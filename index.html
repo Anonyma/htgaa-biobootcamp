@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>HTGAA Day 1 | Interactive Class</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --card-bg: #ffffff;
+            --success: #22c55e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            color: var(--primary-dark);
+            text-align: center;
+        }
+
+        .header .subtitle {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+
+        /* Progress bar */
+        .progress-container {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 0.7rem;
+            color: var(--gray);
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+
+        /* Main content */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* Module cards */
+        .module {
+            background: var(--card-bg);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .module:active {
+            transform: scale(0.98);
+        }
+
+        .module-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .module-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .module-info {
+            flex: 1;
+        }
+
+        .module-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .module-meta {
+            font-size: 0.75rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        .module-status {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            transition: all 0.3s;
+        }
+
+        .module-status.completed {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .module-status.in-progress {
+            border-color: var(--primary);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(99, 102, 241, 0); }
+        }
+
+        .module-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .module-content.expanded {
+            max-height: 3000px;
+        }
+
+        .module-body {
+            padding: 0 1rem 1rem;
+        }
+
+        /* Section styles */
+        .section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .section h3 {
+            font-size: 0.9rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section p, .section li {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+
+        .section ul {
+            padding-left: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .section li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Highlight boxes */
+        .highlight {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-left: 4px solid var(--accent);
+            padding: 0.75rem;
+            border-radius: 0 8px 8px 0;
+            margin: 0.75rem 0;
+        }
+
+        .highlight.info {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-left-color: var(--primary);
+        }
+
+        .highlight.success {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border-left-color: var(--secondary);
+        }
+
+        .highlight-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .highlight p {
+            font-size: 0.8rem;
+        }
+
+        /* Interactive diagrams */
+        .diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            text-align: center;
+            border: 2px dashed #e2e8f0;
+        }
+
+        .diagram-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 1rem 0;
+        }
+
+        .diagram-item {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            min-width: 80px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+        }
+
+        .diagram-arrow {
+            font-size: 1.5rem;
+            color: var(--gray);
+        }
+
+        .diagram-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+
+        /* Quiz styles */
+        .quiz {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border: 2px solid #e2e8f0;
+        }
+
+        .quiz-question {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+            background: #f0f4ff;
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background: #e0e7ff;
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: #dcfce7;
+        }
+
+        .quiz-option.incorrect {
+            border-color: var(--danger);
+            background: #fee2e2;
+        }
+
+        .quiz-option-letter {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        .quiz-feedback {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .quiz-feedback.incorrect {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .quiz-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.75rem;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .quiz-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .quiz-btn:disabled {
+            background: #e2e8f0;
+            color: var(--gray);
+            cursor: not-allowed;
+        }
+
+        /* Video embed placeholder */
+        .video-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 0.75rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .video-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .video-card-duration {
+            font-size: 0.75rem;
+            opacity: 0.7;
+        }
+
+        .video-link {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+
+        .video-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Flashcard */
+        .flashcard-container {
+            perspective: 1000px;
+            margin: 0.75rem 0;
+        }
+
+        .flashcard {
+            background: white;
+            border-radius: 12px;
+            min-height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .flashcard-front {
+            background: linear-gradient(135deg, var(--primary) 0%, #8b5cf6 100%);
+            color: white;
+        }
+
+        .flashcard-back {
+            background: white;
+            transform: rotateY(180deg);
+            border: 2px solid var(--primary);
+        }
+
+        .flashcard-term {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .flashcard-definition {
+            font-size: 0.9rem;
+            text-align: center;
+            color: var(--dark);
+        }
+
+        .flashcard-hint {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        /* Tab navigation for module content */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab {
+            background: #e2e8f0;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item-icon {
+            font-size: 1.25rem;
+        }
+
+        /* Color coding for modules */
+        .module-1 .module-icon { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+        .module-2 .module-icon { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .module-3 .module-icon { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .module-4 .module-icon { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .module-5 .module-icon { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        /* Responsive tweaks */
+        @media (min-width: 640px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .module-header {
+                padding: 1.25rem;
+            }
+
+            .module-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Key concept cards */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin: 0.75rem 0;
+        }
+
+        .concept-card {
+            background: white;
+            border-radius: 10px;
+            padding: 0.75rem;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+
+        .concept-card:active {
+            transform: scale(0.95);
+            border-color: var(--primary);
+        }
+
+        .concept-card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .concept-card-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .concept-card-desc {
+            font-size: 0.65rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        /* Gene structure diagram */
+        .gene-diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            overflow-x: auto;
+        }
+
+        .gene-structure {
+            display: flex;
+            align-items: center;
+            min-width: 300px;
+            height: 50px;
+            position: relative;
+        }
+
+        .gene-part {
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: white;
+            border-radius: 4px;
+            padding: 0 0.5rem;
+        }
+
+        .gene-promoter {
+            background: #8b5cf6;
+            width: 60px;
+        }
+
+        .gene-coding {
+            background: var(--primary);
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .gene-terminator {
+            background: #ef4444;
+            width: 50px;
+        }
+
+        .gene-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.65rem;
+            color: var(--gray);
+        }
+
+        /* Interactive base pairing */
+        .base-pair-demo {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            margin: 0.75rem 0;
+        }
+
+        .base-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .base {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .base:active {
+            transform: scale(1.1);
+        }
+
+        .base-a { background: #ef4444; }
+        .base-t { background: #22c55e; }
+        .base-g { background: #3b82f6; }
+        .base-c { background: #f59e0b; }
+
+        .base-bond {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        /* Summary stats */
+        .stats-row {
+            display: flex;
+            gap: 0.75rem;
+            margin: 0.75rem 0;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 0.75rem;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Intro screen */
+        .intro-screen {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 2rem;
+            text-align: center;
+            color: white;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+
+        .intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .intro-logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .intro-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .intro-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .intro-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <!-- Intro Screen -->
+    <div class="intro-screen" id="introScreen">
+        <div class="intro-logo">🧬</div>
+        <h1 class="intro-title">HTGAA Day 1</h1>
+        <p class="intro-subtitle">Foundations of Synthetic Biology</p>
+        <button class="intro-btn" onclick="startClass()">Begin Learning</button>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>HTGAA Bio-Bootcamp</h1>
+        <div class="subtitle">Day 1: Foundations & Global Projects</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">0% Complete</div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Module 1: Central Dogma -->
+        <div class="module module-1" data-module="1">
+            <div class="module-header" onclick="toggleModule(this)">
+                <div class="module-icon">🧬</div>
+                <div class="module-info">
+                    <div class="module-title">The Central Dogma</div>
+                    <div class="module-meta">DNA → RNA → Protein</div>
+                </div>
+                <div class="module-status" id="status-1"></div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab(this, 'learn-1')">Learn</button>
+                        <button class="tab" onclick="switchTab(this, 'practice-1')">Practice</button>
+                        <button class="tab" onclick="switchTab(this, 'quiz-1')">Quiz</button>
+                    </div>
+
+                    <div class="tab-content active" id="learn-1">
+                        <div class="section">
+                            <h3>🎯 Key Concept</h3>
+                            <p>The <strong>Central Dogma</strong> describes how genetic information flows in living cells:</p>
+                            <div class="diagram">
+                                <div class="diagram-flow">
+                                    <div class="diagram-item">DNA</div>
+                                    <div class="diagram-arrow">→</div>
+                                    <div class="diagram-item">RNA</div>
+                                    <div class="diagram-arrow">→</div>
+                                    <div class="diagram-item">Protein</div>
+                                </div>
+                                <div class="diagram-label">Transcription → Translation</div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h3>📚 The Three Steps</h3>
+                            <ul>
+                                <li><strong>Replication:</strong> DNA copies itself (DNA → DNA)</li>
+                                <li><strong>Transcription:</strong> DNA is read to make RNA (DNA → RNA)</li>
+                                <li><strong>Translation:</strong> RNA is used to build proteins (RNA → Protein)</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight info">
+                            <div class="highlight-title">💡 Software Analogy</div>
+                            <p>Think of DNA as <strong>source code</strong>, RNA as <strong>compiled bytecode</strong>, and proteins as the <strong>running program</strong>!</p>
+                        </div>
+
+                        <div class="section">
+                            <h3>🔬 DNA Structure</h3>
+                            <p>DNA is a double helix made of nucleotides. Bases pair specifically:</p>
+                            <div class="base-pair-demo">
+                                <div class="base-column">
+                                    <div class="base base-a">A</div>
+                                    <div class="base-bond">═══</div>
+                                    <div class="base base-t">T</div>
+                                </div>
+                                <div class="base-column">
+                                    <div class="base base-g">G</div>
+                                    <div class="base-bond">≡≡≡</div>
+                                    <div class="base base-c">C</div>
+                                </div>
+                            </div>
+                            <p style="text-align: center; font-size: 0.75rem; color: var(--gray);">A-T: 2 hydrogen bonds | G-C: 3 hydrogen bonds</p>
+                        </div>
+
+                        <div class="video-card">
+                            <div class="video-card-icon">▶️</div>
+                            <div class="video-card-title">DNA Replication Animation</div>
+                            <div class="video-card-duration">~7 min</div>
+                            <a href="https://www.youtube.com/watch?v=0Ha9nppnwOc" target="_blank" class="video-link">Watch Video</a>
+                        </div>
+
+                        <div class="highlight success">
+                            <div class="highlight-title">🧪 Longevity Connection</div>
+                            <p>Understanding the central dogma is essential for gene therapies targeting aging genes like <strong>SIRT1</strong>, <strong>FOXO</strong>, and <strong>mTOR</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="practice-1">
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">Transcription</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">The process of copying DNA into messenger RNA (mRNA). Occurs in the nucleus.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">Translation</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">The process of building proteins from mRNA. Occurs at ribosomes using tRNA.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">Codon</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">A sequence of 3 nucleotides (triplet) that codes for a specific amino acid or stop signal.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="concept-grid">
+                            <div class="concept-card">
+                                <div class="concept-card-icon">🔄</div>
+                                <div class="concept-card-title">Replication</div>
+                                <div class="concept-card-desc">DNA → DNA</div>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-card-icon">📝</div>
+                                <div class="concept-card-title">Transcription</div>
+                                <div class="concept-card-desc">DNA → RNA</div>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-card-icon">🏭</div>
+                                <div class="concept-card-title">Translation</div>
+                                <div class="concept-card-desc">RNA → Protein</div>
+                            </div>
+                            <div class="concept-card">
+                                <div class="concept-card-icon">🧪</div>
+                                <div class="concept-card-title">Expression</div>
+                                <div class="concept-card-desc">Gene → Function</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="quiz-1">
+                        <div class="quiz" data-quiz="1">
+                            <div class="quiz-question">What is the correct order of the Central Dogma?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">A</div>
+                                    <span>RNA → DNA → Protein</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="true">
+                                    <div class="quiz-option-letter">B</div>
+                                    <span>DNA → RNA → Protein</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">C</div>
+                                    <span>Protein → RNA → DNA</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">D</div>
+                                    <span>DNA → Protein → RNA</span>
+                                </div>
+                            </div>
+                            <div class="quiz-feedback"></div>
+                            <button class="quiz-btn" onclick="checkAnswer(this)" disabled>Check Answer</button>
+                        </div>
+
+                        <div class="quiz" data-quiz="1b">
+                            <div class="quiz-question">Which bases pair together in DNA?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">A</div>
+                                    <span>A-G and T-C</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="true">
+                                    <div class="quiz-option-letter">B</div>
+                                    <span>A-T and G-C</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">C</div>
+                                    <span>A-C and G-T</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">D</div>
+                                    <span>A-A and T-T</span>
+                                </div>
+                            </div>
+                            <div class="quiz-feedback"></div>
+                            <button class="quiz-btn" onclick="checkAnswer(this)" disabled>Check Answer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 2: DNA Design & Genome Engineering -->
+        <div class="module module-2" data-module="2">
+            <div class="module-header" onclick="toggleModule(this)">
+                <div class="module-icon">✂️</div>
+                <div class="module-info">
+                    <div class="module-title">DNA Design & CRISPR</div>
+                    <div class="module-meta">Genome Engineering Methods</div>
+                </div>
+                <div class="module-status" id="status-2"></div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab(this, 'learn-2')">Learn</button>
+                        <button class="tab" onclick="switchTab(this, 'practice-2')">Practice</button>
+                        <button class="tab" onclick="switchTab(this, 'quiz-2')">Quiz</button>
+                    </div>
+
+                    <div class="tab-content active" id="learn-2">
+                        <div class="section">
+                            <h3>🧬 Gene Structure</h3>
+                            <p>A typical gene has these key parts:</p>
+                            <div class="gene-diagram">
+                                <div class="gene-structure">
+                                    <div class="gene-part gene-promoter">Promoter</div>
+                                    <div class="gene-part gene-coding">Coding Sequence (CDS)</div>
+                                    <div class="gene-part gene-terminator">Term</div>
+                                </div>
+                                <div class="gene-labels">
+                                    <span>Controls when gene is ON</span>
+                                    <span>Makes the protein</span>
+                                    <span>Stop signal</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h3>🔄 The Synbio Design Cycle</h3>
+                            <div class="diagram">
+                                <div class="diagram-flow">
+                                    <div class="diagram-item" style="background: linear-gradient(135deg, #8b5cf6, #6366f1)">Design</div>
+                                    <div class="diagram-arrow">→</div>
+                                    <div class="diagram-item" style="background: linear-gradient(135deg, #10b981, #059669)">Build</div>
+                                    <div class="diagram-arrow">→</div>
+                                    <div class="diagram-item" style="background: linear-gradient(135deg, #f59e0b, #d97706)">Test</div>
+                                    <div class="diagram-arrow">→</div>
+                                    <div class="diagram-item" style="background: linear-gradient(135deg, #ec4899, #db2777)">Learn</div>
+                                </div>
+                                <div class="diagram-label">Iterate until it works!</div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h3>✂️ CRISPR-Cas9</h3>
+                            <p>CRISPR is a revolutionary gene editing tool that works like molecular scissors:</p>
+                            <ul>
+                                <li><strong>Guide RNA (gRNA):</strong> Directs Cas9 to the target DNA sequence</li>
+                                <li><strong>Cas9 protein:</strong> Cuts the DNA at the specified location</li>
+                                <li><strong>DNA repair:</strong> Cell fixes the cut (often introducing changes)</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight">
+                            <div class="highlight-title">🎯 CRISPR Applications</div>
+                            <p><strong>Knockout:</strong> Disrupt a gene | <strong>Knock-in:</strong> Insert new DNA | <strong>Base editing:</strong> Change single letters</p>
+                        </div>
+
+                        <div class="video-card">
+                            <div class="video-card-icon">▶️</div>
+                            <div class="video-card-title">CRISPR-Cas9 Explained</div>
+                            <div class="video-card-duration">~5 min</div>
+                            <a href="https://www.youtube.com/watch?v=2pp17E4E-O8" target="_blank" class="video-link">Watch Video</a>
+                        </div>
+
+                        <div class="section">
+                            <h3>🔧 Other Genome Engineering Tools</h3>
+                            <div class="concept-grid">
+                                <div class="concept-card">
+                                    <div class="concept-card-icon">🎯</div>
+                                    <div class="concept-card-title">ZFNs</div>
+                                    <div class="concept-card-desc">Zinc Finger Nucleases</div>
+                                </div>
+                                <div class="concept-card">
+                                    <div class="concept-card-icon">✂️</div>
+                                    <div class="concept-card-title">TALENs</div>
+                                    <div class="concept-card-desc">Precise but complex</div>
+                                </div>
+                                <div class="concept-card">
+                                    <div class="concept-card-icon">🧬</div>
+                                    <div class="concept-card-title">CRISPR</div>
+                                    <div class="concept-card-desc">Easy & versatile</div>
+                                </div>
+                                <div class="concept-card">
+                                    <div class="concept-card-icon">🔗</div>
+                                    <div class="concept-card-title">Gibson</div>
+                                    <div class="concept-card-desc">DNA Assembly</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="highlight success">
+                            <div class="highlight-title">🧪 Longevity Connection</div>
+                            <p>CRISPR is being used to edit genes linked to aging, target senescent cells, and develop gene therapies for age-related diseases.</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="practice-2">
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">Promoter</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">A DNA sequence that controls when and how much a gene is expressed. Like an ON/OFF switch.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">Plasmid</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">A small circular DNA molecule used as a vector to carry genes into cells. Common in bacteria.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">PAM Sequence</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">Protospacer Adjacent Motif - a short DNA sequence (often NGG) required for Cas9 to cut. Located next to the target site.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="quiz-2">
+                        <div class="quiz" data-quiz="2">
+                            <div class="quiz-question">What does CRISPR-Cas9 use to find its target?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">A</div>
+                                    <span>Random searching</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="true">
+                                    <div class="quiz-option-letter">B</div>
+                                    <span>Guide RNA (gRNA)</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">C</div>
+                                    <span>Antibodies</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">D</div>
+                                    <span>Chemical signals</span>
+                                </div>
+                            </div>
+                            <div class="quiz-feedback"></div>
+                            <button class="quiz-btn" onclick="checkAnswer(this)" disabled>Check Answer</button>
+                        </div>
+
+                        <div class="quiz" data-quiz="2b">
+                            <div class="quiz-question">What is the Synbio Design Cycle?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="true">
+                                    <div class="quiz-option-letter">A</div>
+                                    <span>Design → Build → Test → Learn</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">B</div>
+                                    <span>Plan → Code → Deploy → Monitor</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">C</div>
+                                    <span>Research → Write → Publish → Cite</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">D</div>
+                                    <span>Idea → Prototype → Scale → Sell</span>
+                                </div>
+                            </div>
+                            <div class="quiz-feedback"></div>
+                            <button class="quiz-btn" onclick="checkAnswer(this)" disabled>Check Answer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 3: Phage Therapeutics -->
+        <div class="module module-3" data-module="3">
+            <div class="module-header" onclick="toggleModule(this)">
+                <div class="module-icon">🦠</div>
+                <div class="module-info">
+                    <div class="module-title">Phage Therapeutics</div>
+                    <div class="module-meta">Viruses that kill bacteria</div>
+                </div>
+                <div class="module-status" id="status-3"></div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab(this, 'learn-3')">Learn</button>
+                        <button class="tab" onclick="switchTab(this, 'practice-3')">Practice</button>
+                        <button class="tab" onclick="switchTab(this, 'quiz-3')">Quiz</button>
+                    </div>
+
+                    <div class="tab-content active" id="learn-3">
+                        <div class="section">
+                            <h3>🦠 What Are Bacteriophages?</h3>
+                            <p>Bacteriophages (phages) are viruses that specifically infect and kill bacteria. They are:</p>
+                            <ul>
+                                <li>The most abundant biological entities on Earth</li>
+                                <li>Highly specific (each targets certain bacteria)</li>
+                                <li>Self-replicating when inside their host</li>
+                            </ul>
+                        </div>
+
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <div class="stat-number">10<sup>31</sup></div>
+                                <div class="stat-label">Phages on Earth</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">~100</div>
+                                <div class="stat-label">Years Known</div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h3>💊 Why Phage Therapy?</h3>
+                            <p>The antibiotic resistance crisis is a major global health threat:</p>
+                            <ul>
+                                <li><strong>1.2M+ deaths/year</strong> from antibiotic-resistant infections</li>
+                                <li>Few new antibiotics in development</li>
+                                <li>Phages offer a targeted alternative</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight">
+                            <div class="highlight-title">⚡ Phage vs Antibiotics</div>
+                            <p><strong>Antibiotics:</strong> Broad-spectrum, resistance spreads easily<br>
+                            <strong>Phages:</strong> Highly specific, co-evolve with bacteria</p>
+                        </div>
+
+                        <div class="video-card">
+                            <div class="video-card-icon">▶️</div>
+                            <div class="video-card-title">Phages: The Deadliest Beings</div>
+                            <div class="video-card-duration">Kurzgesagt</div>
+                            <a href="https://www.youtube.com/watch?v=YI3tsmFsrOg" target="_blank" class="video-link">Watch Video</a>
+                        </div>
+
+                        <div class="highlight success">
+                            <div class="highlight-title">🧪 Longevity Connection</div>
+                            <p>Phage therapy is relevant for aging populations where antibiotic resistance is a major concern, and for microbiome engineering.</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="practice-3">
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">Lytic Cycle</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">Phage infects, replicates rapidly, then bursts (lyses) the bacterial cell, releasing new phages.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">Host Specificity</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">Phages typically only infect specific bacterial species or strains, leaving beneficial bacteria unharmed.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="quiz-3">
+                        <div class="quiz" data-quiz="3">
+                            <div class="quiz-question">What do bacteriophages specifically target?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">A</div>
+                                    <span>Human cells</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">B</div>
+                                    <span>All microorganisms</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="true">
+                                    <div class="quiz-option-letter">C</div>
+                                    <span>Specific bacteria</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">D</div>
+                                    <span>Viruses</span>
+                                </div>
+                            </div>
+                            <div class="quiz-feedback"></div>
+                            <button class="quiz-btn" onclick="checkAnswer(this)" disabled>Check Answer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 4: Genetic Circuits -->
+        <div class="module module-4" data-module="4">
+            <div class="module-header" onclick="toggleModule(this)">
+                <div class="module-icon">⚡</div>
+                <div class="module-info">
+                    <div class="module-title">Genetic Circuits</div>
+                    <div class="module-meta">Programming living cells</div>
+                </div>
+                <div class="module-status" id="status-4"></div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchTab(this, 'learn-4')">Learn</button>
+                        <button class="tab" onclick="switchTab(this, 'practice-4')">Practice</button>
+                        <button class="tab" onclick="switchTab(this, 'quiz-4')">Quiz</button>
+                    </div>
+
+                    <div class="tab-content active" id="learn-4">
+                        <div class="section">
+                            <h3>⚡ What Are Genetic Circuits?</h3>
+                            <p>Genetic circuits are engineered DNA sequences that perform logical operations in living cells, similar to electronic circuits.</p>
+                        </div>
+
+                        <div class="highlight info">
+                            <div class="highlight-title">💻 Code Analogy</div>
+                            <p><strong>Promoters</strong> = function calls<br>
+                            <strong>Repressors/Activators</strong> = if/else statements<br>
+                            <strong>Feedback loops</strong> = while loops</p>
+                        </div>
+
+                        <div class="section">
+                            <h3>🔧 Circuit Components</h3>
+                            <div class="concept-grid">
+                                <div class="concept-card">
+                                    <div class="concept-card-icon">🎛️</div>
+                                    <div class="concept-card-title">Promoter</div>
+                                    <div class="concept-card-desc">Controls gene ON/OFF</div>
+                                </div>
+                                <div class="concept-card">
+                                    <div class="concept-card-icon">🔗</div>
+                                    <div class="concept-card-title">RBS</div>
+                                    <div class="concept-card-desc">Ribosome binding site</div>
+                                </div>
+                                <div class="concept-card">
+                                    <div class="concept-card-icon">🛑</div>
+                                    <div class="concept-card-title">Terminator</div>
+                                    <div class="concept-card-desc">Stop signal</div>
+                                </div>
+                                <div class="concept-card">
+                                    <div class="concept-card-icon">💡</div>
+                                    <div class="concept-card-title">Reporter</div>
+                                    <div class="concept-card-desc">Output (GFP, etc.)</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section">
+                            <h3>🎯 Example: Toggle Switch</h3>
+                            <p>A genetic toggle switch can exist in two stable states (ON or OFF), just like a light switch. It was one of the first synthetic genetic circuits built (Gardner et al., 2000).</p>
+                        </div>
+
+                        <div class="highlight success">
+                            <div class="highlight-title">🧪 Longevity Connection</div>
+                            <p>Genetic circuits can be designed as <strong>biosensors for aging biomarkers</strong> or as <strong>therapeutic systems</strong> that respond to cellular aging states.</p>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="practice-4">
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">Repressor</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">A protein that blocks transcription by binding to DNA and preventing RNA polymerase from working.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flashcard-container">
+                            <div class="flashcard" onclick="this.classList.toggle('flipped')">
+                                <div class="flashcard-front">
+                                    <div class="flashcard-term">GFP</div>
+                                    <div class="flashcard-hint">Tap to reveal</div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="flashcard-definition">Green Fluorescent Protein - a reporter gene that glows green under UV light. Used to visualize gene expression.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="quiz-4">
+                        <div class="quiz" data-quiz="4">
+                            <div class="quiz-question">In genetic circuits, what is analogous to an if/else statement?</div>
+                            <div class="quiz-options">
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">A</div>
+                                    <span>Terminators</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="true">
+                                    <div class="quiz-option-letter">B</div>
+                                    <span>Repressors and Activators</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">C</div>
+                                    <span>Reporters</span>
+                                </div>
+                                <div class="quiz-option" onclick="selectOption(this)" data-correct="false">
+                                    <div class="quiz-option-letter">D</div>
+                                    <span>Plasmids</span>
+                                </div>
+                            </div>
+                            <div class="quiz-feedback"></div>
+                            <button class="quiz-btn" onclick="checkAnswer(this)" disabled>Check Answer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 5: Summary & Next Steps -->
+        <div class="module module-5" data-module="5">
+            <div class="module-header" onclick="toggleModule(this)">
+                <div class="module-icon">🎓</div>
+                <div class="module-info">
+                    <div class="module-title">Day 1 Summary</div>
+                    <div class="module-meta">Key takeaways & resources</div>
+                </div>
+                <div class="module-status" id="status-5"></div>
+            </div>
+            <div class="module-content">
+                <div class="module-body">
+                    <div class="section">
+                        <h3>✅ What You Learned Today</h3>
+                        <ul>
+                            <li><strong>Central Dogma:</strong> DNA → RNA → Protein</li>
+                            <li><strong>CRISPR:</strong> Gene editing with guide RNA + Cas9</li>
+                            <li><strong>Phages:</strong> Viruses that kill bacteria</li>
+                            <li><strong>Genetic Circuits:</strong> Programming cells with DNA</li>
+                        </ul>
+                    </div>
+
+                    <div class="section">
+                        <h3>📚 Key Resources</h3>
+                        <ul>
+                            <li><a href="https://innovativegenomics.org/" target="_blank">Innovative Genomics Institute</a></li>
+                            <li><a href="https://www.addgene.org/guides/plasmids/" target="_blank">Addgene Plasmids 101</a></li>
+                            <li><a href="http://rosalind.info/" target="_blank">Rosalind Bioinformatics</a></li>
+                            <li><a href="https://www.labxchange.org/" target="_blank">LabXchange Simulations</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight success">
+                        <div class="highlight-title">🚀 Next Steps</div>
+                        <p>Day 2 covers <strong>Wet Lab Methods</strong> and <strong>Scientific Practice</strong>. Review today's material and watch the recommended videos!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="scrollToTop()">
+            <div class="nav-item-icon">📚</div>
+            <span>Modules</span>
+        </div>
+        <div class="nav-item" onclick="showProgress()">
+            <div class="nav-item-icon">📊</div>
+            <span>Progress</span>
+        </div>
+        <div class="nav-item" onclick="resetProgress()">
+            <div class="nav-item-icon">🔄</div>
+            <span>Reset</span>
+        </div>
+    </nav>
+
+    <script>
+        // State management
+        let moduleProgress = {};
+        let quizResults = {};
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProgress();
+            updateProgressBar();
+        });
+
+        // Start class (dismiss intro)
+        function startClass() {
+            document.getElementById('introScreen').classList.add('hidden');
+        }
+
+        // Toggle module expansion
+        function toggleModule(header) {
+            const content = header.nextElementSibling;
+            const module = header.parentElement;
+            const moduleId = module.dataset.module;
+
+            content.classList.toggle('expanded');
+
+            if (content.classList.contains('expanded')) {
+                moduleProgress[moduleId] = moduleProgress[moduleId] || 'in-progress';
+                updateModuleStatus(moduleId);
+                saveProgress();
+            }
+        }
+
+        // Tab switching
+        function switchTab(btn, contentId) {
+            const tabs = btn.parentElement.querySelectorAll('.tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+
+            const moduleBody = btn.closest('.module-body');
+            const contents = moduleBody.querySelectorAll('.tab-content');
+            contents.forEach(c => c.classList.remove('active'));
+            document.getElementById(contentId).classList.add('active');
+        }
+
+        // Quiz functionality
+        function selectOption(option) {
+            const quiz = option.closest('.quiz');
+            const options = quiz.querySelectorAll('.quiz-option');
+            options.forEach(o => o.classList.remove('selected'));
+            option.classList.add('selected');
+            quiz.querySelector('.quiz-btn').disabled = false;
+        }
+
+        function checkAnswer(btn) {
+            const quiz = btn.closest('.quiz');
+            const quizId = quiz.dataset.quiz;
+            const selected = quiz.querySelector('.quiz-option.selected');
+            const feedback = quiz.querySelector('.quiz-feedback');
+            const isCorrect = selected.dataset.correct === 'true';
+
+            // Mark all options
+            quiz.querySelectorAll('.quiz-option').forEach(o => {
+                o.style.pointerEvents = 'none';
+                if (o.dataset.correct === 'true') {
+                    o.classList.add('correct');
+                } else if (o === selected && !isCorrect) {
+                    o.classList.add('incorrect');
+                }
+            });
+
+            // Show feedback
+            feedback.classList.add('show');
+            if (isCorrect) {
+                feedback.classList.add('correct');
+                feedback.classList.remove('incorrect');
+                feedback.textContent = '✓ Correct! Well done!';
+            } else {
+                feedback.classList.add('incorrect');
+                feedback.classList.remove('correct');
+                feedback.textContent = '✗ Not quite. The correct answer is highlighted in green.';
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Answered';
+
+            // Save result
+            quizResults[quizId] = isCorrect;
+            checkModuleCompletion(quiz);
+            saveProgress();
+        }
+
+        function checkModuleCompletion(quiz) {
+            const module = quiz.closest('.module');
+            const moduleId = module.dataset.module;
+            const quizzes = module.querySelectorAll('.quiz');
+            let allAnswered = true;
+            let allCorrect = true;
+
+            quizzes.forEach(q => {
+                const qId = q.dataset.quiz;
+                if (quizResults[qId] === undefined) {
+                    allAnswered = false;
+                } else if (!quizResults[qId]) {
+                    allCorrect = false;
+                }
+            });
+
+            if (allAnswered) {
+                moduleProgress[moduleId] = 'completed';
+                updateModuleStatus(moduleId);
+                updateProgressBar();
+            }
+        }
+
+        function updateModuleStatus(moduleId) {
+            const status = document.getElementById(`status-${moduleId}`);
+            const state = moduleProgress[moduleId];
+
+            status.classList.remove('completed', 'in-progress');
+            status.innerHTML = '';
+
+            if (state === 'completed') {
+                status.classList.add('completed');
+                status.innerHTML = '✓';
+            } else if (state === 'in-progress') {
+                status.classList.add('in-progress');
+            }
+        }
+
+        function updateProgressBar() {
+            const total = 5;
+            const completed = Object.values(moduleProgress).filter(s => s === 'completed').length;
+            const percent = Math.round((completed / total) * 100);
+
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            document.getElementById('progressText').textContent = `${percent}% Complete (${completed}/${total} modules)`;
+        }
+
+        // Local storage
+        function saveProgress() {
+            localStorage.setItem('htgaa-progress', JSON.stringify({ moduleProgress, quizResults }));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('htgaa-progress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                moduleProgress = data.moduleProgress || {};
+                quizResults = data.quizResults || {};
+
+                // Restore UI state
+                Object.keys(moduleProgress).forEach(id => updateModuleStatus(id));
+
+                // Restore quiz states
+                Object.keys(quizResults).forEach(qId => {
+                    const quiz = document.querySelector(`[data-quiz="${qId}"]`);
+                    if (quiz && quizResults[qId] !== undefined) {
+                        // Mark as answered
+                        quiz.querySelectorAll('.quiz-option').forEach(o => {
+                            o.style.pointerEvents = 'none';
+                            if (o.dataset.correct === 'true') {
+                                o.classList.add('correct');
+                            }
+                        });
+                        const btn = quiz.querySelector('.quiz-btn');
+                        btn.disabled = true;
+                        btn.textContent = 'Answered';
+                    }
+                });
+            }
+        }
+
+        // Navigation
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showProgress() {
+            const completed = Object.values(moduleProgress).filter(s => s === 'completed').length;
+            const correct = Object.values(quizResults).filter(r => r === true).length;
+            const total = Object.keys(quizResults).length;
+
+            alert(`Progress Summary:\n\n• Modules completed: ${completed}/5\n• Quizzes correct: ${correct}/${total}\n\nKeep learning! 🧬`);
+        }
+
+        function resetProgress() {
+            if (confirm('Reset all progress? This cannot be undone.')) {
+                localStorage.removeItem('htgaa-progress');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

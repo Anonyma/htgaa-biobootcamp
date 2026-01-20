@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTGAA Day 1 - Complete Study Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #059669;
+            --accent: #f59e0b;
+            --text: #1f2937;
+            --text-light: #6b7280;
+            --bg: #f9fafb;
+            --card: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .nav-progress {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .progress-bar-container {
+            width: 200px;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Main layout */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 6rem 1.5rem 4rem;
+        }
+
+        /* Hero section */
+        .hero {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .hero-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Table of Contents */
+        .toc {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .toc h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-list li {
+            margin-bottom: 0.75rem;
+        }
+
+        .toc-list a {
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .toc-list a:hover {
+            background: var(--bg);
+        }
+
+        .toc-number {
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* Chapter sections */
+        .chapter {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            scroll-margin-top: 80px;
+        }
+
+        .chapter-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--bg);
+        }
+
+        .chapter-number {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .chapter-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.25rem;
+        }
+
+        .chapter-subtitle {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Content styling */
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 2rem 0 1rem;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Callout boxes */
+        .callout {
+            padding: 1.25rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .callout-info {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .callout-info .callout-title { color: #1d4ed8; }
+
+        .callout-tip {
+            background: #f0fdf4;
+            border-left: 4px solid #22c55e;
+        }
+
+        .callout-tip .callout-title { color: #16a34a; }
+
+        .callout-warning {
+            background: #fefce8;
+            border-left: 4px solid #eab308;
+        }
+
+        .callout-warning .callout-title { color: #ca8a04; }
+
+        .callout-analogy {
+            background: #faf5ff;
+            border-left: 4px solid #a855f7;
+        }
+
+        .callout-analogy .callout-title { color: #9333ea; }
+
+        /* Diagrams */
+        .diagram-container {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+
+        .diagram-caption {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 1rem;
+            font-style: italic;
+        }
+
+        /* SVG diagrams */
+        .svg-diagram {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Flow diagrams */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 1rem 0;
+        }
+
+        .flow-item {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .flow-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+
+        /* Interactive quiz */
+        .quiz-container {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .quiz-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quiz-question {
+            font-weight: 500;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--primary);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .quiz-option.correct {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .quiz-letter {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .quiz-feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: #f0fdf4; color: #166534; }
+        .quiz-feedback.incorrect { background: #fef2f2; color: #991b1b; }
+
+        .quiz-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+
+        .quiz-btn:hover { background: #4338ca; }
+        .quiz-btn:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
+
+        /* Key terms */
+        .key-term {
+            background: #fef3c7;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        /* Video embed */
+        .video-embed {
+            background: linear-gradient(135deg, #1f2937, #374151);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .video-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .video-duration {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .video-link {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            padding: 0.6rem 1.25rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .video-link:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Table styling */
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        tr:hover {
+            background: var(--bg);
+        }
+
+        /* Educational images */
+        .edu-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .image-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .image-card-caption {
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .image-attribution {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* Gene structure diagram */
+        .gene-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1.5rem 0;
+            gap: 2px;
+        }
+
+        .gene-part {
+            padding: 1rem;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .gene-promoter { background: #8b5cf6; border-radius: 8px 0 0 8px; min-width: 80px; }
+        .gene-5utr { background: #a78bfa; min-width: 50px; }
+        .gene-cds { background: #4f46e5; flex: 1; min-width: 150px; }
+        .gene-3utr { background: #a78bfa; min-width: 50px; }
+        .gene-terminator { background: #ef4444; border-radius: 0 8px 8px 0; min-width: 70px; }
+
+        /* DNA base pairing */
+        .base-pairing {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 1.5rem;
+        }
+
+        .base-pair {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .base {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .base-a { background: #ef4444; }
+        .base-t { background: #22c55e; }
+        .base-g { background: #3b82f6; }
+        .base-c { background: #f59e0b; }
+
+        .base-bond {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-weight: bold;
+        }
+
+        /* Summary section */
+        .summary {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .summary h4 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .summary ul {
+            margin-bottom: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .nav {
+                padding: 0.75rem 1rem;
+            }
+
+            .nav-progress {
+                display: none;
+            }
+
+            .container {
+                padding: 5rem 1rem 3rem;
+            }
+
+            .hero h1 {
+                font-size: 1.75rem;
+            }
+
+            .chapter {
+                padding: 1.25rem;
+            }
+
+            .flow-diagram {
+                flex-direction: column;
+            }
+
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .nav { display: none; }
+            .container { padding-top: 0; }
+            .quiz-container { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-brand">HTGAA Bio-Bootcamp</div>
+        <div class="nav-progress">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <span class="progress-text" id="progressText">0%</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-icon">🧬</div>
+            <h1>HTGAA Day 1</h1>
+            <p class="hero-subtitle">Foundations of Molecular Biology & Synthetic Biology</p>
+            <div class="hero-meta">
+                <div class="hero-meta-item">📖 ~45 min read</div>
+                <div class="hero-meta-item">📝 5 Quizzes</div>
+                <div class="hero-meta-item">🎯 Beginner Friendly</div>
+            </div>
+        </section>
+
+        <!-- Table of Contents -->
+        <nav class="toc">
+            <h2>📚 What You'll Learn</h2>
+            <ol class="toc-list">
+                <li><a href="#chapter1"><span class="toc-number">1</span> The Central Dogma of Biology</a></li>
+                <li><a href="#chapter2"><span class="toc-number">2</span> DNA Structure & Replication</a></li>
+                <li><a href="#chapter3"><span class="toc-number">3</span> Gene Structure & Expression</a></li>
+                <li><a href="#chapter4"><span class="toc-number">4</span> CRISPR & Genome Engineering</a></li>
+                <li><a href="#chapter5"><span class="toc-number">5</span> Phage Therapy</a></li>
+                <li><a href="#chapter6"><span class="toc-number">6</span> Genetic Circuits</a></li>
+            </ol>
+        </nav>
+
+        <!-- Chapter 1: Central Dogma -->
+        <section class="chapter" id="chapter1">
+            <div class="chapter-header">
+                <div class="chapter-number">1</div>
+                <div>
+                    <h2 class="chapter-title">The Central Dogma of Biology</h2>
+                    <p class="chapter-subtitle">How information flows from genes to proteins</p>
+                </div>
+            </div>
+
+            <h3>What is the Central Dogma?</h3>
+            <p>The <span class="key-term">Central Dogma</span> is the most fundamental concept in molecular biology. It describes how the genetic information stored in your DNA gets converted into functional proteins that do the actual work in your cells.</p>
+
+            <div class="diagram-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/68/Central_dogma_of_molecular_biology.svg/800px-Central_dogma_of_molecular_biology.svg.png"
+                     alt="Central Dogma of Molecular Biology diagram showing DNA to RNA to Protein"
+                     class="edu-image"
+                     style="max-width: 500px;">
+                <p class="diagram-caption">The Central Dogma: genetic information flows from DNA to RNA to Protein</p>
+                <p class="image-attribution">Image: Wikimedia Commons (Public Domain)</p>
+            </div>
+
+            <p>Think of it as a one-way information highway:</p>
+
+            <div class="diagram-container">
+                <div class="flow-diagram">
+                    <div class="flow-item">
+                        DNA
+                        <div class="flow-label">Storage</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #059669, #34d399);">
+                        RNA
+                        <div class="flow-label">Messenger</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #d97706, #fbbf24);">
+                        Protein
+                        <div class="flow-label">Function</div>
+                    </div>
+                </div>
+                <p class="diagram-caption">The Central Dogma: Information flows from DNA to RNA to Protein</p>
+            </div>
+
+            <div class="callout callout-analogy">
+                <div class="callout-title">💻 Software Analogy</div>
+                <p>If you're familiar with software development, think of it this way:</p>
+                <ul>
+                    <li><strong>DNA</strong> = Source code (stored in a repository, rarely modified directly)</li>
+                    <li><strong>RNA</strong> = Compiled bytecode (temporary working copy)</li>
+                    <li><strong>Protein</strong> = Running program (does the actual work)</li>
+                </ul>
+            </div>
+
+            <h3>The Three Key Processes</h3>
+
+            <h4>1. Replication (DNA → DNA)</h4>
+            <p>Before a cell divides, it needs to copy all of its DNA so each daughter cell gets a complete set of instructions. This copying process is called <span class="key-term">replication</span>.</p>
+
+            <div class="diagram-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/DNA_replication_split.svg/689px-DNA_replication_split.svg.png"
+                     alt="DNA replication fork showing how double helix separates and new strands are synthesized"
+                     class="edu-image"
+                     style="max-width: 450px;">
+                <p class="diagram-caption">DNA replication: the double helix unwinds and each strand serves as a template for a new complementary strand</p>
+                <p class="image-attribution">Image: Wikimedia Commons (Madprime, CC BY-SA 3.0)</p>
+            </div>
+
+            <ul>
+                <li>Happens before cell division</li>
+                <li>Creates an exact copy of the entire genome</li>
+                <li>Uses an enzyme called <strong>DNA polymerase</strong></li>
+                <li>Error rate: about 1 mistake per billion letters copied</li>
+            </ul>
+
+            <h4>2. Transcription (DNA → RNA)</h4>
+            <p><span class="key-term">Transcription</span> is the process of creating an RNA copy of a specific gene. Unlike replication, which copies everything, transcription only copies the genes that are needed at that moment.</p>
+            <ul>
+                <li>Only copies specific genes as needed</li>
+                <li>Uses an enzyme called <strong>RNA polymerase</strong></li>
+                <li>Produces <strong>messenger RNA (mRNA)</strong> that carries the message</li>
+                <li>Happens in the <strong>nucleus</strong> of eukaryotic cells</li>
+            </ul>
+
+            <h4>3. Translation (RNA → Protein)</h4>
+            <p><span class="key-term">Translation</span> is where the magic happens - the RNA message is "translated" into a sequence of amino acids that fold into a functional protein.</p>
+            <ul>
+                <li>Happens at <strong>ribosomes</strong> (molecular machines)</li>
+                <li>mRNA is read in groups of 3 letters called <strong>codons</strong></li>
+                <li>Each codon specifies one amino acid</li>
+                <li>Amino acids are linked together to form proteins</li>
+            </ul>
+
+            <div class="callout callout-info">
+                <div class="callout-title">📊 By the Numbers</div>
+                <ul>
+                    <li>Human genome: ~3 billion DNA letters</li>
+                    <li>Number of genes: ~20,000</li>
+                    <li>Possible codons: 64 (but only 20 amino acids + stop signals)</li>
+                    <li>Average protein: ~300 amino acids long</li>
+                </ul>
+            </div>
+
+            <h3>Why This Matters for Biotech</h3>
+            <p>Understanding the Central Dogma is essential because <strong>every biotechnology intervention</strong> works by manipulating one of these steps:</p>
+            <ul>
+                <li><strong>Gene therapy:</strong> Changing the DNA sequence</li>
+                <li><strong>RNA vaccines:</strong> Delivering mRNA directly (like COVID vaccines)</li>
+                <li><strong>Protein drugs:</strong> Delivering functional proteins (like insulin)</li>
+                <li><strong>CRISPR:</strong> Editing the DNA to change what proteins are made</li>
+            </ul>
+
+            <div class="video-embed">
+                <div class="video-icon">▶️</div>
+                <div class="video-title">DNA Replication & Central Dogma</div>
+                <div class="video-duration">Recommended: Watch to see this process animated</div>
+                <a href="https://www.youtube.com/watch?v=0Ha9nppnwOc" target="_blank" class="video-link">Watch on YouTube</a>
+            </div>
+
+            <div class="summary">
+                <h4>✅ Key Takeaways</h4>
+                <ul>
+                    <li>Central Dogma: DNA → RNA → Protein</li>
+                    <li>Replication copies DNA; Transcription makes RNA; Translation makes protein</li>
+                    <li>Information flows one way (with some rare exceptions)</li>
+                    <li>All biotech works by manipulating these processes</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" data-quiz="1">
+                <div class="quiz-title">📝 Check Your Understanding</div>
+                <p class="quiz-question">What is the correct order of information flow in the Central Dogma?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectQuizOption(this, '1')" data-correct="false">
+                        <span class="quiz-letter">A</span>
+                        <span>RNA → DNA → Protein</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '1')" data-correct="true">
+                        <span class="quiz-letter">B</span>
+                        <span>DNA → RNA → Protein</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '1')" data-correct="false">
+                        <span class="quiz-letter">C</span>
+                        <span>Protein → RNA → DNA</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '1')" data-correct="false">
+                        <span class="quiz-letter">D</span>
+                        <span>DNA → Protein → RNA</span>
+                    </div>
+                </div>
+                <div class="quiz-feedback" id="feedback-1"></div>
+                <button class="quiz-btn" onclick="checkQuizAnswer('1')" disabled>Check Answer</button>
+            </div>
+        </section>
+
+        <!-- Chapter 2: DNA Structure -->
+        <section class="chapter" id="chapter2">
+            <div class="chapter-header">
+                <div class="chapter-number">2</div>
+                <div>
+                    <h2 class="chapter-title">DNA Structure & Replication</h2>
+                    <p class="chapter-subtitle">The molecule that stores genetic information</p>
+                </div>
+            </div>
+
+            <h3>What is DNA?</h3>
+            <p><span class="key-term">DNA (Deoxyribonucleic Acid)</span> is a long molecule that contains all the genetic instructions used in the development, functioning, and reproduction of all known living organisms.</p>
+
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/DNA_Structure%2BKey%2BLabelled.pn_NoBB.png/400px-DNA_Structure%2BKey%2BLabelled.pn_NoBB.png"
+                         alt="DNA double helix structure with labeled components">
+                    <div class="image-card-caption">
+                        <strong>DNA Double Helix Structure</strong><br>
+                        The twisted ladder shape of DNA with base pairs forming the rungs
+                        <p class="image-attribution">Wikimedia Commons (Zephyris, CC BY-SA 3.0)</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/DNA_chemical_structure.svg/400px-DNA_chemical_structure.svg.png"
+                         alt="DNA chemical structure showing nucleotides and base pairs">
+                    <div class="image-card-caption">
+                        <strong>DNA Chemical Structure</strong><br>
+                        Sugar-phosphate backbone with nitrogenous bases paired in the middle
+                        <p class="image-attribution">Wikimedia Commons (Madeleine Price Ball, Public Domain)</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>The Double Helix Structure</h3>
+            <p>DNA has a distinctive shape called a <span class="key-term">double helix</span> - imagine a twisted ladder:</p>
+            <ul>
+                <li><strong>The sides of the ladder:</strong> Made of sugar (deoxyribose) and phosphate groups</li>
+                <li><strong>The rungs:</strong> Made of paired bases (A-T and G-C)</li>
+                <li><strong>The twist:</strong> The whole structure spirals around an axis</li>
+            </ul>
+
+            <h3>The Four Bases</h3>
+            <p>DNA is made up of four chemical bases, often abbreviated by their first letters:</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Base</th>
+                            <th>Full Name</th>
+                            <th>Type</th>
+                            <th>Pairs With</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>A</strong></td>
+                            <td>Adenine</td>
+                            <td>Purine (2 rings)</td>
+                            <td>T (2 hydrogen bonds)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>T</strong></td>
+                            <td>Thymine</td>
+                            <td>Pyrimidine (1 ring)</td>
+                            <td>A (2 hydrogen bonds)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>G</strong></td>
+                            <td>Guanine</td>
+                            <td>Purine (2 rings)</td>
+                            <td>C (3 hydrogen bonds)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>C</strong></td>
+                            <td>Cytosine</td>
+                            <td>Pyrimidine (1 ring)</td>
+                            <td>G (3 hydrogen bonds)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Base Pairing Rules</h3>
+            <p>The bases pair up in a specific way - this is called <span class="key-term">complementary base pairing</span>:</p>
+
+            <div class="diagram-container">
+                <div class="base-pairing">
+                    <div class="base-pair">
+                        <div class="base base-a">A</div>
+                        <div class="base-bond">══</div>
+                        <div class="base base-t">T</div>
+                    </div>
+                    <div class="base-pair">
+                        <div class="base base-g">G</div>
+                        <div class="base-bond">≡≡</div>
+                        <div class="base base-c">C</div>
+                    </div>
+                </div>
+                <p class="diagram-caption">A always pairs with T (2 bonds) | G always pairs with C (3 bonds)</p>
+            </div>
+
+            <div class="callout callout-tip">
+                <div class="callout-title">💡 Memory Trick</div>
+                <p><strong>A</strong>pple <strong>T</strong>ree (A-T) and <strong>G</strong>reen <strong>C</strong>ar (G-C)</p>
+                <p>Or: <strong>A</strong>T goes together | <strong>C</strong>G goes together</p>
+            </div>
+
+            <h3>Why Base Pairing Matters</h3>
+            <p>Complementary base pairing is crucial for:</p>
+            <ul>
+                <li><strong>Replication:</strong> Each strand can serve as a template to make the other</li>
+                <li><strong>Transcription:</strong> RNA is made using one DNA strand as a template</li>
+                <li><strong>DNA repair:</strong> If one strand is damaged, the other provides the correct sequence</li>
+                <li><strong>CRISPR targeting:</strong> Guide RNAs use base pairing to find specific sequences</li>
+            </ul>
+
+            <h3>5' to 3' Directionality</h3>
+            <p>DNA strands have a direction, determined by the chemical structure:</p>
+            <ul>
+                <li>Each strand has a <strong>5' end</strong> (pronounced "five prime") and a <strong>3' end</strong></li>
+                <li>DNA is always read and synthesized from <strong>5' to 3'</strong></li>
+                <li>The two strands run in <strong>opposite directions</strong> (antiparallel)</li>
+            </ul>
+
+            <div class="callout callout-analogy">
+                <div class="callout-title">💻 Software Analogy</div>
+                <p>Think of 5' to 3' like reading direction. Just as English text is always read left-to-right, DNA is always read 5' to 3'. The molecular machinery that reads DNA can only work in this direction.</p>
+            </div>
+
+            <div class="video-embed">
+                <div class="video-icon">▶️</div>
+                <div class="video-title">Protein Synthesis Animation</div>
+                <div class="video-duration">See how transcription and translation work visually</div>
+                <a href="https://www.youtube.com/watch?v=Z6n7CWyoqFU" target="_blank" class="video-link">Watch on YouTube</a>
+            </div>
+
+            <div class="quiz-container" data-quiz="2">
+                <div class="quiz-title">📝 Check Your Understanding</div>
+                <p class="quiz-question">If one strand of DNA has the sequence 5'-ATGCGA-3', what is the complementary strand?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectQuizOption(this, '2')" data-correct="false">
+                        <span class="quiz-letter">A</span>
+                        <span>5'-TACGCT-3'</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '2')" data-correct="true">
+                        <span class="quiz-letter">B</span>
+                        <span>3'-TACGCT-5'</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '2')" data-correct="false">
+                        <span class="quiz-letter">C</span>
+                        <span>5'-ATGCGA-3'</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '2')" data-correct="false">
+                        <span class="quiz-letter">D</span>
+                        <span>3'-ATGCGA-5'</span>
+                    </div>
+                </div>
+                <div class="quiz-feedback" id="feedback-2"></div>
+                <button class="quiz-btn" onclick="checkQuizAnswer('2')" disabled>Check Answer</button>
+            </div>
+        </section>
+
+        <!-- Chapter 3: Gene Structure -->
+        <section class="chapter" id="chapter3">
+            <div class="chapter-header">
+                <div class="chapter-number">3</div>
+                <div>
+                    <h2 class="chapter-title">Gene Structure & Expression</h2>
+                    <p class="chapter-subtitle">How genes are organized and controlled</p>
+                </div>
+            </div>
+
+            <h3>What is a Gene?</h3>
+            <p>A <span class="key-term">gene</span> is a segment of DNA that contains the instructions for making one specific protein (or sometimes RNA). Think of genes as individual recipes in a cookbook - the whole genome is the cookbook, and each gene is one recipe.</p>
+
+            <h3>Parts of a Gene</h3>
+            <p>A typical gene has several important regions:</p>
+
+            <div class="diagram-container">
+                <div class="gene-diagram">
+                    <div class="gene-part gene-promoter">Promoter</div>
+                    <div class="gene-part gene-5utr">5' UTR</div>
+                    <div class="gene-part gene-cds">Coding Sequence (CDS)</div>
+                    <div class="gene-part gene-3utr">3' UTR</div>
+                    <div class="gene-part gene-terminator">Terminator</div>
+                </div>
+                <p class="diagram-caption">Structure of a typical gene (simplified)</p>
+            </div>
+
+            <h4>Promoter</h4>
+            <p>The <span class="key-term">promoter</span> is the "ON switch" for the gene. It's a DNA sequence located before the gene that:</p>
+            <ul>
+                <li>Is recognized by RNA polymerase (the enzyme that makes RNA)</li>
+                <li>Determines <strong>when</strong> and <strong>how strongly</strong> a gene is expressed</li>
+                <li>Can respond to signals (e.g., "turn on this gene when glucose is low")</li>
+            </ul>
+
+            <div class="callout callout-analogy">
+                <div class="callout-title">💻 Software Analogy</div>
+                <p>Promoters are like function decorators or triggers. A strong promoter is like a function that gets called frequently; a weak promoter is called rarely. An inducible promoter is like a function triggered only by specific events.</p>
+            </div>
+
+            <h4>5' UTR and 3' UTR</h4>
+            <p><span class="key-term">UTR</span> stands for "Untranslated Region" - these regions are transcribed into RNA but don't code for protein:</p>
+            <ul>
+                <li><strong>5' UTR:</strong> Controls how efficiently the mRNA is translated</li>
+                <li><strong>3' UTR:</strong> Affects mRNA stability and localization</li>
+            </ul>
+
+            <h4>Coding Sequence (CDS)</h4>
+            <p>The <span class="key-term">Coding Sequence</span> is the actual "recipe" - the part that gets translated into protein:</p>
+            <ul>
+                <li>Starts with a <strong>start codon</strong> (ATG, which codes for methionine)</li>
+                <li>Ends with a <strong>stop codon</strong> (TAA, TAG, or TGA)</li>
+                <li>Everything in between codes for amino acids</li>
+            </ul>
+
+            <h4>Terminator</h4>
+            <p>The <span class="key-term">terminator</span> signals the end of transcription - it tells RNA polymerase to stop and release the RNA.</p>
+
+            <h3>The Genetic Code</h3>
+            <p>The genetic code is the "dictionary" that translates RNA sequences into amino acids:</p>
+            <ul>
+                <li>Each group of 3 nucleotides is called a <span class="key-term">codon</span></li>
+                <li>There are 64 possible codons (4³ = 64)</li>
+                <li>These code for 20 amino acids plus stop signals</li>
+                <li>Multiple codons can code for the same amino acid (redundancy)</li>
+            </ul>
+
+            <div class="callout callout-info">
+                <div class="callout-title">📊 The Universal Code</div>
+                <p>The genetic code is nearly universal across all life on Earth - from bacteria to humans. This shared code is strong evidence that all life evolved from a common ancestor, and it's why we can put human genes into bacteria and have them work!</p>
+            </div>
+
+            <h3>Gene Regulation</h3>
+            <p>Not all genes are active all the time. <span class="key-term">Gene regulation</span> controls which genes are expressed:</p>
+
+            <h4>Activators</h4>
+            <p>Proteins that <strong>increase</strong> gene expression by helping RNA polymerase bind or work more efficiently.</p>
+
+            <h4>Repressors</h4>
+            <p>Proteins that <strong>decrease</strong> gene expression by blocking transcription.</p>
+
+            <div class="callout callout-analogy">
+                <div class="callout-title">💻 Software Analogy</div>
+                <p>Gene regulation is like access control and feature flags:</p>
+                <ul>
+                    <li><strong>Activators</strong> = Feature flags set to "enabled"</li>
+                    <li><strong>Repressors</strong> = Feature flags set to "disabled"</li>
+                    <li><strong>Inducers</strong> = User actions that toggle features on</li>
+                </ul>
+            </div>
+
+            <div class="summary">
+                <h4>✅ Key Takeaways</h4>
+                <ul>
+                    <li>Genes have distinct regions: promoter, UTRs, coding sequence, terminator</li>
+                    <li>Promoters control when and how much a gene is expressed</li>
+                    <li>The genetic code uses 3-letter codons to specify amino acids</li>
+                    <li>Gene expression is regulated by activators and repressors</li>
+                </ul>
+            </div>
+
+            <div class="quiz-container" data-quiz="3">
+                <div class="quiz-title">📝 Check Your Understanding</div>
+                <p class="quiz-question">What is the function of a promoter?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectQuizOption(this, '3')" data-correct="false">
+                        <span class="quiz-letter">A</span>
+                        <span>It codes for the protein sequence</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '3')" data-correct="false">
+                        <span class="quiz-letter">B</span>
+                        <span>It signals the end of transcription</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '3')" data-correct="true">
+                        <span class="quiz-letter">C</span>
+                        <span>It controls when and how strongly a gene is expressed</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '3')" data-correct="false">
+                        <span class="quiz-letter">D</span>
+                        <span>It stabilizes the mRNA after transcription</span>
+                    </div>
+                </div>
+                <div class="quiz-feedback" id="feedback-3"></div>
+                <button class="quiz-btn" onclick="checkQuizAnswer('3')" disabled>Check Answer</button>
+            </div>
+        </section>
+
+        <!-- Chapter 4: CRISPR -->
+        <section class="chapter" id="chapter4">
+            <div class="chapter-header">
+                <div class="chapter-number">4</div>
+                <div>
+                    <h2 class="chapter-title">CRISPR & Genome Engineering</h2>
+                    <p class="chapter-subtitle">How we edit DNA with precision</p>
+                </div>
+            </div>
+
+            <h3>What is CRISPR?</h3>
+            <p><span class="key-term">CRISPR</span> (Clustered Regularly Interspaced Short Palindromic Repeats) is a revolutionary gene editing technology that works like "molecular scissors." It allows scientists to cut DNA at specific locations and make precise changes.</p>
+
+            <div class="diagram-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/GRNA-Cas9.svg/800px-GRNA-Cas9.svg.png"
+                     alt="CRISPR-Cas9 mechanism showing guide RNA directing Cas9 to cut DNA"
+                     class="edu-image"
+                     style="max-width: 550px;">
+                <p class="diagram-caption">CRISPR-Cas9: The guide RNA (orange) directs Cas9 protein to the target DNA sequence, where it makes a double-strand break</p>
+                <p class="image-attribution">Image: Wikimedia Commons (Marius Walter, CC BY-SA 4.0)</p>
+            </div>
+
+            <div class="callout callout-info">
+                <div class="callout-title">🏆 Historical Note</div>
+                <p>CRISPR was discovered as a bacterial immune system. Bacteria use it to remember and destroy viruses! Jennifer Doudna and Emmanuelle Charpentier won the 2020 Nobel Prize in Chemistry for developing CRISPR-Cas9 as a genome editing tool.</p>
+            </div>
+
+            <h3>How CRISPR-Cas9 Works</h3>
+            <p>CRISPR-Cas9 has two main components:</p>
+
+            <h4>1. Guide RNA (gRNA)</h4>
+            <p>A short RNA molecule (~20 nucleotides) that:</p>
+            <ul>
+                <li>Is designed by scientists to match the target DNA sequence</li>
+                <li>Uses complementary base pairing to find the target</li>
+                <li>Acts as a "GPS" to guide Cas9 to the right location</li>
+            </ul>
+
+            <h4>2. Cas9 Protein</h4>
+            <p>The "scissors" enzyme that:</p>
+            <ul>
+                <li>Binds to the guide RNA</li>
+                <li>Scans DNA looking for a matching sequence</li>
+                <li>Cuts both strands of DNA at the target site</li>
+                <li>Requires a <span class="key-term">PAM sequence</span> (usually NGG) next to the target</li>
+            </ul>
+
+            <div class="diagram-container">
+                <div class="flow-diagram">
+                    <div class="flow-item">
+                        Design gRNA
+                        <div class="flow-label">Choose target</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #059669, #34d399);">
+                        gRNA + Cas9
+                        <div class="flow-label">Form complex</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #d97706, #fbbf24);">
+                        Cut DNA
+                        <div class="flow-label">At target site</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #dc2626, #f87171);">
+                        Cell Repairs
+                        <div class="flow-label">Introduces changes</div>
+                    </div>
+                </div>
+                <p class="diagram-caption">Overview of CRISPR-Cas9 gene editing process</p>
+            </div>
+
+            <h3>What Happens After the Cut?</h3>
+            <p>After Cas9 cuts the DNA, the cell tries to repair it. This can lead to different outcomes:</p>
+
+            <div class="diagram-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/NHEJ_versus_HDR.svg/800px-NHEJ_versus_HDR.svg.png"
+                     alt="Comparison of NHEJ and HDR DNA repair pathways"
+                     class="edu-image"
+                     style="max-width: 600px;">
+                <p class="diagram-caption">Two repair pathways after CRISPR cuts: NHEJ (error-prone, causes disruptions) vs HDR (precise editing with template)</p>
+                <p class="image-attribution">Image: Wikimedia Commons (Viktoria.science, CC BY-SA 4.0)</p>
+            </div>
+
+            <h4>Non-Homologous End Joining (NHEJ)</h4>
+            <ul>
+                <li>The cell's default repair mechanism</li>
+                <li>Often introduces small insertions or deletions ("indels")</li>
+                <li>Usually <strong>disrupts</strong> the gene (gene knockout)</li>
+                <li>Quick but error-prone</li>
+            </ul>
+
+            <h4>Homology-Directed Repair (HDR)</h4>
+            <ul>
+                <li>Uses a provided template DNA for precise repair</li>
+                <li>Allows <strong>precise insertions</strong> or corrections (gene knock-in)</li>
+                <li>Slower and less efficient</li>
+                <li>Requires providing a DNA template</li>
+            </ul>
+
+            <div class="callout callout-analogy">
+                <div class="callout-title">💻 Software Analogy</div>
+                <p><strong>NHEJ</strong> is like a quick patch that might break the code (useful if you want to disable a function).</p>
+                <p><strong>HDR</strong> is like a careful refactor using a well-tested PR - more precise but requires more setup.</p>
+            </div>
+
+            <h3>The Synbio Design Cycle</h3>
+            <p>In synthetic biology, we use an iterative engineering approach:</p>
+
+            <div class="diagram-container">
+                <div class="flow-diagram">
+                    <div class="flow-item" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">
+                        Design
+                        <div class="flow-label">Plan the edit</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #059669, #34d399);">
+                        Build
+                        <div class="flow-label">Make constructs</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #d97706, #fbbf24);">
+                        Test
+                        <div class="flow-label">Check results</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-item" style="background: linear-gradient(135deg, #ec4899, #f472b6);">
+                        Learn
+                        <div class="flow-label">Iterate</div>
+                    </div>
+                </div>
+                <p class="diagram-caption">The Design-Build-Test-Learn cycle of synthetic biology</p>
+            </div>
+
+            <h3>Other Genome Engineering Tools</h3>
+            <p>CRISPR isn't the only tool - earlier technologies paved the way:</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Technology</th>
+                            <th>Targeting</th>
+                            <th>Pros</th>
+                            <th>Cons</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ZFNs</strong> (Zinc Finger Nucleases)</td>
+                            <td>Protein-DNA</td>
+                            <td>First technology, proven</td>
+                            <td>Hard to design, expensive</td>
+                        </tr>
+                        <tr>
+                            <td><strong>TALENs</strong></td>
+                            <td>Protein-DNA</td>
+                            <td>More programmable than ZFNs</td>
+                            <td>Large size, time-consuming</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CRISPR-Cas9</strong></td>
+                            <td>RNA-DNA</td>
+                            <td>Easy, cheap, versatile</td>
+                            <td>PAM requirement, off-targets</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="video-embed">
+                <div class="video-icon">▶️</div>
+                <div class="video-title">CRISPR-Cas9 Mechanism</div>
+                <div class="video-duration">Detailed animation of how CRISPR works</div>
+                <a href="https://www.youtube.com/watch?v=2pp17E4E-O8" target="_blank" class="video-link">Watch on YouTube</a>
+            </div>
+
+            <div class="quiz-container" data-quiz="4">
+                <div class="quiz-title">📝 Check Your Understanding</div>
+                <p class="quiz-question">What does the guide RNA (gRNA) do in CRISPR-Cas9?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectQuizOption(this, '4')" data-correct="false">
+                        <span class="quiz-letter">A</span>
+                        <span>Cuts the DNA</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '4')" data-correct="true">
+                        <span class="quiz-letter">B</span>
+                        <span>Guides Cas9 to the correct location in the genome</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '4')" data-correct="false">
+                        <span class="quiz-letter">C</span>
+                        <span>Repairs the DNA after cutting</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '4')" data-correct="false">
+                        <span class="quiz-letter">D</span>
+                        <span>Provides the template for new DNA</span>
+                    </div>
+                </div>
+                <div class="quiz-feedback" id="feedback-4"></div>
+                <button class="quiz-btn" onclick="checkQuizAnswer('4')" disabled>Check Answer</button>
+            </div>
+        </section>
+
+        <!-- Chapter 5: Phage Therapy -->
+        <section class="chapter" id="chapter5">
+            <div class="chapter-header">
+                <div class="chapter-number">5</div>
+                <div>
+                    <h2 class="chapter-title">Phage Therapy</h2>
+                    <p class="chapter-subtitle">Viruses as weapons against bacteria</p>
+                </div>
+            </div>
+
+            <h3>What Are Bacteriophages?</h3>
+            <p><span class="key-term">Bacteriophages</span> (or simply "phages") are viruses that specifically infect and kill bacteria. The name literally means "bacteria eater" (Greek: phagein = to eat).</p>
+
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Phage.jpg/512px-Phage.jpg"
+                         alt="Electron microscope image of bacteriophages">
+                    <div class="image-card-caption">
+                        <strong>Bacteriophages Under Microscope</strong><br>
+                        Electron microscope image showing phages with their characteristic head and tail structure
+                        <p class="image-attribution">Wikimedia Commons (Dr. Graham Beards, CC BY-SA 3.0)</p>
+                    </div>
+                </div>
+                <div class="image-card">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/11_Hegasy_Phage_Therapy_Wiki_E.svg/512px-11_Hegasy_Phage_Therapy_Wiki_E.svg.png"
+                         alt="Phage therapy mechanism showing phages attacking bacteria">
+                    <div class="image-card-caption">
+                        <strong>Phage Therapy Mechanism</strong><br>
+                        Phages specifically target and destroy bacterial cells while leaving human cells unharmed
+                        <p class="image-attribution">Wikimedia Commons (Guido4, CC BY-SA 4.0)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout callout-info">
+                <div class="callout-title">📊 Phages by the Numbers</div>
+                <ul>
+                    <li><strong>10³¹</strong> phages on Earth - the most abundant biological entities</li>
+                    <li>Kill <strong>40% of ocean bacteria</strong> every day</li>
+                    <li>Discovered over <strong>100 years ago</strong> (1915)</li>
+                    <li>Each phage targets only <strong>specific bacterial strains</strong></li>
+                </ul>
+            </div>
+
+            <h3>Why Phage Therapy Matters</h3>
+            <p>We're facing an <span class="key-term">antibiotic resistance crisis</span>:</p>
+            <ul>
+                <li><strong>1.2+ million deaths per year</strong> from antibiotic-resistant infections</li>
+                <li>Very few new antibiotics in development</li>
+                <li>Bacteria evolve resistance faster than we can develop new drugs</li>
+                <li>Some infections are becoming untreatable</li>
+            </ul>
+
+            <h3>How Phages Work</h3>
+            <p>The <span class="key-term">lytic cycle</span> is how phages kill bacteria:</p>
+
+            <div class="diagram-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Phage_lytic_cycle.svg/800px-Phage_lytic_cycle.svg.png"
+                     alt="Lytic cycle of bacteriophage showing attachment, injection, replication, assembly, and lysis"
+                     class="edu-image"
+                     style="max-width: 550px;">
+                <p class="diagram-caption">The lytic cycle: phage attaches, injects DNA, replicates inside the cell, assembles new particles, and bursts the cell</p>
+                <p class="image-attribution">Image: Wikimedia Commons (Suly12, CC BY-SA 4.0)</p>
+            </div>
+
+            <ol>
+                <li><strong>Attachment:</strong> Phage binds to specific receptors on bacterial surface</li>
+                <li><strong>Injection:</strong> Phage injects its DNA into the bacterium</li>
+                <li><strong>Replication:</strong> Bacterial machinery makes copies of phage DNA and proteins</li>
+                <li><strong>Assembly:</strong> New phage particles are assembled inside the cell</li>
+                <li><strong>Lysis:</strong> Cell bursts, releasing 50-200 new phages</li>
+            </ol>
+
+            <h3>Phages vs. Antibiotics</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Antibiotics</th>
+                            <th>Phages</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Specificity</td>
+                            <td>Broad-spectrum (kill many bacteria)</td>
+                            <td>Highly specific (target one species/strain)</td>
+                        </tr>
+                        <tr>
+                            <td>Effect on microbiome</td>
+                            <td>Disrupt beneficial bacteria</td>
+                            <td>Leave beneficial bacteria alone</td>
+                        </tr>
+                        <tr>
+                            <td>Resistance</td>
+                            <td>Spreads between bacteria</td>
+                            <td>Phages co-evolve with bacteria</td>
+                        </tr>
+                        <tr>
+                            <td>Self-amplifying</td>
+                            <td>No (need repeated doses)</td>
+                            <td>Yes (multiply at infection site)</td>
+                        </tr>
+                        <tr>
+                            <td>Finding new ones</td>
+                            <td>Difficult, expensive R&D</td>
+                            <td>Found in environment (soil, sewage)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="callout callout-tip">
+                <div class="callout-title">🔬 Current State of Phage Therapy</div>
+                <p>Phage therapy is already used in some countries (Georgia, Poland, Russia) and is being explored in clinical trials worldwide. The FDA has approved compassionate use for patients with no other options. Major applications include treating wound infections, UTIs, and lung infections in cystic fibrosis patients.</p>
+            </div>
+
+            <h3>Connection to Longevity</h3>
+            <p>Phage therapy is particularly relevant for aging populations because:</p>
+            <ul>
+                <li>Older individuals are more susceptible to infections</li>
+                <li>Antibiotic resistance is a major threat to elderly care</li>
+                <li>Phages could be used for <strong>microbiome engineering</strong> (selectively removing harmful bacteria)</li>
+                <li>Potential for treating chronic infections that affect healthspan</li>
+            </ul>
+
+            <div class="video-embed">
+                <div class="video-icon">▶️</div>
+                <div class="video-title">Phages - The Deadliest Being on Earth</div>
+                <div class="video-duration">Kurzgesagt - Excellent visual explanation</div>
+                <a href="https://www.youtube.com/watch?v=YI3tsmFsrOg" target="_blank" class="video-link">Watch on YouTube</a>
+            </div>
+
+            <div class="quiz-container" data-quiz="5">
+                <div class="quiz-title">📝 Check Your Understanding</div>
+                <p class="quiz-question">What is a key advantage of phages over traditional antibiotics?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectQuizOption(this, '5')" data-correct="false">
+                        <span class="quiz-letter">A</span>
+                        <span>Phages kill all types of bacteria</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '5')" data-correct="false">
+                        <span class="quiz-letter">B</span>
+                        <span>Bacteria cannot develop resistance to phages</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '5')" data-correct="true">
+                        <span class="quiz-letter">C</span>
+                        <span>Phages are highly specific and don't harm beneficial bacteria</span>
+                    </div>
+                    <div class="quiz-option" onclick="selectQuizOption(this, '5')" data-correct="false">
+                        <span class="quiz-letter">D</span>
+                        <span>Phages are cheaper to manufacture than antibiotics</span>
+                    </div>
+                </div>
+                <div class="quiz-feedback" id="feedback-5"></div>
+                <button class="quiz-btn" onclick="checkQuizAnswer('5')" disabled>Check Answer</button>
+            </div>
+        </section>
+
+        <!-- Chapter 6: Genetic Circuits -->
+        <section class="chapter" id="chapter6">
+            <div class="chapter-header">
+                <div class="chapter-number">6</div>
+                <div>
+                    <h2 class="chapter-title">Genetic Circuits</h2>
+                    <p class="chapter-subtitle">Programming living cells</p>
+                </div>
+            </div>
+
+            <h3>What Are Genetic Circuits?</h3>
+            <p><span class="key-term">Genetic circuits</span> are engineered DNA systems that perform logical operations inside living cells. Just like electronic circuits process electrical signals, genetic circuits process biochemical signals.</p>
+
+            <div class="diagram-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Design_of_a_genetic_toggle_switch.svg/800px-Design_of_a_genetic_toggle_switch.svg.png"
+                     alt="Genetic toggle switch circuit diagram"
+                     class="edu-image"
+                     style="max-width: 500px;">
+                <p class="diagram-caption">A genetic toggle switch: two repressors that mutually inhibit each other, creating bistable (ON/OFF) behavior</p>
+                <p class="image-attribution">Image: Wikimedia Commons (Vossman, CC BY-SA 4.0)</p>
+            </div>
+
+            <div class="callout callout-analogy">
+                <div class="callout-title">💻 The Ultimate Software Analogy</div>
+                <p>Genetic circuits are literally <strong>biological programming</strong>:</p>
+                <ul>
+                    <li><strong>Promoters</strong> = Function calls (trigger expression)</li>
+                    <li><strong>Repressors</strong> = if (NOT x) statements</li>
+                    <li><strong>Activators</strong> = if (x) statements</li>
+                    <li><strong>Feedback loops</strong> = while loops</li>
+                    <li><strong>Ribosomes</strong> = The runtime environment</li>
+                </ul>
+            </div>
+
+            <h3>Circuit Components</h3>
+            <p>Genetic circuits are built from standard biological parts:</p>
+
+            <h4>Promoters</h4>
+            <p>Control <strong>when</strong> a gene is expressed:</p>
+            <ul>
+                <li><strong>Constitutive:</strong> Always on (like a constant)</li>
+                <li><strong>Inducible:</strong> Turned on by a signal (like an event listener)</li>
+                <li><strong>Repressible:</strong> Turned off by a signal</li>
+            </ul>
+
+            <h4>Ribosome Binding Site (RBS)</h4>
+            <p>Controls <strong>how much</strong> protein is made (like setting the volume).</p>
+
+            <h4>Coding Sequence</h4>
+            <p>The gene that produces the output protein (the function body).</p>
+
+            <h4>Terminator</h4>
+            <p>Signals the end of transcription (like a return statement).</p>
+
+            <h4>Reporters</h4>
+            <p>Proteins that produce a measurable signal, commonly:</p>
+            <ul>
+                <li><strong>GFP (Green Fluorescent Protein):</strong> Glows green under UV light</li>
+                <li><strong>Luciferase:</strong> Produces bioluminescence</li>
+                <li><strong>LacZ:</strong> Turns blue with X-gal</li>
+            </ul>
+
+            <div class="diagram-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/GFP_Mice_01.jpg/640px-GFP_Mice_01.jpg"
+                     alt="GFP expressing mice glowing green under UV light"
+                     class="edu-image"
+                     style="max-width: 450px;">
+                <p class="diagram-caption">GFP in action: mice expressing Green Fluorescent Protein glow green under UV light, demonstrating gene expression</p>
+                <p class="image-attribution">Image: Wikimedia Commons (Ingrid Moen et al., CC BY 2.5)</p>
+            </div>
+
+            <h3>Example: The Toggle Switch</h3>
+            <p>One of the first synthetic genetic circuits was the <span class="key-term">toggle switch</span> (Gardner et al., 2000). It can exist in two stable states, like a light switch:</p>
+
+            <ul>
+                <li>Two repressors that inhibit each other</li>
+                <li>Can be flipped between states with external signals</li>
+                <li>Maintains its state even after the signal is removed</li>
+            </ul>
+
+            <div class="callout callout-analogy">
+                <div class="callout-title">💻 Software Analogy</div>
+                <p>The toggle switch is like a boolean flag with persistence:</p>
+                <pre style="background: #f8fafc; padding: 1rem; border-radius: 8px; overflow-x: auto;">
+// Pseudo-code for genetic toggle switch
+let state = false; // Can be "on" or "off"
+
+function inducer1Signal() {
+    state = true;  // Flip to ON
+}
+
+function inducer2Signal() {
+    state = false; // Flip to OFF
+}
+
+// State persists until next signal!</pre>
+            </div>
+
+            <h3>Applications of Genetic Circuits</h3>
+            <ul>
+                <li><strong>Biosensors:</strong> Cells that detect environmental conditions (toxins, diseases)</li>
+                <li><strong>Living therapeutics:</strong> Engineered bacteria that produce drugs only when needed</li>
+                <li><strong>Biomanufacturing:</strong> Optimized production of chemicals and medicines</li>
+                <li><strong>Cell-based computation:</strong> Performing logic inside cells</li>
+            </ul>
+
+            <h3>Connection to Longevity</h3>
+            <p>Genetic circuits could enable:</p>
+            <ul>
+                <li><strong>Aging biosensors:</strong> Circuits that detect cellular aging markers</li>
+                <li><strong>Smart senolytics:</strong> Systems that identify and eliminate senescent cells</li>
+                <li><strong>Therapeutic release:</strong> Drugs produced only when and where needed</li>
+                <li><strong>Microbiome engineering:</strong> Programmable bacteria for gut health</li>
+            </ul>
+
+            <div class="summary">
+                <h4>✅ Day 1 Complete!</h4>
+                <p>You've learned the foundations of molecular biology and synthetic biology:</p>
+                <ul>
+                    <li><strong>Central Dogma:</strong> DNA → RNA → Protein</li>
+                    <li><strong>DNA Structure:</strong> Double helix with A-T and G-C base pairs</li>
+                    <li><strong>Gene Structure:</strong> Promoter, CDS, terminator</li>
+                    <li><strong>CRISPR:</strong> Programmable genome editing with guide RNA</li>
+                    <li><strong>Phage Therapy:</strong> Using viruses to kill specific bacteria</li>
+                    <li><strong>Genetic Circuits:</strong> Programming cells with DNA</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Quiz state
+        const quizState = {};
+
+        function selectQuizOption(element, quizId) {
+            // Clear previous selection
+            const container = element.closest('.quiz-container');
+            container.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            // Select this option
+            element.classList.add('selected');
+            quizState[quizId] = element;
+
+            // Enable button
+            container.querySelector('.quiz-btn').disabled = false;
+        }
+
+        function checkQuizAnswer(quizId) {
+            const selected = quizState[quizId];
+            if (!selected) return;
+
+            const container = selected.closest('.quiz-container');
+            const isCorrect = selected.dataset.correct === 'true';
+            const feedback = document.getElementById(`feedback-${quizId}`);
+
+            // Disable all options
+            container.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if (opt.dataset.correct === 'true') {
+                    opt.classList.add('correct');
+                } else if (opt === selected) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            // Show feedback
+            feedback.classList.add('show');
+            if (isCorrect) {
+                feedback.classList.add('correct');
+                feedback.textContent = '✓ Correct! Great job!';
+            } else {
+                feedback.classList.add('incorrect');
+                feedback.textContent = '✗ Not quite. The correct answer is highlighted in green.';
+            }
+
+            // Disable button
+            container.querySelector('.quiz-btn').disabled = true;
+            container.querySelector('.quiz-btn').textContent = 'Answered';
+
+            // Update progress
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const total = document.querySelectorAll('.quiz-container').length;
+            const answered = document.querySelectorAll('.quiz-btn:disabled').length;
+            const percent = Math.round((answered / total) * 100);
+
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            document.getElementById('progressText').textContent = `${percent}%`;
+        }
+
+        // Smooth scroll for ToC links
+        document.querySelectorAll('.toc-list a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
