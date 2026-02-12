@@ -1,0 +1,468 @@
+/* HTGAA Week 2 - Shared Styles */
+/* Tailwind handles most styling; these are overrides and simulation-specific styles */
+
+/* ===== Base & Typography ===== */
+:root {
+  --dna-blue: #3b82f6;
+  --dna-green: #10b981;
+  --dna-red: #ef4444;
+  --dna-yellow: #f59e0b;
+  --gel-bg: #0f172a;
+  --gel-band: #4ade80;
+  --gel-glow: rgba(74, 222, 128, 0.6);
+  --sim-border: #e2e8f0;
+  --sim-bg: #f8fafc;
+}
+
+.dark {
+  --sim-border: #334155;
+  --sim-bg: #1e293b;
+}
+
+/* Smooth scroll for anchor links */
+html { scroll-behavior: smooth; }
+
+/* ===== Navigation ===== */
+.nav-link.active {
+  color: #3b82f6;
+  border-bottom: 2px solid #3b82f6;
+}
+
+.dark .nav-link.active {
+  color: #60a5fa;
+  border-bottom-color: #60a5fa;
+}
+
+/* ===== Topic Cards (index.html) ===== */
+.topic-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.topic-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+}
+.dark .topic-card:hover {
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.4);
+}
+
+/* Progress ring on cards */
+.progress-ring circle {
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+/* ===== Sidebar TOC (dna-rwe.html) ===== */
+.toc-link {
+  transition: color 0.2s, border-color 0.2s, padding-left 0.2s;
+  border-left: 3px solid transparent;
+  padding-left: 12px;
+}
+.toc-link.active {
+  color: #3b82f6;
+  border-left-color: #3b82f6;
+  padding-left: 16px;
+  font-weight: 600;
+}
+.dark .toc-link.active {
+  color: #60a5fa;
+  border-left-color: #60a5fa;
+}
+
+/* ===== Collapsible Sections ===== */
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.collapsible-content.open {
+  max-height: 10000px;
+}
+.collapsible-header .chevron {
+  transition: transform 0.3s ease;
+}
+.collapsible-header.expanded .chevron {
+  transform: rotate(90deg);
+}
+
+/* ===== Callout Boxes ===== */
+.callout {
+  border-left: 4px solid;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+.callout-concept {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+.callout-definition {
+  border-color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.08);
+}
+.callout-warning {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+.callout-tip {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+}
+.dark .callout-concept { background: rgba(59, 130, 246, 0.15); }
+.dark .callout-definition { background: rgba(139, 92, 246, 0.15); }
+.dark .callout-warning { background: rgba(245, 158, 11, 0.15); }
+.dark .callout-tip { background: rgba(16, 185, 129, 0.15); }
+
+/* ===== Quiz Styles ===== */
+.quiz-option {
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
+  border: 2px solid var(--sim-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.quiz-option:hover:not(.selected) {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
+  transform: translateX(2px);
+}
+.quiz-option.correct {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+.quiz-option.incorrect {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+.quiz-explanation {
+  display: none;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  font-size: 0.9rem;
+}
+.quiz-explanation.show { display: block; }
+
+/* ===== Simulation Containers ===== */
+.sim-container {
+  border: 2px solid var(--sim-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  background: var(--sim-bg);
+}
+.sim-container h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ===== Restriction Enzyme Simulator ===== */
+#restriction-sim .seq-display {
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  overflow-x: auto;
+  white-space: pre;
+  padding: 1rem;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 0.5rem;
+}
+#restriction-sim .seq-display .highlight {
+  background: rgba(245, 158, 11, 0.4);
+  border-radius: 2px;
+  padding: 1px 0;
+}
+#restriction-sim .fragment {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  margin: 0.25rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* ===== Gel Electrophoresis Simulator ===== */
+#gel-sim svg {
+  background: var(--gel-bg);
+  border-radius: 0.5rem;
+  display: block;
+  margin: 0 auto;
+}
+#gel-sim .gel-band {
+  fill: var(--gel-band);
+  filter: url(#glow);
+}
+#gel-sim .gel-well {
+  fill: #1e293b;
+  stroke: #475569;
+}
+#gel-sim .band-label {
+  fill: #94a3b8;
+  font-size: 10px;
+  font-family: system-ui, sans-serif;
+}
+
+/* ===== Codon Wheel ===== */
+#codon-wheel svg {
+  display: block;
+  margin: 0 auto;
+}
+#codon-wheel .segment {
+  stroke: #fff;
+  stroke-width: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+#codon-wheel .segment:hover {
+  opacity: 0.8;
+}
+#codon-wheel .segment.highlighted {
+  stroke: #fbbf24;
+  stroke-width: 2.5;
+}
+#codon-wheel .segment-label {
+  font-size: 8px;
+  fill: #1e293b;
+  pointer-events: none;
+  font-weight: 600;
+}
+#codon-wheel .ring-label {
+  font-size: 14px;
+  fill: #64748b;
+  font-weight: 700;
+}
+#codon-wheel .info-panel {
+  background: var(--sim-bg);
+  border: 1px solid var(--sim-border);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-top: 1rem;
+  min-height: 80px;
+}
+
+/* ===== Cassette Builder ===== */
+#cassette-builder .part {
+  cursor: grab;
+  border: 2px solid transparent;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  user-select: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#cassette-builder .part:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+#cassette-builder .part.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+#cassette-builder .drop-zone {
+  min-height: 80px;
+  border: 2px dashed #94a3b8;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  transition: border-color 0.2s, background 0.2s;
+}
+#cassette-builder .drop-zone.drag-over {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
+}
+#cassette-builder .construct-part {
+  position: relative;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+#cassette-builder .construct-part .remove-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: white;
+  border: none;
+  font-size: 10px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+#cassette-builder .construct-part:hover .remove-btn {
+  display: flex;
+}
+#cassette-builder .connector {
+  width: 24px;
+  height: 2px;
+  background: #64748b;
+  flex-shrink: 0;
+}
+#cassette-builder .validation-msg {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* ===== Central Dogma Animation ===== */
+#central-dogma svg {
+  display: block;
+  margin: 0 auto;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+}
+.dark #central-dogma svg {
+  background: #1e293b;
+}
+#central-dogma .molecule-label {
+  font-size: 11px;
+  font-weight: 700;
+  font-family: system-ui, sans-serif;
+}
+#central-dogma .base {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: 700;
+}
+#central-dogma .controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+#central-dogma .controls button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--sim-border);
+  background: var(--sim-bg);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+#central-dogma .controls button:hover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+}
+#central-dogma .stage-label {
+  text-align: center;
+  font-weight: 600;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* ===== Lab Protocol Styles ===== */
+.protocol-step {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--sim-border);
+}
+.protocol-step .step-number {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.protocol-step.completed .step-number {
+  background: #10b981;
+}
+.protocol-check {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #10b981;
+}
+
+/* Materials table */
+.materials-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.materials-table th {
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+}
+.materials-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--sim-border);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .sim-container { padding: 1rem; }
+  #restriction-sim .seq-display { font-size: 0.75rem; }
+  #codon-wheel svg { max-width: 100%; height: auto; }
+  #cassette-builder .drop-zone { flex-direction: column; }
+  .toc-sidebar { display: none; }
+}
+
+/* ===== Animations ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+  50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); }
+}
+.pulse-glow {
+  animation: pulse-glow 2s infinite;
+}
+
+/* DNA base colors */
+.base-A { color: #10b981; }
+.base-T { color: #ef4444; }
+.base-G { color: #3b82f6; }
+.base-C { color: #f59e0b; }
+.base-U { color: #f97316; }
+
+/* Print styles */
+@media print {
+  .sim-container, .controls, .toc-sidebar, nav { display: none !important; }
+  .collapsible-content { max-height: none !important; }
+}

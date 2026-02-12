@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gel Art Lab | Week 2 | HTGAA 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dna: { blue: '#3b82f6', green: '#10b981', red: '#ef4444', yellow: '#f59e0b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/week2.css">
+</head>
+<body class="bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 min-h-screen transition-colors">
+
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-sm flex-wrap">
+                <a href="../index.html" class="text-slate-500 hover:text-dna-blue flex items-center gap-1">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> HTGAA
+                </a>
+                <span class="text-slate-300 dark:text-slate-600">/</span>
+                <a href="index.html" class="text-slate-500 hover:text-dna-blue">Week 2</a>
+                <span class="text-slate-300 dark:text-slate-600">/</span>
+                <span class="font-bold text-slate-800 dark:text-slate-200">Gel Art Lab</span>
+            </div>
+            <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Toggle theme">
+                <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="bg-gradient-to-br from-yellow-500 via-amber-600 to-orange-600 text-white">
+        <div class="max-w-5xl mx-auto px-4 py-12 md:py-16">
+            <p class="text-yellow-100 text-sm font-medium mb-2">HTGAA Spring 2026 — Week 2 Lab</p>
+            <h1 class="text-3xl md:text-4xl font-extrabold mb-3">DNA Gel Art: Restriction Digests & Gel Electrophoresis</h1>
+            <p class="text-yellow-100 max-w-2xl leading-relaxed">
+                Design and run restriction digests of Lambda phage DNA to create artistic banding patterns on an agarose gel.
+                Combine molecular biology technique with creative expression.
+            </p>
+            <div class="flex flex-wrap items-center gap-4 mt-5 text-sm text-yellow-200">
+                <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> ~3 hours total</span>
+                <span class="flex items-center gap-1"><i data-lucide="flask-conical" class="w-4 h-4"></i> Wet lab protocol</span>
+                <span class="flex items-center gap-1"><i data-lucide="sparkles" class="w-4 h-4"></i> Inspired by Paul Vanouse's <em>Latent Figure Protocol</em></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-10 space-y-10">
+
+        <!-- ================================================================== -->
+        <!-- OVERVIEW -->
+        <!-- ================================================================== -->
+        <section class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i data-lucide="target" class="w-5 h-5 text-dna-blue"></i> Overview
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="font-semibold mb-2 text-slate-700 dark:text-slate-300">Learning Objectives</h3>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400">
+                        <li>Understand the mechanism of gel electrophoresis (charge-based separation through a matrix)</li>
+                        <li>Learn how restriction enzymes recognize and cut DNA at specific palindromic sequences</li>
+                        <li>Predict DNA banding patterns from restriction digest fragment sizes</li>
+                        <li>Use Benchling to simulate digests and plan gel layouts</li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-2 text-slate-700 dark:text-slate-300">Skills Gained</h3>
+                    <ul class="list-disc list-inside space-y-1 text-sm text-slate-600 dark:text-slate-400">
+                        <li>Setting up a restriction digest reaction</li>
+                        <li>Preparing a 1% agarose gel from scratch</li>
+                        <li>Loading and running gel electrophoresis</li>
+                        <li>Visualizing DNA with SYBR Safe and a blue-light transilluminator</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================== -->
+        <!-- PRE-LAB READING (Collapsible) -->
+        <!-- ================================================================== -->
+        <section class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <button class="collapsible-header w-full text-left p-6 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" data-collapsible-id="prelab-reading">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <i data-lucide="book-open" class="w-5 h-5 text-purple-500"></i> Pre-Lab Reading
+                </h2>
+                <i data-lucide="chevron-right" class="w-5 h-5 chevron text-slate-400"></i>
+            </button>
+            <div class="collapsible-content">
+                <div class="px-6 pb-6 space-y-6">
+
+                    <!-- Gel Electrophoresis -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">How Gel Electrophoresis Works</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-2">
+                            DNA carries a net <strong>negative charge</strong> from its phosphate backbone. When placed in an electric field,
+                            DNA molecules migrate toward the <strong>positive electrode (anode)</strong>. The agarose gel acts as a molecular sieve:
+                            <strong>smaller fragments</strong> travel faster through the pores, while larger fragments are retarded.
+                            After a set run time, fragments separate into distinct <strong>bands</strong> based on size.
+                        </p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            A 1% agarose gel effectively resolves DNA fragments from roughly <strong>500 bp to 10,000 bp</strong>.
+                            Lower percentages (0.5%) resolve larger fragments; higher percentages (2%) resolve smaller ones.
+                            Migration distance is approximately proportional to the <strong>log of the fragment size</strong>.
+                        </p>
+                    </div>
+
+                    <!-- DNA Ladders -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">DNA Gel Ladders</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-2">
+                            A <strong>DNA ladder</strong> (molecular weight marker) is a mixture of DNA fragments of known sizes.
+                            You run it alongside your samples so you can estimate the size of unknown bands by comparison.
+                        </p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            The <strong>1 kb ladder</strong> is the most common for general work, with bands at regular intervals
+                            (e.g. 500, 1000, 1500, 2000, 3000, 4000, 5000, 6000, 8000, 10000 bp).
+                            Some bands appear brighter as reference points (typically the 3 kb band).
+                        </p>
+                    </div>
+
+                    <!-- Restriction Enzymes -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">Restriction Enzymes</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-2">
+                            Restriction endonucleases are bacterial enzymes that cut double-stranded DNA at specific
+                            <strong>palindromic recognition sequences</strong> (typically 4-8 bp long). They are named after the organism
+                            of origin: <strong>Eco</strong>RI comes from <em>Escherichia coli</em>.
+                        </p>
+                        <div class="callout callout-concept text-sm mb-3">
+                            <strong>EcoRI example:</strong> Recognizes 5'-G<span class="text-red-500 font-bold">|</span>AATTC-3' / 3'-CTTAA<span class="text-red-500 font-bold">|</span>G-5'.
+                            The staggered cut produces <strong>sticky ends</strong> (single-stranded overhangs).
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            <strong>Sticky ends</strong> have single-stranded overhangs that can base-pair with complementary sticky ends,
+                            making them useful for cloning. <strong>Blunt ends</strong> (e.g. from EcoRV cutting at GAT|ATC) have no overhangs.
+                            The number of fragments produced equals the number of cut sites plus one.
+                        </p>
+                    </div>
+
+                    <!-- GenBank/FASTA -->
+                    <div>
+                        <h3 class="font-semibold text-lg mb-2">GenBank & FASTA File Formats</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-2">
+                            <strong>GenBank</strong> format (.gb) includes annotated sequence data: features, gene names, organism info,
+                            and the raw nucleotide sequence. It is the standard format used by NCBI and Benchling.
+                        </p>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                            <strong>FASTA</strong> format (.fasta) is simpler: a header line starting with <code>&gt;</code> followed by the
+                            sequence. By convention, sequences represent the <strong>coding (sense) strand</strong> written
+                            <strong>5' to 3'</strong>. Lambda phage DNA (GenBank accession J02459) is 48,502 bp long.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================== -->
+        <!-- PROTOCOL STEPS -->
+        <!-- ================================================================== -->
+        <section>
+            <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                <i data-lucide="list-checks" class="w-6 h-6 text-dna-blue"></i> Protocol Steps
+            </h2>
+
+            <!-- ============================================================ -->
+            <!-- PART 0: Design Your Gel Art -->
+            <!-- ============================================================ -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6">
+                <h3 class="text-lg font-bold mb-1 flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-sm font-bold">0</span>
+                    Design Your Gel Art
+                </h3>
+                <p class="text-sm text-slate-500 mb-4 ml-10">~1 hour | Computer work (Benchling)</p>
+
+                <div class="space-y-4">
+                    <div class="protocol-step" data-step="0-1">
+                        <input type="checkbox" class="protocol-check" data-check="gel-0-1">
+                        <div>
+                            <p class="font-medium text-sm">Create a free <a href="https://benchling.com" target="_blank" class="text-dna-blue hover:underline">Benchling</a> account and import Lambda phage DNA (GenBank J02459, 48,502 bp).</p>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="0-2">
+                        <input type="checkbox" class="protocol-check" data-check="gel-0-2">
+                        <div>
+                            <p class="font-medium text-sm">Use Benchling's "Simulate Digestion" tool to run virtual restriction digests with each of the following enzymes:</p>
+                            <div class="flex flex-wrap gap-2 mt-2">
+                                <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded text-xs font-mono font-bold">EcoRI</span>
+                                <span class="px-2 py-1 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 rounded text-xs font-mono font-bold">HindIII</span>
+                                <span class="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 rounded text-xs font-mono font-bold">BamHI</span>
+                                <span class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-300 rounded text-xs font-mono font-bold">KpnI</span>
+                                <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 rounded text-xs font-mono font-bold">EcoRV</span>
+                                <span class="px-2 py-1 bg-pink-100 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300 rounded text-xs font-mono font-bold">SacI</span>
+                                <span class="px-2 py-1 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded text-xs font-mono font-bold">SalI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="0-3">
+                        <input type="checkbox" class="protocol-check" data-check="gel-0-3">
+                        <div>
+                            <p class="font-medium text-sm">Design your gel art pattern by choosing which enzyme(s) to load in each lane. Consider single and double digests for variety.</p>
+                            <div class="callout callout-tip text-sm mt-2">
+                                <strong>Tip:</strong> Paul Vanouse's <em>Latent Figure Protocol</em> used strategic enzyme choices
+                                to produce banding patterns that spelled out letters and formed recognizable images.
+                                Think about how different fragment counts and sizes create visual rhythms across lanes.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="0-4">
+                        <input type="checkbox" class="protocol-check" data-check="gel-0-4">
+                        <div>
+                            <p class="font-medium text-sm">Export your planned gel design as a PNG from Benchling (or sketch it by hand) for reference during the lab.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PART 1a: Prepare Agarose Gel -->
+            <!-- ============================================================ -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6">
+                <h3 class="text-lg font-bold mb-1 flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-sm font-bold">1a</span>
+                    Prepare 1% Agarose Gel
+                </h3>
+                <p class="text-sm text-slate-500 mb-4 ml-10">~20 min prep + 30 min solidification</p>
+
+                <!-- Materials Table -->
+                <h4 class="font-semibold text-sm mb-2 text-slate-700 dark:text-slate-300">Materials</h4>
+                <table class="materials-table mb-4">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Amount</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Agarose powder</td><td>0.75 g</td><td>Molecular biology grade</td></tr>
+                        <tr><td>1x TAE buffer</td><td>75 mL</td><td>Tris-acetate-EDTA</td></tr>
+                        <tr><td>SYBR Safe DNA stain</td><td>7.5 &micro;L</td><td>10,000x stock (1 &micro;L per 10 mL gel)</td></tr>
+                    </tbody>
+                </table>
+
+                <h4 class="font-semibold text-sm mb-2 text-slate-700 dark:text-slate-300">Equipment</h4>
+                <table class="materials-table mb-4">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Pipette set (P20, P200, P1000)</td><td>With sterile tips</td></tr>
+                        <tr><td>Gel casting tray + comb</td><td>Choose comb based on lane count</td></tr>
+                        <tr><td>Microwave</td><td>For melting agarose</td></tr>
+                        <tr><td>Analytical balance / scale</td><td>For weighing agarose</td></tr>
+                        <tr><td>Erlenmeyer flask (250 mL)</td><td>Microwave-safe</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="space-y-4">
+                    <div class="protocol-step" data-step="1a-1">
+                        <input type="checkbox" class="protocol-check" data-check="gel-1a-1">
+                        <div>
+                            <p class="font-medium text-sm">Weigh <strong>0.75 g agarose</strong> and add to a 250 mL Erlenmeyer flask with <strong>75 mL of 1x TAE buffer</strong>. Swirl to mix.</p>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="1a-2">
+                        <input type="checkbox" class="protocol-check" data-check="gel-1a-2">
+                        <div>
+                            <p class="font-medium text-sm">Microwave in <strong>30-second pulses</strong>, swirling between pulses, until the agarose is fully dissolved and the solution is clear. Typically takes 1-2 minutes total.</p>
+                            <div class="callout callout-warning text-sm mt-2">
+                                <strong>Safety:</strong> Molten agarose is extremely hot (~100 C). Use heat-resistant gloves. The solution can superheat and boil over suddenly -- always watch during microwaving and never seal the flask.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="1a-3">
+                        <input type="checkbox" class="protocol-check" data-check="gel-1a-3">
+                        <div>
+                            <p class="font-medium text-sm">Cool the flask to approximately <strong>50-55 C</strong> (comfortable to hold briefly). Add <strong>7.5 &micro;L SYBR Safe</strong> stain and swirl gently to distribute evenly.</p>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="1a-4">
+                        <input type="checkbox" class="protocol-check" data-check="gel-1a-4">
+                        <div>
+                            <p class="font-medium text-sm">Pour into the gel casting tray (with comb inserted). Pop any bubbles with a pipette tip. Allow to solidify at room temperature for <strong>~30 minutes</strong> until opaque.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PART 1b: Restriction Digest -->
+            <!-- ============================================================ -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6">
+                <h3 class="text-lg font-bold mb-1 flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 text-sm font-bold">1b</span>
+                    Restriction Digest
+                </h3>
+                <p class="text-sm text-slate-500 mb-4 ml-10">~15 min prep + 20-30 min incubation (run in parallel with gel solidification)</p>
+
+                <h4 class="font-semibold text-sm mb-2 text-slate-700 dark:text-slate-300">Reaction Setup (per lane, 20 &micro;L total)</h4>
+                <table class="materials-table mb-4">
+                    <thead>
+                        <tr>
+                            <th>Component</th>
+                            <th>Volume</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Lambda DNA (0.5 &micro;g/&micro;L)</td><td>3 &micro;L</td><td>~1.5 &micro;g total</td></tr>
+                        <tr><td>10x Restriction buffer</td><td>2 &micro;L</td><td>Use enzyme-specific buffer</td></tr>
+                        <tr><td>Restriction enzyme</td><td>1 &micro;L</td><td>~10 units</td></tr>
+                        <tr><td>Nuclease-free water</td><td>14 &micro;L</td><td>To bring total to 20 &micro;L</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="space-y-4">
+                    <div class="protocol-step" data-step="1b-1">
+                        <input type="checkbox" class="protocol-check" data-check="gel-1b-1">
+                        <div>
+                            <p class="font-medium text-sm">Label one tube per lane. Add water first, then buffer, then DNA. Add enzyme <strong>last</strong> (keep on ice until use).</p>
+                            <div class="callout callout-tip text-sm mt-2">
+                                <strong>Tip:</strong> Always add enzyme last to avoid star activity. Mix gently by flicking -- never vortex restriction enzymes.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="1b-2">
+                        <input type="checkbox" class="protocol-check" data-check="gel-1b-2">
+                        <div>
+                            <p class="font-medium text-sm">Briefly spin tubes in a microcentrifuge (2-3 seconds) to collect liquid at the bottom.</p>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="1b-3">
+                        <input type="checkbox" class="protocol-check" data-check="gel-1b-3">
+                        <div>
+                            <p class="font-medium text-sm">Incubate at <strong>37 C for 30 minutes</strong>.</p>
+                            <div class="callout callout-concept text-sm mt-2">
+                                <strong>Double digests:</strong> For lanes with two enzymes, use <strong>Tango buffer</strong> (universal buffer compatible with most enzymes) and add 0.5 &micro;L of each enzyme. Check the manufacturer's compatibility chart.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PART 2: Gel Run -->
+            <!-- ============================================================ -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6">
+                <h3 class="text-lg font-bold mb-1 flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-300 text-sm font-bold">2</span>
+                    Gel Run
+                </h3>
+                <p class="text-sm text-slate-500 mb-4 ml-10">~15 min setup + 45-60 min electrophoresis</p>
+
+                <div class="space-y-4">
+                    <div class="protocol-step" data-step="2-1">
+                        <input type="checkbox" class="protocol-check" data-check="gel-2-1">
+                        <div>
+                            <p class="font-medium text-sm">Carefully <strong>remove the comb</strong> from the solidified gel by pulling straight up slowly. Place the gel tray into the electrophoresis chamber.</p>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="2-2">
+                        <input type="checkbox" class="protocol-check" data-check="gel-2-2">
+                        <div>
+                            <p class="font-medium text-sm">Fill the chamber with <strong>1x TAE buffer</strong> until the gel is submerged by 2-3 mm. The wells should be on the <strong>negative (cathode / black)</strong> end.</p>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="2-3">
+                        <input type="checkbox" class="protocol-check" data-check="gel-2-3">
+                        <div>
+                            <p class="font-medium text-sm">Prepare loading mix for each sample: combine <strong>3.33 &micro;L of 6x loading dye</strong> with your 20 &micro;L digest reaction (total ~23 &micro;L). Load <strong>20 &micro;L</strong> per well.</p>
+                            <div class="callout callout-tip text-sm mt-2">
+                                <strong>Loading tips:</strong> Brace your pipetting hand against the gel box for stability.
+                                Lower the pipette tip just inside the well opening -- do not puncture the gel bottom.
+                                Expel slowly; the loading dye makes the sample sink to the bottom of the well.
+                                Check for air bubbles before loading.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="2-4">
+                        <input type="checkbox" class="protocol-check" data-check="gel-2-4">
+                        <div>
+                            <p class="font-medium text-sm">Close the lid. Connect leads: <strong>red (positive/anode)</strong> at the far end (DNA runs toward red). Set power supply to <strong>80-115 V</strong>.</p>
+                            <div class="callout callout-warning text-sm mt-2">
+                                <strong>Safety:</strong> Do not touch the buffer or gel while the power supply is on. Electrophoresis runs at voltages that can cause serious injury. Always turn off the power supply before opening the lid.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="2-5">
+                        <input type="checkbox" class="protocol-check" data-check="gel-2-5">
+                        <div>
+                            <p class="font-medium text-sm">Run for <strong>~45 minutes</strong>. Check for <strong>bubbles at the electrodes</strong> (confirms current flow). Monitor the loading dye front -- stop before it runs off the gel.</p>
+                            <div class="callout callout-tip text-sm mt-2">
+                                <strong>Tip:</strong> Bromophenol blue (dark blue dye) migrates at roughly the same rate as a 300 bp fragment. Xylene cyanol (lighter blue) migrates like a 4 kb fragment. Use these as visual reference points.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- PART 3: Imaging -->
+            <!-- ============================================================ -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 mb-6">
+                <h3 class="text-lg font-bold mb-1 flex items-center gap-2">
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 text-sm font-bold">3</span>
+                    Imaging
+                </h3>
+                <p class="text-sm text-slate-500 mb-4 ml-10">~5 min</p>
+
+                <div class="space-y-4">
+                    <div class="protocol-step" data-step="3-1">
+                        <input type="checkbox" class="protocol-check" data-check="gel-3-1">
+                        <div>
+                            <p class="font-medium text-sm">Turn off the power supply. Carefully remove the gel from the tray and place it on a <strong>blue-light transilluminator</strong>.</p>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="3-2">
+                        <input type="checkbox" class="protocol-check" data-check="gel-3-2">
+                        <div>
+                            <p class="font-medium text-sm">Put on <strong>orange protective eyewear</strong> (or use the transilluminator's shield). SYBR Safe fluoresces green under blue light.</p>
+                            <div class="callout callout-warning text-sm mt-2">
+                                <strong>Safety:</strong> While SYBR Safe is much safer than ethidium bromide, always wear gloves when handling stained gels. Blue light can cause eye strain -- always use the orange filter.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="3-3">
+                        <input type="checkbox" class="protocol-check" data-check="gel-3-3">
+                        <div>
+                            <p class="font-medium text-sm">Capture an image of your gel (phone camera through the orange filter works well). Compare your banding pattern to your Benchling virtual digest prediction.</p>
+                        </div>
+                    </div>
+
+                    <div class="protocol-step" data-step="3-4">
+                        <input type="checkbox" class="protocol-check" data-check="gel-3-4">
+                        <div>
+                            <p class="font-medium text-sm">Document any differences between predicted and actual patterns. Consider why bands might be missing, extra, or at unexpected positions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================== -->
+        <!-- TROUBLESHOOTING (Collapsible) -->
+        <!-- ================================================================== -->
+        <section class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <button class="collapsible-header w-full text-left p-6 flex items-center justify-between cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors" data-collapsible-id="troubleshooting">
+                <h2 class="text-xl font-bold flex items-center gap-2">
+                    <i data-lucide="wrench" class="w-5 h-5 text-orange-500"></i> Troubleshooting
+                </h2>
+                <i data-lucide="chevron-right" class="w-5 h-5 chevron text-slate-400"></i>
+            </button>
+            <div class="collapsible-content">
+                <div class="px-6 pb-6">
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-red-400 pl-4">
+                            <h4 class="font-semibold text-sm text-red-600 dark:text-red-400">Non-functional lane / no bands visible</h4>
+                            <ul class="text-sm text-slate-600 dark:text-slate-400 list-disc list-inside mt-1 space-y-1">
+                                <li>Enzyme may have been heat-inactivated -- did you keep it on ice?</li>
+                                <li>Forgot to add DNA to the tube</li>
+                                <li>Well may not have been loaded (sample floated away without loading dye)</li>
+                                <li>Excess DNA concentration can cause the entire lane to appear as a bright smear rather than distinct bands</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-4 border-yellow-400 pl-4">
+                            <h4 class="font-semibold text-sm text-yellow-600 dark:text-yellow-400">Bleeding trails instead of clean bands</h4>
+                            <ul class="text-sm text-slate-600 dark:text-slate-400 list-disc list-inside mt-1 space-y-1">
+                                <li>Overloaded well -- reduce DNA amount</li>
+                                <li>Voltage too high -- lower to 80 V for sharper bands</li>
+                                <li>Gel percentage too low for the fragment sizes being resolved</li>
+                                <li>Sample degraded -- DNA nucleases present (check buffer freshness)</li>
+                            </ul>
+                        </div>
+
+                        <div class="border-l-4 border-blue-400 pl-4">
+                            <h4 class="font-semibold text-sm text-blue-600 dark:text-blue-400">Samples not migrating or migrating wrong direction</h4>
+                            <ul class="text-sm text-slate-600 dark:text-slate-400 list-disc list-inside mt-1 space-y-1">
+                                <li>Check buffer: is the chamber filled with TAE (not water)?</li>
+                                <li>Verify electrode connections: DNA runs to red (positive/anode)</li>
+                                <li>If leads are reversed, DNA will run off the well end of the gel</li>
+                                <li>No bubbles at electrodes = no current flowing. Check connections and power supply</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================== -->
+        <!-- INTERACTIVE SIMULATIONS -->
+        <!-- ================================================================== -->
+        <section class="space-y-6">
+            <h2 class="text-2xl font-bold flex items-center gap-2">
+                <i data-lucide="zap" class="w-6 h-6 text-dna-yellow"></i> Interactive Simulations
+            </h2>
+
+            <div id="restriction-sim" class="sim-container">
+                <h3>
+                    <i data-lucide="scissors" class="w-5 h-5 text-dna-red"></i>
+                    Try It: Restriction Enzyme Simulator
+                </h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-3">Select an enzyme to see how it cuts Lambda DNA and view the resulting fragments.</p>
+            </div>
+
+            <div id="gel-sim" class="sim-container">
+                <h3>
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-dna-green"></i>
+                    Try It: Gel Electrophoresis Simulator
+                </h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-3">Load virtual lanes and run an electrophoresis simulation to preview your gel art design.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-700 mt-12">
+        <div class="max-w-5xl mx-auto px-4 py-6 text-center text-sm text-slate-400">
+            HTGAA Spring 2026 — How to Grow (Almost) Anything — MIT MAS.885
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/shared.js"></script>
+    <script src="js/restriction-sim.js"></script>
+    <script src="js/gel-sim.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // Theme toggle
+            const toggle = document.getElementById('theme-toggle');
+            if (toggle) {
+                const saved = localStorage.getItem('htgaa-theme');
+                if (saved === 'dark') document.documentElement.classList.add('dark');
+                toggle.addEventListener('click', () => {
+                    document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('htgaa-theme',
+                        document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                    lucide.createIcons();
+                });
+            }
+
+            // Protocol step checkbox persistence
+            const CHECKBOX_KEY = 'htgaa-gel-lab-checks';
+
+            function getChecked() {
+                try {
+                    return JSON.parse(localStorage.getItem(CHECKBOX_KEY)) || {};
+                } catch { return {}; }
+            }
+
+            function saveChecked(state) {
+                localStorage.setItem(CHECKBOX_KEY, JSON.stringify(state));
+            }
+
+            const checkState = getChecked();
+            document.querySelectorAll('.protocol-check').forEach(cb => {
+                const key = cb.dataset.check;
+                if (!key) return;
+
+                // Restore state
+                if (checkState[key]) {
+                    cb.checked = true;
+                    const step = cb.closest('.protocol-step');
+                    if (step) step.classList.add('completed');
+                }
+
+                // Listen for changes
+                cb.addEventListener('change', () => {
+                    const state = getChecked();
+                    state[key] = cb.checked;
+                    saveChecked(state);
+
+                    const step = cb.closest('.protocol-step');
+                    if (step) {
+                        if (cb.checked) {
+                            step.classList.add('completed');
+                        } else {
+                            step.classList.remove('completed');
+                        }
+                    }
+                });
+            });
+
+            // Collapsible sections
+            document.querySelectorAll('.collapsible-header').forEach(header => {
+                const content = header.nextElementSibling;
+                if (!content || !content.classList.contains('collapsible-content')) return;
+
+                const id = header.dataset.collapsibleId || header.textContent.trim();
+                const stateKey = 'htgaa-gel-lab-collapsibles';
+                let states = {};
+                try { states = JSON.parse(localStorage.getItem(stateKey)) || {}; } catch {}
+
+                // Default: collapsed
+                if (states[id]) {
+                    content.classList.add('open');
+                    header.classList.add('expanded');
+                }
+
+                header.addEventListener('click', () => {
+                    const isOpen = content.classList.toggle('open');
+                    header.classList.toggle('expanded', isOpen);
+                    try { states = JSON.parse(localStorage.getItem(stateKey)) || {}; } catch {}
+                    states[id] = isOpen;
+                    localStorage.setItem(stateKey, JSON.stringify(states));
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2: DNA Read, Write, & Edit | HTGAA 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dna: { blue: '#3b82f6', green: '#10b981', red: '#ef4444', yellow: '#f59e0b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/week2.css">
+</head>
+<body class="bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 min-h-screen transition-colors">
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="../index.html" class="text-sm text-slate-500 hover:text-dna-blue flex items-center gap-1">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> HTGAA
+                </a>
+                <span class="text-slate-300 dark:text-slate-600">/</span>
+                <span class="font-bold text-lg">Week 2</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="text-sm text-slate-500 hidden sm:inline">DNA Read, Write, & Edit</span>
+                <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Toggle theme">
+                    <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white">
+        <div class="max-w-6xl mx-auto px-4 py-12 md:py-16">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                    <p class="text-blue-200 text-sm font-medium mb-2">HTGAA Spring 2026 — Week 2</p>
+                    <h1 class="text-3xl md:text-4xl font-extrabold mb-3">DNA Read, Write, & Edit</h1>
+                    <p class="text-blue-100 max-w-xl leading-relaxed">
+                        Sequencing and synthesis workflows, restriction digests and gel electrophoresis,
+                        genome-editing frameworks, and expanded genetic codes.
+                    </p>
+                    <div class="flex items-center gap-4 mt-4 text-sm text-blue-200">
+                        <span class="flex items-center gap-1"><i data-lucide="presentation" class="w-4 h-4"></i> 3 Lectures</span>
+                        <span class="flex items-center gap-1"><i data-lucide="flask-conical" class="w-4 h-4"></i> 1 Lab</span>
+                        <span class="flex items-center gap-1"><i data-lucide="zap" class="w-4 h-4"></i> 5 Interactive Sims</span>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="relative w-28 h-28">
+                        <svg class="progress-ring w-28 h-28 -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
+                            <circle id="progress-circle" cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="8"
+                                    stroke-dasharray="264" stroke-dashoffset="264" stroke-linecap="round"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span id="progress-pct" class="text-2xl font-bold">0%</span>
+                        </div>
+                    </div>
+                    <span class="text-blue-200 text-sm mt-2">Progress</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Topic Cards Grid -->
+    <main class="max-w-6xl mx-auto px-4 py-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Card: DNA Sequencing -->
+            <a href="dna-rwe.html#sequencing" class="topic-card block bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+                        <i data-lucide="scan-search" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                    </div>
+                    <h2 class="font-bold text-lg">DNA Sequencing</h2>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    Sanger to nanopore: how we read DNA. Illumina SBS, PacBio SMRT, Oxford Nanopore, and spatial omics.
+                </p>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Church & Jacobson lectures</span>
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center" data-progress="sequencing">
+                        <i data-lucide="check" class="w-3 h-3 text-green-500 hidden"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card: DNA Synthesis -->
+            <a href="dna-rwe.html#synthesis" class="topic-card block bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:border-green-400 dark:hover:border-green-500">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-lg bg-green-100 dark:bg-green-900/50 flex items-center justify-center">
+                        <i data-lucide="pen-tool" class="w-5 h-5 text-green-600 dark:text-green-400"></i>
+                    </div>
+                    <h2 class="font-bold text-lg">DNA Synthesis</h2>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    Writing DNA: phosphoramidite chemistry, chip-based oligo synthesis, Gibson assembly, and enzymatic synthesis.
+                </p>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Leproust & Jacobson lectures</span>
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center" data-progress="synthesis">
+                        <i data-lucide="check" class="w-3 h-3 text-green-500 hidden"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card: Gene Editing -->
+            <a href="dna-rwe.html#editing" class="topic-card block bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:border-red-400 dark:hover:border-red-500">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
+                        <i data-lucide="scissors" class="w-5 h-5 text-red-600 dark:text-red-400"></i>
+                    </div>
+                    <h2 class="font-bold text-lg">Gene Editing</h2>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    CRISPR-Cas9, base editors, prime editors, MAGE, PASTE, and genomically recoded organisms.
+                </p>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Church lecture</span>
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center" data-progress="editing">
+                        <i data-lucide="check" class="w-3 h-3 text-green-500 hidden"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card: Genetic Codes -->
+            <a href="dna-rwe.html#genetic-codes" class="topic-card block bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:border-purple-400 dark:hover:border-purple-500">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center">
+                        <i data-lucide="dna" class="w-5 h-5 text-purple-600 dark:text-purple-400"></i>
+                    </div>
+                    <h2 class="font-bold text-lg">Genetic Codes</h2>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    The standard genetic code, expanded alphabets, non-standard amino acids, and codon optimization.
+                </p>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Church lecture + Interactive codon wheel</span>
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center" data-progress="genetic-codes">
+                        <i data-lucide="check" class="w-3 h-3 text-green-500 hidden"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card: Gel Electrophoresis -->
+            <a href="gel-art-lab.html" class="topic-card block bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:border-yellow-400 dark:hover:border-yellow-500">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-lg bg-yellow-100 dark:bg-yellow-900/50 flex items-center justify-center">
+                        <i data-lucide="flask-conical" class="w-5 h-5 text-yellow-600 dark:text-yellow-400"></i>
+                    </div>
+                    <h2 class="font-bold text-lg">Gel Electrophoresis</h2>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    Restriction enzymes, gel art protocol, DNA ladders, and interactive gel simulation.
+                </p>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Lab protocol + Simulator</span>
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center" data-progress="gel-electrophoresis">
+                        <i data-lucide="check" class="w-3 h-3 text-green-500 hidden"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card: Homework -->
+            <a href="dna-rwe.html#homework" class="topic-card block bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+                        <i data-lucide="clipboard-list" class="w-5 h-5 text-indigo-600 dark:text-indigo-400"></i>
+                    </div>
+                    <h2 class="font-bold text-lg">Homework</h2>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-4">
+                    5-part assignment: gel basics, Benchling, DNA design challenge, Twist order, and R/W/E essays.
+                </p>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-slate-400">Due Feb 17, 2026</span>
+                    <div class="w-6 h-6 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center" data-progress="homework">
+                        <i data-lucide="check" class="w-3 h-3 text-green-500 hidden"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="mt-12 bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h2 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <i data-lucide="link" class="w-5 h-5"></i> Quick Links & Resources
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <a href="https://www.ncbi.nlm.nih.gov/genbank/" target="_blank" class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-500 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> GenBank (NCBI)
+                </a>
+                <a href="https://benchling.com" target="_blank" class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-500 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> Benchling
+                </a>
+                <a href="https://www.twistbioscience.com" target="_blank" class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-500 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> Twist Bioscience
+                </a>
+                <a href="https://www.addgene.org/mol-bio-reference/restriction-enzymes/" target="_blank" class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-500 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> Addgene RE Reference
+                </a>
+                <a href="https://www.nature.com/articles/nature24286" target="_blank" class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-500 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> DNA Sequencing at 40
+                </a>
+                <a href="https://www.science.org/doi/10.1126/science.add8643" target="_blank" class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-500 p-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> CRISPR: A Decade of Editing
+                </a>
+            </div>
+        </div>
+
+        <!-- Lecturers -->
+        <div class="mt-8 bg-white dark:bg-slate-800 rounded-xl p-6 border border-slate-200 dark:border-slate-700">
+            <h2 class="font-bold text-lg mb-4 flex items-center gap-2">
+                <i data-lucide="users" class="w-5 h-5"></i> Lecturers
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                    <h3 class="font-semibold">George Church</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Reading & Writing Life — Genetic codes, sequencing technologies, expanded alphabets, CRISPR, MAGE, genome recoding, DNA data storage</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Joe Jacobson</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Gene Synthesis — Phosphoramidite chemistry, chip-based synthesis, error correction, Gibson assembly, DNA nanostructures, bioFPGA</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Emily Leproust</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">DNA Synthesis Development — History of chemical synthesis, Twist Bioscience platform, silicon chip synthesis, oligo pools, applications</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-700 mt-12">
+        <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-slate-400">
+            HTGAA Spring 2026 — How to Grow (Almost) Anything — MIT MAS.885
+        </div>
+    </footer>
+
+    <script src="js/shared.js"></script>
+    <script>
+        // Update progress display on load
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+
+            // Theme toggle
+            const toggle = document.getElementById('theme-toggle');
+            if (toggle) {
+                const saved = localStorage.getItem('htgaa-theme');
+                if (saved === 'dark') document.documentElement.classList.add('dark');
+                toggle.addEventListener('click', () => {
+                    document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('htgaa-theme',
+                        document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                    lucide.createIcons();
+                });
+            }
+
+            // Progress
+            const progress = JSON.parse(localStorage.getItem('htgaa-week2-progress') || '{}');
+            const sections = ['sequencing', 'synthesis', 'editing', 'genetic-codes', 'gel-electrophoresis', 'homework'];
+            let completed = 0;
+            sections.forEach(s => {
+                if (progress[s]) {
+                    completed++;
+                    const el = document.querySelector(`[data-progress="${s}"]`);
+                    if (el) {
+                        el.classList.remove('border-slate-300', 'dark:border-slate-600');
+                        el.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/30');
+                        const check = el.querySelector('i');
+                        if (check) check.classList.remove('hidden');
+                    }
+                }
+            });
+            const pct = Math.round((completed / sections.length) * 100);
+            document.getElementById('progress-pct').textContent = pct + '%';
+            const circle = document.getElementById('progress-circle');
+            const circumference = 2 * Math.PI * 42;
+            circle.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Read, Write, & Edit — Content | HTGAA Week 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dna: { blue: '#3b82f6', green: '#10b981', red: '#ef4444', yellow: '#f59e0b' }
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/week2.css">
+    <style>
+        /* Sidebar layout */
+        .page-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        @media (max-width: 1024px) {
+            .page-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        .toc-sidebar {
+            position: sticky;
+            top: 5rem;
+            align-self: start;
+            max-height: calc(100vh - 6rem);
+            overflow-y: auto;
+        }
+        /* Details content styling */
+        .section-details h4 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-top: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: inherit;
+        }
+        .section-details h4:first-child {
+            margin-top: 0;
+        }
+        .section-details p {
+            margin-bottom: 1rem;
+            line-height: 1.75;
+        }
+        .section-details strong {
+            font-weight: 700;
+        }
+        .section-details em {
+            font-style: italic;
+        }
+        .section-details sup {
+            font-size: 0.75em;
+            vertical-align: super;
+        }
+        /* Vocab grid */
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        /* Mark complete button */
+        .mark-complete-btn {
+            transition: background 0.2s, transform 0.1s;
+        }
+        .mark-complete-btn:hover {
+            transform: translateY(-1px);
+        }
+        .mark-complete-btn.completed {
+            background: #10b981 !important;
+            border-color: #10b981 !important;
+            color: white !important;
+            pointer-events: none;
+        }
+        /* Section divider */
+        .content-section {
+            padding-bottom: 3rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .dark .content-section {
+            border-bottom-color: #334155;
+        }
+        .content-section:last-of-type {
+            border-bottom: none;
+        }
+        /* Loading state */
+        .loading-skeleton {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 min-h-screen transition-colors">
+
+    <!-- Nav -->
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-sm">
+                <a href="../index.html" class="text-slate-500 hover:text-dna-blue flex items-center gap-1">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i> HTGAA
+                </a>
+                <span class="text-slate-300 dark:text-slate-600">/</span>
+                <a href="index.html" class="text-slate-500 hover:text-dna-blue">Week 2</a>
+                <span class="text-slate-300 dark:text-slate-600">/</span>
+                <span class="font-semibold text-slate-700 dark:text-slate-200">DNA Read, Write, &amp; Edit</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <button data-theme-toggle class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Toggle theme">
+                    <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                    <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="page-layout">
+
+        <!-- Sidebar TOC -->
+        <aside class="toc-sidebar hidden lg:block">
+            <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">Contents</h2>
+                <nav id="toc-nav" class="flex flex-col gap-1">
+                    <!-- TOC links will be injected here -->
+                    <div class="loading-skeleton h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4 mb-2"></div>
+                    <div class="loading-skeleton h-4 bg-slate-200 dark:bg-slate-700 rounded w-2/3 mb-2"></div>
+                    <div class="loading-skeleton h-4 bg-slate-200 dark:bg-slate-700 rounded w-4/5 mb-2"></div>
+                    <div class="loading-skeleton h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/5 mb-2"></div>
+                    <div class="loading-skeleton h-4 bg-slate-200 dark:bg-slate-700 rounded w-4/5 mb-2"></div>
+                    <div class="loading-skeleton h-4 bg-slate-200 dark:bg-slate-700 rounded w-2/3 mb-2"></div>
+                </nav>
+                <!-- Progress summary -->
+                <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+                        <span>Progress</span>
+                        <span id="sidebar-progress-pct">0%</span>
+                    </div>
+                    <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div id="sidebar-progress-bar" class="h-full bg-dna-blue rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content">
+            <!-- Loading state -->
+            <div id="loading-state" class="space-y-8">
+                <div class="loading-skeleton bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+                    <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mb-4"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-5/6 mb-2"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-4/5"></div>
+                </div>
+                <div class="loading-skeleton bg-white dark:bg-slate-800 rounded-xl p-8 border border-slate-200 dark:border-slate-700">
+                    <div class="h-6 bg-slate-200 dark:bg-slate-700 rounded w-1/4 mb-4"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-full mb-2"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div>
+                </div>
+            </div>
+
+            <!-- Error state (hidden by default) -->
+            <div id="error-state" class="hidden">
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-8 text-center">
+                    <i data-lucide="alert-triangle" class="w-12 h-12 text-red-400 mx-auto mb-4"></i>
+                    <h2 class="text-xl font-bold text-red-700 dark:text-red-400 mb-2">Failed to load content</h2>
+                    <p class="text-red-600 dark:text-red-300 mb-4">Could not fetch data/content.json. Make sure the file exists and you are serving this page via HTTP.</p>
+                    <button onclick="loadContent()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">Retry</button>
+                </div>
+            </div>
+
+            <!-- Sections will be injected here by JS -->
+            <div id="sections-container"></div>
+
+            <!-- Homework section -->
+            <div id="homework-section" class="hidden mt-8"></div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-700 mt-12">
+        <div class="max-w-6xl mx-auto px-4 py-6 text-center text-sm text-slate-400">
+            HTGAA Spring 2026 — How to Grow (Almost) Anything — MIT MAS.885
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/shared.js" type="module"></script>
+    <script type="module">
+        import { getProgress, markComplete, initTheme, initScrollSpy, initCollapsibles, initQuizzes } from './js/shared.js';
+
+        // Simulation containers keyed by section ID
+        const SIMULATIONS = {
+            'genetic-codes': [
+                { id: 'codon-wheel', title: 'Interactive Codon Wheel' }
+            ],
+            'gel-electrophoresis': [
+                { id: 'restriction-sim', title: 'Restriction Enzyme Simulator' },
+                { id: 'gel-sim', title: 'Gel Electrophoresis Simulator' }
+            ],
+            'central-dogma': [
+                { id: 'central-dogma', title: 'Central Dogma Animation' },
+                { id: 'cassette-builder', title: 'Expression Cassette Builder' }
+            ]
+        };
+
+        // Icon color mapping per section
+        const SECTION_COLORS = {
+            'sequencing': { bg: 'bg-blue-100 dark:bg-blue-900/50', icon: 'text-blue-600 dark:text-blue-400', accent: 'border-blue-400' },
+            'synthesis': { bg: 'bg-green-100 dark:bg-green-900/50', icon: 'text-green-600 dark:text-green-400', accent: 'border-green-400' },
+            'editing': { bg: 'bg-red-100 dark:bg-red-900/50', icon: 'text-red-600 dark:text-red-400', accent: 'border-red-400' },
+            'genetic-codes': { bg: 'bg-purple-100 dark:bg-purple-900/50', icon: 'text-purple-600 dark:text-purple-400', accent: 'border-purple-400' },
+            'gel-electrophoresis': { bg: 'bg-yellow-100 dark:bg-yellow-900/50', icon: 'text-yellow-600 dark:text-yellow-400', accent: 'border-yellow-400' },
+            'central-dogma': { bg: 'bg-indigo-100 dark:bg-indigo-900/50', icon: 'text-indigo-600 dark:text-indigo-400', accent: 'border-indigo-400' }
+        };
+
+        async function loadContent() {
+            const loadingEl = document.getElementById('loading-state');
+            const errorEl = document.getElementById('error-state');
+            const container = document.getElementById('sections-container');
+            const homeworkEl = document.getElementById('homework-section');
+
+            loadingEl.classList.remove('hidden');
+            errorEl.classList.add('hidden');
+            container.innerHTML = '';
+
+            try {
+                const resp = await fetch('data/content.json');
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data = await resp.json();
+
+                loadingEl.classList.add('hidden');
+
+                // Build TOC
+                buildTOC(data.sections, data.homework);
+
+                // Build sections
+                data.sections.forEach(section => {
+                    container.appendChild(buildSection(section));
+                });
+
+                // Build homework
+                if (data.homework) {
+                    buildHomework(data.homework, homeworkEl);
+                    homeworkEl.classList.remove('hidden');
+                }
+
+                // Initialize Lucide icons for dynamically added content
+                lucide.createIcons();
+
+                // Initialize shared.js features for new DOM
+                initScrollSpy();
+                initCollapsibles();
+                initQuizzes();
+
+                // Update progress display
+                updateProgressDisplay();
+
+                // Hash navigation
+                if (window.location.hash) {
+                    const target = document.getElementById(window.location.hash.slice(1));
+                    if (target) {
+                        setTimeout(() => target.scrollIntoView({ behavior: 'smooth' }), 300);
+                    }
+                }
+
+            } catch (err) {
+                console.error('Failed to load content:', err);
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+            }
+        }
+
+        function buildTOC(sections, homework) {
+            const nav = document.getElementById('toc-nav');
+            nav.innerHTML = '';
+
+            sections.forEach(section => {
+                const link = document.createElement('a');
+                link.href = `#${section.id}`;
+                link.className = 'toc-link text-sm text-slate-600 dark:text-slate-400 py-1.5 hover:text-dna-blue dark:hover:text-blue-400 flex items-center gap-2';
+                link.innerHTML = `<i data-lucide="${section.icon}" class="w-3.5 h-3.5 flex-shrink-0"></i><span>${section.title}</span>`;
+                nav.appendChild(link);
+            });
+
+            if (homework) {
+                const link = document.createElement('a');
+                link.href = '#homework';
+                link.className = 'toc-link text-sm text-slate-600 dark:text-slate-400 py-1.5 hover:text-dna-blue dark:hover:text-blue-400 flex items-center gap-2 mt-2 pt-2 border-t border-slate-200 dark:border-slate-700';
+                link.innerHTML = `<i data-lucide="clipboard-list" class="w-3.5 h-3.5 flex-shrink-0"></i><span>Homework</span>`;
+                nav.appendChild(link);
+            }
+        }
+
+        function buildSection(section) {
+            const colors = SECTION_COLORS[section.id] || SECTION_COLORS['sequencing'];
+            const progress = getProgress();
+            const isComplete = progress[section.id] || false;
+
+            const el = document.createElement('section');
+            el.id = section.id;
+            el.dataset.section = section.id;
+            el.className = 'content-section fade-in';
+
+            // Section header
+            const header = document.createElement('div');
+            header.className = 'flex items-center gap-3 mb-6';
+            header.innerHTML = `
+                <div class="w-12 h-12 rounded-xl ${colors.bg} flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="${section.icon}" class="w-6 h-6 ${colors.icon}"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold">${section.title}</h2>
+            `;
+            el.appendChild(header);
+
+            // Key Concepts (collapsible)
+            if (section.keyPoints && section.keyPoints.length > 0) {
+                const conceptBox = document.createElement('div');
+                conceptBox.className = 'mb-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl overflow-hidden';
+                const conceptHeader = document.createElement('button');
+                conceptHeader.className = 'collapsible-header w-full flex items-center justify-between p-4 text-left font-semibold text-blue-800 dark:text-blue-300 hover:bg-blue-100/50 dark:hover:bg-blue-900/30 transition-colors';
+                conceptHeader.dataset.collapsibleId = `key-concepts-${section.id}`;
+                conceptHeader.innerHTML = `
+                    <span class="flex items-center gap-2"><i data-lucide="lightbulb" class="w-4 h-4"></i> Key Concepts</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 chevron transition-transform"></i>
+                `;
+                const conceptContent = document.createElement('div');
+                conceptContent.className = 'collapsible-content px-4 pb-4';
+                const ul = document.createElement('ul');
+                ul.className = 'space-y-2';
+                section.keyPoints.forEach(point => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-start gap-2 text-sm text-slate-700 dark:text-slate-300 leading-relaxed';
+                    li.innerHTML = `<span class="text-blue-500 mt-1 flex-shrink-0">&bull;</span><span>${point}</span>`;
+                    ul.appendChild(li);
+                });
+                conceptContent.appendChild(ul);
+                conceptBox.appendChild(conceptHeader);
+                conceptBox.appendChild(conceptContent);
+                el.appendChild(conceptBox);
+            }
+
+            // Details content
+            if (section.details) {
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'section-details mb-8 text-slate-700 dark:text-slate-300';
+                detailsDiv.innerHTML = section.details;
+                el.appendChild(detailsDiv);
+            }
+
+            // Simulations
+            const sims = SIMULATIONS[section.id];
+            if (sims && sims.length > 0) {
+                sims.forEach(sim => {
+                    const simDiv = document.createElement('div');
+                    simDiv.id = sim.id;
+                    simDiv.className = 'sim-container mb-6';
+                    simDiv.innerHTML = `<h3><i data-lucide="play-circle" class="w-5 h-5"></i> ${sim.title}</h3>`;
+                    el.appendChild(simDiv);
+                });
+            }
+
+            // Vocabulary
+            if (section.vocabulary && section.vocabulary.length > 0) {
+                const vocabSection = document.createElement('div');
+                vocabSection.className = 'mb-8';
+                vocabSection.innerHTML = `<h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="book-open" class="w-5 h-5"></i> Vocabulary</h3>`;
+                const grid = document.createElement('div');
+                grid.className = 'vocab-grid';
+                section.vocabulary.forEach(v => {
+                    const card = document.createElement('div');
+                    card.className = 'callout callout-definition';
+                    card.innerHTML = `<div class="font-semibold text-sm text-purple-700 dark:text-purple-300 mb-1">${v.term}</div><div class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">${v.definition}</div>`;
+                    grid.appendChild(card);
+                });
+                vocabSection.appendChild(grid);
+                el.appendChild(vocabSection);
+            }
+
+            // Quiz
+            if (section.quizQuestions && section.quizQuestions.length > 0) {
+                const quizSection = document.createElement('div');
+                quizSection.className = 'mb-8';
+                quizSection.innerHTML = `<h3 class="text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="brain" class="w-5 h-5"></i> Check Your Understanding</h3>`;
+
+                section.quizQuestions.forEach((q, qi) => {
+                    const quizContainer = document.createElement('div');
+                    quizContainer.className = 'quiz-container bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5 mb-4';
+                    quizContainer.dataset.correct = q.correctIndex;
+                    quizContainer.dataset.quizId = `${section.id}-q${qi}`;
+
+                    const questionP = document.createElement('p');
+                    questionP.className = 'font-semibold mb-3 text-sm';
+                    questionP.textContent = `${qi + 1}. ${q.question}`;
+                    quizContainer.appendChild(questionP);
+
+                    q.options.forEach((opt, oi) => {
+                        const btn = document.createElement('button');
+                        btn.className = 'quiz-option text-sm bg-white dark:bg-slate-800';
+                        btn.dataset.index = oi;
+                        btn.textContent = opt;
+                        quizContainer.appendChild(btn);
+                    });
+
+                    const explanation = document.createElement('div');
+                    explanation.className = 'quiz-explanation hidden text-sm';
+                    explanation.innerHTML = `<strong>Explanation:</strong> ${q.explanation}`;
+                    quizContainer.appendChild(explanation);
+
+                    quizSection.appendChild(quizContainer);
+                });
+
+                el.appendChild(quizSection);
+            }
+
+            // Mark Complete button
+            const btnWrap = document.createElement('div');
+            btnWrap.className = 'flex justify-end';
+            const btn = document.createElement('button');
+            btn.className = `mark-complete-btn px-5 py-2.5 rounded-lg font-semibold text-sm border-2 transition-colors flex items-center gap-2 ${
+                isComplete
+                    ? 'completed'
+                    : 'border-slate-300 dark:border-slate-600 text-slate-600 dark:text-slate-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+            }`;
+            btn.innerHTML = isComplete
+                ? '<i data-lucide="check-circle" class="w-4 h-4"></i> Completed'
+                : '<i data-lucide="circle" class="w-4 h-4"></i> Mark Complete';
+            btn.addEventListener('click', () => {
+                markComplete(section.id);
+                btn.className = 'mark-complete-btn px-5 py-2.5 rounded-lg font-semibold text-sm border-2 flex items-center gap-2 completed';
+                btn.innerHTML = '<i data-lucide="check-circle" class="w-4 h-4"></i> Completed';
+                lucide.createIcons({ nodes: [btn] });
+                updateProgressDisplay();
+            });
+            btnWrap.appendChild(btn);
+            el.appendChild(btnWrap);
+
+            return el;
+        }
+
+        function buildHomework(homework, container) {
+            container.id = 'homework';
+            container.dataset.section = 'homework';
+
+            container.innerHTML = `
+                <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 md:p-8">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="clipboard-list" class="w-6 h-6 text-indigo-600 dark:text-indigo-400"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-extrabold">Homework</h2>
+                            <p class="text-sm text-slate-500">Due: ${homework.dueDate}</p>
+                        </div>
+                    </div>
+                    <div id="homework-parts" class="mt-6 space-y-4"></div>
+                </div>
+            `;
+
+            const partsContainer = container.querySelector('#homework-parts');
+            const hwProgress = getHomeworkProgress();
+
+            homework.parts.forEach(part => {
+                const checked = hwProgress[part.id] || false;
+                const partEl = document.createElement('label');
+                partEl.className = 'flex items-start gap-4 p-4 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors cursor-pointer';
+                partEl.innerHTML = `
+                    <input type="checkbox" class="protocol-check mt-1 flex-shrink-0" data-hw-id="${part.id}" ${checked ? 'checked' : ''}>
+                    <div>
+                        <div class="font-semibold text-sm">${part.title}</div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">${part.description}</p>
+                    </div>
+                `;
+                partEl.querySelector('input').addEventListener('change', (e) => {
+                    const state = getHomeworkProgress();
+                    state[part.id] = e.target.checked;
+                    localStorage.setItem('htgaa-week2-homework', JSON.stringify(state));
+                });
+                partsContainer.appendChild(partEl);
+            });
+        }
+
+        function getHomeworkProgress() {
+            try {
+                return JSON.parse(localStorage.getItem('htgaa-week2-homework')) || {};
+            } catch {
+                return {};
+            }
+        }
+
+        function updateProgressDisplay() {
+            const progress = getProgress();
+            const sections = document.querySelectorAll('[data-section]');
+            const total = sections.length;
+            if (total === 0) return;
+            let completed = 0;
+            sections.forEach(s => {
+                if (progress[s.dataset.section]) completed++;
+            });
+            const pct = Math.round((completed / total) * 100);
+            const pctEl = document.getElementById('sidebar-progress-pct');
+            const barEl = document.getElementById('sidebar-progress-bar');
+            if (pctEl) pctEl.textContent = pct + '%';
+            if (barEl) barEl.style.width = pct + '%';
+        }
+
+        // Load content on page ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme toggle (handle both shared.js and local)
+            const saved = localStorage.getItem('htgaa-theme');
+            if (saved === 'dark') document.documentElement.classList.add('dark');
+
+            const toggleBtns = document.querySelectorAll('[data-theme-toggle]');
+            toggleBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('htgaa-theme',
+                        document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+                    lucide.createIcons();
+                });
+            });
+
+            lucide.createIcons();
+            loadContent();
+        });
+    </script>
+
+    <!-- Simulation scripts (loaded after shared.js, initialize on their containers) -->
+    <script src="js/restriction-sim.js" defer></script>
+    <script src="js/gel-sim.js" defer></script>
+    <script src="js/codon-wheel.js" defer></script>
+    <script src="js/cassette-builder.js" defer></script>
+    <script src="js/central-dogma.js" defer></script>
+</body>
+</html>
