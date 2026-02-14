@@ -150,6 +150,15 @@ function createTopicView(topicId) {
       // Section progress indicator
       initSectionProgress(container);
 
+      // Back-to-top button
+      initBackToTop();
+
+      // Toast notifications system
+      initToastSystem(container, topicId);
+
+      // Add ripple effect to buttons
+      initRippleEffect(container);
+
       // Keyboard navigation (j/k for sections, n/p for prev/next topic)
       this._keyHandler = (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
@@ -161,7 +170,7 @@ function createTopicView(topicId) {
             return rect.top >= -50 && rect.top < window.innerHeight / 2;
           });
           const next = e.key === 'j' ? Math.min(current + 1, sections.length - 1) : Math.max(current - 1, 0);
-          if (sections[next]) sections[next].scrollIntoView({ behavior: 'smooth', block: 'start' });
+          if (sections[next]) smoothScrollToElement(sections[next]);
         }
         if (e.key === 'n' || e.key === 'p') {
           const topicIndex = TOPICS.findIndex(t => t.id === topicId);
@@ -204,6 +213,11 @@ function renderTopicPage(data, topicId) {
     <div id="reading-progress" class="fixed top-[57px] left-0 right-0 h-1 bg-slate-200 dark:bg-slate-700 z-40">
       <div id="reading-progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-150" style="width:0%"></div>
     </div>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to top">
+      <i data-lucide="arrow-up" class="w-5 h-5"></i>
+    </button>
 
     <!-- Section Progress Indicator -->
     <div id="section-progress-indicator" class="section-progress-indicator">
@@ -1148,7 +1162,7 @@ function initScrollSpy(container) {
       e.preventDefault();
       const targetId = link.getAttribute('href')?.replace('#', '');
       const target = document.getElementById(targetId);
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
+      if (target) smoothScrollToElement(target);
     });
   });
 
@@ -1331,20 +1345,25 @@ function initReadingProgress(container) {
 /** Fade-in elements as they scroll into view */
 function initScrollReveal(container) {
   // Tag elements for scroll reveal
-  container.querySelectorAll('.topic-section, .sim-container, .inline-diagram, .callout, .callout-insight, .callout-fact, .callout-example, .enhanced-table, .key-fact-card, .pull-quote, .image-placeholder, .deep-dive-box, .try-it-card').forEach(el => {
+  container.querySelectorAll('.topic-section, .sim-container, .inline-diagram, .callout, .callout-insight, .callout-fact, .callout-example, .enhanced-table, .key-fact-card, .pull-quote, .image-placeholder, .deep-dive-box, .try-it-card').forEach((el, index) => {
     if (!el.classList.contains('scroll-reveal')) {
       el.classList.add('scroll-reveal');
+      // Add stagger delay based on index (capped at 6 for CSS)
+      el.style.setProperty('--reveal-index', Math.min(index, 6));
     }
   });
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
+        // Slight delay to ensure smooth animation
+        requestAnimationFrame(() => {
+          entry.target.classList.add('revealed');
+        });
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
   container.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
 }
@@ -1366,7 +1385,12 @@ function initSectionProgress(container) {
       if (entry.isIntersecting) {
         const idx = Array.from(sections).indexOf(entry.target);
         if (idx >= 0 && numSpan) {
-          numSpan.textContent = idx + 1;
+          // Trigger animation by removing and re-adding animation class
+          numSpan.style.animation = 'none';
+          requestAnimationFrame(() => {
+            numSpan.style.animation = '';
+            numSpan.textContent = idx + 1;
+          });
           indicator.classList.add('visible');
           clearTimeout(hideTimeout);
           hideTimeout = setTimeout(() => indicator.classList.remove('visible'), 2000);
@@ -1387,6 +1411,218 @@ function initSectionProgress(container) {
     }
   };
   window.addEventListener('scroll', onScroll, { passive: true });
+}
+
+/** Back-to-top button */
+function initBackToTop() {
+  const btn = document.getElementById('back-to-top');
+  if (!btn) return;
+
+  const toggleVisibility = () => {
+    if (window.scrollY > 500) {
+      btn.classList.add('visible');
+    } else {
+      btn.classList.remove('visible');
+    }
+  };
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', toggleVisibility, { passive: true });
+  toggleVisibility();
+}
+
+/** Toast notification system */
+let toastContainer = null;
+let toastQueue = [];
+let currentToast = null;
+
+function showToast(title, message, type = 'info', duration = 3000) {
+  const toast = {
+    title,
+    message,
+    type, // 'success', 'info', 'warning', 'error'
+    duration
+  };
+
+  toastQueue.push(toast);
+  if (!currentToast) {
+    displayNextToast();
+  }
+}
+
+function displayNextToast() {
+  if (toastQueue.length === 0) {
+    currentToast = null;
+    return;
+  }
+
+  const toast = toastQueue.shift();
+  currentToast = toast;
+
+  // Create toast element
+  const el = document.createElement('div');
+  el.className = `toast toast--${toast.type}`;
+  el.innerHTML = `
+    <div class="toast__icon">
+      <i data-lucide="${getToastIcon(toast.type)}" class="w-5 h-5"></i>
+    </div>
+    <div class="toast__content">
+      <div class="toast__title">${toast.title}</div>
+      ${toast.message ? `<div class="toast__message">${toast.message}</div>` : ''}
+    </div>
+    <button class="toast__close" aria-label="Close">
+      <i data-lucide="x" class="w-4 h-4"></i>
+    </button>
+  `;
+
+  document.body.appendChild(el);
+  if (window.lucide) lucide.createIcons();
+
+  // Show toast
+  requestAnimationFrame(() => {
+    el.classList.add('visible');
+  });
+
+  // Close button
+  const closeBtn = el.querySelector('.toast__close');
+  const closeToast = () => {
+    el.classList.remove('visible');
+    setTimeout(() => {
+      el.remove();
+      displayNextToast();
+    }, 300);
+  };
+
+  closeBtn.addEventListener('click', closeToast);
+
+  // Auto-dismiss
+  setTimeout(closeToast, toast.duration);
+}
+
+function getToastIcon(type) {
+  const icons = {
+    success: 'check-circle-2',
+    info: 'info',
+    warning: 'alert-triangle',
+    error: 'alert-circle'
+  };
+  return icons[type] || 'info';
+}
+
+/** Initialize toast system and hook into events */
+function initToastSystem(container, topicId) {
+  // Show toast when section is marked complete
+  const completeBtn = container.querySelector('#mark-complete-btn');
+  if (completeBtn) {
+    const originalHandler = completeBtn.onclick;
+    completeBtn.addEventListener('click', (e) => {
+      setTimeout(() => {
+        const isComplete = store.isTopicComplete(topicId);
+        if (isComplete) {
+          showToast('Topic Complete!', 'Great work on finishing this chapter.', 'success', 3000);
+        }
+      }, 100);
+    });
+  }
+
+  // Show toast when quiz is completed
+  const quizCard = container.querySelector('.quiz-card-container');
+  if (quizCard) {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          const resultsSlide = quizCard.querySelector('.quiz-results:not(.hidden)');
+          if (resultsSlide) {
+            const scoreEl = resultsSlide.querySelector('.quiz-final-score');
+            const total = quizCard.dataset.total;
+            if (scoreEl && total) {
+              const score = scoreEl.textContent;
+              const percentage = Math.round((parseInt(score) / parseInt(total)) * 100);
+              const emoji = percentage >= 90 ? '🎉' : percentage >= 70 ? '👍' : '💪';
+              showToast(
+                'Quiz Complete!',
+                `You scored ${score}/${total} (${percentage}%) ${emoji}`,
+                percentage >= 70 ? 'success' : 'info',
+                4000
+              );
+            }
+            observer.disconnect();
+          }
+        }
+      });
+    });
+    observer.observe(quizCard, { childList: true, subtree: true });
+  }
+
+  // Track section completion (when user reaches the end of a section)
+  const sections = container.querySelectorAll('.topic-section');
+  const sectionsSeen = new Set();
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.8) {
+        const sectionId = entry.target.dataset.section;
+        if (sectionId && !sectionsSeen.has(sectionId)) {
+          sectionsSeen.add(sectionId);
+          const sectionIndex = Array.from(sections).indexOf(entry.target);
+          if (sectionIndex === sections.length - 1) {
+            // Last section
+            setTimeout(() => {
+              showToast('Section Complete', 'You\'ve reached the end! Ready for the quiz?', 'info', 3000);
+            }, 500);
+          }
+        }
+      }
+    });
+  }, { threshold: 0.8 });
+
+  sections.forEach(s => sectionObserver.observe(s));
+}
+
+/** Smooth scroll to element with offset for fixed headers */
+function smoothScrollToElement(element) {
+  if (!element) return;
+
+  const offset = 120; // Account for fixed header + nav
+  const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+  const offsetPosition = elementPosition - offset;
+
+  window.scrollTo({
+    top: offsetPosition,
+    behavior: 'smooth'
+  });
+}
+
+/** Add ripple effect to buttons */
+function initRippleEffect(container) {
+  const buttons = container.querySelectorAll('button:not([disabled]), .quiz-option, #mark-complete-btn');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      // Skip if button already has ripple running
+      if (this.querySelector('.ripple')) return;
+
+      const ripple = document.createElement('span');
+      ripple.classList.add('ripple');
+
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+
+      this.appendChild(ripple);
+
+      // Remove ripple after animation
+      setTimeout(() => ripple.remove(), 600);
+    });
+  });
 }
 
 export { createTopicView };

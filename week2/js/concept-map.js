@@ -94,6 +94,30 @@ function createConceptMapView() {
       .attr('height', height)
       .attr('viewBox', `0 0 ${width} ${height}`);
 
+    // Add zoom/pan
+    const g = svg.append('g');
+    const zoom = d3.zoom()
+      .scaleExtent([0.3, 3])
+      .on('zoom', (event) => g.attr('transform', event.transform));
+    svg.call(zoom);
+
+    // Zoom controls
+    const controls = document.createElement('div');
+    controls.className = 'absolute top-3 right-3 flex flex-col gap-1 z-10';
+    controls.innerHTML = `
+      <button class="cm-zoom-btn bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg w-8 h-8 flex items-center justify-center text-sm font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-600" data-zoom="in">+</button>
+      <button class="cm-zoom-btn bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg w-8 h-8 flex items-center justify-center text-sm font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-600" data-zoom="out">−</button>
+      <button class="cm-zoom-btn bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg w-8 h-8 flex items-center justify-center text-xs shadow-sm hover:bg-slate-50 dark:hover:bg-slate-600" data-zoom="reset">⊙</button>
+    `;
+    container.querySelector('#concept-map-container').appendChild(controls);
+    controls.querySelectorAll('.cm-zoom-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.zoom === 'in') svg.transition().duration(300).call(zoom.scaleBy, 1.4);
+        else if (btn.dataset.zoom === 'out') svg.transition().duration(300).call(zoom.scaleBy, 0.7);
+        else svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
+      });
+    });
+
     // Defs for arrows
     svg.append('defs').append('marker')
       .attr('id', 'arrowhead')
@@ -113,7 +137,7 @@ function createConceptMapView() {
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('collision', d3.forceCollide().radius(d => d.isTopic ? 35 : 20));
 
-    const link = svg.append('g')
+    const link = g.append('g')
       .selectAll('line')
       .data(links)
       .join('line')
@@ -121,7 +145,7 @@ function createConceptMapView() {
       .attr('stroke-opacity', 0.4)
       .attr('stroke-width', d => d.isTopic ? 2 : 1);
 
-    const node = svg.append('g')
+    const node = g.append('g')
       .selectAll('g')
       .data(nodes)
       .join('g')

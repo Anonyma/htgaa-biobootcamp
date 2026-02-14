@@ -129,23 +129,60 @@ class Store {
   // --- Flashcards (SM-2) ---
   saveFlashcardReview(cardId, quality) {
     const fc = { ...this._state.flashcards };
-    const review = fc.reviews[cardId] || { easeFactor: 2.5, interval: 1, repetitions: 0 };
+    const review = fc.reviews[cardId] || {
+      easeFactor: 2.5,
+      interval: 1,
+      repetitions: 0,
+      lastReview: null,
+      nextReview: null,
+      reviewCount: 0,
+      lapses: 0
+    };
 
+    // SM-2 Algorithm Implementation
+    // Quality: 1 (Again), 3 (Hard), 4 (Good), 5 (Easy)
+
+    // Update ease factor using SM-2 formula
+    // EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+    const efDelta = 0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02);
+    review.easeFactor = Math.max(1.3, review.easeFactor + efDelta);
+
+    // Calculate new interval based on quality
     if (quality >= 3) {
-      if (review.repetitions === 0) review.interval = 1;
-      else if (review.repetitions === 1) review.interval = 6;
-      else review.interval = Math.round(review.interval * review.easeFactor);
+      // Correct response
+      if (review.repetitions === 0) {
+        review.interval = 1; // First successful review: 1 day
+      } else if (review.repetitions === 1) {
+        review.interval = 6; // Second successful review: 6 days
+      } else {
+        // Subsequent reviews: multiply by ease factor
+        review.interval = Math.round(review.interval * review.easeFactor);
+      }
       review.repetitions++;
     } else {
+      // Incorrect response: reset to beginning
       review.repetitions = 0;
       review.interval = 1;
+      review.lapses++;
     }
 
-    review.easeFactor = Math.max(1.3,
-      review.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02))
-    );
+    // Hard (quality 3) gets a shorter interval multiplier
+    if (quality === 3 && review.repetitions > 1) {
+      review.interval = Math.round(review.interval * 0.85);
+    }
+
+    // Easy (quality 5) gets a bonus multiplier
+    if (quality === 5 && review.repetitions > 0) {
+      review.interval = Math.round(review.interval * 1.3);
+    }
+
+    // Cap maximum interval at 1 year
+    review.interval = Math.min(review.interval, 365);
+
+    // Update review timestamps
     review.lastReview = Date.now();
-    review.nextReview = Date.now() + review.interval * 86400000;
+    review.nextReview = Date.now() + review.interval * 86400000; // interval in days
+    review.reviewCount++;
 
     fc.reviews[cardId] = review;
     this.set('flashcards', fc);
@@ -157,9 +194,42 @@ class Store {
     const reviews = this._state.flashcards.reviews;
     return allCards.filter(card => {
       const r = reviews[card.id];
-      if (!r) return true; // never reviewed
-      return r.nextReview <= now;
+      if (!r) return true; // never reviewed (new cards)
+      return r.nextReview <= now; // review due
     });
+  }
+
+  getFlashcardStats() {
+    const reviews = this._state.flashcards.reviews;
+    const stats = {
+      total: Object.keys(reviews).length,
+      new: 0,
+      learning: 0,
+      mature: 0,
+      due: 0,
+      averageEase: 0,
+      totalReviews: 0
+    };
+
+    const now = Date.now();
+    let easeSum = 0;
+    let easeCount = 0;
+
+    Object.values(reviews).forEach(r => {
+      stats.totalReviews += r.reviewCount || 0;
+      if (r.interval < 21) stats.learning++;
+      else stats.mature++;
+      if (r.nextReview <= now) stats.due++;
+
+      easeSum += r.easeFactor;
+      easeCount++;
+    });
+
+    if (easeCount > 0) {
+      stats.averageEase = (easeSum / easeCount).toFixed(2);
+    }
+
+    return stats;
   }
 
   // --- Topic Data Cache ---
