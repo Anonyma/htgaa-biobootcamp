@@ -184,6 +184,55 @@ function createTopicView(topicId) {
         });
       });
 
+      // Section note buttons
+      container.querySelectorAll('.section-note-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const topic = btn.dataset.noteTopic;
+          const section = btn.dataset.noteSection;
+          const area = container.querySelector(`[data-note-area="${topic}:${section}"]`);
+          if (area) {
+            area.classList.toggle('hidden');
+            if (!area.classList.contains('hidden')) {
+              area.querySelector('textarea')?.focus();
+            }
+          }
+        });
+      });
+
+      // Section note auto-save
+      container.querySelectorAll('.section-note-textarea').forEach(textarea => {
+        let saveTimer;
+        textarea.addEventListener('input', () => {
+          clearTimeout(saveTimer);
+          saveTimer = setTimeout(() => {
+            const [topicId, sectionId] = textarea.dataset.noteKey.split(':');
+            saveSectionNote(topicId, sectionId, textarea.value);
+            // Update icon color
+            const btn = container.querySelector(`[data-note-topic="${topicId}"][data-note-section="${sectionId}"]`);
+            const icon = btn?.querySelector('i');
+            if (icon) {
+              if (textarea.value.trim()) {
+                icon.classList.remove('text-slate-400');
+                icon.classList.add('text-amber-500');
+                btn.classList.add('!opacity-100');
+              } else {
+                icon.classList.remove('text-amber-500');
+                icon.classList.add('text-slate-400');
+                btn.classList.remove('!opacity-100');
+              }
+            }
+          }, 500);
+        });
+      });
+
+      // Show note areas that have content
+      container.querySelectorAll('.section-note-textarea').forEach(textarea => {
+        if (textarea.value.trim()) {
+          textarea.closest('.section-note-area')?.classList.remove('hidden');
+        }
+      });
+
       // Design challenge toggles
       container.querySelectorAll('.design-challenge-toggle').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -284,6 +333,29 @@ function createTopicView(topicId) {
   };
 }
 
+// --- Section Notes ---
+const SECTION_NOTES_KEY = 'htgaa-week2-section-notes';
+
+function getSectionNotes() {
+  try { return JSON.parse(localStorage.getItem(SECTION_NOTES_KEY)) || {}; } catch { return {}; }
+}
+
+function getSectionNote(topicId, sectionId) {
+  const notes = getSectionNotes();
+  return notes[`${topicId}:${sectionId}`] || '';
+}
+
+function saveSectionNote(topicId, sectionId, text) {
+  const notes = getSectionNotes();
+  const key = `${topicId}:${sectionId}`;
+  if (text.trim()) {
+    notes[key] = text.trim();
+  } else {
+    delete notes[key];
+  }
+  localStorage.setItem(SECTION_NOTES_KEY, JSON.stringify(notes));
+}
+
 function renderError(topicId) {
   return `
     <div class="max-w-3xl mx-auto px-4 py-16 text-center">
@@ -321,15 +393,25 @@ function renderTopicPage(data, topicId) {
 
     <!-- Topic Nav -->
     <div class="sticky top-[57px] z-30 bg-white/95 dark:bg-slate-800/95 backdrop-blur border-b border-slate-200 dark:border-slate-700 mt-1">
-      <div class="max-w-4xl mx-auto px-4 py-2 flex items-center justify-between text-sm">
-        <div class="flex items-center gap-2">
-          ${prevTopic ? `<a data-route="#/topic/${prevTopic.id}" class="flex items-center gap-1 text-slate-500 hover:text-blue-500 cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i>${prevTopic.title}</a>` : '<span></span>'}
-        </div>
-        <a data-route="#/" class="text-slate-500 hover:text-blue-500 cursor-pointer flex items-center gap-1">
-          <i data-lucide="layout-grid" class="w-4 h-4"></i> Hub
-        </a>
-        <div class="flex items-center gap-2">
-          ${nextTopic ? `<a data-route="#/topic/${nextTopic.id}" class="flex items-center gap-1 text-slate-500 hover:text-blue-500 cursor-pointer">${nextTopic.title}<i data-lucide="chevron-right" class="w-4 h-4"></i></a>` : '<span></span>'}
+      <div class="max-w-4xl mx-auto px-4 py-1.5">
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-1 text-xs text-slate-400 mb-1" aria-label="Breadcrumb">
+          <a data-route="#/" class="hover:text-blue-500 cursor-pointer">Home</a>
+          <i data-lucide="chevron-right" class="w-3 h-3"></i>
+          <span class="text-slate-600 dark:text-slate-300 font-medium">${data.title}</span>
+          <span id="time-remaining" class="ml-auto text-slate-400 hidden"><i data-lucide="hourglass" class="w-3 h-3 inline"></i> <span id="time-remaining-value"></span></span>
+        </nav>
+        <!-- Prev/Next -->
+        <div class="flex items-center justify-between text-sm">
+          <div class="flex items-center gap-2">
+            ${prevTopic ? `<a data-route="#/topic/${prevTopic.id}" class="flex items-center gap-1 text-slate-500 hover:text-blue-500 cursor-pointer"><i data-lucide="chevron-left" class="w-4 h-4"></i>${prevTopic.title}</a>` : '<span></span>'}
+          </div>
+          <a data-route="#/" class="text-slate-500 hover:text-blue-500 cursor-pointer flex items-center gap-1">
+            <i data-lucide="layout-grid" class="w-4 h-4"></i> Hub
+          </a>
+          <div class="flex items-center gap-2">
+            ${nextTopic ? `<a data-route="#/topic/${nextTopic.id}" class="flex items-center gap-1 text-slate-500 hover:text-blue-500 cursor-pointer">${nextTopic.title}<i data-lucide="chevron-right" class="w-4 h-4"></i></a>` : '<span></span>'}
+          </div>
         </div>
       </div>
     </div>
@@ -367,7 +449,7 @@ function renderTopicPage(data, topicId) {
             <h1 class="text-3xl font-extrabold">${data.title}</h1>
           </div>
         </div>
-        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6">
+        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6" data-reading-time="${data.readingTime || 25}">
           <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> ${data.readingTime || 25} min read</span>
           <span class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> ${data.quizQuestions?.length || 0} questions</span>
           ${isComplete ? '<span class="flex items-center gap-1 text-green-600"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Completed</span>' : ''}
@@ -569,6 +651,9 @@ function renderSection(section, index, topicId) {
       <div class="section-header flex items-center gap-3 mb-4 group ${isHistorySection ? 'cursor-pointer' : ''}" ${isHistorySection ? 'data-collapsible-section' : ''}>
         <span class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-sm font-mono flex-shrink-0">${index + 1}</span>
         <h2 class="text-2xl font-bold flex-1">${section.title}</h2>
+        <button class="section-note-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 ${getSectionNote(topicId, section.id) ? '!opacity-100' : ''}" data-note-topic="${topicId}" data-note-section="${section.id}" title="Add note to this section">
+          <i data-lucide="sticky-note" class="w-4 h-4 ${getSectionNote(topicId, section.id) ? 'text-amber-500' : 'text-slate-400'}"></i>
+        </button>
         <button class="bookmark-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 ${store.isBookmarked(topicId, section.id) ? 'bookmarked !opacity-100' : ''}" data-bookmark-topic="${topicId}" data-bookmark-section="${section.id}" data-bookmark-title="${section.title}" title="Bookmark this section">
           <i data-lucide="bookmark" class="w-4 h-4 ${store.isBookmarked(topicId, section.id) ? 'text-blue-500' : 'text-slate-400'}"></i>
         </button>
@@ -617,6 +702,11 @@ function renderSection(section, index, topicId) {
           </div>
         </div>
       ` : ''}
+
+      <!-- Section Note -->
+      <div class="section-note-area hidden mt-4" data-note-area="${topicId}:${section.id}">
+        <textarea class="section-note-textarea w-full h-24 p-3 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-900/20 text-sm leading-relaxed resize-y focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none placeholder:text-slate-400" placeholder="Add your note for this section..." data-note-key="${topicId}:${section.id}">${getSectionNote(topicId, section.id)}</textarea>
+      </div>
 
       <!-- Section divider with DNA motif -->
       <div class="section-divider">
@@ -2184,11 +2274,30 @@ function initReadingProgress(container) {
   const bar = document.getElementById('reading-progress-bar');
   if (!bar) return;
 
+  const timeRemainingEl = document.getElementById('time-remaining');
+  const timeRemainingVal = document.getElementById('time-remaining-value');
+  const readingTimeAttr = container.querySelector('[data-reading-time]');
+  const totalMinutes = readingTimeAttr ? parseInt(readingTimeAttr.dataset.readingTime) : 30;
+
   const update = () => {
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
     bar.style.width = pct + '%';
+
+    // Update time remaining
+    if (timeRemainingEl && timeRemainingVal) {
+      const remaining = Math.max(1, Math.round(totalMinutes * (1 - pct / 100)));
+      if (pct > 5 && pct < 95) {
+        timeRemainingEl.classList.remove('hidden');
+        timeRemainingVal.textContent = `~${remaining} min left`;
+      } else if (pct >= 95) {
+        timeRemainingEl.classList.remove('hidden');
+        timeRemainingVal.textContent = 'Almost done!';
+      } else {
+        timeRemainingEl.classList.add('hidden');
+      }
+    }
   };
 
   window.addEventListener('scroll', update, { passive: true });

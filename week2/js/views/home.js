@@ -102,6 +102,9 @@ function createHomeView() {
           <!-- Study Activity Heatmap -->
           ${renderStudyHeatmap()}
 
+          <!-- Study Planner -->
+          ${renderStudyPlanner(progress)}
+
           <!-- Quick Actions -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -911,6 +914,61 @@ function renderStudyHeatmap() {
           <div class="w-3 h-3 rounded-sm bg-green-500 dark:bg-green-600"></div>
           <div class="w-3 h-3 rounded-sm bg-green-700 dark:bg-green-400"></div>
           <span>More</span>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderStudyPlanner(progress) {
+  const incomplete = TOPICS.filter(t => !progress[t.id]);
+  if (incomplete.length === 0) return ''; // All done!
+
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const today = new Date();
+  const todayDay = today.getDay();
+
+  // Spread remaining topics across the next 7 days, 1 per day, skipping none
+  const plan = [];
+  for (let i = 0; i < Math.min(7, incomplete.length); i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() + i);
+    const topic = incomplete[i];
+    const readingTimes = { 'sequencing': 35, 'synthesis': 35, 'editing': 35, 'genetic-codes': 28, 'gel-electrophoresis': 28, 'central-dogma': 35 };
+    plan.push({
+      day: dayNames[d.getDay()],
+      date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      isToday: i === 0,
+      topic,
+      time: readingTimes[topic.id] || 30,
+    });
+  }
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="calendar-check" class="w-5 h-5 text-indigo-500"></i> Study Plan
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">${incomplete.length} topic${incomplete.length > 1 ? 's' : ''} remaining — here's a suggested schedule:</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(plan.length, 4)} gap-3">
+          ${plan.map(p => `
+            <a data-route="#/topic/${p.topic.id}" class="block p-3 rounded-lg border ${p.isToday ? 'border-indigo-400 dark:border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20' : 'border-slate-200 dark:border-slate-700'} hover:border-indigo-400 cursor-pointer transition-colors">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-bold ${p.isToday ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'}">${p.isToday ? 'Today' : p.day}</span>
+                <span class="text-xs text-slate-400">${p.date}</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-lg bg-${p.topic.color}-100 dark:bg-${p.topic.color}-900/40 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="${p.topic.icon}" class="w-4 h-4 text-${p.topic.color}-600 dark:text-${p.topic.color}-400"></i>
+                </div>
+                <div>
+                  <p class="text-sm font-semibold leading-tight">${p.topic.title}</p>
+                  <p class="text-xs text-slate-400">${p.time} min</p>
+                </div>
+              </div>
+            </a>
+          `).join('')}
         </div>
       </div>
     </section>
