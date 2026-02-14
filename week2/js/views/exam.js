@@ -455,7 +455,14 @@ export function createExamView() {
 
       <!-- Question Review -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
-        <h2 class="font-semibold mb-4">Question Review</h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="font-semibold">Question Review</h2>
+          ${results.some(r => !r.isCorrect) ? `
+            <button id="exam-toggle-missed" class="text-xs px-3 py-1 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors font-medium">
+              Show missed only (${results.filter(r => !r.isCorrect).length})
+            </button>
+          ` : ''}
+        </div>
         <div class="space-y-4" id="exam-review-questions">
           ${results.map((r, i) => `
             <div class="p-4 rounded-xl border ${r.isCorrect ? 'border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/10' : 'border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-900/10'}">
@@ -481,6 +488,36 @@ export function createExamView() {
         </div>
       </div>
 
+      <!-- Study Recommendations -->
+      ${(() => {
+        const weakTopics = Object.entries(topicBreakdown)
+          .filter(([, tb]) => Math.round((tb.correct / tb.total) * 100) < 70)
+          .sort((a, b) => (a[1].correct / a[1].total) - (b[1].correct / b[1].total));
+        if (weakTopics.length === 0) return '';
+        return `
+        <div class="bg-amber-50 dark:bg-amber-900/20 rounded-2xl border border-amber-200 dark:border-amber-800 p-6 mb-6">
+          <h2 class="font-semibold mb-3 flex items-center gap-2">
+            <i data-lucide="target" class="w-5 h-5 text-amber-600"></i> Recommended Review
+          </h2>
+          <p class="text-sm text-amber-800 dark:text-amber-200 mb-3">These topics scored below 70%. Review them before retaking the exam:</p>
+          <div class="space-y-2">
+            ${weakTopics.map(([tid, tb]) => {
+              const topic = TOPICS.find(t => t.id === tid);
+              return `
+                <a data-route="#/topic/${tid}" class="flex items-center justify-between p-3 rounded-lg bg-white dark:bg-slate-800 border border-amber-200 dark:border-amber-700 cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors">
+                  <div class="flex items-center gap-2">
+                    <i data-lucide="${topic?.icon || 'book'}" class="w-4 h-4 text-${tb.color}-500"></i>
+                    <span class="text-sm font-medium">${escapeHtml(tb.title)}</span>
+                  </div>
+                  <span class="text-xs text-red-600 dark:text-red-400 font-bold">${Math.round((tb.correct / tb.total) * 100)}%</span>
+                </a>
+              `;
+            }).join('')}
+          </div>
+        </div>
+        `;
+      })()}
+
       <!-- Actions -->
       <div class="flex gap-3">
         <button id="exam-retry" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium
@@ -500,6 +537,24 @@ export function createExamView() {
       state = 'setup';
       renderSetup();
     });
+
+    // Toggle missed-only filter
+    const toggleMissed = containerEl.querySelector('#exam-toggle-missed');
+    if (toggleMissed) {
+      let showMissedOnly = false;
+      toggleMissed.addEventListener('click', () => {
+        showMissedOnly = !showMissedOnly;
+        toggleMissed.textContent = showMissedOnly ? 'Show all' : `Show missed only (${results.filter(r => !r.isCorrect).length})`;
+        const reviewItems = containerEl.querySelectorAll('#exam-review-questions > div');
+        reviewItems.forEach((el, i) => {
+          if (showMissedOnly && results[i].isCorrect) {
+            el.style.display = 'none';
+          } else {
+            el.style.display = '';
+          }
+        });
+      });
+    }
 
     cleanupKeyHandler();
   }
