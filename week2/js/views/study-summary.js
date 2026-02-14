@@ -6,10 +6,11 @@
 import { store, TOPICS } from '../store.js';
 
 function createStudySummaryView() {
+  let allData = [];
   return {
     async render() {
       // Load all topic data
-      const allData = [];
+      allData = [];
       for (const topic of TOPICS) {
         const data = await store.loadTopicData(topic.id);
         if (data) allData.push({ topic, data });
@@ -27,9 +28,14 @@ function createStudySummaryView() {
                 <p class="text-sm text-slate-500">HTGAA Week 2 — All topics at a glance</p>
               </div>
             </div>
-            <button onclick="window.print()" class="print:hidden px-4 py-2 rounded-lg bg-rose-500 text-white text-sm font-medium hover:bg-rose-600 transition-colors flex items-center gap-2">
-              <i data-lucide="printer" class="w-4 h-4"></i> Print
-            </button>
+            <div class="flex items-center gap-2 print:hidden">
+              <button id="summary-download-md" class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
+                <i data-lucide="download" class="w-4 h-4"></i> Markdown
+              </button>
+              <button onclick="window.print()" class="px-4 py-2 rounded-lg bg-rose-500 text-white text-sm font-medium hover:bg-rose-600 transition-colors flex items-center gap-2">
+                <i data-lucide="printer" class="w-4 h-4"></i> Print
+              </button>
+            </div>
           </header>
 
           <!-- Summary stats -->
@@ -146,7 +152,50 @@ function createStudySummaryView() {
       `;
     },
 
-    mount() {},
+    mount(container) {
+      // Markdown download
+      container.querySelector('#summary-download-md')?.addEventListener('click', () => {
+        let md = `# HTGAA Week 2 — Study Summary\n\nGenerated: ${new Date().toLocaleDateString()}\n\n`;
+        allData.forEach(({ topic, data }) => {
+          md += `## ${data.title}\n\n`;
+          if (data.learningObjectives) {
+            md += `### Learning Objectives\n`;
+            data.learningObjectives.forEach(obj => { md += `- ${obj}\n`; });
+            md += '\n';
+          }
+          if (data.sections?.some(s => s.takeaway)) {
+            md += `### Key Takeaways\n`;
+            data.sections.filter(s => s.takeaway).forEach(s => {
+              md += `- **${s.title}**: ${s.takeaway}\n`;
+            });
+            md += '\n';
+          }
+          if (data.keyFacts?.length) {
+            md += `### Key Facts\n`;
+            data.keyFacts.forEach(f => {
+              md += `- ${f.label || f.fact || ''} ${f.value || ''}\n`;
+            });
+            md += '\n';
+          }
+          if (data.vocabulary?.length) {
+            md += `### Vocabulary (${data.vocabulary.length} terms)\n`;
+            data.vocabulary.forEach(v => {
+              md += `- **${v.term}**: ${v.definition}\n`;
+            });
+            md += '\n';
+          }
+          md += '---\n\n';
+        });
+        const blob = new Blob([md], { type: 'text/markdown' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'htgaa-week2-study-summary.md';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      });
+    },
     unmount() {}
   };
 }
