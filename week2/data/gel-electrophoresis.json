@@ -366,6 +366,163 @@
       ],
       "correctOrder": [0, 1, 2, 3, 4, 5],
       "explanation": "First cast the gel, then prepare samples with loading buffer, load into wells, run the gel with electric current, visualize under UV, and finally analyze band sizes using the ladder as reference."
+    },
+    {
+      "question": "What is the primary physical property that allows gel electrophoresis to separate DNA fragments?",
+      "options": [
+        "DNA fragments have different densities based on their sequence",
+        "Smaller DNA fragments migrate faster through the gel pores due to size-dependent resistance",
+        "DNA fragments have different colors that can be sorted",
+        "Larger DNA fragments have more negative charge and migrate faster"
+      ],
+      "correctIndex": 1,
+      "explanation": "DNA has a uniform charge-to-mass ratio regardless of size. Separation occurs because smaller fragments navigate through the agarose pore network more easily than larger fragments, which experience more friction and migrate more slowly.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "A 4-base cutter restriction enzyme cuts DNA on average every how many base pairs?",
+      "options": [
+        "64 bp (4^3)",
+        "256 bp (4^4)",
+        "1,024 bp (4^5)",
+        "4,096 bp (4^6)"
+      ],
+      "correctIndex": 1,
+      "explanation": "For a 4-base recognition sequence, assuming each position has a 1/4 probability of being the required base, the expected frequency is 4^4 = 256 bp. Four-base cutters are frequent cutters, producing many small fragments.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Why does EcoRI produce compatible ends with BamHI-cut DNA that can be ligated together?",
+      "options": [
+        "They do not produce compatible ends; this is incorrect",
+        "Both produce the same 5'-GATC overhang",
+        "Both produce blunt ends",
+        "Both recognize the same palindromic sequence"
+      ],
+      "correctIndex": 0,
+      "explanation": "EcoRI produces a 5'-AATT overhang while BamHI produces a 5'-GATC overhang. These are NOT compatible. However, BamHI IS compatible with BglII (both produce 5'-GATC). EcoRI is compatible with enzymes like MfeI that also produce AATT overhangs.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What causes 'star activity' in restriction enzyme digests?",
+      "options": [
+        "Using too little enzyme",
+        "Optimal pH and temperature conditions",
+        "Non-optimal conditions like excess glycerol, wrong buffer, or extended incubation",
+        "Adding too much DNA substrate"
+      ],
+      "correctIndex": 2,
+      "explanation": "Star activity occurs when suboptimal reaction conditions relax the enzyme's sequence specificity, causing it to cut at sites similar to but not exactly matching its recognition sequence. Common triggers include excess glycerol (>5%), low ionic strength, wrong pH, and over-digestion.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Which type of DNA ends provides directional cloning control?",
+      "options": [
+        "Blunt ends, because they are most stable",
+        "Two different sticky ends (e.g., EcoRI on one side, BamHI on the other)",
+        "5' overhangs only",
+        "3' overhangs only"
+      ],
+      "correctIndex": 1,
+      "explanation": "Using two different restriction enzymes that produce incompatible sticky ends (like EcoRI and BamHI) ensures the insert can only ligate into the vector in one orientation, because the EcoRI end can only join to another EcoRI end, and BamHI to BamHI.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "A DNA ladder shows bands at 1000 bp, 2000 bp, 3000 bp, etc. Your unknown sample runs between the 2000 bp and 3000 bp bands, closer to 2000 bp. What is the approximate size?",
+      "options": [
+        "1500 bp",
+        "2200-2400 bp",
+        "3500 bp",
+        "500 bp"
+      ],
+      "correctIndex": 1,
+      "explanation": "If the unknown band runs between 2000 bp and 3000 bp, closer to the 2000 bp marker, its size is approximately 2200-2400 bp. Migration distance is logarithmically related to size, so interpolation between markers can estimate fragment size.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Why is TAE buffer preferred over TBE when DNA will be extracted from the gel for cloning?",
+      "options": [
+        "TAE provides better resolution for small fragments",
+        "TBE contains borate that can inhibit downstream enzymatic reactions",
+        "TAE is more expensive and therefore higher quality",
+        "TBE causes DNA to denature"
+      ],
+      "correctIndex": 1,
+      "explanation": "TBE (Tris-borate-EDTA) contains borate which can form complexes with DNA sugars and inhibit enzymes like ligase and restriction endonucleases. TAE (Tris-acetate-EDTA) does not have this problem, making it better for gel purification.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What would you observe on a gel if your restriction digest had star activity?",
+      "options": [
+        "No bands at all",
+        "Expected bands only",
+        "Unexpected additional bands from non-specific cutting",
+        "All bands would be the same size"
+      ],
+      "correctIndex": 2,
+      "explanation": "Star activity causes the enzyme to cut at sequences similar to its recognition site, producing additional unexpected bands. These extra bands represent fragments from non-canonical cut sites.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "How do restriction enzymes distinguish their own bacterial DNA from invading phage DNA?",
+      "options": [
+        "Bacterial DNA has a different sequence than phage DNA",
+        "A companion methyltransferase adds methyl groups to recognition sites in bacterial DNA, protecting it",
+        "Restriction enzymes only work on single-stranded DNA",
+        "Bacterial DNA is stored in the nucleus where enzymes cannot access it"
+      ],
+      "correctIndex": 1,
+      "explanation": "In restriction-modification systems, the bacterial methyltransferase adds methyl groups to the same recognition sequences that the restriction enzyme cuts. The enzyme does not cut methylated sites, so bacterial DNA is protected while unmethylated phage DNA is destroyed.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "For a gel art lab, you want many small, closely spaced bands. Which strategy would work best?",
+      "options": [
+        "Use an 8-base rare cutter enzyme on a small plasmid",
+        "Use a 4-base frequent cutter enzyme on a large plasmid or genomic DNA",
+        "Use a blunt-end cutter instead of a sticky-end cutter",
+        "Use no enzyme and run uncut DNA"
+      ],
+      "correctIndex": 1,
+      "explanation": "Four-base cutters recognize sites every ~256 bp on average, producing many small fragments. Using this on a large DNA substrate generates many bands. Eight-base cutters produce few large fragments, which would not create the desired dense banding pattern.",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "Why does bromophenol blue in loading dye help monitor gel progress without visualizing DNA?",
+      "options": [
+        "It binds to DNA and makes it glow",
+        "It migrates at a predictable rate (~300 bp in 1% gel), acting as a visible tracking marker",
+        "It increases the voltage across the gel",
+        "It denatures the DNA for better separation"
+      ],
+      "correctIndex": 1,
+      "explanation": "Bromophenol blue is a small colored molecule that migrates through the gel at approximately the same rate as a 300 bp DNA fragment (in 1% agarose). By watching the dye front, you can estimate when the gel has run long enough without stopping to visualize DNA.",
+      "difficulty": "beginner"
+    },
+    {
+      "type": "matching",
+      "question": "Match each troubleshooting symptom with its most likely cause:",
+      "pairs": [
+        { "term": "Smeared bands instead of discrete bands", "definition": "DNA degradation from nuclease contamination or overloading" },
+        { "term": "No bands visible", "definition": "Forgot to add stain, or no DNA in sample" },
+        { "term": "Curved 'smiling' bands", "definition": "Excessive voltage causing uneven heating across the gel" },
+        { "term": "Unexpected extra bands", "definition": "Star activity from non-optimal digest conditions" }
+      ],
+      "explanation": "Each gel artifact has characteristic causes: smearing indicates degradation, invisible bands mean missing stain or DNA, curved bands result from heat gradients, and extra bands suggest star activity.",
+      "difficulty": "advanced"
+    },
+    {
+      "type": "ordering",
+      "question": "Order the agarose concentrations from best for SMALL fragments to best for LARGE fragments:",
+      "items": [
+        "2.0% agarose (100-2,000 bp)",
+        "1.5% agarose (200-4,000 bp)",
+        "1.0% agarose (400-8,000 bp)",
+        "0.8% agarose (800-12,000 bp)",
+        "0.5% agarose (1,000-30,000 bp)"
+      ],
+      "explanation": "Higher agarose concentrations create smaller pores that better resolve small fragments. Lower concentrations have larger pores that allow large fragments to migrate and separate. 2.0% is best for small, 0.5% is best for large.",
+      "difficulty": "intermediate"
     }
   ],
   "conceptConnections": [

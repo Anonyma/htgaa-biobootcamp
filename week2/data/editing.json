@@ -401,6 +401,186 @@
         "NHEJ introduces indels (knockout) or HDR inserts new sequence (knock-in)"
       ],
       "explanation": "CRISPR editing proceeds through: gRNA design → PAM recognition → R-loop formation → dual-strand cleavage → DNA repair. The repair pathway determines the outcome: NHEJ for knockouts, HDR for precise insertions."
+    },
+    {
+      "id": "editing-q14",
+      "question": "A researcher wants to correct a pathogenic T-to-C mutation in a patient's genome. Which editing tool is most appropriate?",
+      "options": [
+        "Cytosine base editor (CBE), since it converts C back to T",
+        "Adenine base editor (ABE), since it converts A to G",
+        "Prime editing, since it can make any base change",
+        "CRISPR-Cas9 with HDR, since base editors cannot reverse mutations"
+      ],
+      "correctIndex": 0,
+      "explanation": "CBE converts C-G to T-A, which is exactly what's needed to reverse a T-to-C mutation back to the wild-type sequence. This is more efficient than prime editing for single-nucleotide corrections and doesn't require a DSB or donor template.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "editing-q15",
+      "question": "Why does delivering Cas9 as a ribonucleoprotein (RNP) complex reduce off-target editing?",
+      "options": [
+        "The RNP complex has higher specificity for its target site",
+        "RNP delivery limits the duration of Cas9 activity, as the protein is degraded within 24-48 hours",
+        "The RNP cannot enter the nucleus where off-target sites are located",
+        "RNP complexes only work with high-fidelity Cas9 variants"
+      ],
+      "correctIndex": 1,
+      "explanation": "When delivered as a preformed RNP complex, Cas9 is immediately active but is degraded by cellular proteases within 24-48 hours. This short activity window reduces the opportunity for off-target cutting compared to plasmid or mRNA delivery, where Cas9 can be expressed for days.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "editing-q16",
+      "question": "What is the function of uracil glycosylase inhibitor (UGI) in cytosine base editors?",
+      "options": [
+        "UGI enhances the deaminase activity of APOBEC1",
+        "UGI blocks cellular base excision repair from removing the uracil created by deamination",
+        "UGI provides the nuclease activity that nicks the DNA",
+        "UGI converts uracil directly to thymine"
+      ],
+      "correctIndex": 1,
+      "explanation": "After APOBEC1 deaminates cytosine to uracil, the cell's uracil DNA glycosylase (UDG) normally removes uracil from DNA as part of base excision repair. UGI blocks UDG, protecting the edited uracil long enough for it to be replicated as thymine, making the C-to-T change permanent.",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "editing-q17",
+      "question": "Which of the following is a key advantage of TALENs over zinc finger nucleases (ZFNs)?",
+      "options": [
+        "TALENs do not require a PAM sequence",
+        "TALENs have a simple one-module-one-base recognition code, making them easier to engineer",
+        "TALENs can edit RNA as well as DNA",
+        "TALENs create single-strand nicks instead of double-strand breaks"
+      ],
+      "correctIndex": 1,
+      "explanation": "TALENs use TAL effector repeat modules where just two amino acids (the RVD) determine which DNA base is recognized: NI=A, HD=C, NG=T, NN=G. This straightforward code makes TALEN assembly much faster than the context-dependent zinc finger engineering required for ZFNs.",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "editing-q18",
+      "question": "In prime editing, why is the H840A nickase used instead of the D10A nickase commonly used in base editors?",
+      "options": [
+        "H840A has higher fidelity and fewer off-target effects",
+        "H840A nicks the PAM-containing strand, allowing the PBS to hybridize to the 3' end for reverse transcription",
+        "H840A can work without a PAM sequence",
+        "H840A creates a double-strand break needed for prime editing"
+      ],
+      "correctIndex": 1,
+      "explanation": "The H840A mutation inactivates the HNH domain, leaving only the RuvC domain active, which nicks the PAM-containing strand. This creates a 3' end that the primer binding site (PBS) can hybridize to, initiating reverse transcription. The D10A nickase would nick the wrong strand for this mechanism.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "editing-q19",
+      "question": "What was the rate-limiting step in creating the first genomically recoded organism (C321.ΔA)?",
+      "options": [
+        "Identifying all 321 UAG codon locations in the genome",
+        "Combining changes from multiple strains using conjugative assembly genome engineering (CAGE)",
+        "Deleting the Release Factor 1 (RF1) gene after all codon changes were made",
+        "Synthesizing the synthetic oligonucleotides for MAGE"
+      ],
+      "correctIndex": 1,
+      "explanation": "While MAGE could introduce ~10 changes per strain efficiently, hierarchically combining changes from 32 different strains into a single genome using CAGE (conjugative assembly genome engineering) was the most complex and time-consuming step, requiring careful selection and validation at each stage.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "editing-q20",
+      "question": "Why can't current prime editing systems efficiently insert very large DNA sequences (>100 bp)?",
+      "options": [
+        "The reverse transcriptase has limited processivity and the RT template on the pegRNA becomes too long",
+        "Prime editing creates double-strand breaks that destabilize large insertions",
+        "Large insertions require a PAM sequence that is not available",
+        "The pegRNA cannot fold properly if it exceeds 100 nucleotides"
+      ],
+      "correctIndex": 0,
+      "explanation": "Prime editing relies on reverse transcriptase extending from the nicked strand using the pegRNA's RT template. RT processivity limits how far it can extend, and very long RT templates on the pegRNA also face synthesis and delivery challenges. This is why PASTE was developed for large insertions.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "editing-q21",
+      "question": "What ethical concern was raised by the He Jiankui embryo editing case beyond the lack of medical necessity?",
+      "options": [
+        "The editing was performed on adult somatic cells",
+        "The edits were germline modifications that will be inherited by all future descendants",
+        "The CCR5 gene should never be edited under any circumstances",
+        "The editing efficiency was too high, causing too many on-target edits"
+      ],
+      "correctIndex": 1,
+      "explanation": "The embryo edits were germline modifications present in every cell including germ cells, meaning they will be passed to all future generations. This raises profound ethical issues about consent for future descendants, unintended consequences, and whether we should make heritable changes to the human genome.",
+      "difficulty": "beginner"
+    },
+    {
+      "type": "matching",
+      "question": "Match each CRISPR-based tool to its primary application.",
+      "pairs": [
+        {
+          "term": "dCas9-KRAB",
+          "definition": "Gene silencing (CRISPRi)"
+        },
+        {
+          "term": "dCas9-VP64",
+          "definition": "Gene activation (CRISPRa)"
+        },
+        {
+          "term": "dCas9-DNMT3A",
+          "definition": "Installing DNA methylation marks"
+        },
+        {
+          "term": "dCas9-GFP",
+          "definition": "Live-cell genomic locus imaging"
+        }
+      ],
+      "explanation": "dCas9 fusions deliver different enzymatic activities to specific genomic loci: KRAB silences via heterochromatin, VP64 activates transcription, DNMT3A methylates DNA, and GFP enables fluorescent visualization.",
+      "difficulty": "intermediate"
+    },
+    {
+      "type": "ordering",
+      "question": "Order the steps of the PASTE mechanism for inserting large DNA payloads.",
+      "items": [
+        "Design a pegRNA targeting the desired genomic insertion site",
+        "Prime editor writes an attB integrase recognition site at the target locus",
+        "Serine integrase (Bxb1) recognizes the attB site in the genome",
+        "Integrase catalyzes recombination between attB and attP on donor DNA",
+        "Large cargo (up to ~36 kb) is permanently inserted at the target site"
+      ],
+      "explanation": "PASTE works in two steps: first, prime editing writes a short attB site (~38-46 bp) at the target without a DSB. Then, Bxb1 integrase catalyzes site-specific recombination between the genomic attB and the attP site on the donor DNA carrying the large cargo.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "editing-q22",
+      "question": "A scientist delivers guide RNAs targeting 50 different genes simultaneously to cultured cells. What is this approach called and what outcome is expected?",
+      "options": [
+        "MAGE; the cells will die because too many breaks are created",
+        "Multiplexed CRISPR; many genes can be knocked out simultaneously in the same cell",
+        "Gene drive; the edits will spread through the cell population over time",
+        "PASTE; large DNA cargos will be inserted at all 50 sites"
+      ],
+      "correctIndex": 1,
+      "explanation": "One of CRISPR's key advantages is trivial multiplexing: delivering multiple guide RNAs simultaneously allows editing of many genes at once. This is used for combinatorial knockouts, synthetic lethality screens, and building complex genetic circuits. MAGE refers specifically to bacterial oligo-based editing.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "editing-q23",
+      "question": "What is the biocontainment strategy employed in genomically recoded organisms that require non-standard amino acids?",
+      "options": [
+        "The organisms grow in media that wild-type organisms cannot metabolize",
+        "Essential proteins are redesigned to require synthetic amino acids at critical positions, so without external supply the organism dies",
+        "The organisms are sterile and cannot reproduce",
+        "A kill-switch gene is activated if the organism leaves the laboratory"
+      ],
+      "correctIndex": 1,
+      "explanation": "Essential proteins in GROs can be engineered to depend on non-standard amino acids at structurally critical positions. Without an external supply of the synthetic amino acid, the organism cannot make functional versions of these essential proteins and dies, achieving escape frequencies below 1 in 10^12.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "editing-q24",
+      "question": "Why was the first FDA-approved CRISPR therapy (Casgevy) performed ex vivo rather than in vivo?",
+      "options": [
+        "In vivo delivery of CRISPR to blood cells is currently impractical; ex vivo allows editing in the lab before reinfusion",
+        "Ex vivo editing has fewer off-target effects",
+        "The FDA only approves ex vivo gene therapies",
+        "In vivo editing would affect germline cells"
+      ],
+      "correctIndex": 0,
+      "explanation": "Editing hematopoietic stem cells in vivo (inside the patient's body) is currently very challenging. The ex vivo approach harvests the patient's stem cells, edits them in controlled lab conditions, then returns them after myeloablative conditioning. This ensures high editing efficiency and allows quality control before reinfusion.",
+      "difficulty": "beginner"
     }
   ],
   "conceptConnections": [

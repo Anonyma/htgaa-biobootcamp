@@ -345,6 +345,151 @@
         "Benner lab demonstrates Hachimoji DNA with 8-letter alphabet (2019)"
       ],
       "explanation": "The genetic code was first cracked in 1961, wobble was proposed in 1966, the genomically recoded organism came in 2013, unnatural base pair replication in vivo in 2014, and Hachimoji DNA in 2019."
+    },
+    {
+      "question": "Which codon serves as the universal start codon in the standard genetic code?",
+      "options": [
+        "UAA",
+        "AUG",
+        "GUG",
+        "UGA"
+      ],
+      "correctIndex": 1,
+      "explanation": "AUG is the universal start codon that initiates translation and encodes methionine. In bacteria, it is recognized in the context of a Shine-Dalgarno sequence; in eukaryotes, it is identified by ribosome scanning from the 5' cap.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "How many tRNA species would be theoretically required if wobble pairing did not exist?",
+      "options": [
+        "20 (one per amino acid)",
+        "43 (the actual number in E. coli)",
+        "61 (one per sense codon)",
+        "64 (including stop codons)"
+      ],
+      "correctIndex": 2,
+      "explanation": "Without wobble pairing, each of the 61 sense codons would require its own unique tRNA species with a perfectly complementary anticodon. Wobble pairing at the third position allows one tRNA to recognize multiple synonymous codons, reducing the required number to ~43 in E. coli.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What is the primary advantage of using harmonized codon usage over always selecting the single most frequent codon?",
+      "options": [
+        "It increases the mutation rate for beneficial variation",
+        "It prevents tRNA depletion and avoids creating highly repetitive sequences",
+        "It makes the DNA sequence identical to the native organism's genome",
+        "It eliminates all secondary structure in the mRNA"
+      ],
+      "correctIndex": 1,
+      "explanation": "Harmonized codon usage distributes codon choices to match the overall frequency distribution of the host organism rather than using only the most frequent codon. This prevents depletion of specific tRNA pools and avoids long runs of identical codons that can cause synthesis failures.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In Hachimoji DNA, how many distinct triplet codons are theoretically possible?",
+      "options": [
+        "64 (same as natural DNA)",
+        "128 (twice as many as natural DNA)",
+        "256 (8^2)",
+        "512 (8^3)"
+      ],
+      "correctIndex": 3,
+      "explanation": "Hachimoji DNA uses an 8-letter alphabet (A, T, G, C, Z, P, S, B). The number of possible triplet codons is 8^3 = 512, compared to 4^3 = 64 for natural DNA. This vastly expanded coding capacity could theoretically encode many more amino acids.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Why was E. coli C321.ΔA able to achieve near-quantitative incorporation of non-standard amino acids?",
+      "options": [
+        "It has extra copies of all tRNA genes",
+        "It contains a synthetic ribosome that only reads UAG codons",
+        "All 321 UAG codons were replaced with UAA and RF1 was deleted, eliminating competition",
+        "It uses a completely different genetic code from wild-type E. coli"
+      ],
+      "correctIndex": 2,
+      "explanation": "By replacing all genomic UAG codons with the synonymous UAA stop codon and deleting release factor RF1 (which recognizes UAG), the strain has no natural use for UAG. The amber codon becomes a blank codon that can be exclusively assigned to non-standard amino acids with no competition from RF1.",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "What is the main chemical difference between Benner's AEGIS base pairs and Romesberg's dNaM-dTPT3 pair?",
+      "options": [
+        "AEGIS uses triple bonds while dNaM-dTPT3 uses double bonds",
+        "AEGIS uses rearranged hydrogen bonding patterns; dNaM-dTPT3 relies on hydrophobic interactions",
+        "AEGIS bases are much larger than natural bases; dNaM-dTPT3 bases are smaller",
+        "AEGIS only works in RNA; dNaM-dTPT3 only works in DNA"
+      ],
+      "correctIndex": 1,
+      "explanation": "AEGIS base pairs use reshuffled hydrogen bond donor and acceptor patterns to create orthogonal pairing. In contrast, Romesberg's dNaM-dTPT3 pair has no interbase hydrogen bonds at all, relying instead on hydrophobic stacking and shape complementarity.",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "Which application currently uses AEGIS synthetic base pairs in millions of clinical tests per year?",
+      "options": [
+        "Whole genome sequencing of cancer patients",
+        "CRISPR guide RNA design",
+        "HIV and hepatitis C viral load quantification (COBAS TaqMan assays)",
+        "COVID-19 PCR testing"
+      ],
+      "correctIndex": 2,
+      "explanation": "Hologic's COBAS TaqMan assays for HIV and HCV viral load use AEGIS bases (specifically isoC-isoG pairs) in their molecular beacon probes. The synthetic bases prevent cross-hybridization with patient DNA, reducing background and improving sensitivity.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the wobble position in a codon-anticodon interaction?",
+      "options": [
+        "The first position of the codon (5' end)",
+        "The second position of the codon (middle)",
+        "The third position of the codon (3' end), which pairs with the first position of the anticodon",
+        "The position where the ribosome binds to mRNA"
+      ],
+      "correctIndex": 2,
+      "explanation": "The wobble position is the third base of the codon (3' end of the codon triplet), which pairs with the first base of the anticodon (5' end of the anticodon). This position tolerates non-Watson-Crick base pairing, allowing one tRNA to recognize multiple synonymous codons.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Why would a mirror-image organism using D-amino acid proteins potentially be invisible to the human immune system?",
+      "options": [
+        "D-amino acids are inherently non-immunogenic",
+        "Mirror organisms would be too small for immune cells to detect",
+        "All immune recognition molecules evolved to bind L-amino acid structures and cannot recognize mirror-image epitopes",
+        "Mirror organisms would secrete immunosuppressive compounds"
+      ],
+      "correctIndex": 2,
+      "explanation": "Antibodies, T-cell receptors, and innate immune sensors are all chiral molecules that evolved to recognize natural L-amino acid proteins. Mirror-image D-amino acid proteins present molecular surfaces that are completely foreign to these recognition systems, making immune detection extremely difficult.",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "In the context of expanding the genetic code, what is an orthogonal tRNA/synthetase pair?",
+      "options": [
+        "A tRNA and synthetase from the same organism that work more efficiently",
+        "A tRNA and synthetase from a different domain of life that do not cross-react with the host's machinery",
+        "A tRNA that reads codons backwards",
+        "A synthetase that charges multiple tRNAs with the same amino acid"
+      ],
+      "correctIndex": 1,
+      "explanation": "An orthogonal pair (typically from archaea used in E. coli, or vice versa) is designed so that the tRNA is not recognized by any host synthetase, and the synthetase does not charge any host tRNA. This orthogonality allows the pair to be engineered to charge a non-standard amino acid without disrupting normal translation.",
+      "difficulty": "intermediate"
+    },
+    {
+      "type": "matching",
+      "question": "Match each non-standard amino acid with its primary application:",
+      "pairs": [
+        { "term": "p-Azidophenylalanine (pAzF)", "definition": "Contains azide group for copper-catalyzed click chemistry conjugation" },
+        { "term": "p-Benzoylphenylalanine (Bpa)", "definition": "UV-activatable crosslinker for mapping protein-protein interactions" },
+        { "term": "ANAP", "definition": "Environmentally sensitive fluorophore for real-time conformational monitoring" },
+        { "term": "Propargyl-lysine", "definition": "Contains alkyne group for bioorthogonal CuAAC reactions" }
+      ],
+      "explanation": "Each non-standard amino acid provides unique chemical functionality: pAzF and propargyl-lysine enable click chemistry (azide and alkyne, respectively), Bpa enables photo-crosslinking studies, and ANAP provides genetically encoded fluorescence.",
+      "difficulty": "advanced"
+    },
+    {
+      "type": "ordering",
+      "question": "Order these steps in creating a genomically recoded organism for nsAA incorporation:",
+      "items": [
+        "Identify all instances of the target codon (e.g., UAG) in the genome",
+        "Replace each instance with a synonymous codon (e.g., UAA) using CRISPR or recombineering",
+        "Delete the release factor gene that recognizes the target codon (e.g., RF1 for UAG)",
+        "Introduce orthogonal tRNA/synthetase pair that reads the now-blank codon",
+        "Transform with expression plasmid containing UAG codon at desired position in target gene"
+      ],
+      "explanation": "First, all genomic instances of the target stop codon are systematically replaced, then the competing release factor is deleted, creating a blank codon. An orthogonal pair is introduced to assign the codon to a non-standard amino acid, and finally expression constructs can use this codon.",
+      "difficulty": "advanced"
     }
   ],
   "conceptConnections": [

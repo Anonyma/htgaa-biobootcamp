@@ -396,6 +396,152 @@
       ],
       "correctOrder": [0, 1, 2, 3, 4, 5],
       "explanation": "A prokaryotic expression cassette reads 5' to 3': promoter (recruits RNA polymerase) → RBS (positions ribosome) → start codon (initiates translation) → CDS (encodes protein) → stop codon (terminates translation) → terminator (stops transcription). This order is essential for proper gene expression."
+    },
+    {
+      "question": "What is the fundamental principle of Crick's Central Dogma?",
+      "options": [
+        "DNA always flows to RNA, which always flows to protein in a strict linear path",
+        "Once sequence information passes into protein, it cannot flow back to nucleic acid",
+        "All organisms use exactly the same genetic code",
+        "Transcription and translation are coupled in all organisms"
+      ],
+      "correctIndex": 1,
+      "explanation": "Crick's Central Dogma states that protein sequence information never flows back to nucleic acid. DNA can be copied to DNA (replication) or to RNA (transcription), and RNA can be copied to DNA (reverse transcription) or to RNA, but protein sequence cannot be reverse-translated back into a nucleic acid template.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Why must cDNA be used instead of genomic DNA when expressing eukaryotic genes in E. coli?",
+      "options": [
+        "E. coli cannot replicate genomic DNA",
+        "Genomic DNA contains introns that E. coli cannot splice out",
+        "cDNA is shorter and easier to clone",
+        "Genomic DNA has the wrong nucleotides for E. coli"
+      ],
+      "correctIndex": 1,
+      "explanation": "Eukaryotic genomic DNA contains introns that must be removed by splicing. E. coli lacks the spliceosome machinery for intron removal. cDNA is reverse-transcribed from mature mRNA that has already been spliced, so it contains only exons and can be translated directly by E. coli ribosomes.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which of the four expression cassette components determines WHEN a gene is transcribed?",
+      "options": [
+        "The ribosome binding site (RBS)",
+        "The promoter (constitutive or inducible)",
+        "The coding sequence (CDS)",
+        "The terminator"
+      ],
+      "correctIndex": 1,
+      "explanation": "The promoter controls when and how much transcription occurs. Constitutive promoters are always active; inducible promoters are activated by specific signals (like IPTG for lac promoter). RBS controls translation initiation, not transcription timing.",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the key advantage of using iGEM BioBrick standard parts?",
+      "options": [
+        "They are free from intellectual property restrictions",
+        "They have standardized flanking restriction sites enabling modular assembly",
+        "They always produce the highest expression levels",
+        "They work in all organisms without modification"
+      ],
+      "correctIndex": 1,
+      "explanation": "BioBrick parts have standardized flanking restriction sites (EcoRI, XbaI, SpeI, PstI) that allow any two parts to be assembled using the same protocol. This standardization enables modular design where parts can be mixed and matched like LEGO blocks.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "In metabolic pathway engineering, what is 'flux balancing'?",
+      "options": [
+        "Making all enzymes in the pathway have identical expression levels",
+        "Tuning enzyme expression levels and knocking out competing pathways to optimize flow through the desired pathway",
+        "Running metabolic reactions in both forward and reverse directions equally",
+        "Using only reversible enzymatic reactions"
+      ],
+      "correctIndex": 1,
+      "explanation": "Flux balancing optimizes the flow of metabolites through a synthetic pathway by tuning each enzyme's expression level to match pathway demand, eliminating bottleneck steps, and knocking out competing pathways that divert precursors. The goal is maximizing product yield without toxic intermediate accumulation.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Why does alternative splicing allow the human genome to produce ~80,000-100,000 proteins from only ~20,000 genes?",
+      "options": [
+        "Each gene is present in multiple copies throughout the genome",
+        "Post-translational modifications create new amino acid sequences",
+        "The spliceosome can include or exclude specific exons, producing multiple mRNA isoforms from one gene",
+        "Mutations accumulate during transcription"
+      ],
+      "correctIndex": 2,
+      "explanation": "Alternative splicing allows a single pre-mRNA to be processed in multiple ways by including or excluding specific exons. Each splicing pattern produces a distinct mRNA isoform encoding a different protein variant. This combinatorial mechanism vastly expands proteomic diversity beyond gene count.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What is the Kozak consensus sequence and what is its function?",
+      "options": [
+        "A prokaryotic terminator sequence that forms a hairpin structure",
+        "A eukaryotic sequence context (gccA/GccAUGG) around the start codon that enhances translation initiation",
+        "The ribosome binding site in bacteria",
+        "A promoter element in yeast"
+      ],
+      "correctIndex": 1,
+      "explanation": "The Kozak sequence (consensus: gccA/GccAUGG, where capitalized bases are most important) is the eukaryotic sequence context surrounding the start codon. The scanning 40S ribosomal subunit preferentially initiates translation at AUG codons in favorable Kozak context. It is the eukaryotic functional equivalent of the bacterial Shine-Dalgarno sequence.",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Which expression system would be most appropriate for producing a multi-subunit protein complex requiring proper disulfide bonds?",
+      "options": [
+        "E. coli cytoplasm (reducing environment)",
+        "E. coli periplasm or specialized strains like SHuffle (oxidizing environment)",
+        "Cell-free system using E. coli extract",
+        "Pure water with isolated ribosomes"
+      ],
+      "correctIndex": 1,
+      "explanation": "The E. coli cytoplasm is a reducing environment that prevents disulfide bond formation. The periplasm is oxidizing and contains disulfide bond isomerases. Specialized strains like SHuffle have an engineered oxidizing cytoplasm and chaperones that facilitate disulfide bond formation in complex proteins.",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "In the Design-Build-Test-Learn (DBTL) cycle for metabolic engineering, what happens in the 'Learn' phase?",
+      "options": [
+        "DNA sequences are synthesized and assembled",
+        "Strains are grown and metabolite titers measured",
+        "Experimental results are analyzed to refine computational models and predict better designs for the next cycle",
+        "Genes are selected from databases"
+      ],
+      "correctIndex": 2,
+      "explanation": "The Learn phase analyzes test results to update predictive models. Machine learning can identify which design features correlated with high product yield, informing the next Design phase. This iterative refinement accelerates strain optimization from months to weeks.",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "Why does afucosylated glycosylation of IgG antibodies enhance their therapeutic efficacy?",
+      "options": [
+        "Afucosylation increases antibody serum half-life",
+        "Afucosylation dramatically enhances binding to Fc gamma receptor IIIa on NK cells, increasing ADCC",
+        "Afucosylation prevents antibody aggregation during storage",
+        "Afucosylation makes the antibody easier to manufacture"
+      ],
+      "correctIndex": 1,
+      "explanation": "Removing core fucose from the Fc region N-glycans (afucosylation) increases antibody affinity for Fc gamma receptor IIIa (CD16a) on natural killer cells by ~50-100 fold, dramatically enhancing antibody-dependent cellular cytotoxicity (ADCC). This is exploited in next-generation therapeutic antibodies like mogamulizumab.",
+      "difficulty": "advanced"
+    },
+    {
+      "type": "matching",
+      "question": "Match each eukaryotic mRNA processing step with its function:",
+      "pairs": [
+        { "term": "5' Capping (m7G cap)", "definition": "Protects from exonucleases, aids ribosome recruitment via eIF4E" },
+        { "term": "Splicing (spliceosome)", "definition": "Removes introns and joins exons to produce mature mRNA" },
+        { "term": "3' Polyadenylation (poly-A tail)", "definition": "Protects from 3' degradation, enhances translation and export" },
+        { "term": "Alternative splicing", "definition": "Includes/excludes specific exons to produce multiple protein isoforms from one gene" }
+      ],
+      "explanation": "Each mRNA processing step has distinct functions: the cap protects the 5' end and enables ribosome recognition, splicing removes non-coding introns, the poly-A tail protects the 3' end, and alternative splicing expands proteome diversity.",
+      "difficulty": "intermediate"
+    },
+    {
+      "type": "ordering",
+      "question": "Order these expression systems from fastest protein production to slowest:",
+      "items": [
+        "Cell-free protein synthesis (hours)",
+        "E. coli transient expression (1-2 days)",
+        "Yeast expression (3-5 days)",
+        "Mammalian transient transfection (5-7 days)",
+        "Mammalian stable cell line (months)"
+      ],
+      "correctOrder": [0, 1, 2, 3, 4],
+      "explanation": "Cell-free systems produce protein in hours by bypassing cell growth. E. coli grows fast (~20 min doubling time) for rapid expression. Yeast is slower (~90 min doubling). Mammalian cells are slowest (~24 hr doubling), and stable cell line development takes months of selection and screening.",
+      "difficulty": "beginner"
     }
   ],
   "conceptConnections": [

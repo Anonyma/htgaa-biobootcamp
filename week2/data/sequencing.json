@@ -381,7 +381,165 @@
         "Detect fluorescent labels with a laser as fragments pass the detector",
         "Read the sequence from the chromatogram peaks"
       ],
-      "explanation": "Sanger sequencing follows this precise order: primer annealing → extension with chain terminators → fragment generation → size separation → fluorescence detection → base calling from chromatogram."
+      "explanation": "Sanger sequencing follows this precise order: primer annealing → extension with chain terminators → fragment generation → size separation → fluorescence detection → base calling from chromatogram.",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "sequencing-q15",
+      "question": "A Sanger chromatogram shows two overlapping peaks (C and T) of equal height at position 342. What is the most likely explanation?",
+      "options": [
+        "A sequencing error occurred at that position",
+        "The sample contains two different DNA molecules (heterozygosity or mixed population)",
+        "The DNA polymerase incorporated the wrong nucleotide",
+        "The capillary was contaminated"
+      ],
+      "correctIndex": 1,
+      "explanation": "Two overlapping peaks of equal height indicate that the sample contains two different sequences at that position—either from heterozygosity in a diploid organism (one chromosome has C, the other has T) or from a mixed population. This would be reported as a heterozygous variant (C/T) using IUPAC code Y.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "sequencing-q16",
+      "question": "What is the primary advantage of using a patterned nanoarray (as in MGI sequencing) compared to random surface distribution (as in early Illumina)?",
+      "options": [
+        "It eliminates the need for library preparation",
+        "It provides more uniform cluster spacing and predictable positioning, improving imaging and base-calling",
+        "It allows sequencing without any amplification step",
+        "It enables reads longer than 10 kb"
+      ],
+      "correctIndex": 1,
+      "explanation": "Patterned nanoarrays have billions of regularly spaced binding sites etched into silicon. This ensures uniform cluster distribution and eliminates cluster overlap, improving signal quality and base-calling accuracy. MGI's DNA nanoballs bind to these defined positions rather than randomly clustering on a flow cell.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "sequencing-q17",
+      "question": "Why does sequencing read quality typically degrade toward the end of Illumina runs?",
+      "options": [
+        "The flow cell becomes physically damaged after many cycles",
+        "Phasing and pre-phasing accumulate: some strands in each cluster fall out of sync with the majority",
+        "The fluorescent dyes photobleach completely after 100 cycles",
+        "DNA polymerase runs out and must be replenished"
+      ],
+      "correctIndex": 1,
+      "explanation": "With each cycle, a small fraction of strands in each cluster may fail to incorporate a nucleotide (phasing, falling behind) or incorporate more than one (pre-phasing, getting ahead) due to incomplete blocking or cleavage. These out-of-sync strands accumulate over cycles, creating mixed signals that reduce base-call confidence at longer read lengths.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "sequencing-q18",
+      "question": "What Phred quality score (Q) corresponds to a 1-in-1,000 chance of error (99.9% accuracy)?",
+      "options": [
+        "Q10",
+        "Q20",
+        "Q30",
+        "Q40"
+      ],
+      "correctIndex": 2,
+      "explanation": "Phred scores use the formula Q = -10 × log₁₀(P_error). A 1-in-1,000 error rate (0.001) gives Q = -10 × log₁₀(0.001) = -10 × (-3) = 30. Q30 is considered high quality and is the standard threshold for most NGS applications.",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "sequencing-q19",
+      "question": "For detecting a 50 kb deletion in a cancer genome, which sequencing approach would be most effective?",
+      "options": [
+        "Illumina short-read sequencing at 30× coverage",
+        "Sanger sequencing across the breakpoint",
+        "PacBio HiFi or Oxford Nanopore long reads that can span the entire deletion",
+        "RNA-seq to detect changes in gene expression"
+      ],
+      "correctIndex": 2,
+      "explanation": "A 50 kb deletion is far longer than Illumina read lengths (75-300 bp). While short reads can infer large deletions from paired-end mapping (insert size changes), long reads that span the entire deletion provide direct, unambiguous evidence. PacBio HiFi (15-20 kb reads) or Nanopore (20+ kb typical, up to Mb) can read through such structural variants.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "sequencing-q20",
+      "question": "What unique capability does Oxford Nanopore's adaptive sampling provide?",
+      "options": [
+        "Automatic correction of sequencing errors using AI",
+        "Real-time selective sequencing: rejecting unwanted molecules mid-read and sequencing only targets of interest",
+        "Simultaneous sequencing of DNA and RNA from the same sample",
+        "Direct protein sequencing through the same nanopores"
+      ],
+      "correctIndex": 1,
+      "explanation": "Adaptive sampling analyzes the first few hundred bases of each read in real-time. If the sequence maps to a region of interest, the read continues; if not, voltage is reversed to eject the molecule and allow a new one to enter. This enables targeted sequencing without any upfront enrichment—a capability unique to nanopore technology.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "sequencing-q21",
+      "question": "Which long-read technology achieves the highest single-molecule accuracy?",
+      "options": [
+        "Oxford Nanopore simplex reads (~99% / Q20)",
+        "PacBio HiFi circular consensus sequencing (>99.9% / Q30+)",
+        "Sanger sequencing (not a long-read method)",
+        "Illumina paired-end reads (not a long-read method)"
+      ],
+      "correctIndex": 1,
+      "explanation": "PacBio HiFi achieves >99.9% accuracy (Q30+) at read lengths of 15-20 kb by reading circular SMRTbell templates multiple times and computing a consensus. This is higher than Oxford Nanopore simplex reads (~Q20) and approaches Illumina short-read accuracy while maintaining long read length. Nanopore duplex (reading both strands) can also reach ~Q30.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "sequencing-q22",
+      "question": "A researcher wants to sequence full-length mRNA isoforms without computational assembly. Which technology is best suited?",
+      "options": [
+        "Illumina RNA-seq with short reads, assembled into transcripts",
+        "PacBio Iso-Seq or Oxford Nanopore direct RNA sequencing to capture full-length transcripts in single reads",
+        "Sanger sequencing of cDNA clones",
+        "Spatial transcriptomics (Visium)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Full-length transcript isoforms can be several kilobases long. Long-read technologies (PacBio Iso-Seq or ONT direct RNA-seq) can capture entire transcripts from 5' cap to poly(A) tail in single reads, revealing complete isoform structures including alternative splicing and UTR variations without the ambiguity of computational assembly from short reads.",
+      "difficulty": "advanced"
+    },
+    {
+      "type": "matching",
+      "id": "sequencing-q-match2",
+      "question": "Match each sequencing application to the most appropriate platform choice:",
+      "pairs": [
+        {
+          "term": "Validating a 600 bp PCR product for a single clone",
+          "definition": "Sanger sequencing"
+        },
+        {
+          "term": "Population-scale variant calling across 10,000 human genomes",
+          "definition": "Illumina NovaSeq"
+        },
+        {
+          "term": "De novo assembly of an uncharacterized fungal genome with many repeats",
+          "definition": "PacBio HiFi or ONT ultra-long reads"
+        },
+        {
+          "term": "Rapid pathogen identification in a remote field clinic during an outbreak",
+          "definition": "Oxford Nanopore MinION"
+        }
+      ],
+      "explanation": "Platform selection depends on the application: Sanger for single-target validation (cheap, fast for low sample counts); Illumina for high-throughput population studies (lowest cost per genome); PacBio/ONT for de novo assembly (long reads span repeats); Nanopore MinION for field work (portable, real-time results).",
+      "difficulty": "intermediate"
+    },
+    {
+      "type": "ordering",
+      "id": "sequencing-q-order2",
+      "question": "Arrange these sequencing milestones in chronological order (earliest to latest):",
+      "items": [
+        "Sanger publishes chain-termination sequencing method (1977)",
+        "Human Genome Project completed, first human genome (~$2.7B)",
+        "Illumina/Solexa introduces massively parallel SBS platform",
+        "PacBio releases SMRT sequencing with zero-mode waveguides",
+        "Oxford Nanopore's MinION becomes commercially available",
+        "Cost reaches ~$200 per human genome on NovaSeq X"
+      ],
+      "explanation": "The timeline: Sanger method (1977) → Human Genome Project completion (2003) → Illumina SBS commercialization (~2006-2008) → PacBio SMRT (~2011) → ONT MinION commercial release (~2014) → $200 genome milestone (~2022).",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "sequencing-q23",
+      "question": "What is the primary trade-off when choosing long-read sequencing (PacBio/Nanopore) over short-read (Illumina) for whole-genome sequencing?",
+      "options": [
+        "Long reads have no advantages; short reads are always superior",
+        "Long reads cost more per genome and produce lower total throughput, but resolve repeats and structural variants that short reads miss",
+        "Long reads are only useful for RNA sequencing, not DNA",
+        "Long reads cannot detect single-nucleotide variants (SNPs)"
+      ],
+      "correctIndex": 1,
+      "explanation": "Long-read platforms cost more per genome and generate less total data per run than short-read platforms like NovaSeq. However, they provide critical advantages for resolving repetitive regions, structural variants, phasing, and de novo assembly—problems that short reads struggle with or cannot solve. The choice depends on the research question and budget.",
+      "difficulty": "beginner"
     }
   ],
   "conceptConnections": [

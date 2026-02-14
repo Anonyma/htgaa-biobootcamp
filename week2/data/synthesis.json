@@ -391,7 +391,163 @@
         "Capping — acetylate any unreacted 5'-OH groups",
         "Oxidation — stabilize the phosphite triester to phosphate"
       ],
-      "explanation": "The phosphoramidite cycle always follows: Detritylation → Coupling → Capping → Oxidation. This is repeated for each nucleotide addition, building the oligo from 3' to 5'."
+      "explanation": "The phosphoramidite cycle always follows: Detritylation → Coupling → Capping → Oxidation. This is repeated for each nucleotide addition, building the oligo from 3' to 5'.",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "synthesis-q14",
+      "question": "Which innovation by Robert Letsinger in 1965 revolutionized DNA synthesis automation?",
+      "options": [
+        "Discovery of phosphoramidite chemistry",
+        "Introduction of solid-phase synthesis using polymer beads",
+        "Development of the polymerase chain reaction",
+        "Creation of the first automated DNA sequencer"
+      ],
+      "correctIndex": 1,
+      "explanation": "Robert Letsinger introduced solid-phase synthesis, attaching the growing oligonucleotide to an insoluble polymer bead. This allowed reagents and byproducts to be simply washed away between steps, dramatically simplifying the workflow and enabling automation.",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "synthesis-q15",
+      "question": "If you need to synthesize 10,000 distinct oligonucleotide sequences for a CRISPR library, which synthesis platform should you choose?",
+      "options": [
+        "Column-based synthesis with 96-well plates",
+        "Chip-based synthesis on a silicon array",
+        "Manual benchtop phosphoramidite synthesis",
+        "PCR amplification from genomic DNA"
+      ],
+      "correctIndex": 1,
+      "explanation": "Chip-based synthesis (Twist, Agilent) can produce hundreds of thousands to millions of distinct sequences on a single chip, making it ideal for large libraries. Column synthesis would require over 100 runs of a 96-column synthesizer, which is impractical for this scale.",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "synthesis-q16",
+      "question": "Why must phosphoramidite coupling reactions be performed under strictly anhydrous (water-free) conditions?",
+      "options": [
+        "Water causes the solid support beads to swell and break",
+        "Water competes with the 5′-hydroxyl for reaction with the activated phosphoramidite, destroying it before coupling",
+        "Water dilutes the tetrazole activator below its working concentration",
+        "Water prevents the DMT protecting group from being removed"
+      ],
+      "correctIndex": 1,
+      "explanation": "Even trace amounts of water (as little as 10 ppm) will hydrolyze the highly reactive activated phosphoramidite before it can couple to the growing chain, dramatically reducing coupling efficiency. This is why synthesis-grade acetonitrile has strict water specifications and synthesis lines are purged with dry argon.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "synthesis-q17",
+      "question": "Calculate the approximate full-length yield for a 150-nucleotide oligonucleotide synthesized at 99.5% coupling efficiency.",
+      "options": [
+        "99.5%",
+        "75%",
+        "47%",
+        "15%"
+      ],
+      "correctIndex": 2,
+      "explanation": "Full-length yield = (0.995)^149 ≈ 0.47 or 47%. Even with excellent 99.5% coupling efficiency, nearly half of the product will contain at least one deletion or error by the time you reach 150 nucleotides, illustrating why chemical synthesis is limited to ~150-300 nt.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "synthesis-q18",
+      "question": "What is the main advantage of using Saccharomyces cerevisiae (yeast) for large-scale DNA assembly versus E. coli?",
+      "options": [
+        "Yeast grows faster than E. coli",
+        "Yeast has exceptionally efficient homologous recombination machinery that can join large (100+ kb) overlapping fragments",
+        "Yeast does not require antibiotics for selection",
+        "Yeast has a smaller genome and fewer restriction enzymes"
+      ],
+      "correctIndex": 1,
+      "explanation": "Yeast's natural homologous recombination system is extraordinarily efficient and can seamlessly join very large DNA fragments (100+ kb) with only short overlaps. This made it essential for the Venter Institute's synthesis of the M. mycoides genome, where 100-kb segments were assembled in yeast.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "synthesis-q19",
+      "question": "In a dial-out PCR error correction strategy, how are correct sequences identified and retrieved?",
+      "options": [
+        "By binding to MutS protein and column separation",
+        "By unique barcodes that allow sequencing verification and barcode-specific PCR amplification",
+        "By differential melting temperature during thermal cycling",
+        "By gel electrophoresis based on size differences"
+      ],
+      "correctIndex": 1,
+      "explanation": "Dial-out PCR assigns a unique barcode to each intended sequence in an oligo pool. After sequencing identifies which clones are error-free, barcode-specific primers selectively amplify (dial out) only those correct sequences from the complex pool.",
+      "difficulty": "intermediate"
+    },
+    {
+      "id": "synthesis-q20",
+      "type": "matching",
+      "question": "Match each historical figure to their key contribution to DNA synthesis.",
+      "pairs": [
+        {
+          "term": "Har Gobind Khorana",
+          "definition": "Synthesized complete trinucleotide codons and the first gene (tRNA) in solution phase"
+        },
+        {
+          "term": "Robert Letsinger",
+          "definition": "Pioneered solid-phase synthesis using polymer beads"
+        },
+        {
+          "term": "Marvin Caruthers",
+          "definition": "Developed phosphoramidite chemistry with >99% coupling efficiency"
+        },
+        {
+          "term": "Daniel Gibson",
+          "definition": "Created isothermal one-pot assembly method using three enzymes"
+        }
+      ],
+      "explanation": "Khorana won the Nobel Prize for decoding the genetic code using synthetic codons. Letsinger invented solid-phase synthesis in 1965. Caruthers developed the phosphoramidite method in 1981 (still used today). Gibson invented Gibson Assembly at JCVI in 2009.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "synthesis-q21",
+      "question": "Why is the requirement for 20-40 bp overlaps in Gibson Assembly more complex than just length?",
+      "options": [
+        "The overlaps must also have appropriate Tm (48-63°C), avoid secondary structures, and be unique across all junctions",
+        "The overlaps must contain at least one restriction site",
+        "The overlaps must be exactly palindromic for proper annealing",
+        "The overlaps must contain start and stop codons"
+      ],
+      "correctIndex": 0,
+      "explanation": "Gibson Assembly overlap design requires careful attention to melting temperature (Tm 48-63°C for proper annealing at 50°C), avoidance of hairpins or secondary structures, and uniqueness across all junctions to prevent mis-annealing. Software tools like NEBuilder automate this complex design process.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "synthesis-q22",
+      "question": "Approximately how much has the cost of DNA synthesis declined from the 1970s to today, and what technology drove the most recent 1,000-fold reduction?",
+      "options": [
+        "10-fold decline due to automation",
+        "100-fold decline due to phosphoramidite chemistry",
+        "Over 10,000-fold decline; chip-based parallel synthesis drove the most recent 1,000-fold drop",
+        "Over 1,000,000-fold decline due to CRISPR technology"
+      ],
+      "correctIndex": 2,
+      "explanation": "DNA synthesis costs have fallen from ~$1,000/base in the 1970s to under $0.07/base today—over 10,000-fold. The most dramatic recent reduction (roughly 1,000-fold) came from chip-based platforms like Twist Bioscience that synthesize millions of sequences in parallel, amortizing costs across all sequences.",
+      "difficulty": "advanced"
+    },
+    {
+      "id": "synthesis-q23",
+      "type": "ordering",
+      "question": "Arrange these DNA synthesis milestones in chronological order from earliest to latest.",
+      "items": [
+        "First dinucleotide synthesized by Michelson and Todd",
+        "Phosphoramidite chemistry developed by Caruthers",
+        "Complete M. mycoides bacterial genome (1.08 Mb) synthesized by Venter Institute",
+        "Twist Bioscience introduces silicon chip platform for million-oligo synthesis"
+      ],
+      "explanation": "The timeline is: 1955 (first dinucleotide) → 1981 (phosphoramidite chemistry) → 2010 (M. mycoides synthetic genome) → 2012-2015 (Twist chip-based synthesis platform).",
+      "difficulty": "beginner"
+    },
+    {
+      "id": "synthesis-q24",
+      "question": "What Type IIS restriction enzyme is most commonly used in Golden Gate Assembly, and what is unique about how it cuts DNA?",
+      "options": [
+        "EcoRI — cuts within its recognition sequence to create blunt ends",
+        "BsaI — recognizes GGTCTC and cuts outside its recognition site, creating custom 4-bp overhangs",
+        "HindIII — creates 5′ overhangs with palindromic sequences",
+        "NotI — creates 8-bp recognition site for rare cutting"
+      ],
+      "correctIndex": 1,
+      "explanation": "BsaI recognizes GGTCTC but cuts 1 bp downstream on one strand and 4 bp on the other, outside the recognition sequence. This allows the design of custom 4-nucleotide overhangs whose sequence is determined by the DNA, not the enzyme, enabling ordered scarless assembly.",
+      "difficulty": "intermediate"
     }
   ],
   "conceptConnections": [

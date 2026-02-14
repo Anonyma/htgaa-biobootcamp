@@ -162,6 +162,12 @@ function createTopicView(topicId) {
       // Quick review mini-flashcards
       initQuickReview(container, data);
 
+      // Notes panel
+      initNotes(container, topicId);
+
+      // Time spent tracker
+      this._timeSpentCleanup = initTimeSpent(container, topicId);
+
       // Keyboard navigation (j/k for sections, n/p for prev/next topic)
       this._keyHandler = (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
@@ -203,6 +209,7 @@ function createTopicView(topicId) {
       simCleanup.forEach(fn => fn());
       simCleanup = [];
       if (this._keyHandler) document.removeEventListener('keydown', this._keyHandler);
+      if (this._timeSpentCleanup) this._timeSpentCleanup();
     }
   };
 }
@@ -274,6 +281,7 @@ function renderTopicPage(data, topicId) {
           <span class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> ${data.quizQuestions?.length || 0} questions</span>
           ${isComplete ? '<span class="flex items-center gap-1 text-green-600"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Completed</span>' : ''}
           ${quizScore ? `<span class="flex items-center gap-1"><i data-lucide="target" class="w-4 h-4"></i> Quiz: ${quizScore.correct}/${quizScore.total}</span>` : ''}
+          <span class="flex items-center gap-1" id="time-spent-display"><i data-lucide="timer" class="w-4 h-4"></i> <span id="time-spent-value">0:00</span> spent</span>
         </div>
 
         <!-- Learning Objectives -->
@@ -293,6 +301,19 @@ function renderTopicPage(data, topicId) {
         </div>
         ` : ''}
       </header>
+
+      <!-- Notes Panel -->
+      <div class="mb-8">
+        <button id="notes-toggle" class="flex items-center gap-2 text-sm text-slate-500 hover:text-blue-500 transition-colors cursor-pointer">
+          <i data-lucide="pencil" class="w-4 h-4"></i>
+          <span>My Notes</span>
+          <i data-lucide="chevron-down" class="w-4 h-4 notes-chevron transition-transform"></i>
+        </button>
+        <div id="notes-panel" class="hidden mt-3">
+          <textarea id="topic-notes" class="w-full h-40 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm leading-relaxed resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none placeholder:text-slate-400" placeholder="Type your notes for this topic here... They'll be saved automatically." data-topic-id="${topicId}"></textarea>
+          <p class="text-xs text-slate-400 mt-1 notes-status">Notes auto-saved to your browser</p>
+        </div>
+      </div>
 
       <!-- Floating Table of Contents (desktop) -->
       <div id="floating-toc" class="hidden xl:block fixed right-4 top-32 w-48 z-20">
@@ -1383,6 +1404,97 @@ function initQuickReview(container, data) {
   });
 
   show();
+}
+
+function initTimeSpent(container, topicId) {
+  const TIME_KEY = 'htgaa-week2-time-spent';
+  let allTime;
+  try { allTime = JSON.parse(localStorage.getItem(TIME_KEY) || '{}'); } catch { allTime = {}; }
+  let elapsed = allTime[topicId] || 0; // seconds
+  const display = container.querySelector('#time-spent-value');
+  if (!display) return;
+
+  function fmt(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  }
+  display.textContent = fmt(elapsed);
+
+  const interval = setInterval(() => {
+    if (document.hidden) return; // pause when tab hidden
+    elapsed++;
+    display.textContent = fmt(elapsed);
+    // Save every 10 seconds
+    if (elapsed % 10 === 0) {
+      try {
+        const t = JSON.parse(localStorage.getItem(TIME_KEY) || '{}');
+        t[topicId] = elapsed;
+        localStorage.setItem(TIME_KEY, JSON.stringify(t));
+      } catch {}
+    }
+  }, 1000);
+
+  // Return cleanup function
+  return () => {
+    clearInterval(interval);
+    try {
+      const t = JSON.parse(localStorage.getItem(TIME_KEY) || '{}');
+      t[topicId] = elapsed;
+      localStorage.setItem(TIME_KEY, JSON.stringify(t));
+    } catch {}
+  };
+}
+
+function initNotes(container, topicId) {
+  const toggle = container.querySelector('#notes-toggle');
+  const panel = container.querySelector('#notes-panel');
+  const textarea = container.querySelector('#topic-notes');
+  if (!toggle || !panel || !textarea) return;
+
+  const NOTES_KEY = 'htgaa-week2-notes';
+
+  // Load saved notes
+  try {
+    const allNotes = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
+    if (allNotes[topicId]) textarea.value = allNotes[topicId];
+  } catch {}
+
+  // Toggle panel
+  toggle.addEventListener('click', () => {
+    panel.classList.toggle('hidden');
+    const chevron = toggle.querySelector('.notes-chevron');
+    if (chevron) chevron.style.transform = panel.classList.contains('hidden') ? '' : 'rotate(180deg)';
+    if (!panel.classList.contains('hidden')) textarea.focus();
+  });
+
+  // Auto-save on input (debounced)
+  let saveTimer;
+  const status = container.querySelector('.notes-status');
+  textarea.addEventListener('input', () => {
+    clearTimeout(saveTimer);
+    if (status) status.textContent = 'Saving...';
+    saveTimer = setTimeout(() => {
+      try {
+        const allNotes = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
+        if (textarea.value.trim()) {
+          allNotes[topicId] = textarea.value;
+        } else {
+          delete allNotes[topicId];
+        }
+        localStorage.setItem(NOTES_KEY, JSON.stringify(allNotes));
+        if (status) status.textContent = 'Saved';
+      } catch {
+        if (status) status.textContent = 'Save failed';
+      }
+    }, 500);
+  });
+
+  // Show indicator if notes exist
+  if (textarea.value.trim()) {
+    const label = toggle.querySelector('span');
+    if (label) label.textContent = 'My Notes (has notes)';
+  }
 }
 
 function launchConfetti(originEl) {
