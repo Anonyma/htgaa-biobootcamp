@@ -155,6 +155,19 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- Quick Quiz -->
+          <section class="mb-10" id="quick-quiz-section">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+              <i data-lucide="brain" class="w-5 h-5 text-purple-500"></i> Quick Quiz
+              <button id="quick-quiz-refresh" class="ml-auto text-xs text-blue-500 hover:text-blue-600 font-medium flex items-center gap-1">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> New Question
+              </button>
+            </h2>
+            <div id="quick-quiz-container" class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+              <p class="text-sm text-slate-400">Loading question...</p>
+            </div>
+          </section>
+
           <!-- Lecturers -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -337,12 +350,92 @@ function createHomeView() {
           window.location.reload();
         }
       });
+      // Quick Quiz on home page
+      initQuickQuiz(container);
+
       // Check milestones
       checkMilestones();
     },
 
     unmount() {}
   };
+}
+
+async function initQuickQuiz(container) {
+  const qContainer = container.querySelector('#quick-quiz-container');
+  const refreshBtn = container.querySelector('#quick-quiz-refresh');
+  if (!qContainer) return;
+
+  // Gather all quiz questions from all topics
+  const allQuestions = [];
+  for (const topic of TOPICS) {
+    const data = await store.loadTopicData(topic.id);
+    if (data?.quizQuestions) {
+      data.quizQuestions.forEach(q => {
+        allQuestions.push({ ...q, topicId: topic.id, topicTitle: topic.title, topicColor: topic.color });
+      });
+    }
+  }
+
+  if (allQuestions.length === 0) {
+    qContainer.innerHTML = '<p class="text-sm text-slate-400">No quiz questions available.</p>';
+    return;
+  }
+
+  function showQuestion() {
+    const q = allQuestions[Math.floor(Math.random() * allQuestions.length)];
+    const qId = `quick-${q.topicId}-${Date.now()}`;
+    qContainer.innerHTML = `
+      <div class="flex items-center gap-2 mb-3">
+        <span class="text-xs px-2 py-0.5 rounded-full bg-${q.topicColor}-100 dark:bg-${q.topicColor}-900/30 text-${q.topicColor}-600 dark:text-${q.topicColor}-400 font-medium">${q.topicTitle}</span>
+      </div>
+      <p class="font-semibold text-sm mb-4">${q.question}</p>
+      <div class="space-y-2">
+        ${q.options.map((opt, i) => `
+          <button class="quick-quiz-opt w-full text-left px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 text-sm hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-700 transition-colors" data-idx="${i}" data-correct="${i === q.correctIndex}">
+            <span class="font-medium text-slate-400 mr-2">${String.fromCharCode(65 + i)}.</span> ${opt}
+          </button>
+        `).join('')}
+      </div>
+      <div class="quick-quiz-feedback hidden mt-3 p-3 rounded-lg text-sm"></div>
+    `;
+
+    if (window.lucide) lucide.createIcons();
+
+    const feedback = qContainer.querySelector('.quick-quiz-feedback');
+    qContainer.querySelectorAll('.quick-quiz-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isCorrect = btn.dataset.correct === 'true';
+        // Disable all buttons
+        qContainer.querySelectorAll('.quick-quiz-opt').forEach(b => {
+          b.disabled = true;
+          b.classList.remove('hover:bg-blue-50', 'dark:hover:bg-blue-900/20', 'hover:border-blue-300');
+          if (b.dataset.correct === 'true') {
+            b.classList.add('bg-green-50', 'dark:bg-green-900/20', 'border-green-400', 'dark:border-green-700');
+          }
+          if (b === btn && !isCorrect) {
+            b.classList.add('bg-red-50', 'dark:bg-red-900/20', 'border-red-400', 'dark:border-red-700');
+          }
+        });
+        // Show feedback
+        if (feedback) {
+          feedback.classList.remove('hidden');
+          if (isCorrect) {
+            feedback.className = 'quick-quiz-feedback mt-3 p-3 rounded-lg text-sm bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400';
+            feedback.textContent = q.explanation || 'Correct!';
+          } else {
+            feedback.className = 'quick-quiz-feedback mt-3 p-3 rounded-lg text-sm bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400';
+            feedback.textContent = q.explanation || `Incorrect. The answer is ${String.fromCharCode(65 + q.correctIndex)}.`;
+          }
+        }
+        // Record in store
+        store.markQuizAnswered(qId, isCorrect);
+      });
+    });
+  }
+
+  showQuestion();
+  refreshBtn?.addEventListener('click', showQuestion);
 }
 
 function checkMilestones() {
@@ -355,12 +448,36 @@ function checkMilestones() {
   const quizzes = store.get('quizzes') || {};
   const quizTotal = Object.keys(quizzes).length;
 
+  // Section reading progress
+  let totalSectionsRead = 0;
+  TOPICS.forEach(t => { totalSectionsRead += store.getSectionsRead(t.id).length; });
+
+  // Flashcard reviews
+  const fcStats = store.getFlashcardStats();
+
+  // Quiz accuracy
+  let quizCorrect = 0;
+  Object.values(quizzes).forEach(v => { if (v) quizCorrect++; });
+  const quizAccuracy = quizTotal > 0 ? Math.round(quizCorrect / quizTotal * 100) : 0;
+
+  // Best exam
+  const bestExam = store.getBestExamScore();
+
   const milestones = [
     { id: 'first-topic', check: completedTopics >= 1, title: 'First Topic Done!', msg: 'You completed your first chapter. Keep going!' },
     { id: 'three-topics', check: completedTopics >= 3, title: 'Halfway There!', msg: '3 of 6 topics complete. You\'re doing great!' },
+    { id: 'all-topics', check: completedTopics >= 6, title: 'All Topics Complete!', msg: 'You\'ve mastered all 6 chapters. Amazing work!' },
     { id: 'first-quiz', check: quizTotal >= 1, title: 'First Quiz Answer!', msg: 'You answered your first quiz question. Test your knowledge!' },
     { id: 'ten-quizzes', check: quizTotal >= 10, title: '10 Quiz Questions!', msg: 'You\'ve answered 10 quiz questions. Nice progress!' },
     { id: 'fifty-quizzes', check: quizTotal >= 50, title: '50 Questions!', msg: 'You\'ve tackled 50 quiz questions. Knowledge is growing!' },
+    { id: 'quiz-master', check: quizTotal >= 20 && quizAccuracy >= 90, title: 'Quiz Master!', msg: '90%+ accuracy across 20+ questions. Brilliant!' },
+    { id: 'ten-sections', check: totalSectionsRead >= 10, title: '10 Sections Read!', msg: 'You\'ve read through 10 sections. Deep learning in progress!' },
+    { id: 'twenty-sections', check: totalSectionsRead >= 20, title: '20 Sections Read!', msg: 'You\'ve read 20 sections. You\'re becoming an expert!' },
+    { id: 'all-sections', check: totalSectionsRead >= 38, title: 'All Sections Read!', msg: 'Every single section read. You know this material inside out!' },
+    { id: 'first-flashcard', check: fcStats.totalReviews >= 1, title: 'First Flashcard!', msg: 'You started spaced repetition. Great study strategy!' },
+    { id: 'twenty-flashcards', check: fcStats.totalReviews >= 20, title: '20 Flashcard Reviews!', msg: 'Consistent repetition builds lasting memory!' },
+    { id: 'first-exam', check: !!bestExam, title: 'First Exam Taken!', msg: 'You completed a practice exam. Review your results!' },
+    { id: 'exam-ace', check: bestExam && bestExam.pct >= 90, title: 'Exam Ace!', msg: '90%+ on a practice exam. You\'re ready for class!' },
   ];
 
   for (const m of milestones) {
