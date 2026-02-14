@@ -544,6 +544,50 @@
       "difficulty": "beginner"
     }
   ],
+  "designChallenges": [
+    {
+      "id": "dogma-expression-cassette",
+      "title": "Expression Cassette Design Challenge",
+      "difficulty": "intermediate",
+      "scenario": "You need to design a complete expression cassette for producing GFP (green fluorescent protein) in E. coli. The protein will be used for teaching lab demonstrations, so you need good expression levels, easy purification, and the ability to turn expression on/off.",
+      "tasks": [
+        "Choose a promoter: Would you use a constitutive promoter (like J23106) or an inducible promoter (like Plac or PT7)? Justify your choice for a teaching lab context.",
+        "Choose an RBS: Select a strong RBS (like BBa_B0034) or calculate a custom RBS using the Salis RBS Calculator for medium expression.",
+        "Design the coding sequence: Should you codon-optimize GFP for E. coli? The wild-type GFP is from jellyfish (Aequorea victoria) — check its codon usage.",
+        "Add a purification tag: N-terminal His6 tag or C-terminal tag? Consider whether the tag might interfere with GFP folding or fluorescence.",
+        "Choose a terminator: Use BBa_B0015 double terminator for strong termination.",
+        "Sketch the complete DNA sequence showing promoter start, RBS, ATG start codon, His-tag if used, GFP CDS, stop codon, and terminator. Annotate each element."
+      ],
+      "hints": [
+        "For a teaching lab, an inducible system (Plac/IPTG or PT7/IPTG) is better because you can grow cells to high density before inducing, getting more protein. Constitutive expression slows growth.",
+        "Wild-type GFP has poor codon usage for E. coli (CAI ~0.4). An optimized version like GFPmut3b or sfGFP has CAI ~0.8 and expresses 10-100× better.",
+        "N-terminal His-tag is common (His6-GFP), but make sure there's a flexible linker (e.g., GSG or GSGS) between the tag and GFP to avoid interfering with chromophore maturation.",
+        "Total cassette length: promoter ~100 bp, RBS ~20 bp, His tag ~18 bp, GFP CDS ~720 bp, terminator ~100 bp = ~960 bp total. This fits easily in a standard expression plasmid."
+      ],
+      "connection": "This is exactly what you'll do in Homework Part 3! Designing expression cassettes requires understanding every element of the Central Dogma (transcription, translation, regulation). The choices you make here determine whether you get protein or not."
+    },
+    {
+      "id": "dogma-metabolic-engineering",
+      "title": "Metabolic Engineering Challenge",
+      "difficulty": "advanced",
+      "scenario": "You want to engineer E. coli to produce β-carotene (the orange pigment in carrots, a valuable antioxidant and Vitamin A precursor). This requires expressing three enzymes from the bacterium Erwinia herbicola: CrtE (geranylgeranyl pyrophosphate synthase), CrtB (phytoene synthase), and CrtI (phytoene desaturase). The three enzymes work in sequence to convert endogenous E. coli metabolites into β-carotene.",
+      "tasks": [
+        "Design a 3-gene expression strategy: Will you put all 3 genes on one plasmid (polycistronic operon), or use 3 separate plasmids, or integrate into the chromosome?",
+        "Balance expression levels: CrtE, CrtB, and CrtI need to be expressed in roughly a 2:1:1 ratio for optimal flux. How will you achieve this using promoters and RBS of different strengths?",
+        "Codon-optimize: All three genes are from Erwinia (GC content ~55%). E. coli prefers ~50% GC. Will you codon-optimize all three genes? Estimate the CAI before and after optimization.",
+        "Choose inducible or constitutive expression: β-carotene is not toxic, but expressing 3 foreign genes creates metabolic burden. What's your strategy?",
+        "Predict the outcome: If your strain produces bright orange colonies, you've succeeded. If colonies are pale yellow or white, what are the likely bottlenecks?"
+      ],
+      "hints": [
+        "A polycistronic operon (all 3 genes under one promoter with individual RBSs) is the simplest design. Use PT7 or Plac for induction. This is how the original β-carotene pathway was built (Martin et al., 2003).",
+        "To get a 2:1:1 ratio, use a strong RBS before CrtE, medium RBS before CrtB, and medium RBS before CrtI. The Salis RBS Calculator can predict translation rates.",
+        "Codon optimization can increase yield 5-10×. The wild-type Erwinia genes have CAI ~0.5 in E. coli; optimized versions reach CAI ~0.85.",
+        "Start with inducible (grow to high density, then induce). If burden is low, you can switch to constitutive for continuous production in a fed-batch reactor.",
+        "Pale color suggests low expression. Check: (1) Are genes codon-optimized? (2) Is the RBS strong enough? (3) Is the culture aerated (β-carotene synthesis needs oxygen)? (4) Sequence-verify all clones."
+      ],
+      "connection": "This is real metabolic engineering, exactly what synthetic biologists do to produce valuable compounds (drugs, biofuels, materials) in microbes. Companies like Ginkgo Bioworks, Zymergen, and Amyris use these strategies. The Central Dogma concepts (expression cassette design, codon optimization, transcription/translation rates) directly determine whether the pathway works."
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "sequencing",

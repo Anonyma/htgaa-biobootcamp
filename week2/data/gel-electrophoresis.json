@@ -525,6 +525,47 @@
       "difficulty": "intermediate"
     }
   ],
+  "designChallenges": [
+    {
+      "id": "gel-art-design",
+      "title": "Gel Art Design Challenge",
+      "difficulty": "intermediate",
+      "scenario": "For the Week 2 Gel Art Lab, you want to create a visually striking banding pattern on an agarose gel. You have access to a 5 kb plasmid (with a known sequence/restriction map) and the following enzymes: EcoRI, HindIII, BamHI, KpnI, EcoRV, and SacI. Your goal is to create a specific artistic pattern with bands at defined positions.",
+      "tasks": [
+        "Choose a plasmid (either use a real plasmid map from Addgene, or the example pUC19)",
+        "Design 3-4 different restriction digest combinations (single digests and double digests) that will create distinct, visually interesting banding patterns",
+        "Predict the fragment sizes for each digest using the plasmid sequence and restriction sites",
+        "Sketch the expected gel image: which lanes will have which bands? Plan the loading order to create a visual composition (e.g., a gradient from many small fragments to few large fragments)",
+        "Use Benchling or SnapGene to perform a virtual digest and compare your predictions to the software output"
+      ],
+      "hints": [
+        "A single restriction digest of a circular plasmid linearizes it (1 band). A double digest with 2 sites creates 2 fragments. Triple digest → 3 fragments, etc.",
+        "For visual interest, mix lanes with 1 band (uncut or single digest) with lanes containing 3-5 bands (multiple digests)",
+        "Fragment sizes should span the range well-separated by your gel (1% agarose separates 400-8000 bp well). Avoid all fragments being >5 kb or all <500 bp",
+        "Consider loading a DNA ladder in lane 1 for reference, then your artistic pattern in lanes 2-8. Symmetrical patterns or gradients work well visually"
+      ],
+      "connection": "This IS the Week 2 Gel Art Lab! Planning your digests ahead of time and predicting the results is how you create intentional gel art rather than random bands. Benchling virtual digest is a required homework tool."
+    },
+    {
+      "id": "gel-troubleshooting",
+      "title": "Gel Troubleshooting Challenge",
+      "difficulty": "intermediate",
+      "scenario": "You ran an agarose gel but the results look wrong. Here are three problems you observe: (1) Lane 2 has smeared bands instead of sharp bands, (2) Lane 4 shows NO bands at all even though you loaded DNA, (3) Lane 6 has bands, but they're all much higher (larger) than expected based on your ladder.",
+      "tasks": [
+        "Diagnose the cause of the smeared bands in lane 2. List at least 3 possible explanations.",
+        "Diagnose why lane 4 has no visible bands. List at least 3 possible explanations and how you'd test each one.",
+        "Diagnose why lane 6 bands are running larger than expected. What could cause DNA to migrate more slowly?",
+        "For each problem, propose a specific fix you would implement in your next gel run"
+      ],
+      "hints": [
+        "Smearing can be caused by: (1) Degraded DNA (from nuclease contamination or old sample), (2) Over-loading the well with too much DNA, (3) RNA contamination (RNase treatment can help), (4) running the gel too fast causing heating",
+        "No bands: (1) Forgot to add loading dye and DNA floated away, (2) DNA concentration too low to detect, (3) Loaded into the wrong end of the gel (loaded near the anode instead of cathode!), (4) Forgot to add ethidium bromide or SYBR Safe",
+        "Bands running larger: (1) Sample contains large protein or RNA contaminants, (2) Not fully digested (partial digest leaves large uncut fragments), (3) DNA is supercoiled (form I) which runs faster than expected, (4) Wrong agarose concentration",
+        "Fixes: For smearing, use fresh DNA, lower load amount, add RNase. For no bands, check loading orientation, increase DNA amount, verify stain. For size issues, treat with RNase, run digest longer, use relaxed/linear DNA"
+      ],
+      "connection": "Troubleshooting is a critical lab skill. Every molecular biologist has seen weird gel results and needs to diagnose the problem systematically. This prepares you for the real lab where gels don't always work perfectly the first time."
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "sequencing",

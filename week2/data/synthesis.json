@@ -550,6 +550,46 @@
       "difficulty": "intermediate"
     }
   ],
+  "designChallenges": [
+    {
+      "id": "synth-gene-assembly",
+      "title": "Gene Assembly Strategy",
+      "difficulty": "intermediate",
+      "scenario": "You need to synthesize a 5 kb gene encoding a novel enzyme. Your synthesis provider (Twist Bioscience) can synthesize oligos up to 300 nt long with ~99% coupling efficiency. You'll use Gibson Assembly to join the oligos into the full gene.",
+      "tasks": [
+        "Calculate how many overlapping oligos you'll need to cover the entire 5 kb gene with 30 bp overlaps between adjacent oligos",
+        "Design the overlap regions: what Tm should they have? What sequences should you avoid?",
+        "Predict potential error hotspots: which regions might have synthesis failures (consider GC content, repeats, secondary structures)?",
+        "Plan your assembly strategy: will you do the full 5 kb in one Gibson Assembly, or hierarchical assembly in stages?"
+      ],
+      "hints": [
+        "For 300 nt oligos with 30 bp overlaps, each oligo contributes 270 bp of unique sequence. So 5000 bp / 270 bp ≈ 19 oligos needed",
+        "Gibson Assembly overlaps should have Tm of 48-63°C, be unique (no repeats), and avoid strong hairpins. Use NEBuilder or similar tools to check",
+        "Very high GC regions (>70%) or very low (<30%) can cause synthesis failures. Homopolymer runs (AAAAAA) are also problematic",
+        "For a 5 kb gene, consider doing two 2.5 kb assemblies first, verify by sequencing, then join the two verified halves — reduces risk of needing to re-order all oligos if there's an error"
+      ],
+      "connection": "This directly prepares you for Homework Part 4 where you order synthetic DNA from Twist. Understanding oligo design, overlap requirements, and assembly strategy is essential for successful gene synthesis."
+    },
+    {
+      "id": "synth-cost-optimization",
+      "title": "Cost Optimization Challenge",
+      "difficulty": "advanced",
+      "scenario": "Your lab needs to create a library of 1000 variants of a gene, each with 5-10 point mutations. You're comparing two approaches: (1) ordering 1000 separate genes from a column synthesis vendor at $0.10/bp, or (2) ordering a single chip-based oligo pool from Twist with all 1000 variants on one chip.",
+      "tasks": [
+        "Calculate the total cost for approach 1 (column synthesis): 1000 genes × 2000 bp × $0.10/bp",
+        "Calculate the total cost for approach 2 (chip synthesis): estimate based on Twist's pricing model (assume ~$0.01 per oligo × 10 oligos per gene for assembly)",
+        "Determine the break-even point: at what number of variants does chip synthesis become more cost-effective?",
+        "Consider practical factors: turnaround time, amount of DNA received, need for PCR amplification from the pool"
+      ],
+      "hints": [
+        "Column synthesis: 1000 × 2000 bp × $0.10 = $200,000. This is clearly too expensive for most labs",
+        "Chip synthesis: If each 2 kb gene requires ~8 oligos of 300 nt (with overlaps), that's 8000 oligos total. At bulk rates, this might be $2000-5000 for the whole chip",
+        "The break-even is around 10-20 variants for most applications: below that, individual gene orders are acceptable; above that, chip synthesis is dramatically cheaper",
+        "Practical consideration: chip-synthesized pools give femtomoles of each oligo, requiring PCR amplification. Column synthesis gives micrograms directly. Factor in PCR cost and labor"
+      ],
+      "connection": "Understanding the economics of synthesis helps you choose the right approach for your project budget. This is especially relevant if you're designing large variant libraries for directed evolution (a common synthetic biology application)."
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "sequencing",

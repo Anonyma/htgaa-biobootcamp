@@ -184,6 +184,23 @@ function createTopicView(topicId) {
         });
       });
 
+      // Design challenge toggles
+      container.querySelectorAll('.design-challenge-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const body = btn.nextElementSibling;
+          const chevron = btn.querySelector('.challenge-chevron');
+          if (body) body.classList.toggle('hidden');
+          if (chevron) chevron.style.transform = body?.classList.contains('hidden') ? '' : 'rotate(180deg)';
+        });
+      });
+      container.querySelectorAll('.challenge-hint-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const hints = btn.nextElementSibling;
+          if (hints) hints.classList.toggle('hidden');
+          btn.textContent = hints?.classList.contains('hidden') ? 'Show Hints' : 'Hide Hints';
+        });
+      });
+
       // Notes panel
       initNotes(container, topicId);
 
@@ -382,6 +399,9 @@ function renderTopicPage(data, topicId) {
 
       <!-- Quiz Section -->
       ${data.quizQuestions ? renderQuizSection(data.quizQuestions, topicId) : ''}
+
+      <!-- Design Challenges -->
+      ${data.designChallenges ? renderDesignChallenges(data.designChallenges) : ''}
 
       <!-- Quick Review Flashcards -->
       ${data.vocabulary && data.vocabulary.length > 0 ? renderQuickReview(data.vocabulary, topicId) : ''}
@@ -744,6 +764,62 @@ function renderQuizSection(questions, topicId) {
             Next <i data-lucide="chevron-right" class="w-4 h-4 inline"></i>
           </button>
         </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderDesignChallenges(challenges) {
+  return `
+    <section class="mb-12">
+      <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+        <i data-lucide="lightbulb" class="w-6 h-6 text-orange-500"></i> Design Challenges
+        <span class="text-xs text-slate-400 font-normal ml-2">Open-ended practice problems</span>
+      </h2>
+      <div class="space-y-4">
+        ${challenges.map((ch, i) => `
+          <div class="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/10 dark:to-amber-900/10 rounded-xl border border-orange-200 dark:border-orange-800 overflow-hidden">
+            <button class="design-challenge-toggle w-full text-left px-5 py-4 flex items-center gap-3 hover:bg-orange-100/50 dark:hover:bg-orange-900/20 transition-colors" data-challenge="${i}">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="rocket" class="w-4 h-4 text-white"></i>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-0.5">
+                  <span class="font-bold text-sm">${ch.title}</span>
+                  <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${ch.difficulty === 'advanced' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'}">${ch.difficulty}</span>
+                </div>
+                <p class="text-xs text-slate-500">${ch.scenario}</p>
+              </div>
+              <i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 challenge-chevron transition-transform flex-shrink-0"></i>
+            </button>
+            <div class="design-challenge-body hidden px-5 pb-5">
+              <div class="mb-4">
+                <h4 class="text-sm font-bold text-orange-800 dark:text-orange-300 mb-2">Your Tasks:</h4>
+                <ol class="space-y-2">
+                  ${ch.tasks.map(task => `<li class="text-sm">${task}</li>`).join('')}
+                </ol>
+              </div>
+              ${ch.hints && ch.hints.length > 0 ? `
+                <div class="mb-3">
+                  <button class="challenge-hint-btn text-xs font-medium text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-700 rounded-full px-3 py-1 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors">Show Hints</button>
+                  <div class="challenge-hints hidden mt-2 p-3 bg-amber-100/50 dark:bg-amber-900/20 rounded-lg">
+                    <ul class="space-y-1">
+                      ${ch.hints.map(h => `<li class="text-xs text-amber-800 dark:text-amber-300">${h}</li>`).join('')}
+                    </ul>
+                  </div>
+                </div>
+              ` : ''}
+              ${ch.connection ? `
+                <div class="text-xs text-slate-500 flex items-center gap-1 mt-2">
+                  <i data-lucide="link" class="w-3 h-3"></i> ${ch.connection}
+                </div>
+              ` : ''}
+              <div class="mt-3">
+                <textarea class="w-full border border-orange-200 dark:border-orange-800 rounded-lg p-3 text-sm bg-white dark:bg-slate-800 min-h-[80px] focus:outline-none focus:ring-2 focus:ring-orange-300 dark:focus:ring-orange-700 resize-y" placeholder="Write your solution here..."></textarea>
+              </div>
+            </div>
+          </div>
+        `).join('')}
       </div>
     </section>
   `;

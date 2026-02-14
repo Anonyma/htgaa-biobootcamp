@@ -492,6 +492,48 @@
       "difficulty": "advanced"
     }
   ],
+  "designChallenges": [
+    {
+      "id": "genetic-codon-opt",
+      "title": "Codon Optimization Challenge",
+      "difficulty": "intermediate",
+      "scenario": "You have a protein sequence (let's say GFP, 238 amino acids) that you need to express at high levels in both E. coli (for research/production) and in human HEK293 cells (for mammalian cell imaging). The same protein, but two very different hosts with different codon preferences.",
+      "tasks": [
+        "Use a codon optimization tool (IDT, GenScript, or OPTIMIZER) to reverse-translate the GFP protein sequence for E. coli",
+        "Use the same tool to optimize for human (Homo sapiens)",
+        "Compare the two DNA sequences: count how many nucleotide positions differ despite encoding the identical protein",
+        "Calculate the Codon Adaptation Index (CAI) for each sequence in its target host and in the opposite host",
+        "Explain why expressing the E. coli-optimized version in human cells (or vice versa) would likely give poor results"
+      ],
+      "hints": [
+        "For a 238 aa protein, the coding sequence is 714 bp (238 × 3). You might find 30-50% of positions differ between the two optimized versions",
+        "E. coli strongly prefers codons like CGT/CGC for arginine, while human cells prefer AGA/AGG. These represent completely different nucleotide sequences for the same amino acid",
+        "The CAI of the E. coli-optimized sequence in E. coli should be 0.8-0.9, but only 0.3-0.5 in human cells, indicating many rare codons for the human ribosome",
+        "Poor CAI correlates with ribosome stalling, reduced protein yield, and potential misfolding or aggregation"
+      ],
+      "connection": "This directly applies to Homework Part 3 where you design synthetic DNA. Codon optimization is essential whenever you express a gene in a heterologous host (different from its native organism)."
+    },
+    {
+      "id": "genetic-expanded-code",
+      "title": "Expanded Genetic Code Design",
+      "difficulty": "advanced",
+      "scenario": "You want to create a minimal expanded genetic code that can encode the 20 standard amino acids plus ONE non-standard amino acid (let's say phosphoserine for studying protein phosphorylation). You have access to genomically recoded E. coli (strain C321.ΔA) where the UAG amber stop codon has been freed up and RF1 deleted.",
+      "tasks": [
+        "Design the orthogonal translation system: What tRNA/aminoacyl-tRNA synthetase pair would you use? (Hint: Archaeal pairs are often orthogonal in E. coli)",
+        "The orthogonal tRNA needs a CUA anticodon (to read UAG). Explain why this tRNA must NOT be recognized by any of E. coli's 43 native aminoacyl-tRNA synthetases",
+        "The orthogonal synthetase must charge the CUA-tRNA with phosphoserine. How would you engineer the synthetase's amino acid binding pocket? (Consider directed evolution strategies)",
+        "Where in your target protein would you place the UAG codon to incorporate phosphoserine? Consider structural/functional sites where phosphorylation naturally occurs",
+        "Calculate incorporation efficiency: if 30% of UAG codons are read by your orthogonal tRNA (and 70% cause termination), what fraction of translated proteins will have phosphoserine incorporated?"
+      ],
+      "hints": [
+        "The Methanocaldococcus jannaschii (Mj) TyrRS/tRNA-Tyr pair is commonly used because it's orthogonal in E. coli. Start with this and evolve the synthetase",
+        "Orthogonality means the Mj-tRNA is not a substrate for any E. coli synthetase, and the Mj-synthetase doesn't charge any E. coli tRNA. This was established by negative selection experiments",
+        "To evolve the synthetase, use a library with randomized residues in the binding pocket, then select for clones that survive on media only if they charge the tRNA with phosphoserine (not tyrosine)",
+        "Only 30% incorporation means only 30% of proteins have the full-length modified form. For a single UAG site, this is acceptable if you purify the correct form. For multiple UAG sites, efficiency drops multiplicatively"
+      ],
+      "connection": "This explores cutting-edge synthetic biology. Expanded genetic codes enable proteins with new chemistries (click handles, fluorophores, photocrosslinkers) impossible with the 20 standard amino acids. Connects to Week 2 lectures on genetic code and protein engineering."
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "central-dogma",

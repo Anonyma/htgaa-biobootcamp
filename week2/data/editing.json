@@ -583,6 +583,48 @@
       "difficulty": "beginner"
     }
   ],
+  "designChallenges": [
+    {
+      "id": "edit-guide-design",
+      "title": "CRISPR Guide Design Challenge",
+      "difficulty": "intermediate",
+      "scenario": "You want to knock out the human HBB gene (encoding beta-globin) in HEK293 cells as a disease model for beta-thalassemia. The gene is about 1600 bp long with 3 exons. Your goal is to create a complete loss-of-function by disrupting the coding sequence.",
+      "tasks": [
+        "Identify 3-5 candidate PAM sites (NGG for SpCas9) in exon 1 or exon 2 of the HBB gene",
+        "Design 20-nucleotide guide RNA sequences for each target site",
+        "Use a tool like CRISPOR or Benchling to evaluate off-target risks for each guide",
+        "Choose the best guide based on on-target efficiency score and minimal off-target hits",
+        "Select a delivery method: plasmid transfection, lentiviral transduction, or ribonucleoprotein (RNP) electroporation? Justify your choice for HEK293 cells"
+      ],
+      "hints": [
+        "Target early exons to ensure any frameshift creates a premature stop codon that triggers nonsense-mediated decay",
+        "Look for PAM sites (NGG) in the first 50% of the coding sequence. Use the NCBI gene page or Ensembl to get the HBB sequence",
+        "Off-target sites with 0-2 mismatches in the seed region (positions 8-12 of the guide) are highest risk. Aim for guides with no perfect matches elsewhere in the genome",
+        "For HEK293, RNP delivery via electroporation is fast (edits in 24-48 hrs) and has low toxicity, but plasmid transfection is simpler if you don't have an electroporator"
+      ],
+      "connection": "This prepares you for real CRISPR experiments. Guide design and off-target analysis are critical skills covered in Week 2 lectures. Connects to Homework Part 5 experimental design section."
+    },
+    {
+      "id": "edit-therapeutic-strategy",
+      "title": "Therapeutic Editing Strategy",
+      "difficulty": "advanced",
+      "scenario": "Sickle cell disease is caused by a single A→T point mutation in the HBB gene (Glu6Val, GAG→GTG). Three editing approaches are possible: (1) Cas9 gene knockout + upregulation of fetal hemoglobin (HbF), (2) adenine base editor (ABE) to revert T→A, or (3) prime editor to install the wild-type sequence. You're designing a clinical trial.",
+      "tasks": [
+        "Compare the three approaches: What are the molecular mechanisms? What are the success rates? What are the safety concerns?",
+        "For approach 1 (Cas9 knockout), explain why disrupting the adult beta-globin gene and reactivating fetal hemoglobin works as a therapy",
+        "For approach 2 (base editing), identify whether ABE (A→G) or CBE (C→T) is needed, and whether the sickle mutation is in a suitable sequence context",
+        "For approach 3 (prime editing), design the pegRNA (primer binding site + RT template + scaffold). What length of homology is optimal?",
+        "Recommend ONE approach and justify based on efficacy, safety, and manufacturability for ex vivo HSC editing"
+      ],
+      "hints": [
+        "Approach 1 is what was used in approved therapies (Casgevy, Lyfgenia): disrupt BCL11A binding site to reactivate fetal hemoglobin. Well-validated but doesn't fix the actual mutation",
+        "The sickle mutation is GAG→GTG (A→T on the non-template strand, T→A on template strand). To revert it, you need a base editor that converts T→C, which is a CBE (cytosine base editor), not ABE. But check the sequence context!",
+        "Prime editing can make any edit but is less efficient (~10-30%) and requires a longer pegRNA that's harder to deliver. Weigh precision vs efficiency",
+        "For clinical use, simpler is often better: Cas9 knockout is most efficient, base editing is good if the edit is possible, prime editing is most flexible but lowest efficiency"
+      ],
+      "connection": "This connects to real-world therapeutic development. The first CRISPR therapy (Casgevy) for sickle cell disease was approved in 2023 using approach 1. Understanding the trade-offs between editing methods is crucial for precision medicine."
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "sequencing",

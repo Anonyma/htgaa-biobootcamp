@@ -2423,6 +2423,17 @@ a[data-route]:hover::after {
   box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
+/* ===== Design Challenge Cards ===== */
+.design-challenge-toggle:hover {
+  background: rgba(245, 158, 11, 0.08);
+}
+.design-challenge-body textarea {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.design-challenge-body textarea:focus {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+}
+
 /* ===== Bookmark Buttons ===== */
 .bookmark-btn.bookmarked svg {
   fill: #3b82f6;

@@ -542,6 +542,44 @@
       "difficulty": "beginner"
     }
   ],
+  "designChallenges": [
+    {
+      "id": "seq-platform-selection",
+      "title": "Platform Selection Challenge",
+      "difficulty": "intermediate",
+      "scenario": "You're part of a cancer genomics lab that has received a tumor biopsy sample. Your goal is to detect rare somatic mutations (present in only 5-10% of cells) that might be targetable for therapy. You have a budget that allows for one sequencing run on any platform.",
+      "tasks": [
+        "Identify the key requirements: What mutation types do you need to detect (SNVs, indels, structural variants)?",
+        "Compare three sequencing platforms (e.g., Illumina NovaSeq, PacBio HiFi, Oxford Nanopore) for this application",
+        "Design a sequencing strategy: What coverage depth will you need to reliably detect mutations at 5-10% frequency?",
+        "Calculate the total cost and justify your platform choice"
+      ],
+      "hints": [
+        "For detecting rare mutations, you need high coverage depth (typically 100-300x) to distinguish true low-frequency variants from sequencing errors",
+        "Short-read platforms like Illumina have the lowest error rates (~0.1%) and highest throughput, making them ideal for sensitive variant calling",
+        "Consider whether you need to detect large structural variants in addition to SNVs — this might require long reads as supplementary data"
+      ],
+      "connection": "This challenge connects to Homework Part 5 (experimental design) where you select appropriate methods. Understanding the trade-offs between accuracy, read length, throughput, and cost is essential for designing real sequencing experiments."
+    },
+    {
+      "id": "seq-qc-analysis",
+      "title": "Quality Control Analysis",
+      "difficulty": "advanced",
+      "scenario": "You've received FASTQ files from a whole-genome sequencing run. When you examine the quality scores, you notice some concerning patterns: the first 10 bases of every read have Q scores around Q35-40, but quality drops sharply after base 100, with many bases showing Q15-20 by position 150. Additionally, you see an unusual spike in GC content in a subset of reads.",
+      "tasks": [
+        "Determine if this sequencing run is acceptable for variant calling, or if you should request a re-run",
+        "Identify what might have caused the quality drop after base 100",
+        "Propose specific quality filtering steps you would apply before alignment",
+        "Estimate how these quality issues will affect your ability to detect heterozygous SNPs"
+      ],
+      "hints": [
+        "Q20 means 1 in 100 error rate; Q30 means 1 in 1000. For diploid variant calling, you typically want Q30+ to confidently call heterozygous variants",
+        "Quality degradation toward the end of reads is normal in Illumina sequencing due to phasing/pre-phasing, but Q15-20 at position 150 is worse than typical",
+        "Unusual GC content spikes can indicate adapter contamination or PCR bias during library prep"
+      ],
+      "connection": "This challenge prepares you for analyzing real sequencing data in Homework Part 3. Understanding quality metrics and knowing when data is good enough versus when to re-run is a critical skill in genomics."
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "synthesis",
