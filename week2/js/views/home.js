@@ -95,7 +95,7 @@ function createHomeView() {
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
               <i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i> Study Tools
             </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               <a data-route="#/flashcards" class="block p-5 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl border border-violet-200 dark:border-violet-800 hover:border-violet-400 cursor-pointer transition-colors">
                 <i data-lucide="layers" class="w-6 h-6 text-violet-500 mb-2"></i>
                 <h3 class="font-bold">Flashcards</h3>
@@ -115,6 +115,11 @@ function createHomeView() {
                 <i data-lucide="trophy" class="w-6 h-6 text-amber-500 mb-2"></i>
                 <h3 class="font-bold">Exam Mode</h3>
                 <p class="text-sm text-slate-500 mt-1">Timed practice quiz</p>
+              </a>
+              <a data-route="#/compare" class="block p-5 bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl border border-teal-200 dark:border-teal-800 hover:border-teal-400 cursor-pointer transition-colors">
+                <i data-lucide="columns" class="w-6 h-6 text-teal-500 mb-2"></i>
+                <h3 class="font-bold">Compare</h3>
+                <p class="text-sm text-slate-500 mt-1">Side-by-side topics</p>
               </a>
             </div>
           </section>
@@ -742,6 +747,13 @@ function renderTopicCard(topic, index, progress) {
     'sequencing': 35, 'synthesis': 35, 'editing': 35,
     'genetic-codes': 28, 'gel-electrophoresis': 28, 'central-dogma': 35,
   };
+  const sectionCounts = {
+    'sequencing': 7, 'synthesis': 7, 'editing': 7,
+    'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7,
+  };
+  const totalSections = sectionCounts[topic.id] || 6;
+  const sectionsRead = store.getSectionsRead(topic.id).length;
+  const sectionPct = Math.round((sectionsRead / totalSections) * 100);
 
   return `
     <a data-route="#/topic/${topic.id}" class="topic-card group block bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 hover:border-${topic.color}-400 dark:hover:border-${topic.color}-500 cursor-pointer transition-all">
@@ -761,8 +773,14 @@ function renderTopicCard(topic, index, progress) {
           <div class="flex items-center gap-3 text-xs text-slate-400">
             <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${readingTimes[topic.id] || 30} min</span>
             ${quizScore ? `<span>Quiz: ${quizScore.correct}/${quizScore.total}</span>` : ''}
-            <span class="flex items-center gap-1"><i data-lucide="arrow-right" class="w-3 h-3"></i> Start reading</span>
+            ${sectionsRead > 0 ? `<span class="flex items-center gap-1"><i data-lucide="book-open" class="w-3 h-3"></i> ${sectionsRead}/${totalSections} read</span>` : ''}
+            ${sectionsRead === 0 ? `<span class="flex items-center gap-1"><i data-lucide="arrow-right" class="w-3 h-3"></i> Start reading</span>` : ''}
           </div>
+          ${sectionsRead > 0 && !isComplete ? `
+            <div class="mt-2 h-1 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+              <div class="h-full rounded-full bg-${topic.color}-400 transition-all" style="width: ${sectionPct}%"></div>
+            </div>
+          ` : ''}
         </div>
       </div>
     </a>

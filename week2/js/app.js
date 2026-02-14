@@ -11,6 +11,7 @@ import { createHomeworkView } from './views/homework.js';
 import { createFlashcardsView } from './views/flashcards.js';
 import { createConceptMapView } from './concept-map.js';
 import { createExamView } from './views/exam.js';
+import { createCompareView } from './views/compare.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -36,7 +37,9 @@ class App {
       .on('/homework', () => createHomeworkView())
       .on('/flashcards', () => createFlashcardsView())
       .on('/concept-map', () => createConceptMapView())
-      .on('/exam', () => createExamView());
+      .on('/exam', () => createExamView())
+      .on('/compare', () => createCompareView())
+      .on('/compare/:a/:b', ({ a, b }) => createCompareView(a, b));
 
     // Start
     this.router.start();
@@ -152,6 +155,24 @@ class App {
                 <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>
                 <span>Exam Mode</span>
               </a>
+              <a data-route="#/compare" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="columns" class="w-4 h-4 text-teal-500"></i>
+                <span>Compare Topics</span>
+              </a>
+            </div>
+
+            <!-- Study Timer -->
+            <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
+              <div class="px-3 py-2">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Session Timer</span>
+                  <button id="session-timer-toggle" class="text-xs text-blue-500 hover:text-blue-600 font-medium" title="Start/Pause">
+                    <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
+                  </button>
+                </div>
+                <div class="text-2xl font-mono font-bold text-slate-700 dark:text-slate-300" id="session-timer-display">00:00</div>
+                <p class="text-xs text-slate-400 mt-1" id="session-timer-status">Click play to start</p>
+              </div>
             </div>
           </div>
         </aside>
@@ -359,6 +380,62 @@ class App {
 
     // "?" help button in bottom-right corner
     document.getElementById('keyboard-help-btn')?.addEventListener('click', toggleShortcutsModal);
+
+    // Session study timer
+    this.initSessionTimer();
+  }
+
+  initSessionTimer() {
+    const display = document.getElementById('session-timer-display');
+    const toggleBtn = document.getElementById('session-timer-toggle');
+    const statusEl = document.getElementById('session-timer-status');
+    if (!display || !toggleBtn) return;
+
+    let seconds = 0;
+    let running = false;
+    let interval = null;
+    const POMODORO = 25 * 60; // 25 min
+
+    const fmt = (s) => {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    };
+
+    const update = () => {
+      display.textContent = fmt(seconds);
+      // Pomodoro reminder at 25 min
+      if (seconds === POMODORO && statusEl) {
+        statusEl.textContent = 'Time for a 5-min break!';
+        statusEl.classList.add('text-amber-500');
+        // Flash the timer
+        display.classList.add('text-amber-500');
+        setTimeout(() => display.classList.remove('text-amber-500'), 3000);
+      }
+    };
+
+    toggleBtn.addEventListener('click', () => {
+      if (running) {
+        clearInterval(interval);
+        running = false;
+        toggleBtn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 inline"></i>';
+        if (statusEl) statusEl.textContent = 'Paused';
+      } else {
+        interval = setInterval(() => {
+          if (!document.hidden) {
+            seconds++;
+            update();
+          }
+        }, 1000);
+        running = true;
+        toggleBtn.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5 inline"></i>';
+        if (statusEl) {
+          statusEl.textContent = 'Studying...';
+          statusEl.classList.remove('text-amber-500');
+        }
+      }
+      if (window.lucide) lucide.createIcons();
+    });
   }
 
   updateSidebarProgress() {

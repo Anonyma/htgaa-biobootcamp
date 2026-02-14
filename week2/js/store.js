@@ -289,6 +289,27 @@ class Store {
     return this.getBookmarks().some(b => b.topicId === topicId && b.sectionId === sectionId);
   }
 
+  // --- Section Progress ---
+  markSectionRead(topicId, sectionId) {
+    const key = 'htgaa-week2-section-progress';
+    const data = this._loadJSON(key, {});
+    if (!data[topicId]) data[topicId] = [];
+    if (!data[topicId].includes(sectionId)) {
+      data[topicId].push(sectionId);
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+  }
+
+  getSectionsRead(topicId) {
+    const data = this._loadJSON('htgaa-week2-section-progress', {});
+    return data[topicId] || [];
+  }
+
+  getSectionProgress(topicId, totalSections) {
+    const read = this.getSectionsRead(topicId).length;
+    return { read, total: totalSections, pct: totalSections > 0 ? Math.round((read / totalSections) * 100) : 0 };
+  }
+
   // --- Topic Data Cache ---
   async loadTopicData(topicId) {
     if (this._state.topicData[topicId]) return this._state.topicData[topicId];

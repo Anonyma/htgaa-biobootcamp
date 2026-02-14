@@ -148,7 +148,7 @@ function createTopicView(topicId) {
       initScrollReveal(container);
 
       // Section progress indicator
-      initSectionProgress(container);
+      initSectionProgress(container, topicId);
 
       // Back-to-top button
       initBackToTop();
@@ -242,9 +242,14 @@ function createTopicView(topicId) {
       };
       container.addEventListener('touchstart', this._touchStart, { passive: true });
       container.addEventListener('touchend', this._touchEnd, { passive: true });
+
+      // Restore scroll position if returning to this topic
+      restoreScrollPosition(topicId);
     },
 
     unmount() {
+      // Save scroll position for this topic
+      saveScrollPosition(topicId);
       simCleanup.forEach(fn => fn());
       simCleanup = [];
       if (this._keyHandler) document.removeEventListener('keydown', this._keyHandler);
@@ -1642,16 +1647,162 @@ function initMarkComplete(container, topicId) {
       store.markTopicIncomplete(topicId);
       btn.className = 'px-6 py-3 rounded-xl font-semibold transition-all bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl';
       btn.innerHTML = '<i data-lucide="circle" class="w-5 h-5 inline mr-2"></i>Mark as Complete';
+      // Remove completion summary if present
+      const summary = container.querySelector('.completion-summary');
+      if (summary) summary.remove();
     } else {
       store.markTopicComplete(topicId);
       btn.className = 'px-6 py-3 rounded-xl font-semibold transition-all bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-2 border-green-300 dark:border-green-700';
       btn.innerHTML = '<i data-lucide="check-circle-2" class="w-5 h-5 inline mr-2"></i>Completed';
       launchConfetti(btn);
+      showCompletionSummary(container, topicId);
     }
     if (window.lucide) lucide.createIcons();
     // Update sidebar
     document.dispatchEvent(new CustomEvent('progress-updated'));
   });
+}
+
+function showCompletionSummary(container, topicId) {
+  // Remove existing summary
+  const existing = container.querySelector('.completion-summary');
+  if (existing) existing.remove();
+
+  // Gather stats
+  const quizScore = store.getQuizScore(topicId);
+  const timeSpent = getTopicTimeSpent(topicId);
+  const topicMeta = TOPICS.find(t => t.id === topicId);
+  const progress = store.getOverallProgress();
+  const completedCount = TOPICS.filter(t => store.isTopicComplete(t.id)).length;
+  const bookmarks = store.getBookmarks().filter(b => b.topicId === topicId).length;
+  const flashcardStats = store.getFlashcardStats();
+
+  const quizDisplay = quizScore
+    ? `${quizScore.correct}/${quizScore.total} (${Math.round(quizScore.correct / quizScore.total * 100)}%)`
+    : 'Not attempted';
+  const quizColor = quizScore && (quizScore.correct / quizScore.total >= 0.7) ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400';
+
+  const summaryEl = document.createElement('div');
+  summaryEl.className = 'completion-summary';
+  summaryEl.innerHTML = `
+    <div class="completion-summary-inner">
+      <div class="completion-header">
+        <div class="completion-icon">
+          <i data-lucide="trophy" class="w-8 h-8 text-amber-500"></i>
+        </div>
+        <h3 class="text-xl font-bold text-slate-800 dark:text-white">Chapter Complete!</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">${topicMeta?.title || topicId}</p>
+      </div>
+
+      <div class="completion-stats">
+        <div class="completion-stat">
+          <i data-lucide="clock" class="w-5 h-5 text-blue-500"></i>
+          <span class="stat-value">${timeSpent}</span>
+          <span class="stat-label">Time Studied</span>
+        </div>
+        <div class="completion-stat">
+          <i data-lucide="brain" class="w-5 h-5 text-purple-500"></i>
+          <span class="stat-value ${quizColor}">${quizDisplay}</span>
+          <span class="stat-label">Quiz Score</span>
+        </div>
+        <div class="completion-stat">
+          <i data-lucide="bookmark" class="w-5 h-5 text-blue-500"></i>
+          <span class="stat-value">${bookmarks}</span>
+          <span class="stat-label">Bookmarks</span>
+        </div>
+        <div class="completion-stat">
+          <i data-lucide="bar-chart-3" class="w-5 h-5 text-green-500"></i>
+          <span class="stat-value">${completedCount}/${TOPICS.length}</span>
+          <span class="stat-label">Topics Done</span>
+        </div>
+      </div>
+
+      <div class="completion-progress-bar">
+        <div class="completion-progress-fill" style="width: 0%"></div>
+      </div>
+      <p class="text-xs text-center text-slate-500 dark:text-slate-400 mt-1">${progress}% overall progress</p>
+
+      ${quizScore && quizScore.correct / quizScore.total < 0.7 ? `
+        <div class="completion-tip">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500 flex-shrink-0"></i>
+          <span>Consider reviewing the quiz — scoring 70%+ helps retain concepts long-term.</span>
+        </div>
+      ` : ''}
+      ${!quizScore ? `
+        <div class="completion-tip">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500 flex-shrink-0"></i>
+          <span>Try the quiz to test your understanding before moving on!</span>
+        </div>
+      ` : ''}
+    </div>
+  `;
+
+  // Insert after the mark-complete button row
+  const btnRow = container.querySelector('#mark-complete-btn')?.closest('.mt-12');
+  if (btnRow) {
+    btnRow.after(summaryEl);
+  }
+
+  // Animate in
+  requestAnimationFrame(() => {
+    summaryEl.classList.add('visible');
+    // Animate progress bar
+    const fill = summaryEl.querySelector('.completion-progress-fill');
+    if (fill) {
+      setTimeout(() => { fill.style.width = `${progress}%`; }, 300);
+    }
+  });
+
+  if (window.lucide) lucide.createIcons();
+}
+
+// --- Scroll Position Memory ---
+const SCROLL_KEY = 'htgaa-week2-scroll-pos';
+
+function saveScrollPosition(topicId) {
+  try {
+    const positions = JSON.parse(localStorage.getItem(SCROLL_KEY) || '{}');
+    positions[topicId] = { y: window.scrollY, ts: Date.now() };
+    localStorage.setItem(SCROLL_KEY, JSON.stringify(positions));
+  } catch {}
+}
+
+function restoreScrollPosition(topicId) {
+  try {
+    const positions = JSON.parse(localStorage.getItem(SCROLL_KEY) || '{}');
+    const saved = positions[topicId];
+    if (!saved || saved.y < 100) return; // Don't restore if near top
+
+    // Only restore if saved within last 7 days
+    if (Date.now() - saved.ts > 7 * 86400000) return;
+
+    // Wait for content to render, then scroll
+    setTimeout(() => {
+      window.scrollTo({ top: saved.y, behavior: 'smooth' });
+      // Show brief toast
+      const toast = document.createElement('div');
+      toast.className = 'scroll-restored-toast';
+      toast.textContent = 'Resumed where you left off';
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('visible'));
+      setTimeout(() => {
+        toast.classList.remove('visible');
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    }, 200);
+  } catch {}
+}
+
+function getTopicTimeSpent(topicId) {
+  try {
+    const t = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+    const secs = t[topicId] || 0;
+    if (secs < 60) return `${secs}s`;
+    const mins = Math.floor(secs / 60);
+    if (mins < 60) return `${mins}m`;
+    const hrs = Math.floor(mins / 60);
+    return `${hrs}h ${mins % 60}m`;
+  } catch { return '0m'; }
 }
 
 async function initInlineInteractions(container, data) {
@@ -1724,7 +1875,7 @@ function initScrollReveal(container) {
 }
 
 /** Show current section number as you scroll */
-function initSectionProgress(container) {
+function initSectionProgress(container, topicId) {
   const indicator = document.getElementById('section-progress-indicator');
   if (!indicator) return;
 
@@ -1739,6 +1890,7 @@ function initSectionProgress(container) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const idx = Array.from(sections).indexOf(entry.target);
+        const sectionId = entry.target.dataset.section;
         if (idx >= 0 && numSpan) {
           // Trigger animation by removing and re-adding animation class
           numSpan.style.animation = 'none';
@@ -1749,6 +1901,11 @@ function initSectionProgress(container) {
           indicator.classList.add('visible');
           clearTimeout(hideTimeout);
           hideTimeout = setTimeout(() => indicator.classList.remove('visible'), 2000);
+
+          // Track section as read
+          if (sectionId && topicId) {
+            store.markSectionRead(topicId, sectionId);
+          }
         }
       }
     });
