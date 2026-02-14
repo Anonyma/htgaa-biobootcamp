@@ -2471,3 +2471,15 @@ a[data-route]:hover::after {
   h1, h2, h3 { page-break-after: avoid; }
   img, svg, table { page-break-inside: avoid; }
 }
+
+/* ===== Focus Mode ===== */
+.focus-mode nav { opacity: 0.3; transition: opacity 0.3s; }
+.focus-mode nav:hover { opacity: 1; }
+.focus-mode #app-sidebar { display: none !important; }
+.focus-mode .keyboard-help-btn { display: none; }
+.focus-mode #app-content {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.focus-mode footer { display: none; }

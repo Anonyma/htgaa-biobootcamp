@@ -65,9 +65,15 @@ class App {
               <span class="font-bold text-lg sm:hidden">W2</span>
             </a>
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1">
             <button id="search-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Search (⌘K or /)">
               <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+            <button id="font-size-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Font size">
+              <i data-lucide="type" class="w-5 h-5"></i>
+            </button>
+            <button id="focus-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Focus mode (f)">
+              <i data-lucide="maximize-2" class="w-5 h-5"></i>
             </button>
             <button id="theme-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Toggle theme">
               <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
@@ -189,6 +195,7 @@ class App {
                 <h3 class="shortcuts-group-label">Search & Interface</h3>
                 <div class="shortcuts-grid">
                   <div class="shortcut-row"><div class="flex items-center gap-1"><kbd class="shortcut-key">/</kbd><span class="shortcut-or">or</span><kbd class="shortcut-key">\u2318K</kbd></div><span class="shortcut-desc">Open search</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">f</kbd><span class="shortcut-desc">Toggle focus mode</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">t</kbd><span class="shortcut-desc">Toggle dark/light theme</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">Esc</kbd><span class="shortcut-desc">Close modal / search</span></div>
                 </div>
@@ -296,6 +303,31 @@ class App {
     this.searchUI = new SearchUI();
     this.searchUI.init();
 
+    // Focus mode
+    const toggleFocus = () => {
+      document.body.classList.toggle('focus-mode');
+      const btn = document.getElementById('focus-toggle');
+      if (btn) {
+        const isFocused = document.body.classList.contains('focus-mode');
+        btn.innerHTML = isFocused
+          ? '<i data-lucide="minimize-2" class="w-5 h-5"></i>'
+          : '<i data-lucide="maximize-2" class="w-5 h-5"></i>';
+        if (window.lucide) lucide.createIcons();
+      }
+    };
+    document.getElementById('focus-toggle')?.addEventListener('click', toggleFocus);
+
+    // Font size toggle (cycles: normal -> large -> xl -> normal)
+    const FONT_SIZES = ['text-base', 'text-lg', 'text-xl'];
+    let fontIdx = 0;
+    document.getElementById('font-size-toggle')?.addEventListener('click', () => {
+      const content = document.getElementById('app-content');
+      if (!content) return;
+      content.classList.remove(FONT_SIZES[fontIdx]);
+      fontIdx = (fontIdx + 1) % FONT_SIZES.length;
+      content.classList.add(FONT_SIZES[fontIdx]);
+    });
+
     // Global keyboard shortcuts
     const toggleShortcutsModal = () => {
       const modal = document.getElementById('shortcuts-modal');
@@ -319,6 +351,9 @@ class App {
       }
       if (e.key === 'h' && !e.metaKey && !e.ctrlKey) {
         window.location.hash = '#/';
+      }
+      if (e.key === 'f' && !e.metaKey && !e.ctrlKey) {
+        toggleFocus();
       }
     });
 
