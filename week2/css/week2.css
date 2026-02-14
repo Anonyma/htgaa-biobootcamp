@@ -2484,6 +2484,10 @@ a[data-route]:hover::after {
   h3 { font-size: 13pt !important; page-break-after: avoid; }
   p, li { orphans: 3; widows: 3; }
 
+  /* Study summary print */
+  .study-summary-page section { page-break-inside: avoid; }
+  .page-break-inside-avoid { page-break-inside: avoid; }
+
   /* Layout: full width, no sidebar */
   #app-content, .topic-content, main { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
 

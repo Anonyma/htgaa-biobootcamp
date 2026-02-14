@@ -12,6 +12,8 @@ import { createFlashcardsView } from './views/flashcards.js';
 import { createConceptMapView } from './concept-map.js';
 import { createExamView } from './views/exam.js';
 import { createCompareView } from './views/compare.js';
+import { createGlossaryView } from './views/glossary.js';
+import { createStudySummaryView } from './views/study-summary.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -39,7 +41,9 @@ class App {
       .on('/concept-map', () => createConceptMapView())
       .on('/exam', () => createExamView())
       .on('/compare', () => createCompareView())
-      .on('/compare/:a/:b', ({ a, b }) => createCompareView(a, b));
+      .on('/compare/:a/:b', ({ a, b }) => createCompareView(a, b))
+      .on('/glossary', () => createGlossaryView())
+      .on('/summary', () => createStudySummaryView());
 
     // Start
     this.router.start();
@@ -163,6 +167,14 @@ class App {
               <a data-route="#/compare" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="columns" class="w-4 h-4 text-teal-500"></i>
                 <span>Compare Topics</span>
+              </a>
+              <a data-route="#/glossary" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="book-a" class="w-4 h-4 text-emerald-500"></i>
+                <span>Glossary</span>
+              </a>
+              <a data-route="#/summary" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="file-text" class="w-4 h-4 text-rose-500"></i>
+                <span>Study Summary</span>
               </a>
             </div>
 
