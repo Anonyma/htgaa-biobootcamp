@@ -328,4 +328,5 @@ function initCodonWheel() {
     });
 }
 
-initCodonWheel();
+function init() { initCodonWheel(); }
+export { init, initCodonWheel };

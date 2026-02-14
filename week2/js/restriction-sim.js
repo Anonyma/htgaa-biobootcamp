@@ -311,3 +311,6 @@ function clearResults() {
   if (r) r.innerHTML = '';
   if (s) s.innerHTML = '';
 }
+
+function init() { initRestrictionSim(); }
+export { init, initRestrictionSim };

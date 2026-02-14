@@ -203,3 +203,6 @@ function initCassetteBuilder() {
   // ── Init ──────────────────────────────────────────────────────────
   render();
 }
+
+function init() { initCassetteBuilder(); }
+export { init, initCassetteBuilder };

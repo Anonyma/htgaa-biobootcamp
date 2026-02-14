@@ -238,3 +238,6 @@ function initGelSim() {
   updateLaneList();
   drawWells();
 }
+
+function init() { initGelSim(); }
+export { init, initGelSim };

@@ -452,3 +452,6 @@ function initCentralDogma() {
   // --- Init ---
   render();
 }
+
+function init() { initCentralDogma(); }
+export { init, initCentralDogma };

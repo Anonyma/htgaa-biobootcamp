@@ -1,0 +1,187 @@
+{
+  "images": {
+    "sequencing": [
+      {
+        "id": "novaseq-6000",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a2/NovaSeq_6000.jpg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/NovaSeq_6000.jpg/600px-NovaSeq_6000.jpg",
+        "caption": "Illumina NovaSeq 6000 sequencer at the Wellcome Trust Sanger Institute. This instrument can sequence up to 48 human genomes in a single run.",
+        "credit": "Magnus Manske",
+        "license": "CC BY-SA 4.0",
+        "keywords": ["illumina", "novaseq", "next-generation sequencing"]
+      },
+      {
+        "id": "novaseq-x",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/05/NovaSeqX.jpg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/NovaSeqX.jpg/600px-NovaSeqX.jpg",
+        "caption": "Illumina NovaSeq X, capable of sequencing over 20,000 genomes per year with improved accuracy and reduced cost.",
+        "credit": "Mike the Chimp",
+        "license": "CC0",
+        "keywords": ["illumina", "novaseq x", "high-throughput"]
+      },
+      {
+        "id": "novaseq-flowcell",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Illumina_NovaSeq_6000_flow_cell.jpg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Illumina_NovaSeq_6000_flow_cell.jpg/600px-Illumina_NovaSeq_6000_flow_cell.jpg",
+        "caption": "An Illumina NovaSeq 6000 flow cell. DNA fragments bind to the surface, where bridge amplification creates clusters sequenced by synthesis.",
+        "credit": "Cirosantilli2",
+        "license": "CC BY-SA 4.0",
+        "keywords": ["flow cell", "bridge amplification", "illumina"]
+      },
+      {
+        "id": "minion-top",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/57/Oxford_Nanopore_MinION_top_cropped.jpg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Oxford_Nanopore_MinION_top_cropped.jpg/600px-Oxford_Nanopore_MinION_top_cropped.jpg",
+        "caption": "The Oxford Nanopore MinION — a palm-sized DNA/RNA sequencer that connects via USB. It reads bases by measuring current changes as molecules pass through protein nanopores.",
+        "credit": "Cirosantilli2",
+        "license": "CC BY-SA 4.0",
+        "keywords": ["nanopore", "minion", "portable"]
+      },
+      {
+        "id": "sanger-chromatogram",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Sanger_sequencing_read_display.png",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Sanger_sequencing_read_display.png/600px-Sanger_sequencing_read_display.png",
+        "caption": "A real Sanger sequencing chromatogram. Each colored peak represents a different nucleotide (A, T, G, C) detected by fluorescent dye terminators.",
+        "credit": "Loris",
+        "license": "Public Domain",
+        "keywords": ["sanger", "chromatogram", "first-generation"]
+      },
+      {
+        "id": "sanger-method",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Sanger-sequencing.svg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Sanger-sequencing.svg/600px-Sanger-sequencing.svg.png",
+        "caption": "The Sanger chain-termination method: primer annealing, extension with ddNTPs, gel separation, and base reading.",
+        "credit": "Estevezj",
+        "license": "CC BY-SA 3.0",
+        "keywords": ["sanger", "chain-termination", "ddntp"]
+      },
+      {
+        "id": "nanopore-principle",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/6b/202001_nanopore_sequencing.svg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/202001_nanopore_sequencing.svg/600px-202001_nanopore_sequencing.svg.png",
+        "caption": "Principle of nanopore DNA sequencing: a single DNA strand passes through a protein pore, and current changes identify each base.",
+        "credit": "DBCLS",
+        "license": "CC BY 4.0",
+        "keywords": ["nanopore", "principle", "ionic current"]
+      }
+    ],
+    "synthesis": [
+      {
+        "id": "phosphoramidite-cycle",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/85/Oligocycle.png",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Oligocycle.png/600px-Oligocycle.png",
+        "caption": "The phosphoramidite synthesis cycle — four steps: detritylation, coupling, capping, and oxidation. Each cycle adds one nucleotide.",
+        "credit": "Chemist234",
+        "license": "Public Domain",
+        "keywords": ["phosphoramidite", "synthesis cycle", "oligonucleotide"]
+      }
+    ],
+    "editing": [
+      {
+        "id": "crispr-nhgri",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/3/31/CRISPR-Cas9_Editing_of_the_Genome_%2826453307604%29.jpg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/CRISPR-Cas9_Editing_of_the_Genome_%2826453307604%29.jpg/600px-CRISPR-Cas9_Editing_of_the_Genome_%2826453307604%29.jpg",
+        "caption": "CRISPR-Cas9 genome editing: the Cas9 protein is guided by a CRISPR RNA to a specific DNA sequence, where it makes a precise double-strand cut. Credit: NHGRI.",
+        "credit": "Ernesto del Aguila III, NHGRI",
+        "license": "CC BY 2.0",
+        "keywords": ["crispr", "cas9", "genome editing"]
+      },
+      {
+        "id": "cas9-structure",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/8/83/CRISPR_CAS9_technology.png",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/CRISPR_CAS9_technology.png/600px-CRISPR_CAS9_technology.png",
+        "caption": "3D crystal structure of Cas9 in complex with guide RNA and target DNA, revealing how Cas9 recognizes and cleaves DNA sequences.",
+        "credit": "Elena I Leonova",
+        "license": "CC BY 4.0",
+        "keywords": ["cas9", "crystal structure", "3d"]
+      }
+    ],
+    "gel-electrophoresis": [
+      {
+        "id": "gel-apparatus",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/a/a6/Gel_electrophoresis_apparatus.JPG",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Gel_electrophoresis_apparatus.JPG/600px-Gel_electrophoresis_apparatus.JPG",
+        "caption": "A gel electrophoresis apparatus: the gel is submerged in buffer, and the power supply drives DNA fragments through the gel matrix.",
+        "credit": "Jeffrey M. Vinocur",
+        "license": "CC BY 2.5",
+        "keywords": ["apparatus", "gel box", "equipment"]
+      },
+      {
+        "id": "gel-bands",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/60/Gel_electrophoresis_2.jpg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Gel_electrophoresis_2.jpg/600px-Gel_electrophoresis_2.jpg",
+        "caption": "A real agarose gel showing DNA bands under UV illumination. The leftmost lane contains a DNA ladder (size standard).",
+        "credit": "Mnolf",
+        "license": "CC BY-SA 3.0",
+        "keywords": ["gel", "dna bands", "uv", "ladder"]
+      },
+      {
+        "id": "agarose-uv",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/15/Electrophoresis_on_agarose_gel.JPG",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Electrophoresis_on_agarose_gel.JPG/600px-Electrophoresis_on_agarose_gel.JPG",
+        "caption": "DNA fragments separated by agarose gel electrophoresis, visualized under UV light.",
+        "credit": "Maryfilip98",
+        "license": "CC BY-SA 4.0",
+        "keywords": ["agarose", "uv transilluminator", "visualization"]
+      }
+    ],
+    "central-dogma": [
+      {
+        "id": "central-dogma-diagram",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Central_dogma_of_molecular_biology.svg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Central_dogma_of_molecular_biology.svg/600px-Central_dogma_of_molecular_biology.svg.png",
+        "caption": "The central dogma: information flows from DNA to RNA (transcription) to protein (translation), with additional pathways including replication and reverse transcription.",
+        "credit": "Philippe Hupe",
+        "license": "CC BY-SA 3.0",
+        "keywords": ["central dogma", "transcription", "translation"]
+      },
+      {
+        "id": "ribosome-translation",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Ribosome_mRNA_translation_en.svg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Ribosome_mRNA_translation_en.svg/600px-Ribosome_mRNA_translation_en.svg.png",
+        "caption": "Translation at the ribosome: mRNA is read in codons, tRNA delivers matching amino acids, and the ribosome links them into a polypeptide chain.",
+        "credit": "LadyofHats",
+        "license": "Public Domain",
+        "keywords": ["ribosome", "translation", "trna", "mrna"]
+      },
+      {
+        "id": "ribosome-50s",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/50S-subunit_of_the_ribosome_3CC2.png",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/50S-subunit_of_the_ribosome_3CC2.png/600px-50S-subunit_of_the_ribosome_3CC2.png",
+        "caption": "Crystal structure of the large ribosomal subunit (50S). Ribosomal proteins in blue, rRNA in ochre.",
+        "credit": "Yikrazuul",
+        "license": "CC BY-SA 3.0",
+        "keywords": ["ribosome", "50s", "crystal structure"]
+      }
+    ],
+    "genetic-codes": [
+      {
+        "id": "codon-sun",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/7/70/Aminoacids_table.svg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Aminoacids_table.svg/600px-Aminoacids_table.svg.png",
+        "caption": "The codon sun: a circular representation of the genetic code showing all 64 codons and their corresponding amino acids.",
+        "credit": "Mouagip",
+        "license": "Public Domain",
+        "keywords": ["codon", "genetic code", "amino acid"]
+      },
+      {
+        "id": "codon-table-grid",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/46/Amino_Acid_Codon_Table.svg",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Amino_Acid_Codon_Table.svg/600px-Amino_Acid_Codon_Table.svg.png",
+        "caption": "The standard genetic code table. Of 64 possible codons, 61 encode amino acids and 3 are stop signals.",
+        "credit": "Scott Henry Maxwell",
+        "license": "CC BY-SA 4.0",
+        "keywords": ["codon table", "grid", "genetic code"]
+      },
+      {
+        "id": "trna-structure",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/ba/TRNA-Phe_yeast_1ehz.png",
+        "thumb": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/TRNA-Phe_yeast_1ehz.png/400px-TRNA-Phe_yeast_1ehz.png",
+        "caption": "Crystal structure of yeast phenylalanine tRNA (PDB: 1EHZ) showing acceptor stem, D-loop, anticodon loop, and CCA-3' tail.",
+        "credit": "Yikrazuul",
+        "license": "CC BY-SA 3.0",
+        "keywords": ["trna", "crystal structure", "anticodon"]
+      }
+    ]
+  }
+}
