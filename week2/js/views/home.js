@@ -446,7 +446,9 @@ async function initQuickQuiz(container) {
     const data = await store.loadTopicData(topic.id);
     if (data?.quizQuestions) {
       data.quizQuestions.forEach(q => {
-        allQuestions.push({ ...q, topicId: topic.id, topicTitle: topic.title, topicColor: topic.color });
+        if (q.options && q.correctIndex !== undefined) {
+          allQuestions.push({ ...q, topicId: topic.id, topicTitle: topic.title, topicColor: topic.color });
+        }
       });
     }
   }
