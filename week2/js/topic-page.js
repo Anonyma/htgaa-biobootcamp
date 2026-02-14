@@ -162,6 +162,28 @@ function createTopicView(topicId) {
       // Quick review mini-flashcards
       initQuickReview(container, data);
 
+      // Bookmark buttons
+      container.querySelectorAll('.bookmark-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const topic = btn.dataset.bookmarkTopic;
+          const section = btn.dataset.bookmarkSection;
+          const title = btn.dataset.bookmarkTitle;
+          const icon = btn.querySelector('i');
+          if (store.isBookmarked(topic, section)) {
+            store.removeBookmark(topic, section);
+            btn.classList.remove('bookmarked');
+            icon.classList.remove('text-blue-500');
+            icon.classList.add('text-slate-400');
+          } else {
+            store.addBookmark(topic, section, title);
+            btn.classList.add('bookmarked');
+            icon.classList.remove('text-slate-400');
+            icon.classList.add('text-blue-500');
+          }
+        });
+      });
+
       // Notes panel
       initNotes(container, topicId);
 
@@ -439,9 +461,12 @@ function renderSection(section, index, topicId) {
 
   return `
     <section id="section-${section.id}" data-section="${section.id}" class="mb-8 scroll-mt-28 topic-section">
-      <div class="section-header flex items-center gap-3 mb-4 ${isHistorySection ? 'cursor-pointer group' : ''}" ${isHistorySection ? 'data-collapsible-section' : ''}>
+      <div class="section-header flex items-center gap-3 mb-4 group ${isHistorySection ? 'cursor-pointer' : ''}" ${isHistorySection ? 'data-collapsible-section' : ''}>
         <span class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-sm font-mono flex-shrink-0">${index + 1}</span>
         <h2 class="text-2xl font-bold flex-1">${section.title}</h2>
+        <button class="bookmark-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 ${store.isBookmarked(topicId, section.id) ? 'bookmarked !opacity-100' : ''}" data-bookmark-topic="${topicId}" data-bookmark-section="${section.id}" data-bookmark-title="${section.title}" title="Bookmark this section">
+          <i data-lucide="bookmark" class="w-4 h-4 ${store.isBookmarked(topicId, section.id) ? 'text-blue-500' : 'text-slate-400'}"></i>
+        </button>
         ${isHistorySection ? '<i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 section-chevron transition-transform group-hover:text-blue-500"></i>' : ''}
       </div>
       <div class="${isHistorySection ? 'section-collapsible-body' : ''}" ${isHistorySection ? 'style="max-height:200px;overflow:hidden;position:relative"' : ''}>

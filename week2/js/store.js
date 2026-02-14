@@ -267,6 +267,28 @@ class Store {
     return scores.reduce((best, s) => s.pct > best.pct ? s : best, scores[0]);
   }
 
+  // --- Bookmarks ---
+  getBookmarks() {
+    return this._loadJSON('htgaa-week2-bookmarks', []);
+  }
+
+  addBookmark(topicId, sectionId, sectionTitle) {
+    const bookmarks = this.getBookmarks();
+    if (bookmarks.some(b => b.topicId === topicId && b.sectionId === sectionId)) return;
+    bookmarks.push({ topicId, sectionId, sectionTitle, date: Date.now() });
+    localStorage.setItem('htgaa-week2-bookmarks', JSON.stringify(bookmarks));
+  }
+
+  removeBookmark(topicId, sectionId) {
+    let bookmarks = this.getBookmarks();
+    bookmarks = bookmarks.filter(b => !(b.topicId === topicId && b.sectionId === sectionId));
+    localStorage.setItem('htgaa-week2-bookmarks', JSON.stringify(bookmarks));
+  }
+
+  isBookmarked(topicId, sectionId) {
+    return this.getBookmarks().some(b => b.topicId === topicId && b.sectionId === sectionId);
+  }
+
   // --- Topic Data Cache ---
   async loadTopicData(topicId) {
     if (this._state.topicData[topicId]) return this._state.topicData[topicId];

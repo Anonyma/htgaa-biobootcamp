@@ -2423,6 +2423,16 @@ a[data-route]:hover::after {
   box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
+/* ===== Bookmark Buttons ===== */
+.bookmark-btn.bookmarked svg {
+  fill: #3b82f6;
+  stroke: #3b82f6;
+}
+.dark .bookmark-btn.bookmarked svg {
+  fill: #60a5fa;
+  stroke: #60a5fa;
+}
+
 /* Print styles */
 @media print {
   /* Hide interactive/nav elements */

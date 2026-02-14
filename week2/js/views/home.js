@@ -26,7 +26,7 @@ function createHomeView() {
                 <div class="flex items-center gap-4 mt-4 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
                   <span class="flex items-center gap-1"><i data-lucide="flask-conical" class="w-4 h-4"></i> 12+ Simulations</span>
-                  <span class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> 80 Questions</span>
+                  <span class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> 152 Questions</span>
                   <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> ~4 hrs</span>
                 </div>
               </div>
@@ -49,6 +49,9 @@ function createHomeView() {
         </header>
 
         <main class="max-w-5xl mx-auto px-4 py-8">
+          <!-- Today's Study Plan -->
+          ${renderStudyPlan(progress)}
+
           <!-- Visual Learning Path -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -72,13 +75,17 @@ function createHomeView() {
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
               <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-500"></i> Your Stats
             </h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
               ${renderStatCard('trophy', 'Topics Done', `${Object.values(progress).filter(Boolean).length}/6`, 'amber')}
               ${renderStatCard('help-circle', 'Quiz Score', getQuizStats(), 'blue')}
               ${renderStatCard('check-square', 'HW Steps', getHWStats(), 'green')}
               ${renderStatCard('brain', 'Flashcards', getFlashcardStats(), 'purple')}
+              ${renderStatCard('timer', 'Time Studied', getTimeStudied(), 'cyan')}
             </div>
           </section>
+
+          <!-- Bookmarks -->
+          ${renderBookmarks()}
 
           <!-- Study Activity Heatmap -->
           ${renderStudyHeatmap()}
@@ -124,6 +131,39 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- Achievements -->
+          ${renderAchievements()}
+
+          <!-- Export & Data -->
+          <section class="mb-10">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+              <i data-lucide="download" class="w-5 h-5 text-teal-500"></i> Export Your Data
+            </h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <button id="export-notes-btn" class="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-teal-400 transition-colors cursor-pointer text-left">
+                <i data-lucide="file-text" class="w-5 h-5 text-teal-500 flex-shrink-0"></i>
+                <div>
+                  <div class="font-bold text-sm">Export Notes</div>
+                  <div class="text-xs text-slate-500">Download all your topic notes</div>
+                </div>
+              </button>
+              <button id="export-progress-btn" class="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 transition-colors cursor-pointer text-left">
+                <i data-lucide="bar-chart" class="w-5 h-5 text-blue-500 flex-shrink-0"></i>
+                <div>
+                  <div class="font-bold text-sm">Export Progress</div>
+                  <div class="text-xs text-slate-500">Quiz scores, time, streaks</div>
+                </div>
+              </button>
+              <button id="reset-progress-btn" class="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-red-400 transition-colors cursor-pointer text-left">
+                <i data-lucide="rotate-ccw" class="w-5 h-5 text-red-400 flex-shrink-0"></i>
+                <div>
+                  <div class="font-bold text-sm">Reset Progress</div>
+                  <div class="text-xs text-slate-500">Start fresh (keeps notes)</div>
+                </div>
+              </button>
+            </div>
+          </section>
+
           <!-- Quick Links -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -162,10 +202,315 @@ function createHomeView() {
       });
 
       container._homeUnsub = unsub;
+
+      // Export Notes
+      container.querySelector('#export-notes-btn')?.addEventListener('click', () => {
+        const notes = JSON.parse(localStorage.getItem('htgaa-week2-notes') || '{}');
+        const topicNames = { sequencing: 'DNA Sequencing', synthesis: 'DNA Synthesis', editing: 'Genome Editing', 'genetic-codes': 'Genetic Codes', 'gel-electrophoresis': 'Gel Electrophoresis', 'central-dogma': 'Central Dogma' };
+        let text = '# HTGAA Week 2 — Study Notes\n# Exported: ' + new Date().toLocaleString() + '\n\n';
+        let hasNotes = false;
+        for (const [id, note] of Object.entries(notes)) {
+          if (note && note.trim()) {
+            hasNotes = true;
+            text += `## ${topicNames[id] || id}\n\n${note.trim()}\n\n---\n\n`;
+          }
+        }
+        if (!hasNotes) {
+          text += '(No notes yet. Open a topic and click "My Notes" to start writing.)\n';
+        }
+        downloadFile('htgaa-week2-notes.txt', text);
+      });
+
+      // Export Progress
+      container.querySelector('#export-progress-btn')?.addEventListener('click', () => {
+        const progress = store.get('progress');
+        const quizzes = store.get('quizzes') || {};
+        const log = store.getStudyLog();
+        const timeSpent = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+        const flashcards = store.get('flashcards') || {};
+        const examScores = store.get('examScores') || [];
+
+        let text = '# HTGAA Week 2 — Progress Report\n# Exported: ' + new Date().toLocaleString() + '\n\n';
+
+        // Topics
+        text += '## Topic Completion\n';
+        for (const t of TOPICS) {
+          text += `- [${progress[t.id] ? 'x' : ' '}] ${t.title}\n`;
+        }
+
+        // Quiz scores
+        const qEntries = Object.entries(quizzes);
+        const correct = qEntries.filter(([, v]) => v === true).length;
+        text += `\n## Quiz Scores\nOverall: ${correct}/${qEntries.length} correct\n`;
+
+        // Time spent per topic
+        text += '\n## Time Spent\n';
+        const topicNames = { sequencing: 'DNA Sequencing', synthesis: 'DNA Synthesis', editing: 'Genome Editing', 'genetic-codes': 'Genetic Codes', 'gel-electrophoresis': 'Gel Electrophoresis', 'central-dogma': 'Central Dogma' };
+        let totalTime = 0;
+        for (const [id, secs] of Object.entries(timeSpent)) {
+          totalTime += secs;
+          const mins = Math.floor(secs / 60);
+          text += `- ${topicNames[id] || id}: ${mins}m ${secs % 60}s\n`;
+        }
+        text += `- Total: ${Math.floor(totalTime / 60)}m\n`;
+
+        // Exam scores
+        if (examScores.length > 0) {
+          text += '\n## Exam History\n';
+          for (const s of examScores) {
+            text += `- ${new Date(s.date).toLocaleDateString()}: ${s.correct}/${s.total} (${Math.round(s.correct / s.total * 100)}%)\n`;
+          }
+        }
+
+        // Study activity
+        const activeDays = Object.entries(log).filter(([, v]) => v > 0).length;
+        text += `\n## Study Activity\nActive days: ${activeDays}\n`;
+
+        downloadFile('htgaa-week2-progress.txt', text);
+      });
+
+      // Reset Progress
+      container.querySelector('#reset-progress-btn')?.addEventListener('click', () => {
+        if (confirm('Reset all progress, quiz scores, and study activity? Your notes will be kept.')) {
+          const notes = localStorage.getItem('htgaa-week2-notes');
+          const keys = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('htgaa-week2')) keys.push(key);
+          }
+          keys.forEach(k => localStorage.removeItem(k));
+          if (notes) localStorage.setItem('htgaa-week2-notes', notes);
+          window.location.hash = '#/';
+          window.location.reload();
+        }
+      });
     },
 
     unmount() {}
   };
+}
+
+function renderAchievements() {
+  const progress = store.get('progress');
+  const quizzes = store.get('quizzes') || {};
+  const fcData = store.get('flashcards') || { reviews: {} };
+  const examScores = store.getExamScores();
+  const log = store.getStudyLog();
+  const timeSpent = (() => {
+    try {
+      const t = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+      return Object.values(t).reduce((s, v) => s + v, 0);
+    } catch { return 0; }
+  })();
+
+  const completedTopics = Object.keys(progress).filter(k => progress[k]).length;
+  const quizTotal = Object.keys(quizzes).length;
+  const quizCorrect = Object.values(quizzes).filter(v => v === true).length;
+  const fcReviewed = Object.keys(fcData.reviews).length;
+  const activeDays = Object.values(log).filter(v => v > 0).length;
+  const bestExam = store.getBestExamScore();
+
+  // Compute streak
+  let streak = 0;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const cursor = new Date(today);
+  while (true) {
+    const ds = cursor.toISOString().slice(0, 10);
+    if ((log[ds] || 0) >= 1) { streak++; cursor.setDate(cursor.getDate() - 1); }
+    else break;
+  }
+
+  const badges = [
+    { id: 'first-topic', icon: '1', label: 'First Steps', desc: 'Complete your first topic', earned: completedTopics >= 1 },
+    { id: 'three-topics', icon: '3', label: 'Halfway There', desc: 'Complete 3 topics', earned: completedTopics >= 3 },
+    { id: 'all-topics', icon: '6', label: 'Scholar', desc: 'Complete all 6 topics', earned: completedTopics >= 6 },
+    { id: 'quiz-10', icon: 'Q', label: 'Quiz Starter', desc: 'Answer 10 quiz questions', earned: quizTotal >= 10 },
+    { id: 'quiz-50', icon: 'Q', label: 'Quiz Master', desc: 'Answer 50 quiz questions', earned: quizTotal >= 50 },
+    { id: 'quiz-ace', icon: 'A', label: 'Perfect Score', desc: '90%+ on an exam', earned: bestExam && bestExam.pct >= 90 },
+    { id: 'fc-10', icon: 'F', label: 'Flash Learner', desc: 'Review 10 flashcards', earned: fcReviewed >= 10 },
+    { id: 'streak-3', icon: 'S', label: '3-Day Streak', desc: 'Study 3 days in a row', earned: streak >= 3 },
+    { id: 'streak-7', icon: 'W', label: 'Week Warrior', desc: 'Study 7 days in a row', earned: streak >= 7 },
+    { id: 'time-30', icon: 'T', label: 'Dedicated', desc: 'Study for 30+ minutes', earned: timeSpent >= 1800 },
+    { id: 'time-120', icon: 'T', label: 'Deep Learner', desc: 'Study for 2+ hours', earned: timeSpent >= 7200 },
+    { id: 'active-7', icon: 'D', label: 'Consistent', desc: 'Study on 7 different days', earned: activeDays >= 7 },
+  ];
+
+  const earnedCount = badges.filter(b => b.earned).length;
+  if (earnedCount === 0 && completedTopics === 0) return ''; // Don't show if no progress at all
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="award" class="w-5 h-5 text-amber-500"></i> Achievements
+        <span class="text-xs text-slate-400 font-normal ml-auto">${earnedCount}/${badges.length} earned</span>
+      </h2>
+      <div class="flex flex-wrap gap-3">
+        ${badges.map(b => `
+          <div class="flex items-center gap-2 px-3 py-2 rounded-xl border ${b.earned ? 'bg-amber-50 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700' : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 opacity-40'}" title="${b.desc}">
+            <div class="w-8 h-8 rounded-full ${b.earned ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-sm' : 'bg-slate-200 dark:bg-slate-700 text-slate-400'} flex items-center justify-center text-xs font-bold">
+              ${b.icon}
+            </div>
+            <div>
+              <div class="text-xs font-bold ${b.earned ? '' : 'text-slate-400'}">${b.label}</div>
+              <div class="text-[10px] text-slate-500">${b.desc}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderBookmarks() {
+  const bookmarks = store.getBookmarks();
+  if (bookmarks.length === 0) return '';
+
+  const topicNames = {};
+  TOPICS.forEach(t => topicNames[t.id] = t.title);
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="bookmark" class="w-5 h-5 text-blue-500"></i> Bookmarked Sections
+        <span class="text-xs text-slate-400 font-normal ml-auto">${bookmarks.length} saved</span>
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        ${bookmarks.map(b => `
+          <a data-route="#/topic/${b.topicId}" class="inline-flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 text-sm cursor-pointer transition-colors group">
+            <i data-lucide="bookmark" class="w-3.5 h-3.5 text-blue-500 fill-blue-500 flex-shrink-0"></i>
+            <span class="text-slate-500 text-xs">${topicNames[b.topicId] || b.topicId}:</span>
+            <span class="font-medium">${b.sectionTitle}</span>
+          </a>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderStudyPlan(progress) {
+  const tasks = [];
+  const completedTopics = Object.keys(progress).filter(k => progress[k]);
+  const incompleteTopics = TOPICS.filter(t => !progress[t.id]);
+
+  // Recommended learning order
+  const learningOrder = ['central-dogma', 'genetic-codes', 'gel-electrophoresis', 'sequencing', 'synthesis', 'editing'];
+
+  // 1. Next topic to read (based on learning order)
+  const nextTopic = learningOrder.find(id => !progress[id]);
+  if (nextTopic) {
+    const topic = TOPICS.find(t => t.id === nextTopic);
+    tasks.push({
+      icon: 'book-open',
+      color: 'blue',
+      title: `Read: ${topic.title}`,
+      desc: completedTopics.length === 0 ? 'Start your learning journey' : `Topic ${completedTopics.length + 1} of 6`,
+      route: `#/topic/${nextTopic}`,
+      priority: 'high'
+    });
+  }
+
+  // 2. Flashcards due
+  const fcData = store.get('flashcards') || { reviews: {} };
+  const now = Date.now();
+  const dueCount = Object.values(fcData.reviews).filter(r => r.nextReview <= now).length;
+  if (dueCount > 0) {
+    tasks.push({
+      icon: 'layers',
+      color: 'violet',
+      title: `Review ${dueCount} flashcard${dueCount > 1 ? 's' : ''}`,
+      desc: 'Spaced repetition cards due today',
+      route: '#/flashcards',
+      priority: 'high'
+    });
+  }
+
+  // 3. Topics with low quiz scores (below 70%)
+  for (const t of TOPICS) {
+    const score = store.getQuizScore(t.id);
+    if (score && score.total >= 3 && (score.correct / score.total) < 0.7) {
+      tasks.push({
+        icon: 'refresh-cw',
+        color: 'amber',
+        title: `Retry: ${t.title} Quiz`,
+        desc: `${score.correct}/${score.total} correct — aim for 70%+`,
+        route: `#/topic/${t.id}`,
+        priority: 'medium'
+      });
+    }
+  }
+
+  // 4. Homework check
+  const hwChecks = store.get('homeworkChecks') || {};
+  const hwDone = Object.values(hwChecks).filter(Boolean).length;
+  if (hwDone < 37 && completedTopics.length >= 2) {
+    tasks.push({
+      icon: 'clipboard-list',
+      color: 'orange',
+      title: 'Work on Homework',
+      desc: `${hwDone}/37 steps done`,
+      route: '#/homework',
+      priority: 'medium'
+    });
+  }
+
+  // 5. Take an exam if all topics done
+  if (completedTopics.length === 6) {
+    const best = store.getBestExamScore();
+    tasks.push({
+      icon: 'trophy',
+      color: 'amber',
+      title: best ? 'Beat Your Best Exam Score' : 'Take Practice Exam',
+      desc: best ? `Current best: ${best.pct}%` : 'Test yourself across all topics',
+      route: '#/exam',
+      priority: 'medium'
+    });
+  }
+
+  // 6. Concept map exploration if started but not completed all
+  if (completedTopics.length >= 1 && completedTopics.length < 6) {
+    tasks.push({
+      icon: 'git-branch',
+      color: 'cyan',
+      title: 'Explore Concept Map',
+      desc: 'See how topics connect to each other',
+      route: '#/concept-map',
+      priority: 'low'
+    });
+  }
+
+  if (tasks.length === 0) {
+    return ''; // Nothing to recommend (unlikely)
+  }
+
+  // Show top 3 tasks
+  const topTasks = tasks.slice(0, 3);
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="target" class="w-5 h-5 text-rose-500"></i> Today's Study Plan
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        ${topTasks.map((task, i) => `
+          <a data-route="${task.route}" class="group block bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 hover:border-${task.color}-400 cursor-pointer transition-all hover:shadow-md">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-lg bg-${task.color}-100 dark:bg-${task.color}-900/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                <i data-lucide="${task.icon}" class="w-5 h-5 text-${task.color}-500"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-0.5">
+                  ${i === 0 ? '<span class="text-[10px] font-bold uppercase tracking-wider text-rose-500 bg-rose-50 dark:bg-rose-900/20 px-1.5 py-0.5 rounded">Next Up</span>' : ''}
+                </div>
+                <h3 class="font-bold text-sm">${task.title}</h3>
+                <p class="text-xs text-slate-500 mt-0.5">${task.desc}</p>
+              </div>
+            </div>
+          </a>
+        `).join('')}
+      </div>
+    </section>
+  `;
 }
 
 function renderStudyHeatmap() {
@@ -462,6 +807,29 @@ function getFlashcardStats() {
   const fc = store.get('flashcards') || { reviews: {} };
   const reviewed = Object.keys(fc.reviews || {}).length;
   return reviewed > 0 ? `${reviewed}` : '0';
+}
+
+function getTimeStudied() {
+  try {
+    const t = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+    const total = Object.values(t).reduce((s, v) => s + v, 0);
+    if (total < 60) return `${total}s`;
+    const mins = Math.floor(total / 60);
+    if (mins < 60) return `${mins}m`;
+    const hrs = Math.floor(mins / 60);
+    return `${hrs}h ${mins % 60}m`;
+  } catch { return '0m'; }
+}
+
+function downloadFile(filename, text) {
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
 }
 
 export { createHomeView };
