@@ -125,7 +125,7 @@ const HW_PARTS = [
       'Start simple: small proteins (100-300 amino acids) are easier to design and cheaper to synthesize',
       'Popular beginner proteins: GFP (green fluorescent protein), mCherry, luciferase',
       'For E. coli: use T7 or tac promoter, BBa_B0034 RBS, double stop codon (TAATAA)',
-      'Codon optimization can improve expression 5-10x — use your host's preferred codons',
+      "Codon optimization can improve expression 5-10x — use your host's preferred codons",
       'Always add a His6 tag (HHHHHH) or FLAG tag for purification and Western blotting',
       'Check your design: total sequence length modulo 3 should equal 0 (no frameshift)',
     ],
