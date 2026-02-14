@@ -120,10 +120,11 @@ function createFlashcardsView() {
             ${dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete()}
           </div>
 
-          <!-- Instructions -->
-          <div class="mt-8 text-center text-sm text-slate-400">
-            <p>Click card to flip. Rate your recall: Again (1), Hard (2), Good (3), Easy (4).</p>
-            <p class="mt-1">Keyboard: Space to flip, 1-4 to rate.</p>
+          <!-- Session Timer -->
+          <div class="mt-6 text-center text-sm text-slate-400 flex items-center justify-center gap-4">
+            <span class="flex items-center gap-1"><i data-lucide="timer" class="w-3.5 h-3.5"></i> Session: <span id="fc-session-timer" class="font-mono">0:00</span></span>
+            <span class="text-slate-300 dark:text-slate-600">|</span>
+            <span>Click card to flip. 1-4 to rate.</span>
           </div>
 
           <!-- Session Stats (hidden initially) -->
@@ -163,6 +164,19 @@ function createFlashcardsView() {
 
       // Reset session stats
       sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 };
+
+      // Session timer
+      let sessionSeconds = 0;
+      const sessionTimerEl = container.querySelector('#fc-session-timer');
+      const sessionTimerInterval = setInterval(() => {
+        sessionSeconds++;
+        if (sessionTimerEl) {
+          const m = Math.floor(sessionSeconds / 60);
+          const s = sessionSeconds % 60;
+          sessionTimerEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+        }
+      }, 1000);
+      container._fcTimerCleanup = () => clearInterval(sessionTimerInterval);
 
       // Filter buttons
       container.querySelectorAll('.fc-filter').forEach(btn => {
@@ -300,11 +314,12 @@ function createFlashcardsView() {
       keyHandler = onKey;
     },
 
-    unmount() {
+    unmount(container) {
       if (keyHandler) {
         document.removeEventListener('keydown', keyHandler);
         keyHandler = null;
       }
+      if (container?._fcTimerCleanup) container._fcTimerCleanup();
     }
   };
 }

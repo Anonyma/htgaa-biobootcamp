@@ -6,6 +6,7 @@
 import { store, TOPICS } from '../store.js';
 
 function createGlossaryView() {
+  let _allTerms = [];
   return {
     async render() {
       // Load all topic data
@@ -37,6 +38,7 @@ function createGlossaryView() {
       });
 
       const letters = Object.keys(grouped).sort();
+      _allTerms = allTerms;
 
       return `
         <div class="max-w-4xl mx-auto px-4 py-8">
@@ -72,6 +74,9 @@ function createGlossaryView() {
               </button>
               <button id="glossary-quiz-mode" class="text-xs px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors flex items-center gap-1">
                 <i data-lucide="eye-off" class="w-3 h-3"></i> Quiz Mode
+              </button>
+              <button id="glossary-export-csv" class="text-xs px-3 py-1.5 rounded-full border border-teal-200 dark:border-teal-700 bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/30 transition-colors flex items-center gap-1">
+                <i data-lucide="download" class="w-3 h-3"></i> CSV
               </button>
             </div>
           </header>
@@ -209,6 +214,23 @@ function createGlossaryView() {
           setTimeout(() => randomTerm.classList.remove('ring-2', 'ring-violet-400', 'ring-offset-2'), 2000);
         });
       }
+
+      // CSV export
+      container.querySelector('#glossary-export-csv')?.addEventListener('click', () => {
+        let csv = 'Term,Definition,Topic\n';
+        _allTerms.forEach(t => {
+          const def = t.definition.replace(/"/g, '""');
+          csv += `"${t.term}","${def}","${t.topicTitle}"\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'htgaa-week2-glossary.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      });
 
       filters.forEach(btn => {
         btn.addEventListener('click', () => {

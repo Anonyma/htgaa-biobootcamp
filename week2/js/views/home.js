@@ -1652,6 +1652,10 @@ function renderTopicCard(topic, index, progress) {
             ${quizScore ? `<span>Quiz: ${quizScore.correct}/${quizScore.total}</span>` : ''}
             ${sectionsRead > 0 ? `<span class="flex items-center gap-1"><i data-lucide="book-open" class="w-3 h-3"></i> ${sectionsRead}/${totalSections} read</span>` : ''}
             ${sectionsRead === 0 ? `<span class="flex items-center gap-1"><i data-lucide="arrow-right" class="w-3 h-3"></i> Start reading</span>` : ''}
+            ${(() => {
+              const m = store.getTopicMastery(topic.id, null);
+              return m && m.mastery > 0 ? `<span class="font-semibold text-${m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'slate'}-600 dark:text-${m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'slate'}-400">${m.mastery}% mastery</span>` : '';
+            })()}
           </div>
           ${sectionsRead > 0 && !isComplete ? `
             <div class="mt-2 h-1 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
