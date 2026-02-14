@@ -505,6 +505,134 @@ html { scroll-behavior: smooth; }
   border-bottom: 1px solid var(--sim-border);
 }
 
+/* ===== Visual Learning Path ===== */
+.lp-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.lp-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 100%;
+  max-width: 800px;
+}
+
+.lp-node {
+  flex: 1;
+  max-width: 200px;
+  min-width: 0;
+}
+
+.lp-arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  --lp-dash: 6 4;
+}
+
+.lp-arrow--done {
+  color: #22c55e;
+  --lp-dash: none;
+}
+
+.lp-arrow--next {
+  color: #3b82f6;
+  --lp-dash: none;
+  animation: lp-pulse 2s ease-in-out infinite;
+}
+
+.lp-arrow--pending {
+  color: #cbd5e1;
+  --lp-dash: 6 4;
+}
+
+.dark .lp-arrow--pending {
+  color: #475569;
+}
+
+@keyframes lp-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.lp-vertical-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  /* Position under the last item of row 1 on desktop */
+  align-self: center;
+  margin-left: 0;
+  --lp-dash: 6 4;
+}
+
+.lp-vertical-connector.lp-arrow--done {
+  color: #22c55e;
+  --lp-dash: none;
+}
+
+.lp-vertical-connector.lp-arrow--next {
+  color: #3b82f6;
+  --lp-dash: none;
+  animation: lp-pulse 2s ease-in-out infinite;
+}
+
+.lp-vertical-connector.lp-arrow--pending {
+  color: #cbd5e1;
+  --lp-dash: 6 4;
+}
+
+.dark .lp-vertical-connector.lp-arrow--pending {
+  color: #475569;
+}
+
+/* Mobile: stack vertically */
+@media (max-width: 640px) {
+  .lp-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .lp-node {
+    max-width: 260px;
+    width: 100%;
+  }
+
+  .lp-arrow {
+    transform: rotate(90deg);
+    width: 40px;
+    height: 40px;
+    margin: -4px 0;
+  }
+
+  .lp-vertical-connector {
+    height: 40px;
+    margin: -4px 0;
+  }
+}
+
+/* Tablet: tighter spacing */
+@media (min-width: 641px) and (max-width: 900px) {
+  .lp-node {
+    max-width: 160px;
+  }
+
+  .lp-arrow svg {
+    width: 30px;
+  }
+
+  .lp-arrow {
+    width: 30px;
+  }
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .sim-container { padding: 1rem; }

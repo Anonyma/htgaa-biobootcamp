@@ -1279,6 +1279,40 @@ async function initSimulations(container, topicId) {
   return cleanups;
 }
 
+function launchConfetti(originEl) {
+  const rect = originEl.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+  const particles = 40;
+
+  for (let i = 0; i < particles; i++) {
+    const el = document.createElement('div');
+    const size = Math.random() * 8 + 4;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const angle = (Math.PI * 2 * i) / particles + (Math.random() - 0.5) * 0.5;
+    const velocity = Math.random() * 200 + 100;
+    const dx = Math.cos(angle) * velocity;
+    const dy = Math.sin(angle) * velocity - 150; // upward bias
+
+    Object.assign(el.style, {
+      position: 'fixed', left: cx + 'px', top: cy + 'px',
+      width: size + 'px', height: size + 'px',
+      backgroundColor: color, borderRadius: Math.random() > 0.5 ? '50%' : '2px',
+      zIndex: '9999', pointerEvents: 'none',
+      transform: `rotate(${Math.random() * 360}deg)`,
+    });
+    document.body.appendChild(el);
+
+    const duration = 800 + Math.random() * 400;
+    el.animate([
+      { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+      { transform: `translate(${dx}px, ${dy + 200}px) rotate(${Math.random() * 720 - 360}deg)`, opacity: 0 }
+    ], { duration, easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' })
+      .onfinish = () => el.remove();
+  }
+}
+
 function initMarkComplete(container, topicId) {
   const btn = container.querySelector('#mark-complete-btn');
   if (!btn) return;
@@ -1293,6 +1327,7 @@ function initMarkComplete(container, topicId) {
       store.markTopicComplete(topicId);
       btn.className = 'px-6 py-3 rounded-xl font-semibold transition-all bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-2 border-green-300 dark:border-green-700';
       btn.innerHTML = '<i data-lucide="check-circle-2" class="w-5 h-5 inline mr-2"></i>Completed';
+      launchConfetti(btn);
     }
     if (window.lucide) lucide.createIcons();
     // Update sidebar
