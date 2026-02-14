@@ -70,6 +70,15 @@ export function createExamView() {
         </div>
         <h1 class="text-3xl font-bold mb-2">Exam Mode</h1>
         <p class="text-slate-500 dark:text-slate-400">Test your knowledge across all topics with a timed quiz</p>
+        ${(() => {
+          const best = store.getBestExamScore();
+          const scores = store.getExamScores();
+          if (!best) return '';
+          return `<div class="mt-3 flex items-center justify-center gap-6 text-sm">
+            <span class="text-slate-400"><i data-lucide="trophy" class="w-4 h-4 inline text-amber-500"></i> Best: <strong class="text-slate-700 dark:text-slate-200">${best.pct}%</strong></span>
+            <span class="text-slate-400"><i data-lucide="bar-chart-3" class="w-4 h-4 inline text-blue-500"></i> Attempts: <strong class="text-slate-700 dark:text-slate-200">${scores.length}</strong></span>
+          </div>`;
+        })()}
       </div>
 
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
@@ -346,6 +355,10 @@ export function createExamView() {
     const pct = Math.round((correct / questions.length) * 100);
     const grade = pct >= 90 ? 'A' : pct >= 80 ? 'B' : pct >= 70 ? 'C' : pct >= 60 ? 'D' : 'F';
     const gradeColor = pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red';
+
+    // Save score
+    store.saveExamScore(correct, questions.length, elapsedSeconds, [...selectedTopics]);
+    store.recordStudyActivity();
 
     // Per-topic breakdown
     const topicBreakdown = {};

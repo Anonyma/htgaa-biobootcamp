@@ -179,6 +179,21 @@ function createTopicView(topicId) {
         }
       };
       document.addEventListener('keydown', this._keyHandler);
+
+      // Touch swipe navigation between topics
+      let touchStartX = 0;
+      let touchStartY = 0;
+      this._touchStart = (e) => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; };
+      this._touchEnd = (e) => {
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) < 80 || Math.abs(dy) > Math.abs(dx) * 0.7) return; // too short or too vertical
+        const topicIndex = TOPICS.findIndex(t => t.id === topicId);
+        if (dx < 0 && TOPICS[topicIndex + 1]) window.location.hash = `#/topic/${TOPICS[topicIndex + 1].id}`;
+        if (dx > 0 && TOPICS[topicIndex - 1]) window.location.hash = `#/topic/${TOPICS[topicIndex - 1].id}`;
+      };
+      container.addEventListener('touchstart', this._touchStart, { passive: true });
+      container.addEventListener('touchend', this._touchEnd, { passive: true });
     },
 
     unmount() {

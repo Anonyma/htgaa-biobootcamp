@@ -247,6 +247,26 @@ class Store {
     return this._loadJSON(STUDY_LOG_KEY, {});
   }
 
+  // --- Exam Scores ---
+  saveExamScore(score, total, elapsed, topics) {
+    const key = 'htgaa-week2-exam-scores';
+    const scores = this._loadJSON(key, []);
+    scores.push({ score, total, pct: Math.round((score / total) * 100), elapsed, topics, date: Date.now() });
+    // Keep last 20 scores
+    if (scores.length > 20) scores.splice(0, scores.length - 20);
+    localStorage.setItem(key, JSON.stringify(scores));
+  }
+
+  getExamScores() {
+    return this._loadJSON('htgaa-week2-exam-scores', []);
+  }
+
+  getBestExamScore() {
+    const scores = this.getExamScores();
+    if (!scores.length) return null;
+    return scores.reduce((best, s) => s.pct > best.pct ? s : best, scores[0]);
+  }
+
   // --- Topic Data Cache ---
   async loadTopicData(topicId) {
     if (this._state.topicData[topicId]) return this._state.topicData[topicId];
