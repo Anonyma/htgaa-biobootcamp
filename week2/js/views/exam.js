@@ -41,6 +41,9 @@ export function createExamView() {
   let streak = 0;
   let bestStreak = 0;
   let questionTimes = [];
+  let questionStartTime = 0;
+  let questionElapsed = [];
+  let questionTimerInterval = null;
 
   function cleanupKeyHandler() {
     if (activeKeyHandler) {
@@ -61,6 +64,7 @@ export function createExamView() {
 
     unmount() {
       if (timerInterval) clearInterval(timerInterval);
+      if (questionTimerInterval) clearInterval(questionTimerInterval);
       cleanupKeyHandler();
     }
   };
@@ -202,6 +206,8 @@ export function createExamView() {
     streak = 0;
     bestStreak = 0;
     questionTimes = new Array(questions.length).fill(0);
+    questionElapsed = new Array(questions.length).fill(0);
+    questionStartTime = Date.now();
     state = 'running';
 
     // Start timer
@@ -209,6 +215,12 @@ export function createExamView() {
       elapsedSeconds++;
       const timerEl = containerEl.querySelector('#exam-timer');
       if (timerEl) timerEl.textContent = formatTime(elapsedSeconds);
+      // Update per-question timer
+      const qTimerEl = containerEl.querySelector('#question-timer');
+      if (qTimerEl) {
+        const qSec = Math.floor((Date.now() - questionStartTime) / 1000) + (questionElapsed[currentIndex] || 0);
+        qTimerEl.textContent = formatTime(qSec);
+      }
     }, 1000);
 
     renderQuestion();
@@ -231,9 +243,15 @@ export function createExamView() {
           </span>
           ${streak >= 2 ? `<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 animate-pulse">${streak} streak</span>` : ''}
         </div>
-        <div class="flex items-center gap-2 text-sm">
-          <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
-          <span id="exam-timer" class="font-mono font-medium">${formatTime(elapsedSeconds)}</span>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1 text-slate-400" title="This question">
+            <i data-lucide="timer" class="w-3.5 h-3.5"></i>
+            <span id="question-timer" class="font-mono text-xs">${formatTime(questionElapsed[currentIndex] || 0)}</span>
+          </span>
+          <span class="flex items-center gap-1">
+            <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+            <span id="exam-timer" class="font-mono font-medium">${formatTime(elapsedSeconds)}</span>
+          </span>
         </div>
       </div>
 
@@ -320,20 +338,28 @@ export function createExamView() {
       });
     });
 
-    // Navigation
+    // Navigation — save per-question elapsed time when moving
+    function saveQuestionTime() {
+      questionElapsed[currentIndex] = (questionElapsed[currentIndex] || 0) + Math.floor((Date.now() - questionStartTime) / 1000);
+    }
+    function navigateTo(idx) {
+      saveQuestionTime();
+      currentIndex = idx;
+      questionStartTime = Date.now();
+      renderQuestion();
+    }
     containerEl.querySelector('#exam-prev')?.addEventListener('click', () => {
-      if (currentIndex > 0) { currentIndex--; renderQuestion(); }
+      if (currentIndex > 0) navigateTo(currentIndex - 1);
     });
     containerEl.querySelector('#exam-next')?.addEventListener('click', () => {
-      if (currentIndex < questions.length - 1) { currentIndex++; renderQuestion(); }
+      if (currentIndex < questions.length - 1) navigateTo(currentIndex + 1);
     });
     containerEl.querySelector('#exam-finish')?.addEventListener('click', finishExam);
 
     // Dot navigation
     containerEl.querySelectorAll('.exam-dot').forEach(dot => {
       dot.addEventListener('click', () => {
-        currentIndex = parseInt(dot.dataset.dotIndex);
-        renderQuestion();
+        navigateTo(parseInt(dot.dataset.dotIndex));
       });
     });
 
@@ -342,10 +368,10 @@ export function createExamView() {
     activeKeyHandler = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if (e.key === 'ArrowRight' && currentIndex < questions.length - 1) {
-        currentIndex++; renderQuestion();
+        navigateTo(currentIndex + 1);
       }
       if (e.key === 'ArrowLeft' && currentIndex > 0) {
-        currentIndex--; renderQuestion();
+        navigateTo(currentIndex - 1);
       }
       if (e.key >= '1' && e.key <= '4') {
         const idx = parseInt(e.key) - 1;
@@ -359,7 +385,10 @@ export function createExamView() {
   }
 
   function finishExam() {
+    // Save time for current question before finishing
+    questionElapsed[currentIndex] = (questionElapsed[currentIndex] || 0) + Math.floor((Date.now() - questionStartTime) / 1000);
     if (timerInterval) clearInterval(timerInterval);
+    if (questionTimerInterval) clearInterval(questionTimerInterval);
     state = 'review';
 
     // Calculate results
@@ -417,8 +446,8 @@ export function createExamView() {
             const tbPct = Math.round((tb.correct / tb.total) * 100);
             // Calculate average time per question for this topic
             const topicQIdxs = results.map((r, i) => r.question.topicId === tid ? i : -1).filter(i => i >= 0);
-            const avgTime = topicQIdxs.length > 0 && questionTimes.length > 0
-              ? Math.round(topicQIdxs.reduce((s, i) => s + (questionTimes[i] || 0), 0) / topicQIdxs.length)
+            const avgTime = topicQIdxs.length > 0 && questionElapsed.length > 0
+              ? Math.round(topicQIdxs.reduce((s, i) => s + (questionElapsed[i] || 0), 0) / topicQIdxs.length)
               : null;
             return `
               <div>
@@ -482,6 +511,7 @@ export function createExamView() {
                   <p class="font-medium text-sm mb-1">
                     <span class="text-slate-400">Q${i + 1}</span>
                     <span class="mx-1 px-1.5 py-0.5 rounded text-xs bg-${r.question.topicColor}-100 text-${r.question.topicColor}-700 dark:bg-${r.question.topicColor}-900/30 dark:text-${r.question.topicColor}-400">${escapeHtml(r.question.topicTitle)}</span>
+                    ${questionElapsed[i] > 0 ? `<span class="text-slate-400 text-xs ml-1">${questionElapsed[i]}s</span>` : ''}
                   </p>
                   <p class="text-sm mb-2">${escapeHtml(r.question.question)}</p>
                   ${!r.isCorrect ? `

@@ -227,6 +227,19 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- What's New -->
+          <section class="mb-10">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-5 h-5 text-violet-500"></i> What's New
+              <button id="whats-new-toggle" class="ml-auto text-xs text-slate-400 hover:text-slate-600 font-normal flex items-center gap-1">
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i> Show all
+              </button>
+            </h2>
+            <div id="whats-new-list">
+              ${renderChangelog()}
+            </div>
+          </section>
+
           <!-- Quick Links -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -364,6 +377,23 @@ function createHomeView() {
           window.location.reload();
         }
       });
+      // What's New toggle
+      const whatsNewToggle = container.querySelector('#whats-new-toggle');
+      if (whatsNewToggle) {
+        let expanded = false;
+        whatsNewToggle.addEventListener('click', () => {
+          expanded = !expanded;
+          container.querySelectorAll('.changelog-item').forEach(el => {
+            const idx = parseInt(el.dataset.changelogIdx);
+            if (idx >= 3) el.classList.toggle('hidden', !expanded);
+          });
+          whatsNewToggle.innerHTML = expanded
+            ? '<i data-lucide="chevron-up" class="w-3.5 h-3.5"></i> Show less'
+            : '<i data-lucide="chevron-down" class="w-3.5 h-3.5"></i> Show all';
+          if (window.lucide) lucide.createIcons();
+        });
+      }
+
       // Quick Quiz on home page
       initQuickQuiz(container);
 
@@ -768,6 +798,28 @@ function renderWeakestTopicSuggestion(progress) {
       </a>
     </div>
   `;
+}
+
+function renderChangelog() {
+  const changes = [
+    { ver: 'v40', items: ['Per-question timer in exams', 'Enhanced study summary export', 'This changelog'] },
+    { ver: 'v39', items: ['Concept map connected nodes panel', 'Cross-topic connections in study summary'] },
+    { ver: 'v38', items: ['Practice all flashcards button', 'Glossary letter term counts', 'Per-topic time tracking on dashboard'] },
+    { ver: 'v37', items: ['Topic mastery scoring system', 'Longest study streak tracking', 'Per-topic exam timing breakdown'] },
+    { ver: 'v36', items: ['Study summary markdown export', 'Printable review sheet'] },
+    { ver: 'v35', items: ['Visual learning path', 'Study streak calendar'] },
+    { ver: 'v34', items: ['Keyboard shortcuts modal', 'DNA storage calculator'] },
+    { ver: 'v33', items: ['Spaced repetition flashcards', 'Homework guidance hub'] },
+    { ver: 'v32', items: ['Scroll animations and polish', 'Design challenges in quizzes'] },
+  ];
+
+  // Show only first 3 by default
+  return changes.map((c, i) => `
+    <div class="changelog-item flex gap-3 py-2 ${i >= 3 ? 'hidden' : ''}" data-changelog-idx="${i}">
+      <span class="text-xs font-mono font-bold text-violet-500 dark:text-violet-400 w-8 flex-shrink-0 mt-0.5">${c.ver}</span>
+      <div class="text-sm text-slate-600 dark:text-slate-400">${c.items.join(' &middot; ')}</div>
+    </div>
+  `).join('');
 }
 
 function renderReviewReminder() {

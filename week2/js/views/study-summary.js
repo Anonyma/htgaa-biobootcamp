@@ -204,10 +204,25 @@ function createStudySummaryView() {
             });
             md += '\n';
           }
+          if (data.quickReference?.length) {
+            md += `### Quick Reference\n`;
+            data.quickReference.forEach(qr => {
+              md += `- **${qr.title}**: ${(qr.content || '').substring(0, 300)}\n`;
+            });
+            md += '\n';
+          }
           if (data.vocabulary?.length) {
             md += `### Vocabulary (${data.vocabulary.length} terms)\n`;
             data.vocabulary.forEach(v => {
               md += `- **${v.term}**: ${v.definition}\n`;
+            });
+            md += '\n';
+          }
+          if (data.conceptConnections?.length) {
+            md += `### Connections\n`;
+            data.conceptConnections.forEach(c => {
+              const target = TOPICS.find(t => t.id === c.toTopic);
+              md += `- → **${target?.title || c.toTopic}**: ${c.relationship}\n`;
             });
             md += '\n';
           }
