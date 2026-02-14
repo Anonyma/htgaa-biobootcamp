@@ -145,6 +145,33 @@ function createStudySummaryView() {
             </section>
           `).join('')}
 
+          <!-- Cross-Topic Connection Map -->
+          ${(() => {
+            const allConnections = [];
+            allData.forEach(({ topic, data }) => {
+              (data.conceptConnections || []).forEach(c => {
+                const target = TOPICS.find(t => t.id === c.toTopic);
+                if (target) allConnections.push({ from: topic.title, to: target.title, relationship: c.relationship, concept: c.concept || '' });
+              });
+            });
+            if (allConnections.length === 0) return '';
+            return `
+            <section class="mb-8 page-break-inside-avoid">
+              <h2 class="text-xl font-bold mb-3 flex items-center gap-2 border-b-2 border-slate-300 dark:border-slate-600 pb-2">
+                <i data-lucide="network" class="w-5 h-5 text-cyan-500"></i>
+                Cross-Topic Connections (${allConnections.length})
+              </h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                ${allConnections.map(c => `
+                  <div class="p-2 rounded-lg bg-cyan-50 dark:bg-cyan-900/10 border border-cyan-200 dark:border-cyan-800">
+                    <div class="font-bold">${c.from} &rarr; ${c.to}</div>
+                    <div class="text-slate-600 dark:text-slate-400 mt-0.5">${c.concept ? `<strong>${c.concept}:</strong> ` : ''}${c.relationship}</div>
+                  </div>
+                `).join('')}
+              </div>
+            </section>`;
+          })()}
+
           <footer class="text-center text-xs text-slate-400 mt-8 pt-4 border-t border-slate-200 dark:border-slate-700 print:mt-4">
             HTGAA Spring 2026 — Week 2 Study Summary — Generated ${new Date().toLocaleDateString()}
           </footer>

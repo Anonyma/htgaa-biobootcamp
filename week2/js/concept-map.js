@@ -49,8 +49,16 @@ function createConceptMapView() {
 
           <!-- Info Panel -->
           <div id="cm-info" class="mt-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 hidden">
-            <h3 id="cm-info-title" class="font-bold text-lg mb-2"></h3>
-            <p id="cm-info-desc" class="text-sm text-slate-600 dark:text-slate-400 mb-3"></p>
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h3 id="cm-info-title" class="font-bold text-lg mb-2"></h3>
+                <p id="cm-info-desc" class="text-sm text-slate-600 dark:text-slate-400 mb-3"></p>
+              </div>
+              <button id="cm-info-close" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 p-1 flex-shrink-0">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <div id="cm-info-connections" class="mb-3"></div>
             <a id="cm-info-link" class="text-sm text-blue-500 hover:underline cursor-pointer"></a>
           </div>
 
@@ -289,6 +297,7 @@ function createConceptMapView() {
     const title = container.querySelector('#cm-info-title');
     const desc = container.querySelector('#cm-info-desc');
     const infoLink = container.querySelector('#cm-info-link');
+    const connectionsEl = container.querySelector('#cm-info-connections');
     if (info && title) {
       info.classList.remove('hidden');
       title.textContent = targetNode.label;
@@ -301,6 +310,30 @@ function createConceptMapView() {
         infoLink.textContent = `Part of: ${topic?.title || targetNode.topicId}`;
         infoLink.dataset.route = `#/topic/${targetNode.topicId}`;
       }
+      // Show connected concepts
+      if (connectionsEl) {
+        const connectedNodes = [];
+        graphLinks.forEach(l => {
+          const srcId = typeof l.source === 'object' ? l.source.id : l.source;
+          const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
+          if (srcId === nodeId) { const n = graphNodes.find(x => x.id === tgtId); if (n) connectedNodes.push(n); }
+          if (tgtId === nodeId) { const n = graphNodes.find(x => x.id === srcId); if (n) connectedNodes.push(n); }
+        });
+        if (connectedNodes.length > 0) {
+          connectionsEl.innerHTML = `
+            <p class="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">Connected to (${connectedNodes.length}):</p>
+            <div class="flex flex-wrap gap-1">
+              ${connectedNodes.map(n => `<span class="text-xs px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 cm-conn-link" data-node-id="${n.id}" style="border-left: 3px solid ${topicColor(n.topicId || n.id)}">${n.label}</span>`).join('')}
+            </div>`;
+          connectionsEl.querySelectorAll('.cm-conn-link').forEach(link => {
+            link.addEventListener('click', () => highlightNode(container, link.dataset.nodeId));
+          });
+        } else {
+          connectionsEl.innerHTML = '';
+        }
+      }
+      // Close button
+      container.querySelector('#cm-info-close')?.addEventListener('click', () => info.classList.add('hidden'));
     }
 
     // Highlight connected
