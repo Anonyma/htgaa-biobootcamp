@@ -37,6 +37,14 @@ export function createExamView() {
   let selectedTopics = new Set(TOPICS.map(t => t.id));
   let questionCount = 20;
   let containerEl = null;
+  let activeKeyHandler = null;
+
+  function cleanupKeyHandler() {
+    if (activeKeyHandler) {
+      document.removeEventListener('keydown', activeKeyHandler);
+      activeKeyHandler = null;
+    }
+  }
 
   return {
     render() {
@@ -50,6 +58,7 @@ export function createExamView() {
 
     unmount() {
       if (timerInterval) clearInterval(timerInterval);
+      cleanupKeyHandler();
     }
   };
 
@@ -299,8 +308,9 @@ export function createExamView() {
       });
     });
 
-    // Keyboard
-    const handler = (e) => {
+    // Keyboard — clean up previous handler first
+    cleanupKeyHandler();
+    activeKeyHandler = (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
       if (e.key === 'ArrowRight' && currentIndex < questions.length - 1) {
         currentIndex++; renderQuestion();
@@ -316,9 +326,7 @@ export function createExamView() {
         }
       }
     };
-    document.addEventListener('keydown', handler);
-    // Store cleanup ref
-    containerEl._examKeyHandler = handler;
+    document.addEventListener('keydown', activeKeyHandler);
   }
 
   function finishExam() {
@@ -437,9 +445,6 @@ export function createExamView() {
       renderSetup();
     });
 
-    // Cleanup keyboard handler
-    if (containerEl._examKeyHandler) {
-      document.removeEventListener('keydown', containerEl._examKeyHandler);
-    }
+    cleanupKeyHandler();
   }
 }

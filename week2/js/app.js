@@ -206,6 +206,15 @@ class App {
                 </div>
               </div>
 
+              <!-- Exam group -->
+              <div class="shortcuts-group">
+                <h3 class="shortcuts-group-label">Exam Mode</h3>
+                <div class="shortcuts-grid">
+                  <div class="shortcut-row"><kbd class="shortcut-key">\u2190 \u2192</kbd><span class="shortcut-desc">Prev / next question</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">1-4</kbd><span class="shortcut-desc">Select answer A-D</span></div>
+                </div>
+              </div>
+
               <!-- Help group -->
               <div class="shortcuts-group">
                 <h3 class="shortcuts-group-label">Help</h3>

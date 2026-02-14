@@ -8,6 +8,7 @@ const THEME_KEY = 'htgaa-theme';
 const QUIZ_KEY = 'htgaa-week2-quizzes';
 const FLASHCARD_KEY = 'htgaa-week2-flashcards';
 const HOMEWORK_KEY = 'htgaa-week2-homework-checks';
+const STUDY_LOG_KEY = 'htgaa-week2-study-log';
 
 const TOPICS = [
   { id: 'sequencing', title: 'DNA Sequencing', icon: 'scan-search', color: 'blue' },
@@ -104,6 +105,7 @@ class Store {
     const quizzes = { ...this._state.quizzes, [quizId]: correct };
     this.set('quizzes', quizzes);
     localStorage.setItem(QUIZ_KEY, JSON.stringify(quizzes));
+    this.recordStudyActivity();
   }
 
   isQuizAnswered(quizId) {
@@ -187,6 +189,7 @@ class Store {
     fc.reviews[cardId] = review;
     this.set('flashcards', fc);
     localStorage.setItem(FLASHCARD_KEY, JSON.stringify(fc));
+    this.recordStudyActivity();
   }
 
   getDueFlashcards(allCards) {
@@ -230,6 +233,18 @@ class Store {
     }
 
     return stats;
+  }
+
+  // --- Study Activity Log ---
+  recordStudyActivity() {
+    const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+    const log = this._loadJSON(STUDY_LOG_KEY, {});
+    log[today] = (log[today] || 0) + 1;
+    localStorage.setItem(STUDY_LOG_KEY, JSON.stringify(log));
+  }
+
+  getStudyLog() {
+    return this._loadJSON(STUDY_LOG_KEY, {});
   }
 
   // --- Topic Data Cache ---

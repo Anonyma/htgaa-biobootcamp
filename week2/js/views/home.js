@@ -107,6 +107,9 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- Study Activity Heatmap -->
+          ${renderStudyHeatmap()}
+
           <!-- Quick Actions -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -190,6 +193,115 @@ function createHomeView() {
 
     unmount() {}
   };
+}
+
+function renderStudyHeatmap() {
+  const log = store.getStudyLog();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Build 12 weeks of data (84 days)
+  // Grid: 7 rows (Mon-Sun), 12 columns (weeks, newest on right)
+  // Start from 83 days ago, aligned to Monday
+  const startDate = new Date(today);
+  startDate.setDate(startDate.getDate() - 83);
+  // Align to Monday (getDay(): 0=Sun,1=Mon...6=Sat)
+  const dayOfWeek = startDate.getDay();
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  startDate.setDate(startDate.getDate() + mondayOffset);
+
+  // Build the grid: weeks as columns, days as rows
+  const weeks = [];
+  const cursor = new Date(startDate);
+  for (let w = 0; w < 12; w++) {
+    const week = [];
+    for (let d = 0; d < 7; d++) {
+      const dateStr = cursor.toISOString().slice(0, 10);
+      const count = log[dateStr] || 0;
+      const isFuture = cursor > today;
+      week.push({ dateStr, count, isFuture });
+      cursor.setDate(cursor.getDate() + 1);
+    }
+    weeks.push(week);
+  }
+
+  // Compute streak (consecutive days ending at today with count >= 1)
+  let streak = 0;
+  const streakCursor = new Date(today);
+  while (true) {
+    const ds = streakCursor.toISOString().slice(0, 10);
+    if ((log[ds] || 0) >= 1) {
+      streak++;
+      streakCursor.setDate(streakCursor.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  // Total sessions
+  const totalSessions = Object.values(log).reduce((s, v) => s + v, 0);
+  const activeDays = Object.values(log).filter(v => v > 0).length;
+
+  // Color function
+  function cellColor(count, isFuture) {
+    if (isFuture) return 'bg-slate-100 dark:bg-slate-800/50';
+    if (count === 0) return 'bg-slate-200 dark:bg-slate-700';
+    if (count <= 3) return 'bg-green-300 dark:bg-green-800';
+    if (count <= 7) return 'bg-green-500 dark:bg-green-600';
+    return 'bg-green-700 dark:bg-green-400';
+  }
+
+  const dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+        <i data-lucide="calendar-days" class="w-5 h-5 text-green-500"></i> Study Activity
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <!-- Stats row -->
+        <div class="flex items-center gap-6 mb-4 text-sm">
+          <div class="flex items-center gap-2">
+            <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
+            <span class="font-bold text-lg ${streak > 0 ? 'text-orange-500' : 'text-slate-400'}">${streak}</span>
+            <span class="text-slate-500 dark:text-slate-400">day streak</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="activity" class="w-4 h-4 text-green-500"></i>
+            <span class="font-bold text-lg text-green-600 dark:text-green-400">${totalSessions}</span>
+            <span class="text-slate-500 dark:text-slate-400">sessions</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="calendar-check" class="w-4 h-4 text-blue-500"></i>
+            <span class="font-bold text-lg text-blue-600 dark:text-blue-400">${activeDays}</span>
+            <span class="text-slate-500 dark:text-slate-400">active days</span>
+          </div>
+        </div>
+        <!-- Heatmap grid -->
+        <div class="flex gap-1 items-start overflow-x-auto">
+          <!-- Day labels column -->
+          <div class="flex flex-col gap-1 mr-1 flex-shrink-0">
+            ${dayLabels.map(label => `<div class="w-4 h-4 text-[10px] text-slate-400 flex items-center justify-center">${label}</div>`).join('')}
+          </div>
+          <!-- Week columns -->
+          ${weeks.map(week => `
+            <div class="flex flex-col gap-1">
+              ${week.map(day => `<div class="w-4 h-4 rounded-sm ${cellColor(day.count, day.isFuture)} transition-colors" title="${day.dateStr}: ${day.count} session${day.count !== 1 ? 's' : ''}"></div>`).join('')}
+            </div>
+          `).join('')}
+        </div>
+        <!-- Legend -->
+        <div class="flex items-center gap-2 mt-3 text-[10px] text-slate-400">
+          <span>Less</span>
+          <div class="w-3 h-3 rounded-sm bg-slate-200 dark:bg-slate-700"></div>
+          <div class="w-3 h-3 rounded-sm bg-green-300 dark:bg-green-800"></div>
+          <div class="w-3 h-3 rounded-sm bg-green-500 dark:bg-green-600"></div>
+          <div class="w-3 h-3 rounded-sm bg-green-700 dark:bg-green-400"></div>
+          <span>More</span>
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function renderTopicCard(topic, index, progress) {
