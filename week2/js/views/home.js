@@ -105,12 +105,15 @@ function createHomeView() {
           <!-- Study Planner -->
           ${renderStudyPlanner(progress)}
 
+          <!-- Recent Activity -->
+          ${renderActivityFeed()}
+
           <!-- Quick Actions -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
               <i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i> Study Tools
             </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               <a data-route="#/flashcards" class="block p-5 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl border border-violet-200 dark:border-violet-800 hover:border-violet-400 cursor-pointer transition-colors">
                 <i data-lucide="layers" class="w-6 h-6 text-violet-500 mb-2"></i>
                 <h3 class="font-bold">Flashcards</h3>
@@ -135,6 +138,16 @@ function createHomeView() {
                 <i data-lucide="columns" class="w-6 h-6 text-teal-500 mb-2"></i>
                 <h3 class="font-bold">Compare</h3>
                 <p class="text-sm text-slate-500 mt-1">Side-by-side topics</p>
+              </a>
+              <a data-route="#/glossary" class="block p-5 bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800 hover:border-emerald-400 cursor-pointer transition-colors">
+                <i data-lucide="book-a" class="w-6 h-6 text-emerald-500 mb-2"></i>
+                <h3 class="font-bold">Glossary</h3>
+                <p class="text-sm text-slate-500 mt-1">All ${88} terms searchable</p>
+              </a>
+              <a data-route="#/summary" class="block p-5 bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl border border-rose-200 dark:border-rose-800 hover:border-rose-400 cursor-pointer transition-colors">
+                <i data-lucide="file-text" class="w-6 h-6 text-rose-500 mb-2"></i>
+                <h3 class="font-bold">Study Summary</h3>
+                <p class="text-sm text-slate-500 mt-1">Printable review sheet</p>
               </a>
             </div>
           </section>
@@ -975,6 +988,58 @@ function renderStudyPlanner(progress) {
   `;
 }
 
+function renderActivityFeed() {
+  const feed = store.getActivityFeed(5);
+  if (feed.length === 0) return '';
+
+  const icons = { quiz: 'help-circle', flashcard: 'layers', complete: 'check-circle-2', section: 'book-open' };
+  const colors = { quiz: 'blue', flashcard: 'violet', complete: 'green', section: 'slate' };
+  const labels = {
+    quiz: (d) => `Answered quiz question ${d.correct ? 'correctly' : 'incorrectly'}`,
+    flashcard: (d) => `Reviewed flashcard`,
+    complete: (d) => {
+      const topic = TOPICS.find(t => t.id === d.topicId);
+      return `Completed ${topic?.title || d.topicId}`;
+    },
+    section: (d) => {
+      const topic = TOPICS.find(t => t.id === d.topicId);
+      return `Read section in ${topic?.title || d.topicId}`;
+    },
+  };
+
+  function timeAgo(ts) {
+    const diff = Date.now() - ts;
+    if (diff < 60000) return 'just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+    return `${Math.floor(diff / 86400000)}d ago`;
+  }
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="history" class="w-5 h-5 text-slate-400"></i> Recent Activity
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
+        ${feed.map(item => {
+          const icon = icons[item.action] || 'activity';
+          const color = colors[item.action] || 'slate';
+          const label = labels[item.action] ? labels[item.action](item.detail || {}) : item.action;
+          return `
+            <div class="flex items-center gap-3 px-4 py-3">
+              <div class="w-8 h-8 rounded-lg bg-${color}-100 dark:bg-${color}-900/40 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="${icon}" class="w-4 h-4 text-${color}-500"></i>
+              </div>
+              <span class="text-sm flex-1">${label}</span>
+              <span class="text-xs text-slate-400">${timeAgo(item.time)}</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function renderLearningPath(progress) {
   // Define the learning path: two rows of 3, with recommended order
   // Row 1: Central Dogma -> Genetic Codes -> Gel Electrophoresis
@@ -1095,6 +1160,15 @@ function renderTopicCard(topic, index, progress) {
     'sequencing': 35, 'synthesis': 35, 'editing': 35,
     'genetic-codes': 28, 'gel-electrophoresis': 28, 'central-dogma': 35,
   };
+  const difficulties = {
+    'central-dogma': { level: 'Foundational', color: 'green' },
+    'genetic-codes': { level: 'Intermediate', color: 'amber' },
+    'gel-electrophoresis': { level: 'Foundational', color: 'green' },
+    'sequencing': { level: 'Intermediate', color: 'amber' },
+    'synthesis': { level: 'Advanced', color: 'red' },
+    'editing': { level: 'Advanced', color: 'red' },
+  };
+  const diff = difficulties[topic.id] || { level: 'Intermediate', color: 'amber' };
   const sectionCounts = {
     'sequencing': 7, 'synthesis': 7, 'editing': 7,
     'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7,
@@ -1127,7 +1201,8 @@ function renderTopicCard(topic, index, progress) {
             }
           </div>
           <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-2">${descriptions[topic.id] || ''}</p>
-          <div class="flex items-center gap-3 text-xs text-slate-400">
+          <div class="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
+            <span class="px-1.5 py-0.5 rounded text-${diff.color}-600 dark:text-${diff.color}-400 bg-${diff.color}-50 dark:bg-${diff.color}-900/20 font-medium">${diff.level}</span>
             <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${readingTimes[topic.id] || 30} min</span>
             ${quizScore ? `<span>Quiz: ${quizScore.correct}/${quizScore.total}</span>` : ''}
             ${sectionsRead > 0 ? `<span class="flex items-center gap-1"><i data-lucide="book-open" class="w-3 h-3"></i> ${sectionsRead}/${totalSections} read</span>` : ''}

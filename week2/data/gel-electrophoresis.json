@@ -607,6 +607,23 @@
       "connection": "Troubleshooting is a critical lab skill. Every molecular biologist has seen weird gel results and needs to diagnose the problem systematically. This prepares you for the real lab where gels don't always work perfectly the first time."
     }
   ],
+  "quickReference": [
+    {
+      "title": "Agarose Concentrations",
+      "type": "table",
+      "content": "<table><tr><th>Agarose %</th><th>Resolution Range</th></tr><tr><td>0.5%</td><td>1&ndash;30 kb</td></tr><tr><td>0.7%</td><td>800 bp &ndash; 12 kb</td></tr><tr><td>1.0%</td><td>500 bp &ndash; 10 kb</td></tr><tr><td>1.5%</td><td>200 bp &ndash; 3 kb</td></tr><tr><td>2.0%</td><td>50 bp &ndash; 2 kb</td></tr></table>"
+    },
+    {
+      "title": "Common Restriction Enzymes",
+      "type": "table",
+      "content": "<table><tr><th>Enzyme</th><th>Recognition Site</th><th>Cut Type</th></tr><tr><td>EcoRI</td><td>GAATTC</td><td>4-nt overhang</td></tr><tr><td>BamHI</td><td>GGATCC</td><td>4-nt overhang</td></tr><tr><td>HindIII</td><td>AAGCTT</td><td>4-nt overhang</td></tr><tr><td>EcoRV</td><td>GATATC</td><td>Blunt</td></tr><tr><td>KpnI</td><td>GGTACC</td><td>4-nt overhang</td></tr><tr><td>SalI</td><td>GTCGAC</td><td>4-nt overhang</td></tr></table>"
+    },
+    {
+      "title": "Expected Cut Frequency",
+      "type": "formula",
+      "content": "<p>Average fragment size = 4<sup>N</sup> bp, where N = recognition sequence length.</p><p>4-cutter: every 256 bp. 6-cutter: every 4,096 bp. 8-cutter: every 65,536 bp.</p>"
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "sequencing",

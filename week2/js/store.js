@@ -82,6 +82,7 @@ class Store {
     const progress = { ...this._state.progress, [topicId]: true };
     this.set('progress', progress);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    this.recordStudyActivity('complete', { topicId });
   }
 
   markTopicIncomplete(topicId) {
@@ -105,7 +106,7 @@ class Store {
     const quizzes = { ...this._state.quizzes, [quizId]: correct };
     this.set('quizzes', quizzes);
     localStorage.setItem(QUIZ_KEY, JSON.stringify(quizzes));
-    this.recordStudyActivity();
+    this.recordStudyActivity('quiz', { quizId, correct });
   }
 
   isQuizAnswered(quizId) {
@@ -189,7 +190,7 @@ class Store {
     fc.reviews[cardId] = review;
     this.set('flashcards', fc);
     localStorage.setItem(FLASHCARD_KEY, JSON.stringify(fc));
-    this.recordStudyActivity();
+    this.recordStudyActivity('flashcard', { cardId, quality });
   }
 
   getDueFlashcards(allCards) {
@@ -236,15 +237,29 @@ class Store {
   }
 
   // --- Study Activity Log ---
-  recordStudyActivity() {
-    const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD"
+  recordStudyActivity(action, detail) {
+    const today = new Date().toISOString().slice(0, 10);
     const log = this._loadJSON(STUDY_LOG_KEY, {});
     log[today] = (log[today] || 0) + 1;
     localStorage.setItem(STUDY_LOG_KEY, JSON.stringify(log));
+
+    // Also log individual activity for feed
+    if (action) {
+      const feed = this._loadJSON('htgaa-week2-activity-feed', []);
+      feed.unshift({ action, detail, time: Date.now() });
+      // Keep last 50
+      if (feed.length > 50) feed.length = 50;
+      localStorage.setItem('htgaa-week2-activity-feed', JSON.stringify(feed));
+    }
   }
 
   getStudyLog() {
     return this._loadJSON(STUDY_LOG_KEY, {});
+  }
+
+  getActivityFeed(limit = 5) {
+    const feed = this._loadJSON('htgaa-week2-activity-feed', []);
+    return feed.slice(0, limit);
   }
 
   // --- Exam Scores ---
@@ -297,6 +312,7 @@ class Store {
     if (!data[topicId].includes(sectionId)) {
       data[topicId].push(sectionId);
       localStorage.setItem(key, JSON.stringify(data));
+      this.recordStudyActivity('section', { topicId, sectionId });
     }
   }
 

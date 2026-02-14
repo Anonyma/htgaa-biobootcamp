@@ -597,6 +597,23 @@
       "connection": "Understanding the economics of synthesis helps you choose the right approach for your project budget. This is especially relevant if you're designing large variant libraries for directed evolution (a common synthetic biology application)."
     }
   ],
+  "quickReference": [
+    {
+      "title": "Coupling Efficiency",
+      "type": "formula",
+      "content": "<p>Overall yield = (coupling efficiency)<sup>N</sup> where N = oligo length.</p><p>At 99% efficiency: 100-mer yield = 0.99<sup>100</sup> = 36.6%</p>"
+    },
+    {
+      "title": "Phosphoramidite Cycle",
+      "type": "list",
+      "content": "<ol><li><strong>Deprotection</strong> &mdash; Remove DMT protecting group</li><li><strong>Coupling</strong> &mdash; Add next nucleotide base</li><li><strong>Capping</strong> &mdash; Block unreacted (failure) sequences</li><li><strong>Oxidation</strong> &mdash; Stabilize the phosphite backbone</li></ol>"
+    },
+    {
+      "title": "Assembly Methods",
+      "type": "table",
+      "content": "<table><tr><th>Method</th><th>Mechanism</th><th>Conditions</th><th>Capacity</th></tr><tr><td>Gibson Assembly</td><td>Overlapping fragments</td><td>Isothermal 50&deg;C</td><td>Up to 6 fragments</td></tr><tr><td>Golden Gate</td><td>Type IIS enzymes</td><td>Seamless ligation</td><td>Up to 24 parts</td></tr></table>"
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "sequencing",

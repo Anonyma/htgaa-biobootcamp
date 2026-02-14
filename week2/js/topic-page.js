@@ -545,6 +545,9 @@ function renderTopicPage(data, topicId) {
       <!-- Quick Review Flashcards -->
       ${data.vocabulary && data.vocabulary.length > 0 ? renderQuickReview(data.vocabulary, topicId) : ''}
 
+      <!-- Quick Reference Cards -->
+      ${data.quickReference && data.quickReference.length > 0 ? renderQuickReference(data.quickReference) : ''}
+
       <!-- Vocabulary Quiz -->
       ${data.vocabulary && data.vocabulary.length >= 4 ? renderVocabQuiz(data.vocabulary, topicId) : ''}
 
@@ -2058,6 +2061,36 @@ function renderMiniConceptMap(connections, currentTopicId) {
         <text x="${cx}" y="${cy + 4}" text-anchor="middle" fill="${centerColor}" font-size="9" font-weight="700">${currentTopic.title.length > 16 ? currentTopic.title.slice(0, 14) + '..' : currentTopic.title}</text>
       </svg>
     </div>
+  `;
+}
+
+function renderQuickReference(cards) {
+  const iconMap = { formula: 'calculator', table: 'table-2', fact: 'info', list: 'list-ordered' };
+  const colorMap = { formula: 'blue', table: 'purple', fact: 'green', list: 'amber' };
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="bookmark-check" class="w-5 h-5 text-violet-500"></i> Quick Reference
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-${Math.min(cards.length, 3)} gap-4">
+        ${cards.map(card => {
+          const icon = iconMap[card.type] || 'file-text';
+          const color = colorMap[card.type] || 'slate';
+          return `
+            <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 hover:border-${color}-300 dark:hover:border-${color}-700 transition-colors">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="w-7 h-7 rounded-lg bg-${color}-100 dark:bg-${color}-900/40 flex items-center justify-center">
+                  <i data-lucide="${icon}" class="w-4 h-4 text-${color}-600 dark:text-${color}-400"></i>
+                </div>
+                <h3 class="font-bold text-sm">${card.title}</h3>
+              </div>
+              <div class="text-sm text-slate-600 dark:text-slate-400 quick-ref-content">${card.content}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </section>
   `;
 }
 

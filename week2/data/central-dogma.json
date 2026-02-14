@@ -635,6 +635,23 @@
       "connection": "This is real metabolic engineering, exactly what synthetic biologists do to produce valuable compounds (drugs, biofuels, materials) in microbes. Companies like Ginkgo Bioworks, Zymergen, and Amyris use these strategies. The Central Dogma concepts (expression cassette design, codon optimization, transcription/translation rates) directly determine whether the pathway works."
     }
   ],
+  "quickReference": [
+    {
+      "title": "Expression Cassette",
+      "type": "list",
+      "content": "<ol><li><strong>Promoter</strong> &mdash; Drives transcription</li><li><strong>RBS/Kozak</strong> &mdash; Ribosome binding site</li><li><strong>Start codon</strong> &mdash; AUG</li><li><strong>CDS</strong> &mdash; Coding sequence</li><li><strong>Stop codon</strong> &mdash; UAA, UAG, or UGA</li><li><strong>Terminator</strong> &mdash; Ends transcription</li></ol>"
+    },
+    {
+      "title": "Expression Systems",
+      "type": "table",
+      "content": "<table><tr><th>System</th><th>Speed</th><th>Cost</th><th>Key Feature</th></tr><tr><td>E. coli</td><td>Fastest</td><td>Cheapest</td><td>No glycosylation</td></tr><tr><td>Yeast</td><td>Moderate</td><td>Low</td><td>Simple glycosylation, good secretion</td></tr><tr><td>CHO/HEK293</td><td>Slow</td><td>Expensive</td><td>Full human post-translational modifications</td></tr><tr><td>Cell-free</td><td>Hours</td><td>Moderate</td><td>Toxic proteins OK, limited scale</td></tr></table>"
+    },
+    {
+      "title": "Reading Frame Rule",
+      "type": "fact",
+      "content": "<p>A single nucleotide insertion or deletion shifts every downstream codon, almost always creating a premature stop codon. Frameshifts are among the most damaging mutations.</p>"
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "sequencing",

@@ -569,6 +569,23 @@
       "connection": "This explores cutting-edge synthetic biology. Expanded genetic codes enable proteins with new chemistries (click handles, fluorophores, photocrosslinkers) impossible with the 20 standard amino acids. Connects to Week 2 lectures on genetic code and protein engineering."
     }
   ],
+  "quickReference": [
+    {
+      "title": "The Genetic Code",
+      "type": "fact",
+      "content": "<p>64 codons &rarr; 20 amino acids + 3 stop codons. <strong>AUG</strong> = start (Met). <strong>UAA, UAG, UGA</strong> = stop. Degeneracy is concentrated at the 3rd (wobble) position.</p>"
+    },
+    {
+      "title": "Codon Optimization",
+      "type": "formula",
+      "content": "<p>CAI (Codon Adaptation Index) ranges from 0 to 1. CAI &asymp; 1 means all codons match the host organism&rsquo;s preference.</p><p>Optimized genes can express <strong>5&ndash;100x</strong> more protein than unoptimized sequences.</p>"
+    },
+    {
+      "title": "Non-Standard Amino Acids",
+      "type": "list",
+      "content": "<ol><li><strong>p-Azidophenylalanine</strong> &mdash; Click chemistry conjugation</li><li><strong>p-Benzoylphenylalanine</strong> &mdash; Photo-crosslinking</li><li><strong>Acetyllysine</strong> &mdash; Epigenetics research</li><li><strong>Selenocysteine</strong> &mdash; Natural 21st amino acid</li></ol>"
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "central-dogma",

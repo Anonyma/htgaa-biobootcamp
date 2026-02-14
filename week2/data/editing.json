@@ -632,6 +632,23 @@
       "connection": "This connects to real-world therapeutic development. The first CRISPR therapy (Casgevy) for sickle cell disease was approved in 2023 using approach 1. Understanding the trade-offs between editing methods is crucial for precision medicine."
     }
   ],
+  "quickReference": [
+    {
+      "title": "CRISPR Components",
+      "type": "list",
+      "content": "<ol><li><strong>Cas9 protein</strong> &mdash; The molecular scissors that cut DNA</li><li><strong>Guide RNA</strong> &mdash; 20 nt targeting sequence + scaffold RNA</li><li><strong>PAM sequence</strong> &mdash; NGG for SpCas9 (required adjacent to target)</li></ol>"
+    },
+    {
+      "title": "Editing Precision Ladder",
+      "type": "table",
+      "content": "<table><tr><th>Method</th><th>Edit Type</th><th>Typical Efficiency</th></tr><tr><td>NHEJ</td><td>Insertions/deletions</td><td>~50%</td></tr><tr><td>HDR</td><td>Precise edits</td><td>~5&ndash;20%</td></tr><tr><td>Base editing</td><td>Single-base changes</td><td>~60%</td></tr><tr><td>Prime editing</td><td>Any small edit</td><td>~30%</td></tr></table>"
+    },
+    {
+      "title": "DSB Repair Pathways",
+      "type": "fact",
+      "content": "<p>Double-strand breaks activate two competing pathways: <strong>NHEJ</strong> (error-prone, always available in all cell cycle phases) and <strong>HDR</strong> (precise, requires a donor template, only active in S/G2 phase).</p>"
+    }
+  ],
   "conceptConnections": [
     {
       "toTopic": "sequencing",
