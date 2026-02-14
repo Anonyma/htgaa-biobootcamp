@@ -94,6 +94,9 @@ class Router {
 
     // Update sidebar active state
     this._updateSidebar(route);
+
+    // Announce page change for screen readers
+    this._announcePageChange(route);
   }
 
   _match(pattern, route) {
@@ -120,6 +123,23 @@ class Router {
       const isActive = route.startsWith(href.replace('#', ''));
       link.classList.toggle('active', isActive);
     });
+  }
+
+  _announcePageChange(route) {
+    let announcer = document.getElementById('route-announcer');
+    if (!announcer) {
+      announcer = document.createElement('div');
+      announcer.id = 'route-announcer';
+      announcer.setAttribute('role', 'status');
+      announcer.setAttribute('aria-live', 'polite');
+      announcer.setAttribute('aria-atomic', 'true');
+      announcer.className = 'sr-only';
+      document.body.appendChild(announcer);
+    }
+    // Extract a readable page name
+    const h1 = this.contentEl.querySelector('h1');
+    const pageName = h1?.textContent?.trim() || route.replace(/\//g, ' ').trim() || 'Home';
+    announcer.textContent = `Navigated to ${pageName}`;
   }
 
   /** Start the router by navigating to the initial hash. */

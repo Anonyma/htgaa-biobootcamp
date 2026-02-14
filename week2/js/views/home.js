@@ -52,6 +52,9 @@ function createHomeView() {
           <!-- All Complete Celebration -->
           ${overallPct === 100 ? renderAllCompleteCelebration() : ''}
 
+          <!-- Flashcard Review Reminder -->
+          ${renderReviewReminder()}
+
           <!-- Today's Study Plan -->
           ${renderStudyPlan(progress)}
 
@@ -448,6 +451,37 @@ function renderBookmarks() {
           </a>
         `).join('')}
       </div>
+    </section>
+  `;
+}
+
+function renderReviewReminder() {
+  const fcData = store.get('flashcards') || { reviews: {} };
+  const reviews = fcData.reviews || {};
+  const now = Date.now();
+
+  // Count due reviews
+  let dueCount = 0;
+  Object.values(reviews).forEach(r => {
+    if (r.nextReview && r.nextReview <= now) dueCount++;
+  });
+
+  if (dueCount === 0) return '';
+
+  return `
+    <section class="mb-6">
+      <a data-route="#/flashcards" class="block bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl border border-violet-200 dark:border-violet-800 p-4 cursor-pointer hover:border-violet-400 transition-colors">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="brain" class="w-5 h-5 text-violet-600 dark:text-violet-400"></i>
+          </div>
+          <div class="flex-1">
+            <p class="font-bold text-violet-800 dark:text-violet-300">${dueCount} flashcard${dueCount > 1 ? 's' : ''} due for review</p>
+            <p class="text-xs text-violet-600 dark:text-violet-400">Spaced repetition works best when reviews are done on time. Click to start.</p>
+          </div>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-violet-400 flex-shrink-0"></i>
+        </div>
+      </a>
     </section>
   `;
 }

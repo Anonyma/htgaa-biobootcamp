@@ -55,11 +55,16 @@ class App {
   renderShell() {
     const app = document.getElementById('app');
     app.innerHTML = `
+      <!-- Skip to Content -->
+      <a href="#app-content" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:outline-none" id="skip-link">
+        Skip to content
+      </a>
+
       <!-- Top Nav -->
-      <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700">
+      <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700" role="navigation" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <button id="sidebar-toggle" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+            <button id="sidebar-toggle" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" aria-label="Toggle sidebar" aria-expanded="false">
               <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
             <a data-route="#/" class="flex items-center gap-2 cursor-pointer">
@@ -104,7 +109,7 @@ class App {
       <!-- Layout: Sidebar + Content -->
       <div class="flex min-h-[calc(100vh-57px)]">
         <!-- Sidebar -->
-        <aside id="app-sidebar" class="w-64 flex-shrink-0 border-r border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hidden lg:block overflow-y-auto">
+        <aside id="app-sidebar" class="w-64 flex-shrink-0 border-r border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hidden lg:block overflow-y-auto" role="complementary" aria-label="Study navigation">
           <div class="p-4">
             <!-- Progress -->
             <div class="mb-6 text-center">
@@ -181,7 +186,7 @@ class App {
         <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-black/50 hidden lg:hidden" style="display:none"></div>
 
         <!-- Main Content -->
-        <main id="app-content" class="flex-1 min-w-0"></main>
+        <main id="app-content" class="flex-1 min-w-0" role="main" aria-label="Topic content"></main>
       </div>
 
       <!-- Keyboard Shortcuts Modal -->
