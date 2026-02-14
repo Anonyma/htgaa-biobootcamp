@@ -68,7 +68,10 @@ function createGlossaryView() {
               ${TOPICS.map(t => `<button class="glossary-filter text-xs px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-${t.color}-50 dark:hover:bg-${t.color}-900/20 text-slate-500 dark:text-slate-400 transition-colors" data-filter="${t.id}">${t.title}</button>`).join('')}
               <span class="text-slate-300 dark:text-slate-600">|</span>
               <button id="glossary-random" class="text-xs px-3 py-1.5 rounded-full border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-colors flex items-center gap-1">
-                <i data-lucide="shuffle" class="w-3 h-3"></i> Random Term
+                <i data-lucide="shuffle" class="w-3 h-3"></i> Random
+              </button>
+              <button id="glossary-quiz-mode" class="text-xs px-3 py-1.5 rounded-full border border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors flex items-center gap-1">
+                <i data-lucide="eye-off" class="w-3 h-3"></i> Quiz Mode
               </button>
             </div>
           </header>
@@ -151,6 +154,46 @@ function createGlossaryView() {
       }
 
       searchInput?.addEventListener('input', applyFilters);
+
+      // Quiz mode — hide definitions, click to reveal
+      const quizBtn = container.querySelector('#glossary-quiz-mode');
+      let quizMode = false;
+      if (quizBtn) {
+        quizBtn.addEventListener('click', () => {
+          quizMode = !quizMode;
+          quizBtn.innerHTML = quizMode
+            ? '<i data-lucide="eye" class="w-3 h-3"></i> Normal Mode'
+            : '<i data-lucide="eye-off" class="w-3 h-3"></i> Quiz Mode';
+          if (window.lucide) lucide.createIcons();
+          terms.forEach(el => {
+            const defEl = el.querySelector('p');
+            if (defEl) {
+              if (quizMode) {
+                defEl.dataset.origText = defEl.textContent;
+                defEl.textContent = 'Click to reveal definition...';
+                defEl.classList.add('italic', 'cursor-pointer', 'text-amber-500', 'dark:text-amber-400');
+                defEl.classList.remove('text-slate-500', 'dark:text-slate-400');
+              } else {
+                if (defEl.dataset.origText) defEl.textContent = defEl.dataset.origText;
+                defEl.classList.remove('italic', 'cursor-pointer', 'text-amber-500', 'dark:text-amber-400');
+                defEl.classList.add('text-slate-500', 'dark:text-slate-400');
+              }
+            }
+          });
+        });
+        // Click to reveal in quiz mode
+        container.querySelector('#glossary-content')?.addEventListener('click', (e) => {
+          if (!quizMode) return;
+          const term = e.target.closest('.glossary-term');
+          if (!term) return;
+          const defEl = term.querySelector('p');
+          if (defEl && defEl.dataset.origText && defEl.textContent.includes('Click to reveal')) {
+            defEl.textContent = defEl.dataset.origText;
+            defEl.classList.remove('italic', 'text-amber-500', 'dark:text-amber-400');
+            defEl.classList.add('text-green-600', 'dark:text-green-400');
+          }
+        });
+      }
 
       // Random term button
       const randomBtn = container.querySelector('#glossary-random');

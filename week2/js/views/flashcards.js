@@ -361,14 +361,33 @@ function renderCard(card, allCards) {
 }
 
 function renderComplete() {
+  const stats = store.getFlashcardStats();
   return `
-    <div class="text-center py-16">
+    <div class="text-center py-12">
       <i data-lucide="party-popper" class="w-16 h-16 mx-auto mb-4 text-green-400"></i>
       <h3 class="text-2xl font-bold mb-2">All caught up!</h3>
       <p class="text-slate-500 mb-6">No cards due for review right now. Come back later for spaced repetition.</p>
-      <a data-route="#/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors cursor-pointer">
-        <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Hub
-      </a>
+      ${stats.total > 0 ? `
+        <div class="max-w-xs mx-auto mb-6">
+          <div class="flex items-center gap-1 h-4 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">
+            ${stats.mature > 0 ? `<div class="h-full bg-green-500" style="width: ${(stats.mature / (stats.total || 1)) * 100}%" title="Mature: ${stats.mature}"></div>` : ''}
+            ${stats.learning > 0 ? `<div class="h-full bg-yellow-500" style="width: ${(stats.learning / (stats.total || 1)) * 100}%" title="Learning: ${stats.learning}"></div>` : ''}
+          </div>
+          <div class="flex justify-between text-xs text-slate-400 mt-1">
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Mature: ${stats.mature}</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> Learning: ${stats.learning}</span>
+            <span>Total reviews: ${stats.totalReviews}</span>
+          </div>
+        </div>
+      ` : ''}
+      <div class="flex justify-center gap-3">
+        <a data-route="#/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors cursor-pointer">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Hub
+        </a>
+        <a data-route="#/exam" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer">
+          <i data-lucide="trophy" class="w-4 h-4"></i> Take Exam
+        </a>
+      </div>
     </div>
   `;
 }
