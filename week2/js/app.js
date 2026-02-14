@@ -10,6 +10,7 @@ import { createHomeView } from './views/home.js';
 import { createHomeworkView } from './views/homework.js';
 import { createFlashcardsView } from './views/flashcards.js';
 import { createConceptMapView } from './concept-map.js';
+import { createExamView } from './views/exam.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -34,7 +35,8 @@ class App {
       .on('/topic/:id', ({ id }) => createTopicView(id))
       .on('/homework', () => createHomeworkView())
       .on('/flashcards', () => createFlashcardsView())
-      .on('/concept-map', () => createConceptMapView());
+      .on('/concept-map', () => createConceptMapView())
+      .on('/exam', () => createExamView());
 
     // Start
     this.router.start();
@@ -140,6 +142,10 @@ class App {
                 <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i>
                 <span>Concept Map</span>
               </a>
+              <a data-route="#/exam" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>
+                <span>Exam Mode</span>
+              </a>
             </div>
           </div>
         </aside>
@@ -152,27 +158,74 @@ class App {
       </div>
 
       <!-- Keyboard Shortcuts Modal -->
-      <div id="shortcuts-modal" class="fixed inset-0 z-[100] hidden">
-        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="document.getElementById('shortcuts-modal').classList.add('hidden')"></div>
-        <div class="relative max-w-md mx-auto mt-24 px-4">
-          <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6">
-            <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
-              <i data-lucide="keyboard" class="w-5 h-5 text-blue-500"></i> Keyboard Shortcuts
-            </h2>
-            <div class="space-y-3 text-sm">
-              <div class="flex justify-between"><span class="text-slate-500">Search</span><div class="flex gap-1"><kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">/</kbd> or <kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">⌘K</kbd></div></div>
-              <div class="flex justify-between"><span class="text-slate-500">Next section</span><kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">j</kbd></div>
-              <div class="flex justify-between"><span class="text-slate-500">Previous section</span><kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">k</kbd></div>
-              <div class="flex justify-between"><span class="text-slate-500">Next topic</span><kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">n</kbd></div>
-              <div class="flex justify-between"><span class="text-slate-500">Previous topic</span><kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">p</kbd></div>
-              <div class="flex justify-between"><span class="text-slate-500">Toggle theme</span><kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">t</kbd></div>
-              <div class="flex justify-between"><span class="text-slate-500">Home</span><kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">h</kbd></div>
-              <div class="flex justify-between"><span class="text-slate-500">This help</span><kbd class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-700 font-mono text-xs">?</kbd></div>
+      <div id="shortcuts-modal" class="shortcuts-modal-overlay hidden">
+        <div class="shortcuts-modal-backdrop" onclick="document.getElementById('shortcuts-modal').classList.add('hidden')"></div>
+        <div class="shortcuts-modal-container">
+          <div class="shortcuts-modal-content">
+            <div class="shortcuts-modal-header">
+              <h2 class="shortcuts-modal-title">
+                <i data-lucide="keyboard" class="w-5 h-5"></i> Keyboard Shortcuts
+              </h2>
+              <button class="shortcuts-modal-close" onclick="document.getElementById('shortcuts-modal').classList.add('hidden')" aria-label="Close">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
             </div>
-            <p class="text-xs text-slate-400 mt-4 text-center">Press ESC to close</p>
+
+            <div class="shortcuts-modal-body">
+              <!-- Navigation group -->
+              <div class="shortcuts-group">
+                <h3 class="shortcuts-group-label">Navigation</h3>
+                <div class="shortcuts-grid">
+                  <div class="shortcut-row"><kbd class="shortcut-key">j</kbd><span class="shortcut-desc">Next section</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">k</kbd><span class="shortcut-desc">Previous section</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">n</kbd><span class="shortcut-desc">Next topic</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">p</kbd><span class="shortcut-desc">Previous topic</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">h</kbd><span class="shortcut-desc">Go home</span></div>
+                </div>
+              </div>
+
+              <!-- Search & UI group -->
+              <div class="shortcuts-group">
+                <h3 class="shortcuts-group-label">Search & Interface</h3>
+                <div class="shortcuts-grid">
+                  <div class="shortcut-row"><div class="flex items-center gap-1"><kbd class="shortcut-key">/</kbd><span class="shortcut-or">or</span><kbd class="shortcut-key">\u2318K</kbd></div><span class="shortcut-desc">Open search</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">t</kbd><span class="shortcut-desc">Toggle dark/light theme</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">Esc</kbd><span class="shortcut-desc">Close modal / search</span></div>
+                </div>
+              </div>
+
+              <!-- Flashcards group -->
+              <div class="shortcuts-group">
+                <h3 class="shortcuts-group-label">Flashcards</h3>
+                <div class="shortcuts-grid">
+                  <div class="shortcut-row"><kbd class="shortcut-key">Space</kbd><span class="shortcut-desc">Flip card</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">1</kbd><span class="shortcut-desc">Rate: Again</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">2</kbd><span class="shortcut-desc">Rate: Hard</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">3</kbd><span class="shortcut-desc">Rate: Good</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">4</kbd><span class="shortcut-desc">Rate: Easy</span></div>
+                </div>
+              </div>
+
+              <!-- Help group -->
+              <div class="shortcuts-group">
+                <h3 class="shortcuts-group-label">Help</h3>
+                <div class="shortcuts-grid">
+                  <div class="shortcut-row"><kbd class="shortcut-key">?</kbd><span class="shortcut-desc">Show this help</span></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="shortcuts-modal-footer">
+              Press <kbd class="shortcut-key shortcut-key-inline">Esc</kbd> or <kbd class="shortcut-key shortcut-key-inline">?</kbd> to close
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Keyboard Shortcuts Help Button -->
+      <button id="keyboard-help-btn" class="keyboard-help-btn" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">
+        <span>?</span>
+      </button>
 
       <!-- Footer -->
       <footer class="border-t border-slate-200 dark:border-slate-700">
@@ -235,12 +288,18 @@ class App {
     this.searchUI.init();
 
     // Global keyboard shortcuts
+    const toggleShortcutsModal = () => {
+      const modal = document.getElementById('shortcuts-modal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden') && window.lucide) lucide.createIcons();
+    };
+
     document.addEventListener('keydown', (e) => {
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
       const shortcuts = document.getElementById('shortcuts-modal');
       if (e.key === '?') {
         e.preventDefault();
-        shortcuts.classList.toggle('hidden');
+        toggleShortcutsModal();
       }
       if (e.key === 'Escape' && !shortcuts.classList.contains('hidden')) {
         shortcuts.classList.add('hidden');
@@ -253,6 +312,9 @@ class App {
         window.location.hash = '#/';
       }
     });
+
+    // "?" help button in bottom-right corner
+    document.getElementById('keyboard-help-btn')?.addEventListener('click', toggleShortcutsModal);
   }
 
   updateSidebarProgress() {

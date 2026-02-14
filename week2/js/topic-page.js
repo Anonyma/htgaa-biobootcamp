@@ -1218,6 +1218,7 @@ async function initSimulations(container, topicId) {
     'synthesis': [
       { module: './synthesis-anim.js', containerId: 'viz-synthesis-anim', initFn: 'initSynthesisAnim', title: 'Phosphoramidite Synthesis Cycle' },
       { module: './coupling-calc.js', containerId: 'viz-coupling-calc', initFn: 'initCouplingCalc', title: 'Coupling Efficiency Calculator' },
+      { module: './storage-calc.js', containerId: 'viz-storage-calc', initFn: 'initStorageCalc', title: 'DNA Data Storage Calculator' },
       { module: './timeline.js', containerId: 'viz-timeline', initFn: 'initTimeline', title: 'DNA Technology Timeline' },
     ],
     'editing': [

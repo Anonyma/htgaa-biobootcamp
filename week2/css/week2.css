@@ -1895,7 +1895,9 @@ html {
   .scroll-reveal,
   .toast,
   #back-to-top,
-  .section-progress-indicator {
+  .section-progress-indicator,
+  .shortcuts-modal-container,
+  .keyboard-help-btn {
     transition: none !important;
     animation: none !important;
   }
@@ -2068,11 +2070,276 @@ a[data-route]:hover::after {
   animation: shimmer 2s infinite;
 }
 
+/* ===== Keyboard Shortcuts Modal ===== */
+.shortcuts-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 10vh;
+}
+.shortcuts-modal-overlay.hidden { display: none; }
+
+.shortcuts-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.shortcuts-modal-container {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 16px;
+  animation: shortcuts-modal-in 0.2s ease-out;
+}
+
+@keyframes shortcuts-modal-in {
+  from { opacity: 0; transform: translateY(-12px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.shortcuts-modal-content {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+.dark .shortcuts-modal-content {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.shortcuts-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+.dark .shortcuts-modal-header { border-color: #334155; }
+
+.shortcuts-modal-title {
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1e293b;
+}
+.dark .shortcuts-modal-title { color: #f1f5f9; }
+.shortcuts-modal-title i { color: #3b82f6; }
+
+.shortcuts-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.shortcuts-modal-close:hover {
+  background: #f1f5f9;
+  color: #475569;
+}
+.dark .shortcuts-modal-close:hover {
+  background: #334155;
+  color: #cbd5e1;
+}
+
+.shortcuts-modal-body {
+  padding: 16px 20px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.shortcuts-group {
+  margin-bottom: 16px;
+}
+.shortcuts-group:last-child { margin-bottom: 0; }
+
+.shortcuts-group-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 8px;
+}
+.dark .shortcuts-group-label { color: #64748b; }
+
+.shortcuts-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.shortcut-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+  padding: 4px 0;
+}
+
+.shortcut-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  white-space: nowrap;
+}
+.dark .shortcut-key {
+  color: #cbd5e1;
+  background: #334155;
+  border-color: #475569;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.shortcut-key-inline {
+  height: 22px;
+  min-width: 22px;
+  padding: 0 6px;
+  font-size: 0.625rem;
+}
+
+.shortcut-or {
+  font-size: 0.6875rem;
+  color: #94a3b8;
+  margin: 0 4px;
+}
+
+.shortcut-desc {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+.dark .shortcut-desc { color: #94a3b8; }
+
+.shortcuts-modal-footer {
+  padding: 12px 20px;
+  text-align: center;
+  font-size: 0.6875rem;
+  color: #94a3b8;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+.dark .shortcuts-modal-footer {
+  color: #64748b;
+  border-color: #334155;
+  background: #0f172a;
+}
+
+/* ===== Keyboard Help Button (bottom-right) ===== */
+.keyboard-help-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 40;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #94a3b8;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+.keyboard-help-btn:hover {
+  opacity: 1;
+  color: #3b82f6;
+  border-color: #93c5fd;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+  transform: translateY(-1px);
+}
+.keyboard-help-btn:active {
+  transform: translateY(0);
+}
+.dark .keyboard-help-btn {
+  background: #1e293b;
+  border-color: #334155;
+  color: #64748b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+.dark .keyboard-help-btn:hover {
+  color: #60a5fa;
+  border-color: #3b82f6;
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
 /* Print styles */
 @media print {
-  .sim-container, .controls, .toc-sidebar, nav, #app-sidebar, #reading-progress { display: none !important; }
-  .collapsible-content, .deep-dive-box__body { max-height: none !important; }
-  .topic-section, .scroll-reveal { opacity: 1 !important; transform: none !important; animation: none !important; }
-  .section-progress-indicator, .section-divider .dna-dot { display: none !important; }
-  #back-to-top, .toast { display: none !important; }
+  /* Hide interactive/nav elements */
+  .sim-container, .controls, .toc-sidebar, nav, #app-sidebar, #reading-progress,
+  #back-to-top, .toast, .keyboard-help-btn, #shortcuts-modal, .search-modal,
+  .section-progress-indicator, .section-divider .dna-dot,
+  .quiz-option:after, .btn, button, .micro-widget,
+  .mark-complete-btn, .topic-nav-footer, .video-card,
+  .inline-check, .try-it-box, .challenge-box { display: none !important; }
+
+  /* Show all collapsed content */
+  .collapsible-content, .deep-dive-box__body { max-height: none !important; display: block !important; }
+
+  /* Remove animations and transforms */
+  .topic-section, .scroll-reveal { opacity: 1 !important; transform: none !important; animation: none !important; transition: none !important; }
+  * { animation: none !important; transition: none !important; }
+
+  /* Typography for print */
+  body { font-size: 11pt !important; line-height: 1.5 !important; color: #000 !important; background: #fff !important; }
+  h1 { font-size: 20pt !important; }
+  h2 { font-size: 16pt !important; page-break-after: avoid; }
+  h3 { font-size: 13pt !important; page-break-after: avoid; }
+  p, li { orphans: 3; widows: 3; }
+
+  /* Layout: full width, no sidebar */
+  #app-content, .topic-content, main { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
+
+  /* Key facts and vocab print well */
+  .key-fact-card { border: 1px solid #ccc !important; background: #f9f9f9 !important; page-break-inside: avoid; margin-bottom: 8pt !important; }
+  .vocab-card { border: 1px solid #ddd !important; background: #fff !important; page-break-inside: avoid; }
+
+  /* Quiz questions print for study */
+  .quiz-question { page-break-inside: avoid; border: 1px solid #ddd !important; padding: 8pt !important; margin-bottom: 8pt !important; }
+  .quiz-option { border: 1px solid #ccc !important; padding: 4pt 8pt !important; margin: 2pt 0 !important; background: #fff !important; }
+
+  /* Deep dive boxes */
+  .deep-dive-box { border: 1px solid #999 !important; background: #f5f5f5 !important; page-break-inside: avoid; }
+
+  /* Links show URLs */
+  a[href^="http"]:after { content: " (" attr(href) ")"; font-size: 9pt; color: #666; }
+  a { color: #000 !important; text-decoration: underline !important; }
+
+  /* Page breaks */
+  .topic-section { page-break-before: auto; }
+  .topic-section:first-child { page-break-before: avoid; }
+  h1, h2, h3 { page-break-after: avoid; }
+  img, svg, table { page-break-inside: avoid; }
 }

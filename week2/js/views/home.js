@@ -112,21 +112,26 @@ function createHomeView() {
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
               <i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i> Study Tools
             </h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <a data-route="#/flashcards" class="block p-5 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl border border-violet-200 dark:border-violet-800 hover:border-violet-400 cursor-pointer transition-colors">
                 <i data-lucide="layers" class="w-6 h-6 text-violet-500 mb-2"></i>
                 <h3 class="font-bold">Flashcards</h3>
-                <p class="text-sm text-slate-500 mt-1">Spaced repetition review of key terms</p>
+                <p class="text-sm text-slate-500 mt-1">Spaced repetition review</p>
               </a>
               <a data-route="#/homework" class="block p-5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-xl border border-orange-200 dark:border-orange-800 hover:border-orange-400 cursor-pointer transition-colors">
                 <i data-lucide="clipboard-list" class="w-6 h-6 text-orange-500 mb-2"></i>
                 <h3 class="font-bold">Homework Hub</h3>
-                <p class="text-sm text-slate-500 mt-1">Assignment guidance & checklists</p>
+                <p class="text-sm text-slate-500 mt-1">Guidance & checklists</p>
               </a>
               <a data-route="#/concept-map" class="block p-5 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl border border-cyan-200 dark:border-cyan-800 hover:border-cyan-400 cursor-pointer transition-colors">
                 <i data-lucide="git-branch" class="w-6 h-6 text-cyan-500 mb-2"></i>
                 <h3 class="font-bold">Concept Map</h3>
-                <p class="text-sm text-slate-500 mt-1">See how all topics connect</p>
+                <p class="text-sm text-slate-500 mt-1">How topics connect</p>
+              </a>
+              <a data-route="#/exam" class="block p-5 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800 hover:border-amber-400 cursor-pointer transition-colors">
+                <i data-lucide="trophy" class="w-6 h-6 text-amber-500 mb-2"></i>
+                <h3 class="font-bold">Exam Mode</h3>
+                <p class="text-sm text-slate-500 mt-1">Timed practice quiz</p>
               </a>
             </div>
           </section>
