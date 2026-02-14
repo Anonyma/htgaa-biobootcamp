@@ -181,10 +181,12 @@ function createFlashcardsView() {
             ${dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete()}
           </div>
 
-          <!-- Session Timer -->
-          <div class="mt-6 text-center text-sm text-slate-400 flex items-center justify-center gap-4">
+          <!-- Session Timer & Running Stats -->
+          <div class="mt-6 text-center text-sm text-slate-400 flex items-center justify-center gap-4 flex-wrap">
             <span class="flex items-center gap-1"><i data-lucide="timer" class="w-3.5 h-3.5"></i> Session: <span id="fc-session-timer" class="font-mono">0:00</span></span>
             <span class="text-slate-300 dark:text-slate-600">|</span>
+            <span id="fc-running-accuracy" class="hidden font-medium"></span>
+            <span class="text-slate-300 dark:text-slate-600 hidden" id="fc-accuracy-divider">|</span>
             <span>Click card to flip. 1-4 to rate.</span>
           </div>
 
@@ -323,6 +325,18 @@ function createFlashcardsView() {
         else if (quality === 3) sessionStats.hard++;
         else if (quality === 4) sessionStats.good++;
         else if (quality === 5) sessionStats.easy++;
+
+        // Update running accuracy display
+        const accEl = container.querySelector('#fc-running-accuracy');
+        const accDivider = container.querySelector('#fc-accuracy-divider');
+        if (accEl && sessionStats.reviewed > 0) {
+          const acc = Math.round(((sessionStats.good + sessionStats.easy) / sessionStats.reviewed) * 100);
+          const accColor = acc >= 80 ? 'text-green-500' : acc >= 60 ? 'text-amber-500' : 'text-red-500';
+          accEl.className = `${accColor} font-medium`;
+          accEl.textContent = `${acc}% recall`;
+          accEl.classList.remove('hidden');
+          if (accDivider) accDivider.classList.remove('hidden');
+        }
 
         // Visual feedback
         const ratingBtns = cardArea.querySelector('.fc-rating');

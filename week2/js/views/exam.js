@@ -239,11 +239,25 @@ export function createExamView() {
       elapsedSeconds++;
       const timerEl = containerEl.querySelector('#exam-timer');
       if (timerEl) timerEl.textContent = formatTime(elapsedSeconds);
-      // Update per-question timer
+      // Update per-question timer with slow warning
       const qTimerEl = containerEl.querySelector('#question-timer');
       if (qTimerEl) {
         const qSec = Math.floor((Date.now() - questionStartTime) / 1000) + (questionElapsed[currentIndex] || 0);
         qTimerEl.textContent = formatTime(qSec);
+        if (qSec >= 90) {
+          qTimerEl.classList.add('text-red-500', 'font-bold');
+          qTimerEl.classList.remove('text-xs');
+        } else if (qSec >= 60) {
+          qTimerEl.classList.add('text-amber-500');
+        }
+      }
+      // Show slow question hint
+      const slowHint = containerEl.querySelector('#slow-question-hint');
+      if (slowHint) {
+        const qSec = Math.floor((Date.now() - questionStartTime) / 1000) + (questionElapsed[currentIndex] || 0);
+        if (qSec >= 60 && slowHint.classList.contains('hidden')) {
+          slowHint.classList.remove('hidden');
+        }
       }
     }, 1000);
 
@@ -317,6 +331,10 @@ export function createExamView() {
               </button>
             `;
           }).join('')}
+        </div>
+        <div id="slow-question-hint" class="hidden mt-3 text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1.5 p-2 rounded-lg bg-amber-50 dark:bg-amber-900/20">
+          <i data-lucide="lightbulb" class="w-3.5 h-3.5 flex-shrink-0"></i>
+          Taking a while? Consider flagging this and moving on — you can return to it later.
         </div>
       </div>
 
