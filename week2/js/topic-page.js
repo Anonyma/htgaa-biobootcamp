@@ -748,15 +748,20 @@ function renderTopicPage(data, topicId) {
             }">
             ${isComplete ? '<i data-lucide="check-circle-2" class="w-5 h-5 inline mr-2"></i>Completed' : '<i data-lucide="circle" class="w-5 h-5 inline mr-2"></i>Mark as Complete'}
           </button>
-          ${nextTopic ? `
-          <a data-route="#/topic/${nextTopic.id}" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-semibold transition-colors cursor-pointer">
-            Next: ${nextTopic.title} <i data-lucide="arrow-right" class="w-5 h-5"></i>
-          </a>
-          ` : `
-          <a data-route="#/" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-semibold transition-colors cursor-pointer">
-            Back to Hub <i data-lucide="layout-grid" class="w-5 h-5"></i>
-          </a>
-          `}
+          <div class="flex items-center gap-3">
+            <a data-route="#/flashcards" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/30 text-sm font-medium transition-colors cursor-pointer">
+              <i data-lucide="layers" class="w-4 h-4"></i> Review Flashcards
+            </a>
+            ${nextTopic ? `
+            <a data-route="#/topic/${nextTopic.id}" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-semibold transition-colors cursor-pointer">
+              Next: ${nextTopic.title} <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </a>
+            ` : `
+            <a data-route="#/" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-semibold transition-colors cursor-pointer">
+              Back to Hub <i data-lucide="layout-grid" class="w-5 h-5"></i>
+            </a>
+            `}
+          </div>
         </div>
       </div>
     </div>

@@ -910,6 +910,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v53', items: ['Exam mastery % on topic toggles', 'Topic page flashcard review link', 'Weekly progress comparison'] },
     { ver: 'v52', items: ['Topic mastery breakdown on chapter page', 'Compare suggested comparisons', 'Struggling terms dashboard'] },
     { ver: 'v51', items: ['Exam retry incorrect only', 'Flashcard session summary', 'Struggling terms dashboard widget'] },
     { ver: 'v50', items: ['TOC section read indicators', 'Quick quiz question type filter'] },
@@ -1118,6 +1119,41 @@ function renderStatsDashboard(progress) {
           <div class="text-xs text-slate-500 mt-1">Study Streak</div>
         </div>
       </div>
+
+      <!-- Weekly Comparison -->
+      ${(() => {
+        const log = store.getStudyLog();
+        const now = new Date();
+        const thisWeekStart = new Date(now);
+        thisWeekStart.setDate(thisWeekStart.getDate() - thisWeekStart.getDay());
+        thisWeekStart.setHours(0, 0, 0, 0);
+        const lastWeekStart = new Date(thisWeekStart);
+        lastWeekStart.setDate(lastWeekStart.getDate() - 7);
+
+        let thisWeekSessions = 0, lastWeekSessions = 0;
+        Object.entries(log).forEach(([dateStr, count]) => {
+          const d = new Date(dateStr + 'T00:00:00');
+          if (d >= thisWeekStart) thisWeekSessions += count;
+          else if (d >= lastWeekStart && d < thisWeekStart) lastWeekSessions += count;
+        });
+
+        if (lastWeekSessions === 0 && thisWeekSessions === 0) return '';
+
+        const diff = thisWeekSessions - lastWeekSessions;
+        const arrow = diff > 0 ? 'trending-up' : diff < 0 ? 'trending-down' : 'minus';
+        const diffColor = diff > 0 ? 'green' : diff < 0 ? 'red' : 'slate';
+        const diffText = diff > 0 ? `+${diff}` : `${diff}`;
+
+        return `
+        <div class="mt-3 flex items-center gap-4 text-xs text-slate-500 px-1">
+          <span class="flex items-center gap-1">
+            <i data-lucide="${arrow}" class="w-3.5 h-3.5 text-${diffColor}-500"></i>
+            <span class="font-medium text-${diffColor}-600 dark:text-${diffColor}-400">${diffText}</span> vs last week
+          </span>
+          <span>This week: ${thisWeekSessions} sessions</span>
+          <span>Last week: ${lastWeekSessions} sessions</span>
+        </div>`;
+      })()}
 
       <!-- Overall Mastery -->
       ${(() => {

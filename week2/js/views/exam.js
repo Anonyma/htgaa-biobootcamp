@@ -111,7 +111,11 @@ export function createExamView() {
           <i data-lucide="list-checks" class="w-5 h-5 text-blue-500"></i> Select Topics
         </h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
-          ${TOPICS.map(t => `
+          ${TOPICS.map(t => {
+            const mastery = store.getTopicMastery(t.id, null);
+            const mPct = mastery ? mastery.mastery : 0;
+            const mColor = mPct >= 80 ? 'green' : mPct >= 50 ? 'amber' : mPct > 0 ? 'red' : 'slate';
+            return `
             <label class="flex items-center gap-2 p-3 rounded-xl border-2 cursor-pointer transition-all
               ${selectedTopics.has(t.id) ? `border-${t.color}-400 bg-${t.color}-50 dark:bg-${t.color}-900/20` : 'border-slate-200 dark:border-slate-700 hover:border-slate-300'}
               exam-topic-toggle" data-topic="${t.id}">
@@ -120,9 +124,10 @@ export function createExamView() {
                 ${selectedTopics.has(t.id) ? `bg-${t.color}-500 text-white` : 'bg-slate-200 dark:bg-slate-600'}">
                 <i data-lucide="check" class="w-3 h-3 ${selectedTopics.has(t.id) ? '' : 'hidden'}"></i>
               </div>
-              <span class="text-sm font-medium truncate">${escapeHtml(t.title)}</span>
-            </label>
-          `).join('')}
+              <span class="text-sm font-medium truncate flex-1">${escapeHtml(t.title)}</span>
+              ${mPct > 0 ? `<span class="text-[10px] font-bold text-${mColor}-600 dark:text-${mColor}-400">${mPct}%</span>` : ''}
+            </label>`;
+          }).join('')}
         </div>
         <div class="flex items-center gap-2">
           <button class="text-xs px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors" id="exam-select-all">Select All</button>
