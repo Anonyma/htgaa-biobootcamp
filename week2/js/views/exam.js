@@ -38,6 +38,9 @@ export function createExamView() {
   let questionCount = 20;
   let containerEl = null;
   let activeKeyHandler = null;
+  let streak = 0;
+  let bestStreak = 0;
+  let questionTimes = [];
 
   function cleanupKeyHandler() {
     if (activeKeyHandler) {
@@ -196,6 +199,9 @@ export function createExamView() {
     currentIndex = 0;
     answers = {};
     elapsedSeconds = 0;
+    streak = 0;
+    bestStreak = 0;
+    questionTimes = new Array(questions.length).fill(0);
     state = 'running';
 
     // Start timer
@@ -223,6 +229,7 @@ export function createExamView() {
           <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-${q.topicColor}-100 text-${q.topicColor}-700 dark:bg-${q.topicColor}-900/30 dark:text-${q.topicColor}-400">
             ${escapeHtml(q.topicTitle)}
           </span>
+          ${streak >= 2 ? `<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 animate-pulse">${streak} streak</span>` : ''}
         </div>
         <div class="flex items-center gap-2 text-sm">
           <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
@@ -295,7 +302,20 @@ export function createExamView() {
     // Option clicks
     containerEl.querySelectorAll('.exam-option').forEach(btn => {
       btn.addEventListener('click', () => {
+        const wasUnanswered = answers[currentIndex] === undefined;
         answers[currentIndex] = parseInt(btn.dataset.optionIndex);
+        // Track question time
+        questionTimes[currentIndex] = elapsedSeconds;
+        // Track streak
+        if (wasUnanswered) {
+          const selectedOpt = questions[currentIndex].shuffledOptions[answers[currentIndex]];
+          if (selectedOpt?.originalIndex === questions[currentIndex].correctIndex) {
+            streak++;
+            if (streak > bestStreak) bestStreak = streak;
+          } else {
+            streak = 0;
+          }
+        }
         renderQuestion();
       });
     });
@@ -385,6 +405,7 @@ export function createExamView() {
           <i data-lucide="clock" class="w-4 h-4 inline"></i> ${formatTime(elapsedSeconds)}
           <span class="mx-2">|</span>
           ~${Math.round(elapsedSeconds / questions.length)}s per question
+          ${bestStreak >= 3 ? `<span class="mx-2">|</span> <span class="text-amber-500 font-medium">Best streak: ${bestStreak}</span>` : ''}
         </p>
       </div>
 
@@ -409,6 +430,28 @@ export function createExamView() {
           }).join('')}
         </div>
       </div>
+
+      <!-- Score History -->
+      ${(() => {
+        const scores = store.getExamScores();
+        if (scores.length < 2) return '';
+        const maxPct = 100;
+        const barWidth = Math.max(12, Math.min(40, Math.floor(300 / scores.length)));
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-4">Score History</h2>
+          <div class="flex items-end gap-1 h-32">
+            ${scores.map((s, i) => `
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <span class="text-xs font-medium ${i === scores.length - 1 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-400'}">${s.pct}%</span>
+                <div class="w-full rounded-t-sm transition-all ${i === scores.length - 1 ? 'bg-gradient-to-t from-amber-500 to-orange-400' : 'bg-slate-300 dark:bg-slate-600'}" style="height: ${Math.max(4, (s.pct / maxPct) * 100)}%"></div>
+              </div>
+            `).join('')}
+          </div>
+          <p class="text-xs text-slate-400 text-center mt-2">${scores.length} attempts</p>
+        </div>
+        `;
+      })()}
 
       <!-- Question Review -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">

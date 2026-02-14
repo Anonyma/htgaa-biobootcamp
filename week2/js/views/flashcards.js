@@ -47,6 +47,32 @@ function createFlashcardsView() {
             }).join('')}
           </div>
 
+          <!-- Struggling Cards Alert -->
+          ${(() => {
+            const reviews = store.get('flashcards').reviews;
+            const struggling = allCards.filter(c => {
+              const r = reviews[c.id];
+              return r && r.lapses >= 3;
+            });
+            if (struggling.length === 0) return '';
+            return `
+            <div class="mb-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+              <div class="flex items-center gap-2 mb-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i>
+                <span class="text-sm font-semibold text-red-700 dark:text-red-400">${struggling.length} struggling card${struggling.length > 1 ? 's' : ''}</span>
+              </div>
+              <p class="text-xs text-red-600 dark:text-red-400 mb-2">These terms have been marked "Again" 3+ times. Try reading the related topic sections.</p>
+              <div class="flex flex-wrap gap-1">
+                ${struggling.slice(0, 8).map(c => {
+                  const topic = TOPICS.find(t => t.id === c.topicId);
+                  return `<span class="text-xs px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">${c.term}</span>`;
+                }).join('')}
+                ${struggling.length > 8 ? `<span class="text-xs text-red-400">+${struggling.length - 8} more</span>` : ''}
+              </div>
+            </div>
+            `;
+          })()}
+
           <!-- Stats Grid -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
             <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 text-center">
@@ -280,6 +306,12 @@ function renderCard(card, allCards) {
             <span class="text-xs text-slate-400 flex items-center gap-1">
               <i data-lucide="${topic?.icon || 'book-open'}" class="w-3 h-3"></i> ${topic?.title || 'General'}
             </span>
+            ${(() => {
+              const r = store.get('flashcards').reviews[card.id];
+              if (r && r.lapses >= 3) return `<span class="text-xs px-2 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">Struggling</span>`;
+              if (r && r.reviewCount > 0) return `<span class="text-xs text-slate-300 dark:text-slate-600">${r.reviewCount} reviews</span>`;
+              return '';
+            })()}
           </div>
           <p class="text-2xl font-bold mb-2">${escapeHtml(card.term)}</p>
           <div class="mt-4 flex items-center gap-2 text-slate-400">

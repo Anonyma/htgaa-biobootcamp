@@ -7,6 +7,9 @@ import { store, TOPICS } from './store.js';
 
 function createConceptMapView() {
   let simulation = null;
+  let graphNodes = [];
+  let graphLinks = [];
+  let svgNodeSelection = null;
 
   return {
     render() {
@@ -22,6 +25,14 @@ function createConceptMapView() {
             </h1>
             <p class="text-slate-500">Explore how all Week 2 topics and concepts connect. Click a node to learn more.</p>
           </header>
+
+          <!-- Search -->
+          <div class="mb-4 relative">
+            <input type="text" id="cm-search" placeholder="Search concepts (e.g. CRISPR, nanopore, codon)..."
+              class="w-full px-4 py-2.5 pl-10 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400 pointer-events-none"></i>
+            <div id="cm-search-results" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-lg z-20 max-h-48 overflow-y-auto"></div>
+          </div>
 
           <!-- Filter -->
           <div class="mb-4 flex items-center gap-2 flex-wrap">
@@ -59,6 +70,37 @@ function createConceptMapView() {
     mount(container) {
       buildGraph(container);
 
+      // Search
+      const searchInput = container.querySelector('#cm-search');
+      const searchResults = container.querySelector('#cm-search-results');
+      if (searchInput && searchResults) {
+        searchInput.addEventListener('input', () => {
+          const query = searchInput.value.trim().toLowerCase();
+          if (query.length < 2) { searchResults.classList.add('hidden'); return; }
+          const matches = graphNodes.filter(n => n.label.toLowerCase().includes(query) || (n.description || '').toLowerCase().includes(query));
+          if (matches.length === 0) { searchResults.classList.add('hidden'); return; }
+          searchResults.classList.remove('hidden');
+          searchResults.innerHTML = matches.slice(0, 8).map(m => `
+            <button class="cm-search-item w-full text-left px-4 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2" data-node-id="${m.id}">
+              <span class="w-3 h-3 rounded-full flex-shrink-0" style="background: ${topicColor(m.topicId || m.id)}"></span>
+              <span class="font-medium">${m.label}</span>
+              <span class="text-xs text-slate-400 truncate">${m.description || ''}</span>
+            </button>
+          `).join('');
+          searchResults.querySelectorAll('.cm-search-item').forEach(item => {
+            item.addEventListener('click', () => {
+              const nodeId = item.dataset.nodeId;
+              highlightNode(container, nodeId);
+              searchResults.classList.add('hidden');
+              searchInput.value = '';
+            });
+          });
+        });
+        searchInput.addEventListener('blur', () => {
+          setTimeout(() => searchResults.classList.add('hidden'), 200);
+        });
+      }
+
       // Filter buttons
       container.querySelectorAll('.cm-filter').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -87,6 +129,8 @@ function createConceptMapView() {
     const height = 600;
 
     const { nodes, links } = getGraphData();
+    graphNodes = nodes;
+    graphLinks = links;
 
     const svg = d3.select(svgContainer)
       .append('svg')
@@ -151,7 +195,9 @@ function createConceptMapView() {
       .join('g')
       .attr('class', 'concept-node')
       .attr('data-topic', d => d.topicId)
+      .attr('data-node-id', d => d.id)
       .call(drag(simulation));
+    svgNodeSelection = node;
 
     // Topic nodes (larger circles)
     node.filter(d => d.isTopic)
@@ -231,6 +277,53 @@ function createConceptMapView() {
 
       node.attr('transform', d => `translate(${d.x},${d.y})`);
     });
+  }
+
+  function highlightNode(container, nodeId) {
+    if (!svgNodeSelection) return;
+    const targetNode = graphNodes.find(n => n.id === nodeId);
+    if (!targetNode) return;
+
+    // Show info panel
+    const info = container.querySelector('#cm-info');
+    const title = container.querySelector('#cm-info-title');
+    const desc = container.querySelector('#cm-info-desc');
+    const infoLink = container.querySelector('#cm-info-link');
+    if (info && title) {
+      info.classList.remove('hidden');
+      title.textContent = targetNode.label;
+      desc.textContent = targetNode.description || '';
+      if (targetNode.isTopic) {
+        infoLink.textContent = `Go to ${targetNode.label} chapter`;
+        infoLink.dataset.route = `#/topic/${targetNode.id}`;
+      } else {
+        const topic = TOPICS.find(t => t.id === targetNode.topicId);
+        infoLink.textContent = `Part of: ${topic?.title || targetNode.topicId}`;
+        infoLink.dataset.route = `#/topic/${targetNode.topicId}`;
+      }
+    }
+
+    // Highlight connected
+    const connected = new Set([nodeId]);
+    graphLinks.forEach(l => {
+      const srcId = typeof l.source === 'object' ? l.source.id : l.source;
+      const tgtId = typeof l.target === 'object' ? l.target.id : l.target;
+      if (srcId === nodeId) connected.add(tgtId);
+      if (tgtId === nodeId) connected.add(srcId);
+    });
+
+    svgNodeSelection.select('circle')
+      .attr('opacity', n => connected.has(n.id) ? 1 : 0.2)
+      .attr('r', n => n.id === nodeId ? (n.isTopic ? 30 : 16) : (n.isTopic ? 24 : 12));
+    svgNodeSelection.select('text')
+      .attr('opacity', n => connected.has(n.id) ? 1 : 0.2);
+
+    setTimeout(() => {
+      svgNodeSelection.select('circle')
+        .attr('opacity', 1)
+        .attr('r', n => n.isTopic ? 24 : 12);
+      svgNodeSelection.select('text').attr('opacity', 1);
+    }, 3000);
   }
 
   function filterGraph(container, filter) {

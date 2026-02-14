@@ -160,6 +160,43 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>
       </div>
 
+      <!-- Similarity Score -->
+      <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Similarity Analysis</h3>
+        <div class="grid grid-cols-3 gap-4 text-center">
+          ${(() => {
+            const vocabOverlap = vocabTermsA.size > 0 && vocabTermsB.size > 0 ? Math.round((sharedTerms.length / Math.min(vocabTermsA.size, vocabTermsB.size)) * 100) : 0;
+            const objA = (dataA.learningObjectives || []);
+            const objB = (dataB.learningObjectives || []);
+            const avgSections = Math.round(((dataA.sections || []).length + (dataB.sections || []).length) / 2);
+            return `
+              <div>
+                <div class="text-2xl font-bold ${vocabOverlap > 30 ? 'text-green-600' : vocabOverlap > 10 ? 'text-yellow-600' : 'text-slate-500'}">${vocabOverlap}%</div>
+                <div class="text-xs text-slate-500">Vocab Overlap</div>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-blue-600">${mutualConnections.length}</div>
+                <div class="text-xs text-slate-500">Direct Links</div>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-purple-600">${sharedTerms.length}</div>
+                <div class="text-xs text-slate-500">Shared Terms</div>
+              </div>
+            `;
+          })()}
+        </div>
+        ${(() => {
+          const scoreA = quizScoreA ? Math.round(quizScoreA.correct / quizScoreA.total * 100) : null;
+          const scoreB = quizScoreB ? Math.round(quizScoreB.correct / quizScoreB.total * 100) : null;
+          if (scoreA !== null && scoreB !== null && Math.abs(scoreA - scoreB) > 15) {
+            const weaker = scoreA < scoreB ? metaA?.title : metaB?.title;
+            const stronger = scoreA >= scoreB ? metaA?.title : metaB?.title;
+            return `<p class="text-xs text-amber-600 dark:text-amber-400 mt-3 text-center">You're scoring lower on <strong>${weaker}</strong> — consider reviewing its vocabulary using shared concepts from <strong>${stronger}</strong>.</p>`;
+          }
+          return '';
+        })()}
+      </div>
+
       ${mutualConnections.length > 0 ? `
       <!-- Mutual Connections -->
       <div class="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-5 border border-blue-100 dark:border-blue-800">
