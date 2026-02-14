@@ -159,6 +159,9 @@ function createTopicView(topicId) {
       // Add ripple effect to buttons
       initRippleEffect(container);
 
+      // Quick review mini-flashcards
+      initQuickReview(container, data);
+
       // Keyboard navigation (j/k for sections, n/p for prev/next topic)
       this._keyHandler = (e) => {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
@@ -336,6 +339,9 @@ function renderTopicPage(data, topicId) {
 
       <!-- Quiz Section -->
       ${data.quizQuestions ? renderQuizSection(data.quizQuestions, topicId) : ''}
+
+      <!-- Quick Review Flashcards -->
+      ${data.vocabulary && data.vocabulary.length > 0 ? renderQuickReview(data.vocabulary, topicId) : ''}
 
       <!-- Bottom strip: Vocab, Connections, References -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -694,6 +700,44 @@ function renderQuizSection(questions, topicId) {
         </div>
       </div>
     </section>
+  `;
+}
+
+function renderQuickReview(vocab, topicId) {
+  if (!vocab || vocab.length === 0) return '';
+  return `
+    <div class="topic-section mb-12" id="quick-review">
+      <div class="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/10 dark:to-purple-900/10 rounded-2xl border border-violet-200 dark:border-violet-800 p-6">
+        <h2 class="text-xl font-bold mb-2 flex items-center gap-2">
+          <i data-lucide="layers" class="w-5 h-5 text-violet-500"></i> Quick Review
+        </h2>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Flip through key terms from this topic. Click a card to reveal the definition.</p>
+        <div class="relative">
+          <div class="qr-card-container bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 p-6 min-h-[160px] cursor-pointer select-none" data-qr-topic="${topicId}">
+            <div class="qr-front text-center">
+              <p class="text-xs text-slate-400 mb-2">Term</p>
+              <p class="text-xl font-bold qr-term"></p>
+            </div>
+            <div class="qr-back text-center hidden">
+              <p class="text-xs text-violet-400 mb-2">Definition</p>
+              <p class="text-sm qr-def"></p>
+            </div>
+          </div>
+          <div class="flex items-center justify-between mt-4">
+            <button class="qr-prev px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+              <i data-lucide="chevron-left" class="w-4 h-4 inline"></i> Prev
+            </button>
+            <span class="qr-counter text-sm text-slate-400"></span>
+            <button class="qr-next px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+              Next <i data-lucide="chevron-right" class="w-4 h-4 inline"></i>
+            </button>
+          </div>
+        </div>
+        <div class="mt-3 text-center">
+          <a data-route="#/flashcards" class="text-sm text-violet-500 hover:text-violet-700 dark:hover:text-violet-300 cursor-pointer">Full flashcard deck with spaced repetition &rarr;</a>
+        </div>
+      </div>
+    </div>
   `;
 }
 
@@ -1292,6 +1336,53 @@ async function initSimulations(container, topicId) {
   }
 
   return cleanups;
+}
+
+function initQuickReview(container, data) {
+  const vocab = data.vocabulary;
+  if (!vocab || vocab.length === 0) return;
+
+  const card = container.querySelector('.qr-card-container');
+  if (!card) return;
+
+  const terms = vocab.map(v => ({ term: v.term, def: v.definition }));
+  let idx = 0;
+  let flipped = false;
+
+  function show() {
+    const front = card.querySelector('.qr-front');
+    const back = card.querySelector('.qr-back');
+    const term = card.querySelector('.qr-term');
+    const def = card.querySelector('.qr-def');
+    const counter = container.querySelector('.qr-counter');
+
+    term.textContent = terms[idx].term;
+    def.textContent = terms[idx].def;
+    counter.textContent = `${idx + 1} / ${terms.length}`;
+    front.classList.remove('hidden');
+    back.classList.add('hidden');
+    flipped = false;
+  }
+
+  card.addEventListener('click', () => {
+    const front = card.querySelector('.qr-front');
+    const back = card.querySelector('.qr-back');
+    flipped = !flipped;
+    front.classList.toggle('hidden', flipped);
+    back.classList.toggle('hidden', !flipped);
+  });
+
+  container.querySelector('.qr-prev')?.addEventListener('click', () => {
+    idx = (idx - 1 + terms.length) % terms.length;
+    show();
+  });
+
+  container.querySelector('.qr-next')?.addEventListener('click', () => {
+    idx = (idx + 1) % terms.length;
+    show();
+  });
+
+  show();
 }
 
 function launchConfetti(originEl) {
