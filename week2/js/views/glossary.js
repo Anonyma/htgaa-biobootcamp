@@ -5,6 +5,8 @@
 
 import { store, TOPICS } from '../store.js';
 
+let _glossaryScrollCleanup = null;
+
 function createGlossaryView() {
   let _allTerms = [];
   return {
@@ -88,17 +90,33 @@ function createGlossaryView() {
               <div class="glossary-letter-group mb-6" data-letter="${l}">
                 <h2 id="letter-${l}" class="text-lg font-bold text-teal-600 dark:text-teal-400 border-b border-slate-200 dark:border-slate-700 pb-2 mb-3 scroll-mt-24">${l}</h2>
                 <div class="space-y-3">
-                  ${grouped[l].map(t => `
+                  ${grouped[l].map((t, tIdx) => {
+                    // Get flashcard status for this term
+                    const reviews = store.get('flashcards').reviews || {};
+                    const topicVocabIdx = allTerms.filter(at => at.topicId === t.topicId).indexOf(t);
+                    const cardId = `${t.topicId}-vocab-${topicVocabIdx >= 0 ? topicVocabIdx : tIdx}`;
+                    const r = reviews[cardId];
+                    let fcBadge = '';
+                    if (r && r.interval >= 21) {
+                      fcBadge = '<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 font-medium">Mastered</span>';
+                    } else if (r && r.repetitions > 0) {
+                      fcBadge = '<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 font-medium">Learning</span>';
+                    } else if (r && r.lapses >= 3) {
+                      fcBadge = '<span class="text-[9px] px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-medium">Struggling</span>';
+                    }
+
+                    return `
                     <div class="glossary-term p-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-700 transition-colors" data-topic="${t.topicId}" data-term-text="${t.term.toLowerCase()}">
                       <div class="flex items-start justify-between gap-3">
                         <div>
                           <span class="font-bold text-slate-800 dark:text-slate-200">${t.term}</span>
+                          ${fcBadge ? `<span class="ml-1.5 align-middle">${fcBadge}</span>` : ''}
                           <p class="text-slate-500 dark:text-slate-400 mt-0.5">${t.definition}</p>
                         </div>
                         <a data-route="#/topic/${t.topicId}" class="flex-shrink-0 text-xs px-2 py-1 rounded-full bg-${t.topicColor}-100 dark:bg-${t.topicColor}-900/30 text-${t.topicColor}-600 dark:text-${t.topicColor}-400 cursor-pointer hover:underline whitespace-nowrap">${t.topicTitle}</a>
                       </div>
-                    </div>
-                  `).join('')}
+                    </div>`;
+                  }).join('')}
                 </div>
               </div>
             `).join('')}
@@ -109,6 +127,11 @@ function createGlossaryView() {
             <p class="text-lg font-medium">No matching terms</p>
             <p class="text-sm">Try a different search term or filter</p>
           </div>
+
+          <!-- Back to top -->
+          <button id="glossary-top-btn" class="fixed bottom-6 right-6 w-10 h-10 rounded-full bg-teal-500 text-white shadow-lg hover:bg-teal-600 transition-all hidden items-center justify-center z-30" title="Back to top">
+            <i data-lucide="arrow-up" class="w-5 h-5"></i>
+          </button>
         </div>
       `;
     },
@@ -133,6 +156,20 @@ function createGlossaryView() {
           const show = matchesTopic && matchesSearch;
           el.style.display = show ? '' : 'none';
           if (show) visible++;
+
+          // Highlight matching text
+          const termEl = el.querySelector('.font-bold');
+          const defEl = el.querySelector('p');
+          if (termEl && termEl.dataset.origTerm === undefined) termEl.dataset.origTerm = termEl.textContent;
+          if (defEl && defEl.dataset.origDef === undefined) defEl.dataset.origDef = defEl.textContent;
+          if (query && show && termEl && defEl) {
+            const re = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            termEl.innerHTML = termEl.dataset.origTerm.replace(re, '<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">$1</mark>');
+            defEl.innerHTML = defEl.dataset.origDef.replace(re, '<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">$1</mark>');
+          } else if (termEl && defEl) {
+            if (termEl.dataset.origTerm) termEl.textContent = termEl.dataset.origTerm;
+            if (defEl.dataset.origDef) defEl.textContent = defEl.dataset.origDef;
+          }
         });
 
         // Hide letter groups that have no visible terms
@@ -232,6 +269,24 @@ function createGlossaryView() {
         URL.revokeObjectURL(a.href);
       });
 
+      // Back to top button
+      const topBtn = container.querySelector('#glossary-top-btn');
+      if (topBtn) {
+        const scrollHandler = () => {
+          if (window.scrollY > 400) {
+            topBtn.classList.remove('hidden');
+            topBtn.classList.add('flex');
+          } else {
+            topBtn.classList.add('hidden');
+            topBtn.classList.remove('flex');
+          }
+        };
+        if (_glossaryScrollCleanup) _glossaryScrollCleanup();
+        window.addEventListener('scroll', scrollHandler);
+        topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+        _glossaryScrollCleanup = () => window.removeEventListener('scroll', scrollHandler);
+      }
+
       filters.forEach(btn => {
         btn.addEventListener('click', () => {
           filters.forEach(f => {
@@ -247,7 +302,12 @@ function createGlossaryView() {
       });
     },
 
-    unmount() {}
+    unmount() {
+      if (_glossaryScrollCleanup) {
+        _glossaryScrollCleanup();
+        _glossaryScrollCleanup = null;
+      }
+    }
   };
 }
 

@@ -910,6 +910,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v55', items: ['Glossary flashcard status badges', 'Study summary time stat'] },
     { ver: 'v54', items: ['Knowledge radar chart', 'Flashcard difficulty gauge', 'Weekly progress comparison'] },
     { ver: 'v53', items: ['Exam mastery % on topic toggles', 'Topic page flashcard review link', 'Weekly comparison stat'] },
     { ver: 'v52', items: ['Topic mastery breakdown on chapter page', 'Compare suggested comparisons', 'Struggling terms dashboard'] },

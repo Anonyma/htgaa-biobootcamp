@@ -39,7 +39,7 @@ function createStudySummaryView() {
           </header>
 
           <!-- Summary stats -->
-          <div class="mb-8 grid grid-cols-2 sm:grid-cols-4 gap-3 print:grid-cols-4">
+          <div class="mb-8 grid grid-cols-2 sm:grid-cols-6 gap-3 print:grid-cols-6">
             <div class="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 print:bg-blue-50">
               <div class="text-2xl font-bold text-blue-600">${allData.length}</div>
               <div class="text-xs text-slate-500">Topics</div>
@@ -56,6 +56,32 @@ function createStudySummaryView() {
               <div class="text-2xl font-bold text-amber-600">${allData.reduce((s, d) => s + (d.data.keyFacts?.length || 0), 0)}</div>
               <div class="text-xs text-slate-500">Key Facts</div>
             </div>
+            <div class="text-center p-3 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 print:bg-emerald-50">
+              ${(() => {
+                const masteries = allData.map(({ topic, data }) => store.getTopicMastery(topic.id, data));
+                const validMasteries = masteries.filter(m => m && m.mastery > 0);
+                const avg = validMasteries.length > 0 ? Math.round(validMasteries.reduce((s, m) => s + m.mastery, 0) / validMasteries.length) : 0;
+                const c = avg >= 80 ? 'emerald' : avg >= 50 ? 'amber' : 'slate';
+                return `<div class="text-2xl font-bold text-${c}-600">${avg}%</div>
+                <div class="text-xs text-slate-500">Avg Mastery</div>`;
+              })()}
+            </div>
+            <div class="text-center p-3 rounded-lg bg-cyan-50 dark:bg-cyan-900/20 print:bg-cyan-50">
+              ${(() => {
+                try {
+                  const t = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+                  const total = Object.values(t).reduce((s, v) => s + v, 0);
+                  const mins = Math.floor(total / 60);
+                  const hrs = Math.floor(mins / 60);
+                  const timeStr = hrs > 0 ? `${hrs}h ${mins % 60}m` : `${mins}m`;
+                  return `<div class="text-2xl font-bold text-cyan-600">${timeStr}</div>
+                  <div class="text-xs text-slate-500">Time Studied</div>`;
+                } catch {
+                  return `<div class="text-2xl font-bold text-cyan-600">0m</div>
+                  <div class="text-xs text-slate-500">Time Studied</div>`;
+                }
+              })()}
+            </div>
           </div>
 
           ${allData.map(({ topic, data }) => `
@@ -63,7 +89,23 @@ function createStudySummaryView() {
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">
                 <i data-lucide="${topic.icon}" class="w-5 h-5"></i>
                 ${data.title}
+                ${(() => {
+                  const m = store.getTopicMastery(topic.id, data);
+                  if (!m || m.mastery === 0) return '';
+                  const c = m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'red';
+                  return `<span class="ml-auto text-sm font-bold text-${c}-600 dark:text-${c}-400 print:text-${c}-700">${m.mastery}% mastery</span>`;
+                })()}
               </h2>
+              ${(() => {
+                const m = store.getTopicMastery(topic.id, data);
+                if (!m || m.mastery === 0) return '';
+                return `<div class="mb-3 flex gap-4 text-xs text-slate-500 print:text-slate-600">
+                  <span>Sections: ${m.sectionPct}%</span>
+                  <span>Quiz: ${m.quizPct}%</span>
+                  <span>Flashcards: ${m.fcPct}%</span>
+                  <span>Time: ${m.timePct}%</span>
+                </div>`;
+              })()}
 
               ${data.learningObjectives ? `
                 <div class="mb-4">
