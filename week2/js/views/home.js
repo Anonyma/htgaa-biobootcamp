@@ -976,12 +976,16 @@ function renderStatsDashboard(progress) {
               <th class="text-left px-4 py-2 font-medium">Topic</th>
               <th class="text-center px-2 py-2 font-medium">Sections</th>
               <th class="text-center px-2 py-2 font-medium">Quiz</th>
+              <th class="text-center px-2 py-2 font-medium hidden md:table-cell">Time</th>
               <th class="text-center px-2 py-2 font-medium hidden sm:table-cell">Mastery</th>
               <th class="text-center px-2 py-2 font-medium hidden sm:table-cell">Status</th>
             </tr>
           </thead>
           <tbody>
-            ${TOPICS.map(topic => {
+            ${(() => {
+              let topicTimeSpent = {};
+              try { topicTimeSpent = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}'); } catch {}
+              return TOPICS.map(topic => {
               const sr = store.getSectionsRead(topic.id).length;
               const st = sectionCounts[topic.id] || 6;
               const quiz = store.getQuizScore(topic.id);
@@ -990,6 +994,8 @@ function renderStatsDashboard(progress) {
               const mastery = topicData ? store.getTopicMastery(topic.id, topicData) : null;
               const masteryPct = mastery ? mastery.mastery : 0;
               const masteryColor = masteryPct >= 80 ? 'green' : masteryPct >= 50 ? 'amber' : masteryPct > 0 ? 'red' : 'slate';
+              const topicSecs = topicTimeSpent[topic.id] || 0;
+              const topicMins = Math.floor(topicSecs / 60);
               return `<tr class="border-t border-slate-100 dark:border-slate-700/50">
                 <td class="px-4 py-2">
                   <a href="#/topic/${topic.id}" class="flex items-center gap-2 hover:text-blue-500 transition-colors">
@@ -1002,6 +1008,9 @@ function renderStatsDashboard(progress) {
                 </td>
                 <td class="text-center px-2 py-2">
                   ${quiz ? `<span class="${quiz.correct === quiz.total ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-slate-500'}">${Math.round(quiz.correct / quiz.total * 100)}%</span>` : '<span class="text-slate-300 dark:text-slate-600">—</span>'}
+                </td>
+                <td class="text-center px-2 py-2 hidden md:table-cell">
+                  ${topicMins > 0 ? `<span class="text-xs ${topicMins >= 20 ? 'text-green-600 dark:text-green-400 font-medium' : 'text-slate-500'}">${topicMins}m</span>` : '<span class="text-slate-300 dark:text-slate-600">—</span>'}
                 </td>
                 <td class="text-center px-2 py-2 hidden sm:table-cell">
                   ${mastery && (sr > 0 || quiz) ? `
@@ -1017,7 +1026,8 @@ function renderStatsDashboard(progress) {
                   ${isComplete ? '<span class="inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i></span>' : sr > 0 ? '<span class="text-xs text-blue-500">In progress</span>' : '<span class="text-xs text-slate-400">Not started</span>'}
                 </td>
               </tr>`;
-            }).join('')}
+            }).join('');
+            })()}
           </tbody>
         </table>
       </div>

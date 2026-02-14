@@ -106,6 +106,15 @@ function createFlashcardsView() {
           </div>
           ` : ''}
 
+          <!-- Review All Button (when no cards due) -->
+          ${dueCards.length === 0 && allCards.length > 0 ? `
+          <div class="mb-6 text-center">
+            <button id="fc-review-all" class="px-5 py-2.5 rounded-xl bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium hover:bg-violet-200 dark:hover:bg-violet-900/50 transition-colors">
+              <i data-lucide="repeat" class="w-4 h-4 inline"></i> Practice All Cards (${allCards.length})
+            </button>
+          </div>
+          ` : ''}
+
           <!-- Card Area -->
           <div id="fc-card-area">
             ${dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete()}
@@ -173,6 +182,20 @@ function createFlashcardsView() {
           updateProgress();
           if (sessionStatsEl) sessionStatsEl.classList.add('hidden');
         });
+      });
+
+      // Review All button (practice mode - review all, not just due)
+      container.querySelector('#fc-review-all')?.addEventListener('click', () => {
+        const filtered = selectedTopic === 'all' ? allCards : allCards.filter(c => c.topicId === selectedTopic);
+        dueCards = [...filtered]; // treat all as due
+        currentIndex = 0;
+        isFlipped = false;
+        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 };
+        cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
+        // Show progress bar
+        if (progressBar) progressBar.parentElement.parentElement.classList.remove('hidden');
+        updateProgress();
+        if (window.lucide) window.lucide.createIcons();
       });
 
       // Update progress display

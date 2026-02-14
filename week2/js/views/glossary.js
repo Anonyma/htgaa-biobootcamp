@@ -59,7 +59,7 @@ function createGlossaryView() {
 
             <!-- Letter nav -->
             <div class="flex flex-wrap gap-1 mt-4">
-              ${letters.map(l => `<a href="#letter-${l}" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-teal-100 dark:hover:bg-teal-800 transition-colors">${l}</a>`).join('')}
+              ${letters.map(l => `<a href="#letter-${l}" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex flex-col items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-teal-100 dark:hover:bg-teal-800 transition-colors relative" title="${grouped[l].length} terms">${l}<span class="text-[8px] font-normal text-slate-400 leading-none">${grouped[l].length}</span></a>`).join('')}
             </div>
 
             <!-- Topic filter + random -->
