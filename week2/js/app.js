@@ -53,6 +53,7 @@ class App {
 
     // Listen for progress updates to refresh sidebar
     store.subscribe('progress', () => this.updateSidebarProgress());
+    store.subscribe('topicData', () => this.updateSidebarProgress());
     document.addEventListener('progress-updated', () => this.updateSidebarProgress());
   }
 
@@ -139,8 +140,13 @@ class App {
                     <i data-lucide="${topic.icon}" class="w-3.5 h-3.5 text-${topic.color}-600 dark:text-${topic.color}-400"></i>
                   </div>
                   <span class="flex-1 truncate">${topic.title}</span>
-                  <div class="sidebar-check w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center flex-shrink-0" data-progress-indicator="${topic.id}">
-                    <i data-lucide="check" class="w-2.5 h-2.5 text-green-500 hidden"></i>
+                  <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <div class="w-12 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden" data-sidebar-bar="${topic.id}">
+                      <div class="h-full rounded-full bg-${topic.color}-500 transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <div class="sidebar-check w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600 flex items-center justify-center flex-shrink-0" data-progress-indicator="${topic.id}">
+                      <i data-lucide="check" class="w-2.5 h-2.5 text-green-500 hidden"></i>
+                    </div>
                   </div>
                 </a>
               `).join('')}
@@ -463,16 +469,29 @@ class App {
     if (ring) ring.setAttribute('stroke-dashoffset', 264 - (pct / 100) * 264);
     if (pctEl) pctEl.textContent = pct + '%';
 
-    // Update individual topic indicators
+    // Update individual topic indicators + progress bars
     TOPICS.forEach(topic => {
       const indicator = document.querySelector(`[data-progress-indicator="${topic.id}"]`);
-      if (!indicator) return;
-      const isComplete = store.isTopicComplete(topic.id);
-      if (isComplete) {
-        indicator.classList.remove('border-slate-300', 'dark:border-slate-600');
-        indicator.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/30');
-        const check = indicator.querySelector('i');
-        if (check) check.classList.remove('hidden');
+      if (indicator) {
+        const isComplete = store.isTopicComplete(topic.id);
+        if (isComplete) {
+          indicator.classList.remove('border-slate-300', 'dark:border-slate-600');
+          indicator.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/30');
+          const check = indicator.querySelector('i');
+          if (check) check.classList.remove('hidden');
+        }
+      }
+
+      // Update sidebar progress bar
+      const bar = document.querySelector(`[data-sidebar-bar="${topic.id}"] > div`);
+      if (bar) {
+        const topicData = store.get('topicData')[topic.id];
+        const totalSections = topicData?.sections?.length || 0;
+        if (totalSections > 0) {
+          const sectionsRead = store.getSectionsRead(topic.id).length;
+          const sectionPct = Math.round((sectionsRead / totalSections) * 100);
+          bar.style.width = sectionPct + '%';
+        }
       }
     });
   }

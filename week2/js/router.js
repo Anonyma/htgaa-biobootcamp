@@ -31,8 +31,19 @@ class Router {
 
   /** Navigate to the current hash route. */
   async navigate(hash) {
-    const route = (hash || window.location.hash || '#/').replace(/^#\/?/, '/');
-    if (route === this.currentRoute) return;
+    const raw = (hash || window.location.hash || '#/').replace(/^#\/?/, '/');
+    // Split off any section fragment (e.g., /topic/sequencing#section-intro)
+    const fragmentIdx = raw.indexOf('#');
+    const route = fragmentIdx >= 0 ? raw.slice(0, fragmentIdx) : raw;
+    const sectionFragment = fragmentIdx >= 0 ? raw.slice(fragmentIdx + 1) : null;
+    if (route === this.currentRoute) {
+      // Same route but different section — just scroll
+      if (sectionFragment) {
+        const target = document.getElementById(sectionFragment);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
 
     // Find matching route
     let matched = null;
@@ -89,8 +100,17 @@ class Router {
       this.contentEl.classList.remove('view-enter');
     });
 
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    // Scroll to section fragment or top
+    if (sectionFragment) {
+      requestAnimationFrame(() => {
+        const target = document.getElementById(sectionFragment);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
 
     // Update sidebar active state
     this._updateSidebar(route);

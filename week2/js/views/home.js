@@ -26,7 +26,7 @@ function createHomeView() {
                 <div class="flex items-center gap-4 mt-4 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
                   <span class="flex items-center gap-1"><i data-lucide="flask-conical" class="w-4 h-4"></i> 12+ Simulations</span>
-                  <span class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> 152 Questions</span>
+                  <span id="hero-question-count" class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> <span data-count>150+</span> Questions</span>
                   <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> ~4 hrs</span>
                 </div>
               </div>
@@ -54,6 +54,9 @@ function createHomeView() {
 
           <!-- Continue Reading -->
           ${renderContinueReading(progress)}
+
+          <!-- Weakest Topic Suggestion -->
+          ${renderWeakestTopicSuggestion(progress)}
 
           <!-- Flashcard Review Reminder -->
           ${renderReviewReminder()}
@@ -235,6 +238,23 @@ function createHomeView() {
       });
 
       container._homeUnsub = unsub;
+
+      // Dynamic question count — load all topic data and count quiz questions
+      (async () => {
+        let totalQ = 0;
+        for (const topic of TOPICS) {
+          try {
+            const data = await store.loadTopicData(topic.id);
+            if (data?.quizQuestions) totalQ += data.quizQuestions.length;
+            // Also count section check questions
+            if (data?.sections) {
+              data.sections.forEach(s => { if (s.checkQuestion) totalQ++; });
+            }
+          } catch {}
+        }
+        const countEl = container.querySelector('#hero-question-count [data-count]');
+        if (countEl && totalQ > 0) countEl.textContent = totalQ;
+      })();
 
       // Export Notes
       container.querySelector('#export-notes-btn')?.addEventListener('click', () => {
@@ -529,6 +549,54 @@ function renderContinueReading(progress) {
   } catch { return ''; }
 }
 
+function renderWeakestTopicSuggestion(progress) {
+  // Find the topic with the lowest combined score (quiz accuracy + section completion)
+  const sectionCounts = { 'sequencing': 7, 'synthesis': 7, 'editing': 7, 'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7 };
+  let hasAnyActivity = false;
+  const scores = TOPICS.map(topic => {
+    const quiz = store.getQuizScore(topic.id);
+    const sr = store.getSectionsRead(topic.id).length;
+    const st = sectionCounts[topic.id] || 6;
+    const quizPct = quiz ? (quiz.correct / quiz.total) : null;
+    const sectionPct = sr / st;
+    if (sr > 0 || quiz) hasAnyActivity = true;
+    // Combined score: weight quiz accuracy and section completion equally
+    // Null quiz counts as 0 if they haven't tried any
+    const combined = quizPct !== null ? (quizPct + sectionPct) / 2 : sectionPct * 0.5;
+    return { topic, combined, sectionPct, quizPct, sr, st };
+  });
+
+  if (!hasAnyActivity) return '';
+
+  // Find weakest non-complete topic
+  const weakest = scores
+    .filter(s => !progress[s.topic.id] && s.combined < 0.9)
+    .sort((a, b) => a.combined - b.combined)[0];
+
+  if (!weakest) return '';
+
+  const reason = weakest.quizPct !== null && weakest.quizPct < 0.7
+    ? `Quiz accuracy is ${Math.round(weakest.quizPct * 100)}%`
+    : weakest.sr === 0
+    ? `Not started yet`
+    : `${weakest.sr}/${weakest.st} sections read`;
+
+  return `
+    <div class="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex items-center gap-4">
+      <div class="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center flex-shrink-0">
+        <i data-lucide="target" class="w-5 h-5 text-amber-600 dark:text-amber-400"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold text-sm text-amber-900 dark:text-amber-200">Focus Area: ${weakest.topic.title}</p>
+        <p class="text-xs text-amber-700 dark:text-amber-400 mt-0.5">${reason} — this topic needs more attention</p>
+      </div>
+      <a href="#/topic/${weakest.topic.id}" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-white text-xs font-semibold rounded-lg transition-colors flex-shrink-0">
+        Study Now
+      </a>
+    </div>
+  `;
+}
+
 function renderReviewReminder() {
   const fcData = store.get('flashcards') || { reviews: {} };
   const reviews = fcData.reviews || {};
@@ -694,6 +762,45 @@ function renderStatsDashboard(progress) {
           <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">${streak > 0 ? streak + 'd' : '—'}</div>
           <div class="text-xs text-slate-500 mt-1">Study Streak</div>
         </div>
+      </div>
+
+      <!-- Per-topic breakdown -->
+      <div class="mt-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="bg-slate-50 dark:bg-slate-700/50 text-xs text-slate-500 dark:text-slate-400">
+              <th class="text-left px-4 py-2 font-medium">Topic</th>
+              <th class="text-center px-2 py-2 font-medium">Sections</th>
+              <th class="text-center px-2 py-2 font-medium">Quiz</th>
+              <th class="text-center px-2 py-2 font-medium hidden sm:table-cell">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${TOPICS.map(topic => {
+              const sr = store.getSectionsRead(topic.id).length;
+              const st = sectionCounts[topic.id] || 6;
+              const quiz = store.getQuizScore(topic.id);
+              const isComplete = !!progress[topic.id];
+              return `<tr class="border-t border-slate-100 dark:border-slate-700/50">
+                <td class="px-4 py-2">
+                  <a href="#/topic/${topic.id}" class="flex items-center gap-2 hover:text-blue-500 transition-colors">
+                    <i data-lucide="${topic.icon}" class="w-3.5 h-3.5 text-${topic.color}-500"></i>
+                    <span class="truncate">${topic.title}</span>
+                  </a>
+                </td>
+                <td class="text-center px-2 py-2">
+                  <span class="${sr === st ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-slate-500'}">${sr}/${st}</span>
+                </td>
+                <td class="text-center px-2 py-2">
+                  ${quiz ? `<span class="${quiz.correct === quiz.total ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-slate-500'}">${Math.round(quiz.correct / quiz.total * 100)}%</span>` : '<span class="text-slate-300 dark:text-slate-600">—</span>'}
+                </td>
+                <td class="text-center px-2 py-2 hidden sm:table-cell">
+                  ${isComplete ? '<span class="inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i></span>' : sr > 0 ? '<span class="text-xs text-blue-500">In progress</span>' : '<span class="text-xs text-slate-400">Not started</span>'}
+                </td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
       </div>
     </section>
   `;

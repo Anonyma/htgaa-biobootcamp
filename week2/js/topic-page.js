@@ -253,6 +253,22 @@ function createTopicView(topicId) {
       // Vocab quiz interaction
       initVocabQuiz(container);
 
+      // Vocab copy buttons
+      container.querySelectorAll('.vocab-copy-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const text = `${btn.dataset.term}: ${btn.dataset.def}`;
+          try {
+            await navigator.clipboard.writeText(text);
+            const icon = btn.querySelector('i');
+            if (icon) { icon.setAttribute('data-lucide', 'check'); lucide.createIcons({ nameAttr: 'data-lucide', nodes: [icon.parentElement] }); }
+            setTimeout(() => {
+              if (icon) { icon.setAttribute('data-lucide', 'copy'); lucide.createIcons({ nameAttr: 'data-lucide', nodes: [icon.parentElement] }); }
+            }, 1500);
+          } catch {}
+        });
+      });
+
       // Quick actions bar
       const qaNotesBtn = container.querySelector('#qa-notes-btn');
       if (qaNotesBtn) {
@@ -489,7 +505,12 @@ function renderTopicPage(data, topicId) {
         </button>
         <div id="notes-panel" class="hidden mt-3">
           <textarea id="topic-notes" class="w-full h-40 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm leading-relaxed resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none placeholder:text-slate-400" placeholder="Type your notes for this topic here... They'll be saved automatically." data-topic-id="${topicId}"></textarea>
-          <p class="text-xs text-slate-400 mt-1 notes-status">Notes auto-saved to your browser</p>
+          <div class="flex items-center justify-between mt-1">
+            <p class="text-xs text-slate-400 notes-status">Notes auto-saved to your browser</p>
+            <button id="export-notes-btn" class="text-xs text-blue-500 hover:text-blue-600 font-medium flex items-center gap-1" title="Export all notes">
+              <i data-lucide="download" class="w-3 h-3"></i> Export
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1091,9 +1112,12 @@ function renderVocabulary(vocab) {
         <div class="vocab-body hidden border-t border-slate-200 dark:border-slate-700">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-slate-200 dark:bg-slate-700">
             ${vocab.map(v => `
-              <div class="bg-white dark:bg-slate-800 px-4 py-3">
+              <div class="bg-white dark:bg-slate-800 px-4 py-3 group/vocab relative">
                 <dt class="font-semibold text-sm text-blue-600 dark:text-blue-400">${v.term}</dt>
                 <dd class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">${v.definition}</dd>
+                <button class="vocab-copy-btn absolute top-2 right-2 p-1 rounded opacity-0 group-hover/vocab:opacity-100 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all" title="Copy term & definition" data-term="${v.term}" data-def="${v.definition.replace(/"/g, '&quot;')}">
+                  <i data-lucide="copy" class="w-3 h-3 text-slate-400"></i>
+                </button>
               </div>
             `).join('')}
           </div>
@@ -1853,6 +1877,45 @@ function initNotes(container, topicId) {
   if (textarea.value.trim()) {
     const label = toggle.querySelector('span');
     if (label) label.textContent = 'My Notes (has notes)';
+  }
+
+  // Export notes button
+  const exportBtn = container.querySelector('#export-notes-btn');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+      const topicTitle = TOPICS.find(t => t.id === topicId)?.title || topicId;
+      let text = `# ${topicTitle} — Study Notes\n\n`;
+
+      // Main topic notes
+      if (textarea.value.trim()) {
+        text += `## General Notes\n${textarea.value.trim()}\n\n`;
+      }
+
+      // Section notes
+      const sectionNotes = getSectionNotes();
+      const sectionEntries = Object.entries(sectionNotes).filter(([k]) => k.startsWith(topicId + ':'));
+      if (sectionEntries.length > 0) {
+        text += `## Section Notes\n`;
+        sectionEntries.forEach(([key, note]) => {
+          const sectionId = key.split(':')[1];
+          text += `\n### ${sectionId}\n${note}\n`;
+        });
+      }
+
+      if (text.trim().split('\n').length <= 2) {
+        text += '(No notes yet)\n';
+      }
+
+      text += `\n---\nExported ${new Date().toLocaleString()}\n`;
+
+      const blob = new Blob([text], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `htgaa-notes-${topicId}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
   }
 }
 
