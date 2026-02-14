@@ -910,6 +910,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v52', items: ['Topic mastery breakdown on chapter page', 'Compare suggested comparisons', 'Struggling terms dashboard'] },
     { ver: 'v51', items: ['Exam retry incorrect only', 'Flashcard session summary', 'Struggling terms dashboard widget'] },
     { ver: 'v50', items: ['TOC section read indicators', 'Quick quiz question type filter'] },
     { ver: 'v49', items: ['Exam score sparkline and average', 'Copy exam results to clipboard', 'Flashcard maturity distribution bar', 'Today study time stat'] },

@@ -705,6 +705,41 @@ function renderTopicPage(data, topicId) {
 
       <!-- Mark Complete / Navigate -->
       <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
+        <!-- Mastery breakdown -->
+        ${(() => {
+          const m = store.getTopicMastery(topicId, data);
+          if (!m || m.mastery === 0) return '';
+          const masteryColor = m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'red';
+          return `
+          <div class="mb-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-bold text-slate-700 dark:text-slate-300">Topic Mastery</span>
+              <span class="text-lg font-bold text-${masteryColor}-600 dark:text-${masteryColor}-400">${m.mastery}%</span>
+            </div>
+            <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden mb-3">
+              <div class="h-full rounded-full bg-${masteryColor}-500 transition-all" style="width:${m.mastery}%"></div>
+            </div>
+            <div class="grid grid-cols-4 gap-2 text-center text-xs">
+              <div>
+                <div class="font-bold text-blue-600 dark:text-blue-400">${m.sectionPct}%</div>
+                <div class="text-slate-400">Sections</div>
+              </div>
+              <div>
+                <div class="font-bold text-green-600 dark:text-green-400">${m.quizPct}%</div>
+                <div class="text-slate-400">Quiz</div>
+              </div>
+              <div>
+                <div class="font-bold text-violet-600 dark:text-violet-400">${m.fcPct}%</div>
+                <div class="text-slate-400">Flashcards</div>
+              </div>
+              <div>
+                <div class="font-bold text-cyan-600 dark:text-cyan-400">${m.timePct}%</div>
+                <div class="text-slate-400">Time</div>
+              </div>
+            </div>
+          </div>`;
+        })()}
+
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
           <button id="mark-complete-btn"
             class="px-6 py-3 rounded-xl font-semibold transition-all ${isComplete

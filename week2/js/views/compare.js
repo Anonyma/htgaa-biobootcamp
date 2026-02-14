@@ -123,7 +123,37 @@ function renderPicker(preA, preB) {
         </button>
       </div>
 
-      <div class="mt-6 text-center">
+      <!-- Suggested comparisons -->
+      <div class="mt-6">
+        <h3 class="text-sm font-semibold text-slate-500 mb-3 text-center">Suggested Comparisons</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          ${(() => {
+            const suggestions = [
+              { a: 'sequencing', b: 'synthesis', label: 'Reading vs Writing DNA' },
+              { a: 'central-dogma', b: 'genetic-codes', label: 'Expression & Codes' },
+              { a: 'editing', b: 'synthesis', label: 'Editing vs Building' },
+            ];
+            return suggestions.map(s => {
+              const tA = TOPICS.find(t => t.id === s.a);
+              const tB = TOPICS.find(t => t.id === s.b);
+              return `
+                <a data-route="#/compare/${s.a}/${s.b}" class="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 transition-colors cursor-pointer text-sm group">
+                  <div class="flex items-center gap-1 flex-1">
+                    <i data-lucide="${tA?.icon || 'book'}" class="w-3.5 h-3.5 text-${tA?.color || 'slate'}-500"></i>
+                    <span class="font-medium">${tA?.title || s.a}</span>
+                    <span class="text-slate-400 mx-1">vs</span>
+                    <i data-lucide="${tB?.icon || 'book'}" class="w-3.5 h-3.5 text-${tB?.color || 'slate'}-500"></i>
+                    <span class="font-medium">${tB?.title || s.b}</span>
+                  </div>
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-400 flex-shrink-0 transition-colors"></i>
+                </a>
+              `;
+            }).join('');
+          })()}
+        </div>
+      </div>
+
+      <div class="mt-4 text-center">
         <a data-route="#/" class="text-blue-500 hover:underline cursor-pointer text-sm">Back to Dashboard</a>
       </div>
     </div>
@@ -366,6 +396,44 @@ function renderComparison(dataA, dataB, idA, idB) {
           </div>
         </div>
       </div>
+
+      <!-- Mastery Comparison -->
+      ${(() => {
+        const mA = store.getTopicMastery(idA, dataA);
+        const mB = store.getTopicMastery(idB, dataB);
+        if ((!mA || mA.mastery === 0) && (!mB || mB.mastery === 0)) return '';
+        const dims = ['sectionPct', 'quizPct', 'fcPct', 'timePct'];
+        const labels = { sectionPct: 'Reading', quizPct: 'Quiz', fcPct: 'Flashcards', timePct: 'Time' };
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+            <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-500"></i> Mastery Comparison
+          </h3>
+          <div class="grid grid-cols-2 gap-4 mb-4 text-center">
+            <div class="text-3xl font-bold text-${metaA?.color || 'blue'}-600">${mA?.mastery || 0}%</div>
+            <div class="text-3xl font-bold text-${metaB?.color || 'blue'}-600">${mB?.mastery || 0}%</div>
+          </div>
+          <div class="space-y-3">
+            ${dims.map(d => `
+              <div>
+                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                  <span>${mA?.[d] || 0}%</span>
+                  <span class="font-medium text-slate-700 dark:text-slate-300">${labels[d]}</span>
+                  <span>${mB?.[d] || 0}%</span>
+                </div>
+                <div class="flex gap-1 h-2">
+                  <div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-l-full overflow-hidden flex justify-end">
+                    <div class="h-full bg-${metaA?.color || 'blue'}-500 rounded-l-full" style="width:${mA?.[d] || 0}%"></div>
+                  </div>
+                  <div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-r-full overflow-hidden">
+                    <div class="h-full bg-${metaB?.color || 'blue'}-500 rounded-r-full" style="width:${mB?.[d] || 0}%"></div>
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+      })()}
 
       <!-- Quick links -->
       <div class="flex justify-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
