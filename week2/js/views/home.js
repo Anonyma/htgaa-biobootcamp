@@ -90,12 +90,13 @@ function createHomeView() {
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
               <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-500"></i> Your Stats
             </h2>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               ${renderStatCard('trophy', 'Topics Done', `${Object.values(progress).filter(Boolean).length}/6`, 'amber')}
               ${renderStatCard('help-circle', 'Quiz Score', getQuizStats(), 'blue')}
               ${renderStatCard('check-square', 'HW Steps', getHWStats(), 'green')}
               ${renderStatCard('brain', 'Flashcards', getFlashcardStats(), 'purple')}
               ${renderStatCard('timer', 'Time Studied', getTimeStudied(), 'cyan')}
+              ${renderStatCard('hourglass', 'Remaining', getEstimatedRemaining(progress), 'rose')}
             </div>
           </section>
 
@@ -1493,6 +1494,24 @@ function getTimeStudied() {
     const hrs = Math.floor(mins / 60);
     return `${hrs}h ${mins % 60}m`;
   } catch { return '0m'; }
+}
+
+function getEstimatedRemaining(progress) {
+  const readingTimes = { 'central-dogma': 35, 'genetic-codes': 30, 'gel-electrophoresis': 30, 'sequencing': 35, 'synthesis': 35, 'editing': 35 };
+  let remaining = 0;
+  TOPICS.forEach(t => {
+    if (!progress[t.id]) {
+      const sectionCounts = { 'sequencing': 7, 'synthesis': 7, 'editing': 7, 'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7 };
+      const read = store.getSectionsRead(t.id).length;
+      const total = sectionCounts[t.id] || 6;
+      const topicTime = readingTimes[t.id] || 30;
+      remaining += Math.round(topicTime * (1 - read / total));
+    }
+  });
+  if (remaining === 0) return 'Done!';
+  if (remaining < 60) return `~${remaining}m`;
+  const hrs = Math.floor(remaining / 60);
+  return `~${hrs}h ${remaining % 60}m`;
 }
 
 function downloadFile(filename, text) {

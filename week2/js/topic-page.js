@@ -184,6 +184,57 @@ function createTopicView(topicId) {
         });
       });
 
+      // Text-to-speech buttons
+      let currentTTS = null;
+      container.querySelectorAll('.tts-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const sectionId = btn.dataset.ttsSection;
+          const section = container.querySelector(`#section-${sectionId}`);
+          if (!section || !window.speechSynthesis) return;
+
+          // If already speaking this section, stop
+          if (currentTTS === sectionId && speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+            currentTTS = null;
+            btn.querySelector('i')?.setAttribute('data-lucide', 'volume-2');
+            btn.querySelector('i')?.classList.remove('text-blue-500');
+            btn.querySelector('i')?.classList.add('text-slate-400');
+            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [btn] });
+            return;
+          }
+
+          // Stop any previous
+          speechSynthesis.cancel();
+
+          // Get text content from prose section
+          const content = section.querySelector('.topic-content');
+          if (!content) return;
+          const text = content.textContent.trim().slice(0, 5000); // Limit to ~5000 chars
+
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.rate = 0.95;
+          utterance.pitch = 1;
+          currentTTS = sectionId;
+
+          // Update button icon
+          btn.querySelector('i')?.setAttribute('data-lucide', 'volume-x');
+          btn.querySelector('i')?.classList.remove('text-slate-400');
+          btn.querySelector('i')?.classList.add('text-blue-500');
+          if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [btn] });
+
+          utterance.onend = () => {
+            currentTTS = null;
+            btn.querySelector('i')?.setAttribute('data-lucide', 'volume-2');
+            btn.querySelector('i')?.classList.remove('text-blue-500');
+            btn.querySelector('i')?.classList.add('text-slate-400');
+            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [btn] });
+          };
+
+          speechSynthesis.speak(utterance);
+        });
+      });
+
       // Section note buttons
       container.querySelectorAll('.section-note-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -345,6 +396,8 @@ function createTopicView(topicId) {
       simCleanup = [];
       if (this._keyHandler) document.removeEventListener('keydown', this._keyHandler);
       if (this._timeSpentCleanup) this._timeSpentCleanup();
+      // Stop any TTS
+      if (window.speechSynthesis) speechSynthesis.cancel();
     }
   };
 }
@@ -701,6 +754,9 @@ function renderSection(section, index, topicId) {
       <div class="section-header flex items-center gap-3 mb-4 group ${isHistorySection ? 'cursor-pointer' : ''}" ${isHistorySection ? 'data-collapsible-section' : ''}>
         <span class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-sm font-mono flex-shrink-0">${index + 1}</span>
         <h2 class="text-2xl font-bold flex-1">${section.title}</h2>
+        <button class="tts-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" data-tts-section="${section.id}" title="Listen to this section">
+          <i data-lucide="volume-2" class="w-4 h-4 text-slate-400"></i>
+        </button>
         <button class="section-note-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 ${getSectionNote(topicId, section.id) ? '!opacity-100' : ''}" data-note-topic="${topicId}" data-note-section="${section.id}" title="Add note to this section">
           <i data-lucide="sticky-note" class="w-4 h-4 ${getSectionNote(topicId, section.id) ? 'text-amber-500' : 'text-slate-400'}"></i>
         </button>
