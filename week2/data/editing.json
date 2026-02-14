@@ -30,7 +30,8 @@
         ],
         "correctIndex": 1,
         "explanation": "While all three systems create double-strand breaks, CRISPR's revolutionary advantage is RNA-based targeting. Instead of engineering new proteins for each target (weeks/months for ZFNs or TALENs), researchers simply design a new 20-nucleotide guide RNA (hours, a few dollars). This dramatically lowered the barrier to entry and made genome editing accessible to virtually any lab."
-      }
+      },
+      "takeaway": "CRISPR's revolutionary advantage over earlier editing tools (ZFNs, TALENs) is RNA-based targeting: instead of engineering a new protein for each target, you simply design a 20-nucleotide guide RNA, reducing cost from thousands of dollars to a few dollars and time from months to hours."
     },
     {
       "id": "crispr-cas9",
@@ -46,7 +47,8 @@
         ],
         "correctIndex": 1,
         "explanation": "NHEJ is the cell's default repair pathway and is active throughout the entire cell cycle. HDR, by contrast, requires a homologous template and is restricted to S and G2 phases when sister chromatids are available. Since many cells in a population are in G1 or M phase, NHEJ repairs most double-strand breaks before HDR can engage, typically resulting in only 1-30% HDR efficiency."
-      }
+      },
+      "takeaway": "Cas9 creates a blunt double-strand break 3 bp upstream of the PAM (NGG), and the cell repairs it via error-prone NHEJ (producing knockouts) or precise HDR (requiring a donor template) -- but NHEJ vastly outcompetes HDR in most cell types."
     },
     {
       "id": "rnp-scaffold",
@@ -62,7 +64,8 @@
         ],
         "correctIndex": 1,
         "explanation": "dCas9 (D10A/H840A double mutant) has both nuclease domains inactivated but retains full guide RNA-directed DNA binding. This makes it a programmable platform: any effector domain fused to dCas9 can be delivered to any 20-nt target in the genome. This includes transcriptional activators (CRISPRa), repressors (CRISPRi), epigenetic modifiers, and fluorescent proteins for live imaging."
-      }
+      },
+      "takeaway": "CRISPR is not just molecular scissors -- by fusing effector domains to catalytically dead Cas9 (dCas9), it becomes a universal GPS system for delivering any activity (activation, repression, epigenetic editing, imaging) to any genomic locus."
     },
     {
       "id": "base-prime-editing",
@@ -78,7 +81,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Prime editing uses a prime editing guide RNA (pegRNA) with an appended reverse transcriptase template that encodes the desired edit. The Cas9 nickase-RT fusion nicks one strand and then reverse-transcribes the new sequence directly from the pegRNA. This enables all 12 point mutations and small insertions/deletions without DSBs or donor templates, far exceeding the 4 transition types achievable with base editors."
-      }
+      },
+      "takeaway": "Base editors install precise single-nucleotide changes (C-to-T or A-to-G) without double-strand breaks, while prime editing uses a pegRNA-encoded template to perform any point mutation plus small insertions and deletions -- the most versatile precision editing tools available."
     },
     {
       "id": "paste",
@@ -94,7 +98,8 @@
         ],
         "correctIndex": 1,
         "explanation": "The elegant design of PASTE separates the targeting step from the insertion step. Prime editing only needs to write a short attB sequence (~38-46 bp) at the target site, regardless of how large the final cargo will be. The serine integrase (Bxb1) then catalyzes recombination between this attB site and the attP site on the donor DNA, inserting cargos up to ~36 kb without double-strand breaks."
-      }
+      },
+      "takeaway": "PASTE solves the large-payload insertion problem by using prime editing to write a short integrase landing pad, then a serine integrase to insert cargo up to 36 kb at that site -- all without double-strand breaks."
     },
     {
       "id": "mage-gro",
@@ -110,7 +115,8 @@
         ],
         "correctIndex": 1,
         "explanation": "MAGE works by electroporating pools of synthetic oligos into dividing cells, where the lambda Red Beta protein facilitates their incorporation at the replication fork during DNA synthesis. This enables simultaneous modification of dozens to hundreds of sites per cycle without any nuclease or double-strand breaks, generating combinatorial diversity across the genome. CRISPR, by contrast, targets individual sites with a guide RNA and nuclease."
-      }
+      },
+      "takeaway": "MAGE introduces many targeted mutations simultaneously across a genome during replication, enabling the creation of genomically recoded organisms (like C321.deltaA) where entire codons are reassigned to encode non-standard amino acids."
     },
     {
       "id": "ethics-clinical",
@@ -126,7 +132,8 @@
         ],
         "correctIndex": 2,
         "explanation": "Casgevy does not fix the sickle cell mutation directly. Instead, it disrupts the BCL11A erythroid-specific enhancer, which normally silences fetal hemoglobin (HbF) production in adults. By knocking out this silencer, the patient's edited stem cells produce high levels of HbF, which compensates for the defective adult sickle hemoglobin and prevents red blood cell sickling."
-      }
+      },
+      "takeaway": "Casgevy, the first approved CRISPR therapy, treats sickle cell disease by reactivating fetal hemoglobin -- while the He Jiankui affair underscores that germline editing, which passes changes to future generations, demands far stricter oversight than somatic editing."
     }
   ],
   "keyFacts": [

@@ -52,6 +52,9 @@ function createHomeView() {
           <!-- All Complete Celebration -->
           ${overallPct === 100 ? renderAllCompleteCelebration() : ''}
 
+          <!-- Continue Reading -->
+          ${renderContinueReading(progress)}
+
           <!-- Flashcard Review Reminder -->
           ${renderReviewReminder()}
 
@@ -453,6 +456,61 @@ function renderBookmarks() {
       </div>
     </section>
   `;
+}
+
+function renderContinueReading(progress) {
+  // Find the most recently viewed topic from scroll positions
+  try {
+    const positions = JSON.parse(localStorage.getItem('htgaa-week2-scroll-pos') || '{}');
+    const timeSpent = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+
+    // Find most recent topic with saved position
+    let latest = null;
+    let latestTs = 0;
+    for (const [topicId, data] of Object.entries(positions)) {
+      if (data.ts > latestTs && !progress[topicId]) {
+        latest = topicId;
+        latestTs = data.ts;
+      }
+    }
+
+    if (!latest) return '';
+
+    const topic = TOPICS.find(t => t.id === latest);
+    if (!topic) return '';
+
+    const sectionCounts = { 'sequencing': 7, 'synthesis': 7, 'editing': 7, 'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7 };
+    const sectionsRead = store.getSectionsRead(latest).length;
+    const totalSections = sectionCounts[latest] || 6;
+    const spent = timeSpent[latest] || 0;
+    const spentMin = Math.floor(spent / 60);
+
+    // How long ago
+    const ago = Date.now() - latestTs;
+    const agoStr = ago < 3600000 ? 'just now' : ago < 86400000 ? `${Math.floor(ago / 3600000)}h ago` : `${Math.floor(ago / 86400000)}d ago`;
+
+    return `
+      <section class="mb-6">
+        <a data-route="#/topic/${latest}" class="block bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-200 dark:border-blue-800 p-5 cursor-pointer hover:border-blue-400 transition-all hover:shadow-md group">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-${topic.color}-100 dark:bg-${topic.color}-900/40 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+              <i data-lucide="${topic.icon}" class="w-6 h-6 text-${topic.color}-600 dark:text-${topic.color}-400"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-blue-500 font-medium mb-0.5">Continue Reading</p>
+              <p class="font-bold text-lg text-slate-800 dark:text-white">${topic.title}</p>
+              <div class="flex items-center gap-3 text-xs text-slate-500 mt-1">
+                <span>${sectionsRead}/${totalSections} sections read</span>
+                ${spentMin > 0 ? `<span>${spentMin}m studied</span>` : ''}
+                <span>Last viewed ${agoStr}</span>
+              </div>
+            </div>
+            <i data-lucide="arrow-right" class="w-6 h-6 text-blue-400 flex-shrink-0 group-hover:translate-x-1 transition-transform"></i>
+          </div>
+        </a>
+      </section>
+    `;
+  } catch { return ''; }
 }
 
 function renderReviewReminder() {
@@ -990,8 +1048,17 @@ function renderTopicCard(topic, index, progress) {
   return `
     <a data-route="#/topic/${topic.id}" class="topic-card group block bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 hover:border-${topic.color}-400 dark:hover:border-${topic.color}-500 cursor-pointer transition-all">
       <div class="flex items-start gap-4">
-        <div class="w-12 h-12 rounded-xl bg-${topic.color}-100 dark:bg-${topic.color}-900/40 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
-          <i data-lucide="${topic.icon}" class="w-6 h-6 text-${topic.color}-600 dark:text-${topic.color}-400"></i>
+        <div class="relative w-12 h-12 flex-shrink-0 group-hover:scale-110 transition-transform">
+          ${sectionPct > 0 ? `
+          <svg class="absolute inset-0 w-12 h-12 -rotate-90" viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="3"/>
+            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-${topic.color}-500" stroke-width="3" stroke-linecap="round"
+              stroke-dasharray="${2 * Math.PI * 21}" stroke-dashoffset="${2 * Math.PI * 21 * (1 - sectionPct / 100)}"
+              style="transition: stroke-dashoffset 0.6s ease"/>
+          </svg>` : ''}
+          <div class="w-12 h-12 rounded-xl ${sectionPct > 0 ? '' : `bg-${topic.color}-100 dark:bg-${topic.color}-900/40`} flex items-center justify-center">
+            <i data-lucide="${topic.icon}" class="w-6 h-6 text-${topic.color}-600 dark:text-${topic.color}-400"></i>
+          </div>
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center justify-between mb-1">

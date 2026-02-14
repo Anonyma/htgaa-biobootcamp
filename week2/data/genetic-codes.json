@@ -11,7 +11,9 @@
     "Describe how non-standard amino acids are incorporated using orthogonal translation systems",
     "Evaluate the biosafety implications of mirror biology and expanded genetic systems"
   ],
-  "prerequisites": ["central-dogma"],
+  "prerequisites": [
+    "central-dogma"
+  ],
   "sections": [
     {
       "id": "standard-genetic-code",
@@ -28,7 +30,8 @@
         "correctIndex": 0,
         "explanation": "Synonymous codons for the same amino acid typically differ only at the third (wobble) position. A point mutation at this position often does not change the encoded amino acid, making the mutation silent. This inherent property of the code reduces the impact of random mutations on protein sequences."
       },
-      "simulation": "codon-wheel"
+      "simulation": "codon-wheel",
+      "takeaway": "The genetic code maps 64 triplet codons to 20 amino acids and 3 stop signals, with built-in redundancy concentrated at the wobble position that buffers against mutations -- most third-position changes are silent."
     },
     {
       "id": "wobble-pairing-trna",
@@ -44,7 +47,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Inosine (formed by deamination of adenosine) can form hydrogen bonds with U, C, or A. This flexibility at the wobble position means a single tRNA species can decode up to three synonymous codons, reducing the total number of tRNAs an organism needs."
-      }
+      },
+      "takeaway": "Wobble base pairing at the third codon position -- especially inosine's ability to pair with U, C, or A -- allows organisms to decode all 61 sense codons with far fewer than 61 tRNA species (just 43 in E. coli)."
     },
     {
       "id": "codon-optimization",
@@ -60,7 +64,8 @@
         ],
         "correctIndex": 2,
         "explanation": "Human and E. coli use the same genetic code, but they have very different codon usage biases. Codons common in human genes (like AGG for arginine) correspond to rare tRNAs in E. coli. When ribosomes encounter these rare codons, they stall, reducing protein yield. Codon optimization replaces these with E. coli-preferred synonymous codons."
-      }
+      },
+      "takeaway": "Synonymous codons are not functionally equivalent: each organism's tRNA pools favor certain codons, so expressing a gene in a foreign host requires codon optimization to match the host's preferences, potentially boosting protein yield 5- to 100-fold."
     },
     {
       "id": "expanded-genetic-alphabets",
@@ -76,7 +81,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Benner's AEGIS pairs use rearranged hydrogen bond donors and acceptors to create orthogonal base pairs. Romesberg's dNaM-dTPT3, by contrast, has no interbase hydrogen bonds. The unnatural bases are held together by hydrophobic packing and shape complementarity within the DNA double helix."
-      }
+      },
+      "takeaway": "Researchers have expanded the genetic alphabet beyond A/T/G/C with synthetic base pairs -- Benner's AEGIS uses rearranged hydrogen bonding (Hachimoji 8-letter DNA) while Romesberg's dNaM-dTPT3 uses hydrophobic packing -- already finding clinical use in diagnostic assays."
     },
     {
       "id": "non-standard-amino-acids",
@@ -92,7 +98,8 @@
         ],
         "correctIndex": 1,
         "explanation": "In wild-type E. coli, UAG stop codons are recognized by release factor RF1, which competes with the orthogonal tRNA for access to the ribosomal A site. By replacing all genomic UAG codons with UAA and deleting RF1, the GRO strain C321.deltaA frees the UAG codon for exclusive assignment to any nsAA, achieving near-100% incorporation efficiency."
-      }
+      },
+      "takeaway": "Over 200 non-standard amino acids with novel chemistries (click handles, fluorophores, photo-crosslinkers) can be genetically encoded using orthogonal tRNA/synthetase pairs that read reassigned codons, fundamentally expanding protein chemistry beyond what evolution explored."
     },
     {
       "id": "mirror-biology-biosafety",
@@ -108,7 +115,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Antibodies, T-cell receptors, Toll-like receptors, and other immune recognition molecules are chiral. They evolved to detect and bind molecules with the natural L-amino acid / D-sugar chirality. Mirror-image molecules (D-proteins, L-nucleic acids) present surfaces that are the mirror image of anything the immune system has encountered, making recognition extremely difficult."
-      }
+      },
+      "takeaway": "Mirror-image organisms built from D-amino acids and L-nucleotides would be invisible to immune systems evolved for natural chirality, making mirror biology a dual-use concern of the highest order that demands proactive governance."
     }
   ],
   "keyFacts": [
@@ -326,11 +334,26 @@
       "type": "matching",
       "question": "Match each expanded genetic alphabet technology with its key mechanism:",
       "pairs": [
-        { "term": "AEGIS (Benner)", "definition": "Reshuffled hydrogen bond donor/acceptor patterns create orthogonal base pairs" },
-        { "term": "dNaM-dTPT3 (Romesberg)", "definition": "Hydrophobic interactions hold synthetic base pairs together without hydrogen bonds" },
-        { "term": "Amber suppression", "definition": "UAG stop codon repurposed with orthogonal tRNA to encode non-standard amino acids" },
-        { "term": "Hachimoji DNA", "definition": "8-letter genetic alphabet combining 4 natural + 4 synthetic bases" },
-        { "term": "Wobble pairing", "definition": "Relaxed base pairing at 3rd codon position allows one tRNA to read multiple codons" }
+        {
+          "term": "AEGIS (Benner)",
+          "definition": "Reshuffled hydrogen bond donor/acceptor patterns create orthogonal base pairs"
+        },
+        {
+          "term": "dNaM-dTPT3 (Romesberg)",
+          "definition": "Hydrophobic interactions hold synthetic base pairs together without hydrogen bonds"
+        },
+        {
+          "term": "Amber suppression",
+          "definition": "UAG stop codon repurposed with orthogonal tRNA to encode non-standard amino acids"
+        },
+        {
+          "term": "Hachimoji DNA",
+          "definition": "8-letter genetic alphabet combining 4 natural + 4 synthetic bases"
+        },
+        {
+          "term": "Wobble pairing",
+          "definition": "Relaxed base pairing at 3rd codon position allows one tRNA to read multiple codons"
+        }
       ],
       "explanation": "AEGIS uses rearranged hydrogen bonding; Romesberg's pair uses hydrophobic packing; amber suppression hijacks UAG for nsAAs; Hachimoji combines all 8 bases; wobble pairing enables efficient decoding with fewer tRNAs."
     },
@@ -470,10 +493,22 @@
       "type": "matching",
       "question": "Match each non-standard amino acid with its primary application:",
       "pairs": [
-        { "term": "p-Azidophenylalanine (pAzF)", "definition": "Contains azide group for copper-catalyzed click chemistry conjugation" },
-        { "term": "p-Benzoylphenylalanine (Bpa)", "definition": "UV-activatable crosslinker for mapping protein-protein interactions" },
-        { "term": "ANAP", "definition": "Environmentally sensitive fluorophore for real-time conformational monitoring" },
-        { "term": "Propargyl-lysine", "definition": "Contains alkyne group for bioorthogonal CuAAC reactions" }
+        {
+          "term": "p-Azidophenylalanine (pAzF)",
+          "definition": "Contains azide group for copper-catalyzed click chemistry conjugation"
+        },
+        {
+          "term": "p-Benzoylphenylalanine (Bpa)",
+          "definition": "UV-activatable crosslinker for mapping protein-protein interactions"
+        },
+        {
+          "term": "ANAP",
+          "definition": "Environmentally sensitive fluorophore for real-time conformational monitoring"
+        },
+        {
+          "term": "Propargyl-lysine",
+          "definition": "Contains alkyne group for bioorthogonal CuAAC reactions"
+        }
       ],
       "explanation": "Each non-standard amino acid provides unique chemical functionality: pAzF and propargyl-lysine enable click chemistry (azide and alkyne, respectively), Bpa enables photo-crosslinking studies, and ANAP provides genetically encoded fluorescence.",
       "difficulty": "advanced"

@@ -29,7 +29,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Gel electrophoresis separates DNA fragments by size using an electric field and an agarose gel matrix. Smaller fragments migrate faster through the gel pores. This allows researchers to determine the sizes and quantities of DNA fragments in a sample, making it essential for verifying digests, PCR products, and cloning results."
-      }
+      },
+      "takeaway": "Gel electrophoresis is the most fundamental technique in molecular biology -- it answers the simple but essential question of what sizes of DNA fragments are present in your sample, and forms the basis for the Week 2 Gel Art Lab."
     },
     {
       "id": "physics-of-electrophoresis",
@@ -45,7 +46,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Increasing the agarose concentration produces a gel with smaller average pore sizes. Small DNA fragments (100-2000 bp) experience more differential resistance in these smaller pores, leading to better separation. A 0.5% gel has pores too large to effectively sieve small fragments, so they all run together near the bottom. Conversely, a 2.0% gel would impede large fragments so severely that they barely enter the gel."
-      }
+      },
+      "takeaway": "DNA's uniform charge-to-mass ratio means all fragments would migrate identically in free solution; the agarose gel provides the molecular sieve that separates fragments by size, with smaller fragments navigating pores faster than larger ones."
     },
     {
       "id": "dna-visualization",
@@ -61,7 +63,8 @@
         ],
         "correctIndex": 1,
         "explanation": "SYBR Safe has been shown to be significantly less mutagenic than ethidium bromide in standard mutagenicity assays (Ames test). Additionally, SYBR Safe can be excited by blue light (~470 nm) instead of UV light, which is safer for the user and causes less photodamage to DNA (important if you want to recover fragments for cloning). Sensitivity is comparable between the two dyes."
-      }
+      },
+      "takeaway": "Fluorescent intercalating dyes (ethidium bromide or the safer SYBR Safe) make invisible DNA visible under UV or blue light, while DNA ladders of known fragment sizes serve as molecular rulers to estimate unknown band sizes."
     },
     {
       "id": "restriction-enzymes",
@@ -78,7 +81,8 @@
         ],
         "correctIndex": 2,
         "explanation": "For a 6-base recognition sequence, assuming each position has an equal probability (1/4) of being the required base, the expected frequency is 4^6 = 4,096 bp. This means a 6-base cutter will, on average, find its recognition site once every ~4,096 bp of random DNA. Of course, actual genomes are not random, so the real frequency varies with sequence composition and GC content."
-      }
+      },
+      "takeaway": "Type II restriction enzymes recognize specific palindromic DNA sequences (typically 4-8 bp) and cut at fixed positions, making them precisely predictable molecular scissors -- a 6-base cutter like EcoRI cuts on average every 4,096 bp."
     },
     {
       "id": "sticky-vs-blunt-ends",
@@ -94,7 +98,8 @@
         ],
         "correctIndex": 2,
         "explanation": "Sticky ends have short complementary single-stranded overhangs that can base-pair via Watson-Crick hydrogen bonding. This transient base-pairing holds the two DNA ends together in the correct alignment, dramatically increasing the probability that ligase will seal the backbone. Blunt ends lack this complementary pairing and must rely on random collision, making ligation 10-100 times less efficient."
-      }
+      },
+      "takeaway": "Sticky ends (complementary single-stranded overhangs) make ligation 10-100x more efficient than blunt ends because they hold fragments together by base pairing, and using two different sticky-end enzymes forces directional insertion during cloning."
     },
     {
       "id": "running-a-gel",
@@ -111,7 +116,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Smeared DNA (a continuous streak rather than discrete bands) is the hallmark of degraded DNA. Nuclease contamination in the DNA sample or preparation reagents is the most common cause. Nucleases randomly cut DNA into fragments of all sizes, producing a continuous smear rather than the discrete bands expected from a specific restriction digest. Other causes include overloading or excessive voltage, but degradation is the most common culprit."
-      }
+      },
+      "takeaway": "Running a gel involves casting agarose with a comb, loading DNA mixed with tracking dye, applying voltage so DNA migrates toward the positive electrode, and imaging with fluorescent dye -- with most problems traceable to degradation, overloading, or excessive voltage."
     },
     {
       "id": "gel-art-and-virtual-digest",
@@ -127,7 +133,8 @@
         ],
         "correctIndex": 2,
         "explanation": "For a circular DNA molecule, a double digest produces a number of fragments equal to the total number of cut sites from both enzymes combined. With 2 EcoRI sites and 3 BamHI sites, there are 5 total cuts, producing 5 linear fragments. This is because each cut opens up an additional fragment from the circular molecule."
-      }
+      },
+      "takeaway": "Gel art combines science and creativity by designing restriction digests to produce specific banding patterns, and Benchling's virtual digest tool lets you computationally predict fragment sizes before going to the lab."
     }
   ],
   "keyFacts": [
@@ -345,11 +352,26 @@
       "type": "matching",
       "question": "Match each restriction enzyme with its properties:",
       "pairs": [
-        { "term": "EcoRI", "definition": "Cuts G^AATTC, produces 4-nt 5' sticky ends (AATT)" },
-        { "term": "EcoRV", "definition": "Cuts GAT^ATC, produces blunt ends" },
-        { "term": "BamHI", "definition": "Cuts G^GATCC, produces 4-nt 5' sticky ends (GATC)" },
-        { "term": "HindIII", "definition": "Cuts A^AGCTT, produces 4-nt 5' sticky ends (AGCT)" },
-        { "term": "KpnI", "definition": "Cuts GGTAC^C, produces 4-nt 3' sticky ends (GTAC)" }
+        {
+          "term": "EcoRI",
+          "definition": "Cuts G^AATTC, produces 4-nt 5' sticky ends (AATT)"
+        },
+        {
+          "term": "EcoRV",
+          "definition": "Cuts GAT^ATC, produces blunt ends"
+        },
+        {
+          "term": "BamHI",
+          "definition": "Cuts G^GATCC, produces 4-nt 5' sticky ends (GATC)"
+        },
+        {
+          "term": "HindIII",
+          "definition": "Cuts A^AGCTT, produces 4-nt 5' sticky ends (AGCT)"
+        },
+        {
+          "term": "KpnI",
+          "definition": "Cuts GGTAC^C, produces 4-nt 3' sticky ends (GTAC)"
+        }
       ],
       "explanation": "EcoRI, BamHI, and HindIII all produce 5' sticky ends (overhangs on the 5' side). KpnI is notable for producing 3' sticky ends. EcoRV is the classic blunt-end cutter, cleaving at the center of its palindrome."
     },
@@ -364,7 +386,14 @@
         "Visualize DNA bands under UV light (with intercalating dye)",
         "Compare band positions to DNA ladder to determine fragment sizes"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5],
+      "correctOrder": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
       "explanation": "First cast the gel, then prepare samples with loading buffer, load into wells, run the gel with electric current, visualize under UV, and finally analyze band sizes using the ladder as reference."
     },
     {
@@ -503,10 +532,22 @@
       "type": "matching",
       "question": "Match each troubleshooting symptom with its most likely cause:",
       "pairs": [
-        { "term": "Smeared bands instead of discrete bands", "definition": "DNA degradation from nuclease contamination or overloading" },
-        { "term": "No bands visible", "definition": "Forgot to add stain, or no DNA in sample" },
-        { "term": "Curved 'smiling' bands", "definition": "Excessive voltage causing uneven heating across the gel" },
-        { "term": "Unexpected extra bands", "definition": "Star activity from non-optimal digest conditions" }
+        {
+          "term": "Smeared bands instead of discrete bands",
+          "definition": "DNA degradation from nuclease contamination or overloading"
+        },
+        {
+          "term": "No bands visible",
+          "definition": "Forgot to add stain, or no DNA in sample"
+        },
+        {
+          "term": "Curved 'smiling' bands",
+          "definition": "Excessive voltage causing uneven heating across the gel"
+        },
+        {
+          "term": "Unexpected extra bands",
+          "definition": "Star activity from non-optimal digest conditions"
+        }
       ],
       "explanation": "Each gel artifact has characteristic causes: smearing indicates degradation, invisible bands mean missing stain or DNA, curved bands result from heat gradients, and extra bands suggest star activity.",
       "difficulty": "advanced"

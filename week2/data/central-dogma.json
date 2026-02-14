@@ -30,7 +30,8 @@
         ],
         "correctIndex": 2,
         "explanation": "The Central Dogma states that once sequence information has been transferred to protein, it cannot flow back to nucleic acid. Reverse transcription (RNA to DNA) and RNA replication (RNA to RNA) were both considered possible by Crick and do occur in nature. The forbidden transfer is protein to nucleic acid."
-      }
+      },
+      "takeaway": "The Central Dogma states that sequence information flows DNA to RNA to Protein, but never from protein back to nucleic acid -- this means that to change what a cell does (its proteins), you must change what it says (its DNA)."
     },
     {
       "id": "expression-cassette",
@@ -47,7 +48,8 @@
         ],
         "correctIndex": 1,
         "explanation": "The Shine-Dalgarno sequence is a purine-rich motif upstream of the start codon that base-pairs with the 3' end of 16S rRNA in the 30S ribosomal subunit. This interaction positions the AUG start codon correctly in the ribosomal P site for translation initiation. It is the prokaryotic equivalent of the eukaryotic Kozak sequence."
-      }
+      },
+      "takeaway": "An expression cassette needs four parts in order -- promoter, ribosome binding site, coding sequence, and terminator -- and each choice (promoter strength, RBS efficiency, codon usage, terminator completeness) directly controls how much protein is produced."
     },
     {
       "id": "codon-optimization",
@@ -63,7 +65,8 @@
         ],
         "correctIndex": 2,
         "explanation": "While maximizing CAI seems optimal, using only the top codon for each amino acid means that a single tRNA species is used at very high frequency. This can exhaust the available pool of that tRNA, causing ribosome stalling not only on the target gene but also on the host's essential genes that use the same codon, potentially reducing cell fitness and overall protein yield."
-      }
+      },
+      "takeaway": "Reverse translation from protein to DNA offers astronomically many possible sequences, and choosing codons that match the host's tRNA abundances (measured by Codon Adaptation Index) can boost expression 5- to 100-fold over unoptimized sequences."
     },
     {
       "id": "reading-frames",
@@ -79,7 +82,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Deleting a single nucleotide causes a frameshift: every codon downstream of the deletion is now read incorrectly. The protein will have a completely different sequence after that point and will almost certainly encounter a premature stop codon, producing a truncated, nonfunctional protein."
-      }
+      },
+      "takeaway": "The reading frame is set by the start codon and read in non-overlapping triplets -- a single nucleotide insertion or deletion shifts every downstream codon, almost always destroying the protein, making frameshifts among the most damaging mutations."
     },
     {
       "id": "expression-systems",
@@ -95,7 +99,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Monoclonal antibodies require complex post-translational modifications including human-compatible glycosylation and correct disulfide bond formation between heavy and light chains. E. coli lacks glycosylation machinery entirely and has a reducing cytoplasm that impedes disulfide bond formation. CHO cells provide the full eukaryotic protein processing pathway needed for functional antibody production."
-      }
+      },
+      "takeaway": "E. coli is fastest and cheapest but cannot glycosylate proteins; yeast adds simple sugars; mammalian cells (CHO, HEK293) provide full human-like post-translational modifications -- choose your expression system based on what your protein needs to be functional."
     },
     {
       "id": "metabolic-engineering",
@@ -111,7 +116,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Even when all required enzymes are present, imbalanced expression can cause intermediates to accumulate (potentially toxic) or be diverted into competing native pathways. Metabolic engineers must tune expression levels, knock out competing pathways, and sometimes use dynamic regulation to maintain balanced flux toward the desired product."
-      }
+      },
+      "takeaway": "Metabolic engineering reprograms cells as factories by introducing heterologous pathway genes, but success requires balancing enzyme expression levels to prevent toxic intermediate accumulation and flux diversion to competing pathways."
     },
     {
       "id": "splicing-ptms",
@@ -127,7 +133,8 @@
         ],
         "correctIndex": 2,
         "explanation": "Alternative splicing allows the spliceosome to process a single pre-mRNA in different ways by including or excluding specific exons, producing multiple distinct mRNA variants from one gene. Each mRNA variant is translated into a different protein isoform. This greatly expands the proteome beyond what the gene count alone would predict."
-      }
+      },
+      "takeaway": "Alternative splicing lets one human gene produce multiple protein isoforms (expanding 20,000 genes to 80,000-100,000 proteins), while post-translational modifications like glycosylation are so critical that they dictate which expression system you must use for therapeutic proteins."
     }
   ],
   "keyFacts": [
@@ -375,11 +382,26 @@
       "type": "matching",
       "question": "Match each expression cassette component with its function:",
       "pairs": [
-        { "term": "Promoter (e.g. BBa_J23106)", "definition": "Recruits RNA polymerase to begin transcription of the gene" },
-        { "term": "RBS / Shine-Dalgarno", "definition": "Base-pairs with 16S rRNA to position ribosome at start codon" },
-        { "term": "Coding sequence (CDS)", "definition": "Open reading frame encoding the protein of interest from ATG to stop codon" },
-        { "term": "Terminator (e.g. BBa_B0015)", "definition": "GC-rich hairpin + poly-U that signals end of transcription" },
-        { "term": "His-tag", "definition": "6x histidine peptide enabling purification by metal affinity chromatography" }
+        {
+          "term": "Promoter (e.g. BBa_J23106)",
+          "definition": "Recruits RNA polymerase to begin transcription of the gene"
+        },
+        {
+          "term": "RBS / Shine-Dalgarno",
+          "definition": "Base-pairs with 16S rRNA to position ribosome at start codon"
+        },
+        {
+          "term": "Coding sequence (CDS)",
+          "definition": "Open reading frame encoding the protein of interest from ATG to stop codon"
+        },
+        {
+          "term": "Terminator (e.g. BBa_B0015)",
+          "definition": "GC-rich hairpin + poly-U that signals end of transcription"
+        },
+        {
+          "term": "His-tag",
+          "definition": "6x histidine peptide enabling purification by metal affinity chromatography"
+        }
       ],
       "explanation": "Each component serves a distinct role: the promoter controls when/how much transcription occurs, the RBS positions the ribosome, the CDS encodes the protein, the terminator stops transcription cleanly, and fusion tags like His-tag enable downstream purification."
     },
@@ -394,7 +416,14 @@
         "Stop codon (TAA/TAG/TGA)",
         "Transcription terminator"
       ],
-      "correctOrder": [0, 1, 2, 3, 4, 5],
+      "correctOrder": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
       "explanation": "A prokaryotic expression cassette reads 5' to 3': promoter (recruits RNA polymerase) → RBS (positions ribosome) → start codon (initiates translation) → CDS (encodes protein) → stop codon (terminates translation) → terminator (stops transcription). This order is essential for proper gene expression."
     },
     {
@@ -521,10 +550,22 @@
       "type": "matching",
       "question": "Match each eukaryotic mRNA processing step with its function:",
       "pairs": [
-        { "term": "5' Capping (m7G cap)", "definition": "Protects from exonucleases, aids ribosome recruitment via eIF4E" },
-        { "term": "Splicing (spliceosome)", "definition": "Removes introns and joins exons to produce mature mRNA" },
-        { "term": "3' Polyadenylation (poly-A tail)", "definition": "Protects from 3' degradation, enhances translation and export" },
-        { "term": "Alternative splicing", "definition": "Includes/excludes specific exons to produce multiple protein isoforms from one gene" }
+        {
+          "term": "5' Capping (m7G cap)",
+          "definition": "Protects from exonucleases, aids ribosome recruitment via eIF4E"
+        },
+        {
+          "term": "Splicing (spliceosome)",
+          "definition": "Removes introns and joins exons to produce mature mRNA"
+        },
+        {
+          "term": "3' Polyadenylation (poly-A tail)",
+          "definition": "Protects from 3' degradation, enhances translation and export"
+        },
+        {
+          "term": "Alternative splicing",
+          "definition": "Includes/excludes specific exons to produce multiple protein isoforms from one gene"
+        }
       ],
       "explanation": "Each mRNA processing step has distinct functions: the cap protects the 5' end and enables ribosome recognition, splicing removes non-coding introns, the poly-A tail protects the 3' end, and alternative splicing expands proteome diversity.",
       "difficulty": "intermediate"
@@ -539,7 +580,13 @@
         "Mammalian transient transfection (5-7 days)",
         "Mammalian stable cell line (months)"
       ],
-      "correctOrder": [0, 1, 2, 3, 4],
+      "correctOrder": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
       "explanation": "Cell-free systems produce protein in hours by bypassing cell growth. E. coli grows fast (~20 min doubling time) for rapid expression. Yeast is slower (~90 min doubling). Mammalian cells are slowest (~24 hr doubling), and stable cell line development takes months of selection and screening.",
       "difficulty": "beginner"
     }

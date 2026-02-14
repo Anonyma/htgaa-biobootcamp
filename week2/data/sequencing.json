@@ -27,7 +27,8 @@
         ],
         "correctIndex": 1,
         "explanation": "DNA sequencing is foundational because every other genomic capability—writing (synthesis), editing (CRISPR), and analysis—depends on the ability to read DNA. You cannot verify a synthetic construct, confirm an edit, or discover new genes without sequencing."
-      }
+      },
+      "takeaway": "DNA sequencing is the foundational technology of modern genomics -- without the ability to read DNA, we cannot write, edit, or understand it. The cost has plummeted from $2.7 billion for the first human genome to under $200 today."
     },
     {
       "id": "sanger-sequencing",
@@ -43,7 +44,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Dideoxyribonucleotides (ddNTPs) lack the 3′-hydroxyl group on the deoxyribose sugar. Without this -OH group, the polymerase cannot form the phosphodiester bond to the next incoming nucleotide, so chain extension stops at the position where the ddNTP was incorporated."
-      }
+      },
+      "takeaway": "Sanger sequencing uses chain-terminating ddNTPs to generate fragments of every possible length, which are then separated by size to read the sequence one base at a time -- still the gold standard for verifying short DNA constructs."
     },
     {
       "id": "next-gen-sequencing",
@@ -59,7 +61,8 @@
         ],
         "correctIndex": 2,
         "explanation": "Each of the four fluorescently labeled nucleotides carries a reversible 3′-blocking group. After one nucleotide is incorporated, this blocking group prevents the polymerase from adding the next base. Only after imaging and chemical cleavage of the blocking group can the next cycle proceed."
-      }
+      },
+      "takeaway": "Illumina's sequencing-by-synthesis reads millions of short DNA fragments simultaneously on a flow cell, making it the workhorse of modern genomics with unmatched throughput and cost-efficiency for most applications."
     },
     {
       "id": "long-read-sequencing",
@@ -75,7 +78,8 @@
         ],
         "correctIndex": 1,
         "explanation": "PacBio HiFi uses circular SMRTbell templates: the polymerase reads around the circle multiple times, generating multiple subreads of the same insert. By computing a consensus from these subreads, random single-pass errors are corrected, yielding reads with >99.9% accuracy at lengths of 15–20 kb."
-      }
+      },
+      "takeaway": "PacBio and Oxford Nanopore read single DNA molecules tens of thousands of bases long, solving problems that short reads cannot -- including resolving repetitive regions, structural variants, and full-length transcript isoforms."
     },
     {
       "id": "spatial-omics",
@@ -91,7 +95,8 @@
         ],
         "correctIndex": 1,
         "explanation": "Conventional RNA-seq lyses cells and pools the extracted RNA, destroying all information about where in the tissue each transcript was located. Spatial transcriptomics methods (Visium, MERFISH, Slide-seq, in situ sequencing) preserve this spatial context, revealing which genes are active in which cell types and tissue regions."
-      }
+      },
+      "takeaway": "Spatial transcriptomics and single-cell sequencing preserve the crucial context that bulk sequencing destroys: which genes are active in which individual cells, and exactly where those cells sit within a tissue."
     },
     {
       "id": "applications-platform-selection",
@@ -107,7 +112,8 @@
         ],
         "correctIndex": 2,
         "explanation": "The Oxford Nanopore MinION weighs only 87 grams, connects via USB to a laptop, requires no complex infrastructure, and generates sequence data in real time. This makes it uniquely suited for rapid pathogen identification in remote or resource-limited settings."
-      }
+      },
+      "takeaway": "No single sequencing platform is best for all applications -- choosing the right technology requires matching your biological question, required accuracy, read length needs, and budget to the strengths of each platform."
     }
   ],
   "keyFacts": [
