@@ -419,6 +419,9 @@ function renderTopicPage(data, topicId) {
       <!-- Vocabulary Quiz -->
       ${data.vocabulary && data.vocabulary.length >= 4 ? renderVocabQuiz(data.vocabulary, topicId) : ''}
 
+      <!-- Related Topics Cards -->
+      ${data.conceptConnections && data.conceptConnections.length > 0 ? renderRelatedTopics(data.conceptConnections, topicId) : ''}
+
       <!-- Bottom strip: Vocab, Connections, References -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         <div>
@@ -663,16 +666,34 @@ function renderFurtherReading(categories) {
   `;
 }
 
+function difficultyBadge(difficulty) {
+  if (!difficulty) return '';
+  const colors = {
+    'beginner': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+    'easy': 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+    'intermediate': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
+    'medium': 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400',
+    'advanced': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+    'hard': 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+  };
+  const label = difficulty.charAt(0).toUpperCase() + difficulty.slice(1);
+  return `<span class="text-xs px-2 py-0.5 rounded-full font-medium ${colors[difficulty] || 'bg-slate-100 text-slate-600'}">${label}</span>`;
+}
+
 function renderQuizSlide(q, i, topicId) {
   const type = q.type || 'multiple-choice';
   const quizId = `${topicId}-q${i}`;
+  const badge = difficultyBadge(q.difficulty);
 
   if (type === 'matching') {
     // Matching: pairs of term -> definition, shuffled
     const shuffledDefs = [...q.pairs].sort(() => Math.random() - 0.5);
     return `
       <div class="quiz-slide ${i === 0 ? '' : 'hidden'}" data-slide="${i}" data-type="matching" data-quiz-id="${quizId}">
-        <p class="font-semibold text-lg mb-2">${q.question}</p>
+        <div class="flex items-center gap-2 mb-2">
+          <p class="font-semibold text-lg">${q.question}</p>
+          ${badge}
+        </div>
         <p class="text-sm text-slate-500 mb-4">Click a term, then click the matching definition.</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="space-y-2">
@@ -700,7 +721,10 @@ function renderQuizSlide(q, i, topicId) {
     const shuffled = [...q.items].sort(() => Math.random() - 0.5);
     return `
       <div class="quiz-slide ${i === 0 ? '' : 'hidden'}" data-slide="${i}" data-type="ordering" data-quiz-id="${quizId}" data-correct-order='${JSON.stringify(q.items)}'>
-        <p class="font-semibold text-lg mb-2">${q.question}</p>
+        <div class="flex items-center gap-2 mb-2">
+          <p class="font-semibold text-lg">${q.question}</p>
+          ${badge}
+        </div>
         <p class="text-sm text-slate-500 mb-4">Drag to reorder, or click items to move them up.</p>
         <div class="ordering-list space-y-2">
           ${shuffled.map((item, j) => `
@@ -722,7 +746,10 @@ function renderQuizSlide(q, i, topicId) {
   // Default: multiple choice
   return `
     <div class="quiz-slide ${i === 0 ? '' : 'hidden'}" data-slide="${i}" data-correct="${q.correctIndex}" data-quiz-id="${quizId}">
-      <p class="font-semibold text-lg mb-5">${q.question}</p>
+      <div class="flex items-center gap-2 mb-5">
+        <p class="font-semibold text-lg">${q.question}</p>
+        ${badge}
+      </div>
       <div class="space-y-2">
         ${q.options.map((opt, j) => `
           <button class="quiz-option" data-index="${j}">${opt}</button>
@@ -1806,6 +1833,46 @@ function showCompletionSummary(container, topicId) {
   });
 
   if (window.lucide) lucide.createIcons();
+}
+
+function renderRelatedTopics(connections, currentTopicId) {
+  const uniqueTopics = [...new Set(connections.map(c => c.toTopic))];
+  const relatedCards = uniqueTopics.map(targetId => {
+    const topic = TOPICS.find(t => t.id === targetId);
+    if (!topic) return '';
+    const connection = connections.find(c => c.toTopic === targetId);
+    const isComplete = store.isTopicComplete(targetId);
+    return `
+      <a data-route="#/topic/${targetId}" class="group block bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-${topic.color}-400 p-4 cursor-pointer transition-all hover:shadow-md">
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-lg bg-${topic.color}-100 dark:bg-${topic.color}-900/40 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+            <i data-lucide="${topic.icon}" class="w-5 h-5 text-${topic.color}-600 dark:text-${topic.color}-400"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <h4 class="font-bold text-sm">${topic.title}</h4>
+              ${isComplete ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 flex-shrink-0"></i>' : ''}
+            </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">${connection?.relationship || ''}</p>
+            ${connection?.concept ? `<span class="inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full bg-${topic.color}-100 dark:bg-${topic.color}-900/30 text-${topic.color}-700 dark:text-${topic.color}-400">${connection.concept}</span>` : ''}
+          </div>
+        </div>
+      </a>
+    `;
+  }).filter(Boolean);
+
+  if (relatedCards.length === 0) return '';
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="network" class="w-5 h-5 text-indigo-500"></i> Related Topics
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        ${relatedCards.join('')}
+      </div>
+    </section>
+  `;
 }
 
 function initVocabQuiz(container) {

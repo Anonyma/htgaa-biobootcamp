@@ -49,6 +49,9 @@ function createHomeView() {
         </header>
 
         <main class="max-w-5xl mx-auto px-4 py-8">
+          <!-- All Complete Celebration -->
+          ${overallPct === 100 ? renderAllCompleteCelebration() : ''}
+
           <!-- Today's Study Plan -->
           ${renderStudyPlan(progress)}
 
@@ -391,6 +394,54 @@ function renderBookmarks() {
             <span class="font-medium">${b.sectionTitle}</span>
           </a>
         `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderAllCompleteCelebration() {
+  let totalTime = 0;
+  try {
+    const t = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+    totalTime = Object.values(t).reduce((sum, s) => sum + s, 0);
+  } catch {}
+  const hrs = Math.floor(totalTime / 3600);
+  const mins = Math.floor((totalTime % 3600) / 60);
+  const timeStr = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+
+  let totalCorrect = 0, totalAnswered = 0;
+  TOPICS.forEach(t => {
+    const s = store.getQuizScore(t.id);
+    if (s) { totalCorrect += s.correct; totalAnswered += s.total; }
+  });
+  const quizPct = totalAnswered > 0 ? Math.round(totalCorrect / totalAnswered * 100) : 0;
+
+  const bestExam = store.getBestExamScore();
+
+  return `
+    <section class="mb-8 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 dark:from-amber-900/20 dark:via-yellow-900/15 dark:to-orange-900/20 rounded-2xl border-2 border-amber-300 dark:border-amber-700 p-6 text-center">
+      <div class="text-4xl mb-3">&#127942;</div>
+      <h2 class="text-2xl font-extrabold text-amber-800 dark:text-amber-300 mb-2">Week 2 Complete!</h2>
+      <p class="text-slate-600 dark:text-slate-400 mb-4 max-w-lg mx-auto">
+        You've mastered all 6 chapters of DNA Read, Write & Edit. Outstanding work!
+      </p>
+      <div class="grid grid-cols-3 gap-4 max-w-md mx-auto mb-4">
+        <div>
+          <div class="text-xl font-bold text-blue-600 dark:text-blue-400">${timeStr}</div>
+          <div class="text-xs text-slate-500">Studied</div>
+        </div>
+        <div>
+          <div class="text-xl font-bold text-green-600 dark:text-green-400">${quizPct}%</div>
+          <div class="text-xs text-slate-500">Quiz Accuracy</div>
+        </div>
+        <div>
+          <div class="text-xl font-bold text-purple-600 dark:text-purple-400">${bestExam ? bestExam.pct + '%' : '—'}</div>
+          <div class="text-xs text-slate-500">Best Exam</div>
+        </div>
+      </div>
+      <div class="flex justify-center gap-3">
+        <a data-route="#/exam" class="px-4 py-2 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-700 cursor-pointer transition-colors text-sm">Take Final Exam</a>
+        <a data-route="#/flashcards" class="px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-600 cursor-pointer transition-colors text-sm">Review Flashcards</a>
       </div>
     </section>
   `;
