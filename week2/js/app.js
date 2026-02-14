@@ -160,7 +160,8 @@ class App {
               </a>
               <a data-route="#/flashcards" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i>
-                <span>Flashcards</span>
+                <span class="flex-1">Flashcards</span>
+                <span id="sidebar-fc-due" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold"></span>
               </a>
               <a data-route="#/concept-map" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i>
@@ -168,7 +169,13 @@ class App {
               </a>
               <a data-route="#/exam" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>
-                <span>Exam Mode</span>
+                <span class="flex-1">Exam Mode</span>
+                ${(() => {
+                  const best = store.getBestExamScore();
+                  if (!best) return '';
+                  const color = best.pct >= 80 ? 'green' : best.pct >= 60 ? 'yellow' : 'red';
+                  return `<span class="text-xs px-1.5 py-0.5 rounded-full bg-${color}-100 dark:bg-${color}-900/30 text-${color}-600 dark:text-${color}-400 font-bold">${best.pct}%</span>`;
+                })()}
               </a>
               <a data-route="#/compare" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="columns" class="w-4 h-4 text-teal-500"></i>
@@ -469,6 +476,9 @@ class App {
     if (ring) ring.setAttribute('stroke-dashoffset', 264 - (pct / 100) * 264);
     if (pctEl) pctEl.textContent = pct + '%';
 
+    // Update flashcard due count badge
+    this.updateFlashcardBadge();
+
     // Update individual topic indicators + progress bars
     TOPICS.forEach(topic => {
       const indicator = document.querySelector(`[data-progress-indicator="${topic.id}"]`);
@@ -494,6 +504,29 @@ class App {
         }
       }
     });
+  }
+  async updateFlashcardBadge() {
+    const badge = document.getElementById('sidebar-fc-due');
+    if (!badge) return;
+    try {
+      // Load all vocab cards to check due count
+      let allCards = [];
+      for (const topic of TOPICS) {
+        const data = await store.loadTopicData(topic.id);
+        if (data?.vocabulary) {
+          data.vocabulary.forEach((v, i) => {
+            allCards.push({ id: `${topic.id}-vocab-${i}`, topicId: topic.id, term: v.term, definition: v.definition });
+          });
+        }
+      }
+      const dueCards = store.getDueFlashcards(allCards);
+      if (dueCards.length > 0) {
+        badge.textContent = dueCards.length;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    } catch { /* ignore */ }
   }
 }
 
