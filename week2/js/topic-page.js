@@ -543,14 +543,19 @@ function renderTopicPage(data, topicId) {
     <nav id="floating-toc" class="floating-toc hidden xl:block">
       <div class="floating-toc-inner">
         <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Contents</p>
-        <ul class="space-y-1">
+        ${(() => {
+          const readSections = store.getSectionsRead(topicId);
+          const readSet = new Set(readSections);
+          return `<ul class="space-y-1">
           ${(data.sections || []).map((s, i) => `
             <li>
-              <a href="#section-${s.id}" class="toc-link text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 block py-0.5 pl-2 border-l-2 border-transparent transition-colors" data-toc-section="${s.id}">
+              <a href="#section-${s.id}" class="toc-link text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 block py-0.5 pl-2 border-l-2 border-transparent transition-colors flex items-center gap-1" data-toc-section="${s.id}">
+                ${readSet.has(s.id) ? '<span class="w-3 h-3 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span></span>' : '<span class="w-3 h-3 rounded-full border border-slate-300 dark:border-slate-600 flex-shrink-0"></span>'}
                 ${s.title}
               </a>
             </li>
-          `).join('')}
+          `).join('')}`;
+        })()}
           <li>
             <a href="#topic-quiz" class="toc-link text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500 block py-0.5 pl-2 border-l-2 border-transparent transition-colors" data-toc-section="quiz">
               Quiz

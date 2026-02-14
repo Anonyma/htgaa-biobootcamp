@@ -831,6 +831,7 @@ function renderWeakestTopicSuggestion(progress) {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v50', items: ['TOC section read indicators', 'Quick quiz question type filter'] },
     { ver: 'v49', items: ['Exam score sparkline and average', 'Copy exam results to clipboard', 'Flashcard maturity distribution bar', 'Today study time stat'] },
     { ver: 'v48', items: ['Exam flagged question warning dialog', 'Study summary average mastery', 'Overall mastery breakdown'] },
     { ver: 'v47', items: ['Live stats on study tool cards', 'Concept map fullscreen and reset', 'Concept map node statistics'] },
