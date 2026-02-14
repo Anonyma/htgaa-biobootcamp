@@ -204,6 +204,29 @@ function createTopicView(topicId) {
       // Vocab quiz interaction
       initVocabQuiz(container);
 
+      // Quick actions bar
+      const qaNotesBtn = container.querySelector('#qa-notes-btn');
+      if (qaNotesBtn) {
+        qaNotesBtn.addEventListener('click', () => {
+          const toggle = container.querySelector('#notes-toggle');
+          if (toggle) toggle.click();
+          const panel = container.querySelector('#notes-panel');
+          if (panel) smoothScrollToElement(panel);
+        });
+      }
+      const qaTopBtn = container.querySelector('#qa-top-btn');
+      if (qaTopBtn) {
+        qaTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      }
+      const qaQuizLink = container.querySelector('#quick-actions-bar a[href="#topic-quiz"]');
+      if (qaQuizLink) {
+        qaQuizLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          const quiz = document.getElementById('topic-quiz');
+          if (quiz) smoothScrollToElement(quiz);
+        });
+      }
+
       // Notes panel
       initNotes(container, topicId);
 
@@ -479,6 +502,28 @@ function renderTopicPage(data, topicId) {
           `}
         </div>
       </div>
+    </div>
+
+    <!-- Mobile Quick Actions Toolbar -->
+    <div id="quick-actions-bar" class="quick-actions-bar">
+      <a href="#topic-quiz" class="quick-action-btn" title="Quiz">
+        <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+        <span>Quiz</span>
+      </a>
+      <button class="quick-action-btn" id="qa-notes-btn" title="Notes">
+        <i data-lucide="pencil" class="w-5 h-5"></i>
+        <span>Notes</span>
+      </button>
+      <button class="quick-action-btn" id="qa-top-btn" title="Top">
+        <i data-lucide="arrow-up" class="w-5 h-5"></i>
+        <span>Top</span>
+      </button>
+      ${nextTopic ? `
+        <a data-route="#/topic/${nextTopic.id}" class="quick-action-btn" title="Next">
+          <i data-lucide="skip-forward" class="w-5 h-5"></i>
+          <span>Next</span>
+        </a>
+      ` : ''}
     </div>
   `;
 }

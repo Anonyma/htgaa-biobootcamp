@@ -295,10 +295,63 @@ function createHomeView() {
           window.location.reload();
         }
       });
+      // Check milestones
+      checkMilestones();
     },
 
     unmount() {}
   };
+}
+
+function checkMilestones() {
+  const MILESTONE_KEY = 'htgaa-week2-milestones-shown';
+  let shown;
+  try { shown = JSON.parse(localStorage.getItem(MILESTONE_KEY) || '{}'); } catch { shown = {}; }
+
+  const progress = store.get('progress');
+  const completedTopics = Object.keys(progress).filter(k => progress[k]).length;
+  const quizzes = store.get('quizzes') || {};
+  const quizTotal = Object.keys(quizzes).length;
+
+  const milestones = [
+    { id: 'first-topic', check: completedTopics >= 1, title: 'First Topic Done!', msg: 'You completed your first chapter. Keep going!' },
+    { id: 'three-topics', check: completedTopics >= 3, title: 'Halfway There!', msg: '3 of 6 topics complete. You\'re doing great!' },
+    { id: 'first-quiz', check: quizTotal >= 1, title: 'First Quiz Answer!', msg: 'You answered your first quiz question. Test your knowledge!' },
+    { id: 'ten-quizzes', check: quizTotal >= 10, title: '10 Quiz Questions!', msg: 'You\'ve answered 10 quiz questions. Nice progress!' },
+    { id: 'fifty-quizzes', check: quizTotal >= 50, title: '50 Questions!', msg: 'You\'ve tackled 50 quiz questions. Knowledge is growing!' },
+  ];
+
+  for (const m of milestones) {
+    if (m.check && !shown[m.id]) {
+      shown[m.id] = Date.now();
+      localStorage.setItem(MILESTONE_KEY, JSON.stringify(shown));
+      // Show toast after a brief delay
+      setTimeout(() => {
+        showMilestoneToast(m.title, m.msg);
+      }, 500);
+      break; // Only show one milestone per visit
+    }
+  }
+}
+
+function showMilestoneToast(title, message) {
+  const toast = document.createElement('div');
+  toast.className = 'milestone-toast';
+  toast.innerHTML = `
+    <div class="milestone-toast-inner">
+      <span class="milestone-emoji">&#127881;</span>
+      <div>
+        <p class="font-bold text-sm">${title}</p>
+        <p class="text-xs text-slate-500">${message}</p>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('visible'));
+  setTimeout(() => {
+    toast.classList.remove('visible');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
 }
 
 function renderAchievements() {
