@@ -251,6 +251,34 @@ function createTopicView(topicId) {
         });
       });
 
+      // Share section link buttons
+      container.querySelectorAll('.share-section-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const topic = btn.dataset.shareTopic;
+          const section = btn.dataset.shareSection;
+          const url = `${window.location.origin}${window.location.pathname}#/topic/${topic}#section-${section}`;
+          try {
+            await navigator.clipboard.writeText(url);
+            const icon = btn.querySelector('i');
+            if (icon) {
+              icon.setAttribute('data-lucide', 'check');
+              icon.classList.remove('text-slate-400');
+              icon.classList.add('text-green-500');
+              if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [btn] });
+            }
+            setTimeout(() => {
+              if (icon) {
+                icon.setAttribute('data-lucide', 'link');
+                icon.classList.remove('text-green-500');
+                icon.classList.add('text-slate-400');
+                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [btn] });
+              }
+            }, 2000);
+          } catch {}
+        });
+      });
+
       // Section note auto-save
       container.querySelectorAll('.section-note-textarea').forEach(textarea => {
         let saveTimer;
@@ -762,6 +790,9 @@ function renderSection(section, index, topicId) {
         </button>
         <button class="bookmark-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 ${store.isBookmarked(topicId, section.id) ? 'bookmarked !opacity-100' : ''}" data-bookmark-topic="${topicId}" data-bookmark-section="${section.id}" data-bookmark-title="${section.title}" title="Bookmark this section">
           <i data-lucide="bookmark" class="w-4 h-4 ${store.isBookmarked(topicId, section.id) ? 'text-blue-500' : 'text-slate-400'}"></i>
+        </button>
+        <button class="share-section-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" data-share-topic="${topicId}" data-share-section="${section.id}" title="Copy link to this section">
+          <i data-lucide="link" class="w-4 h-4 text-slate-400"></i>
         </button>
         ${isHistorySection ? '<i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 section-chevron transition-transform group-hover:text-blue-500"></i>' : ''}
       </div>
