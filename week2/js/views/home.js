@@ -910,7 +910,8 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
-    { ver: 'v53', items: ['Exam mastery % on topic toggles', 'Topic page flashcard review link', 'Weekly progress comparison'] },
+    { ver: 'v54', items: ['Knowledge radar chart', 'Flashcard difficulty gauge', 'Weekly progress comparison'] },
+    { ver: 'v53', items: ['Exam mastery % on topic toggles', 'Topic page flashcard review link', 'Weekly comparison stat'] },
     { ver: 'v52', items: ['Topic mastery breakdown on chapter page', 'Compare suggested comparisons', 'Struggling terms dashboard'] },
     { ver: 'v51', items: ['Exam retry incorrect only', 'Flashcard session summary', 'Struggling terms dashboard widget'] },
     { ver: 'v50', items: ['TOC section read indicators', 'Quick quiz question type filter'] },
@@ -1152,6 +1153,81 @@ function renderStatsDashboard(progress) {
           </span>
           <span>This week: ${thisWeekSessions} sessions</span>
           <span>Last week: ${lastWeekSessions} sessions</span>
+        </div>`;
+      })()}
+
+      <!-- Knowledge Radar -->
+      ${(() => {
+        const topicDataCache = store.get('topicData') || {};
+        const masteryScores = TOPICS.map(t => {
+          const td = topicDataCache[t.id];
+          return td ? { ...store.getTopicMastery(t.id, td), topic: t } : null;
+        }).filter(Boolean);
+        if (masteryScores.length < 3 || masteryScores.every(m => m.mastery === 0)) return '';
+
+        // SVG radar chart
+        const cx = 100, cy = 100, r = 70;
+        const n = masteryScores.length;
+        const angleStep = (2 * Math.PI) / n;
+
+        // Background polygon (100% ring)
+        const bgPts = masteryScores.map((_, i) => {
+          const angle = -Math.PI / 2 + i * angleStep;
+          return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+        }).join(' ');
+
+        // 50% ring
+        const midPts = masteryScores.map((_, i) => {
+          const angle = -Math.PI / 2 + i * angleStep;
+          return `${cx + (r * 0.5) * Math.cos(angle)},${cy + (r * 0.5) * Math.sin(angle)}`;
+        }).join(' ');
+
+        // Data polygon
+        const dataPts = masteryScores.map((m, i) => {
+          const angle = -Math.PI / 2 + i * angleStep;
+          const val = Math.max(0.05, m.mastery / 100) * r;
+          return `${cx + val * Math.cos(angle)},${cy + val * Math.sin(angle)}`;
+        }).join(' ');
+
+        // Labels
+        const labels = masteryScores.map((m, i) => {
+          const angle = -Math.PI / 2 + i * angleStep;
+          const lx = cx + (r + 18) * Math.cos(angle);
+          const ly = cy + (r + 18) * Math.sin(angle);
+          const anchor = Math.abs(Math.cos(angle)) < 0.1 ? 'middle' : Math.cos(angle) > 0 ? 'start' : 'end';
+          return `<text x="${lx}" y="${ly}" text-anchor="${anchor}" dominant-baseline="central" class="fill-slate-500 dark:fill-slate-400" font-size="8" font-weight="600">${m.topic.title.replace('DNA ', '').replace('Gel ', '')}</text>
+          <text x="${lx}" y="${ly + 10}" text-anchor="${anchor}" dominant-baseline="central" class="fill-slate-400" font-size="7">${m.mastery}%</text>`;
+        }).join('');
+
+        return `
+        <div class="mt-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+          <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 mb-2 text-center">Knowledge Radar</h3>
+          <svg viewBox="0 0 200 200" class="w-full max-w-[280px] mx-auto" style="max-height: 220px">
+            <!-- Grid -->
+            <polygon points="${bgPts}" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="1"/>
+            <polygon points="${midPts}" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="0.5" stroke-dasharray="3,3"/>
+            <!-- Axes -->
+            ${masteryScores.map((_, i) => {
+              const angle = -Math.PI / 2 + i * angleStep;
+              return `<line x1="${cx}" y1="${cy}" x2="${cx + r * Math.cos(angle)}" y2="${cy + r * Math.sin(angle)}" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="0.5"/>`;
+            }).join('')}
+            <!-- Data -->
+            <polygon points="${dataPts}" fill="url(#radar-fill)" stroke="#8b5cf6" stroke-width="2" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="radar-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.1"/>
+              </linearGradient>
+            </defs>
+            <!-- Dots -->
+            ${masteryScores.map((m, i) => {
+              const angle = -Math.PI / 2 + i * angleStep;
+              const val = Math.max(0.05, m.mastery / 100) * r;
+              return `<circle cx="${cx + val * Math.cos(angle)}" cy="${cy + val * Math.sin(angle)}" r="3" fill="#8b5cf6"/>`;
+            }).join('')}
+            <!-- Labels -->
+            ${labels}
+          </svg>
         </div>`;
       })()}
 

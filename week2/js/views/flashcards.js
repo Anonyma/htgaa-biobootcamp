@@ -103,6 +103,24 @@ function createFlashcardsView() {
             </div>
           </div>
 
+          <!-- Average Ease Factor -->
+          ${(() => {
+            const fcStats = store.getFlashcardStats();
+            if (fcStats.total === 0) return '';
+            const ease = parseFloat(fcStats.averageEase);
+            const easeLabel = ease >= 2.5 ? 'Easy' : ease >= 2.0 ? 'Moderate' : ease >= 1.5 ? 'Challenging' : 'Hard';
+            const easeColor = ease >= 2.5 ? 'green' : ease >= 2.0 ? 'blue' : ease >= 1.5 ? 'amber' : 'red';
+            return `
+            <div class="mb-4 flex items-center gap-3 bg-${easeColor}-50 dark:bg-${easeColor}-900/10 rounded-lg px-4 py-2 border border-${easeColor}-200 dark:border-${easeColor}-800">
+              <i data-lucide="gauge" class="w-4 h-4 text-${easeColor}-500 flex-shrink-0"></i>
+              <div class="flex-1 text-sm">
+                <span class="font-medium text-${easeColor}-700 dark:text-${easeColor}-400">Difficulty: ${easeLabel}</span>
+                <span class="text-${easeColor}-500 ml-1 text-xs">(ease ${ease})</span>
+              </div>
+              <span class="text-xs text-${easeColor}-500">${fcStats.totalReviews} total reviews</span>
+            </div>`;
+          })()}
+
           <!-- Card Maturity Distribution Bar -->
           ${allCards.length > 0 ? (() => {
             const reviews = store.get('flashcards').reviews;
