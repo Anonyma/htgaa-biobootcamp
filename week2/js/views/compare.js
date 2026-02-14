@@ -44,6 +44,43 @@ function createCompareView(topicA, topicB) {
         });
       }
 
+      // Export comparison as markdown
+      const exportBtn = container.querySelector('#compare-export-btn');
+      if (exportBtn && topicA && topicB) {
+        exportBtn.addEventListener('click', async () => {
+          const dA = await store.loadTopicData(topicA);
+          const dB = await store.loadTopicData(topicB);
+          if (!dA || !dB) return;
+          const mA = TOPICS.find(t => t.id === topicA);
+          const mB = TOPICS.find(t => t.id === topicB);
+          let md = `# Topic Comparison: ${mA?.title} vs ${mB?.title}\n\n`;
+          md += `## ${mA?.title}\n- Reading time: ${dA.readingTime || '?'} min\n- Sections: ${(dA.sections || []).length}\n- Vocab terms: ${(dA.vocabulary || []).length}\n\n`;
+          md += `## ${mB?.title}\n- Reading time: ${dB.readingTime || '?'} min\n- Sections: ${(dB.sections || []).length}\n- Vocab terms: ${(dB.vocabulary || []).length}\n\n`;
+          const vA = new Set((dA.vocabulary || []).map(v => v.term.toLowerCase()));
+          const vB = new Set((dB.vocabulary || []).map(v => v.term.toLowerCase()));
+          const shared = [...vA].filter(t => vB.has(t));
+          if (shared.length > 0) {
+            md += `## Shared Vocabulary (${shared.length})\n`;
+            shared.forEach(t => { md += `- ${t}\n`; });
+            md += '\n';
+          }
+          const conn = [...(dA.conceptConnections || []).filter(c => c.toTopic === topicB), ...(dB.conceptConnections || []).filter(c => c.toTopic === topicA)];
+          if (conn.length > 0) {
+            md += `## Connections\n`;
+            conn.forEach(c => { md += `- ${c.concept || ''}: ${c.relationship}\n`; });
+            md += '\n';
+          }
+          const blob = new Blob([md], { type: 'text/markdown' });
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = `compare-${topicA}-vs-${topicB}.md`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(a.href);
+        });
+      }
+
       if (window.lucide) lucide.createIcons();
     },
 
@@ -129,6 +166,9 @@ function renderComparison(dataA, dataB, idA, idB) {
         <div class="flex gap-2">
           <button id="compare-swap-btn" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Swap topics">
             <i data-lucide="arrow-left-right" class="w-4 h-4 inline"></i> Swap
+          </button>
+          <button id="compare-export-btn" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Export comparison">
+            <i data-lucide="download" class="w-4 h-4 inline"></i> Export
           </button>
           <a data-route="#/compare" class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer">
             Change Topics

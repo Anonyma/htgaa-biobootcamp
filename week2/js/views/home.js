@@ -1656,6 +1656,16 @@ function renderTopicCard(topic, index, progress) {
               const m = store.getTopicMastery(topic.id, null);
               return m && m.mastery > 0 ? `<span class="font-semibold text-${m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'slate'}-600 dark:text-${m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'slate'}-400">${m.mastery}% mastery</span>` : '';
             })()}
+            ${(() => {
+              try {
+                const pos = JSON.parse(localStorage.getItem('htgaa-week2-scroll-pos') || '{}');
+                const ts = pos[topic.id]?.ts;
+                if (!ts) return '';
+                const ago = Date.now() - ts;
+                const agoStr = ago < 3600000 ? 'just now' : ago < 86400000 ? `${Math.floor(ago / 3600000)}h ago` : `${Math.floor(ago / 86400000)}d ago`;
+                return `<span class="text-slate-400">${agoStr}</span>`;
+              } catch { return ''; }
+            })()}
           </div>
           ${sectionsRead > 0 && !isComplete ? `
             <div class="mt-2 h-1 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
