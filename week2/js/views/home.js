@@ -169,6 +169,19 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- Vocab of the Day -->
+          <section class="mb-10" id="vocab-day-section">
+            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+              <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i> Vocab Spotlight
+              <button id="vocab-day-refresh" class="ml-auto text-xs text-blue-500 hover:text-blue-600 font-medium flex items-center gap-1">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Another
+              </button>
+            </h2>
+            <div id="vocab-day-container" class="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-5">
+              <p class="text-sm text-slate-400">Loading...</p>
+            </div>
+          </section>
+
           <!-- Lecturers -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -354,6 +367,9 @@ function createHomeView() {
       // Quick Quiz on home page
       initQuickQuiz(container);
 
+      // Vocab of the Day
+      initVocabDay(container);
+
       // Check milestones
       checkMilestones();
     },
@@ -437,6 +453,45 @@ async function initQuickQuiz(container) {
 
   showQuestion();
   refreshBtn?.addEventListener('click', showQuestion);
+}
+
+async function initVocabDay(container) {
+  const vContainer = container.querySelector('#vocab-day-container');
+  const refreshBtn = container.querySelector('#vocab-day-refresh');
+  if (!vContainer) return;
+
+  const allTerms = [];
+  for (const topic of TOPICS) {
+    const data = await store.loadTopicData(topic.id);
+    if (data?.vocabulary) {
+      data.vocabulary.forEach(v => {
+        allTerms.push({ ...v, topicId: topic.id, topicTitle: topic.title, topicColor: topic.color });
+      });
+    }
+  }
+
+  if (allTerms.length === 0) return;
+
+  function showTerm() {
+    const t = allTerms[Math.floor(Math.random() * allTerms.length)];
+    vContainer.innerHTML = `
+      <div class="flex items-center gap-2 mb-2">
+        <span class="text-xs px-2 py-0.5 rounded-full bg-${t.topicColor}-100 dark:bg-${t.topicColor}-900/30 text-${t.topicColor}-600 dark:text-${t.topicColor}-400 font-medium">${t.topicTitle}</span>
+      </div>
+      <p class="text-lg font-bold text-amber-900 dark:text-amber-200">${t.term}</p>
+      <p class="text-sm text-amber-800 dark:text-amber-300 mt-1 leading-relaxed">${t.definition}</p>
+      <div class="mt-3 flex items-center gap-3">
+        <button class="vocab-day-flip text-xs text-amber-600 dark:text-amber-400 hover:underline flex items-center gap-1">
+          <i data-lucide="eye" class="w-3 h-3"></i> Can you define this term?
+        </button>
+        <a href="#/topic/${t.topicId}" class="text-xs text-blue-500 hover:underline ml-auto">Study this topic &rarr;</a>
+      </div>
+    `;
+    if (window.lucide) lucide.createIcons();
+  }
+
+  showTerm();
+  refreshBtn?.addEventListener('click', showTerm);
 }
 
 function checkMilestones() {
