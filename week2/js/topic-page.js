@@ -372,6 +372,30 @@ function saveSectionNote(topicId, sectionId, text) {
   localStorage.setItem(SECTION_NOTES_KEY, JSON.stringify(notes));
 }
 
+function renderPrerequisiteBanner(data, topicId) {
+  if (!data.prerequisites || data.prerequisites.length === 0) return '';
+  const unread = data.prerequisites.filter(preId => {
+    const sections = store.getSectionsRead(preId);
+    return sections.length === 0;
+  });
+  if (unread.length === 0) return '';
+  const preTopics = unread.map(id => TOPICS.find(t => t.id === id)).filter(Boolean);
+  if (preTopics.length === 0) return '';
+  return `
+    <div class="max-w-4xl mx-auto px-4 mt-3">
+      <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex items-start gap-3">
+        <i data-lucide="info" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>
+        <div>
+          <p class="text-sm font-medium text-amber-800 dark:text-amber-200">Recommended prerequisite${preTopics.length > 1 ? 's' : ''}</p>
+          <p class="text-xs text-amber-600 dark:text-amber-400 mt-1">
+            Consider reading ${preTopics.map(t => `<a href="#/topic/${t.id}" class="underline hover:text-amber-800 dark:hover:text-amber-200 font-medium">${t.title}</a>`).join(' and ')} first for better understanding.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function renderError(topicId) {
   return `
     <div class="max-w-3xl mx-auto px-4 py-16 text-center">
@@ -431,6 +455,8 @@ function renderTopicPage(data, topicId) {
         </div>
       </div>
     </div>
+
+    ${renderPrerequisiteBanner(data, topicId)}
 
     <!-- Floating Table of Contents -->
     <nav id="floating-toc" class="floating-toc hidden xl:block">
