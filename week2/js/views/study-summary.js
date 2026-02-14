@@ -32,6 +32,26 @@ function createStudySummaryView() {
             </button>
           </header>
 
+          <!-- Summary stats -->
+          <div class="mb-8 grid grid-cols-2 sm:grid-cols-4 gap-3 print:grid-cols-4">
+            <div class="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 print:bg-blue-50">
+              <div class="text-2xl font-bold text-blue-600">${allData.length}</div>
+              <div class="text-xs text-slate-500">Topics</div>
+            </div>
+            <div class="text-center p-3 rounded-lg bg-green-50 dark:bg-green-900/20 print:bg-green-50">
+              <div class="text-2xl font-bold text-green-600">${allData.reduce((s, d) => s + (d.data.sections?.length || 0), 0)}</div>
+              <div class="text-xs text-slate-500">Sections</div>
+            </div>
+            <div class="text-center p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 print:bg-purple-50">
+              <div class="text-2xl font-bold text-purple-600">${allData.reduce((s, d) => s + (d.data.vocabulary?.length || 0), 0)}</div>
+              <div class="text-xs text-slate-500">Vocab Terms</div>
+            </div>
+            <div class="text-center p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 print:bg-amber-50">
+              <div class="text-2xl font-bold text-amber-600">${allData.reduce((s, d) => s + (d.data.keyFacts?.length || 0), 0)}</div>
+              <div class="text-xs text-slate-500">Key Facts</div>
+            </div>
+          </div>
+
           ${allData.map(({ topic, data }) => `
             <section class="mb-8 page-break-inside-avoid">
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">
@@ -70,6 +90,34 @@ function createStudySummaryView() {
                       <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
                         <span class="font-semibold">${f.label || f.fact || ''}</span>
                         ${f.value ? `<span class="text-${topic.color}-600 dark:text-${topic.color}-400 font-bold ml-1">${f.value}</span>` : ''}
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+              ${data.quickReference?.length ? `
+                <div class="mb-4">
+                  <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Quick Reference</h3>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                    ${data.quickReference.map(qr => `
+                      <div class="p-2 rounded-lg bg-${topic.color}-50 dark:bg-${topic.color}-900/10 border border-${topic.color}-200 dark:border-${topic.color}-800">
+                        <span class="font-bold text-xs">${qr.title}</span>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 mt-0.5">${qr.content?.substring(0, 200) || ''}</p>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+              ${data.conceptConnections?.length ? `
+                <div class="mb-4">
+                  <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Connections to Other Topics</h3>
+                  <div class="text-xs space-y-1">
+                    ${data.conceptConnections.map(c => `
+                      <div class="flex items-center gap-2">
+                        <span class="text-slate-400">&rarr;</span>
+                        <span><strong>${TOPICS.find(t => t.id === c.toTopic)?.title || c.toTopic}</strong>: ${c.relationship}</span>
                       </div>
                     `).join('')}
                   </div>
