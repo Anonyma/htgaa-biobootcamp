@@ -311,6 +311,27 @@ function renderTopicPage(data, topicId) {
       </div>
     </div>
 
+    <!-- Floating Table of Contents -->
+    <nav id="floating-toc" class="floating-toc hidden xl:block">
+      <div class="floating-toc-inner">
+        <p class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">Contents</p>
+        <ul class="space-y-1">
+          ${(data.sections || []).map((s, i) => `
+            <li>
+              <a href="#section-${s.id}" class="toc-link text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 block py-0.5 pl-2 border-l-2 border-transparent transition-colors" data-toc-section="${s.id}">
+                ${s.title}
+              </a>
+            </li>
+          `).join('')}
+          <li>
+            <a href="#topic-quiz" class="toc-link text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500 block py-0.5 pl-2 border-l-2 border-transparent transition-colors" data-toc-section="quiz">
+              Quiz
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
     <div class="max-w-4xl mx-auto px-4 py-8">
       <!-- Chapter Header -->
       <header class="mb-10">
@@ -332,6 +353,9 @@ function renderTopicPage(data, topicId) {
         </div>
 
         ${renderPrerequisites(data.prerequisites, topicId)}
+
+        <!-- Mini Concept Map -->
+        ${data.conceptConnections && data.conceptConnections.length > 0 ? renderMiniConceptMap(data.conceptConnections, topicId) : ''}
 
         <!-- Learning Objectives -->
         ${data.learningObjectives ? `
@@ -1419,7 +1443,8 @@ function initCollapsibles(container) {
 
 function initScrollSpy(container) {
   const sections = container.querySelectorAll('[data-section]');
-  const tocLinks = container.querySelectorAll('.toc-link');
+  // Include both in-page TOC links and floating TOC links
+  const tocLinks = document.querySelectorAll('.toc-link');
   if (sections.length === 0 || tocLinks.length === 0) return;
 
   tocLinks.forEach(link => {
@@ -1434,11 +1459,10 @@ function initScrollSpy(container) {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const id = entry.target.dataset.section || entry.target.id;
+        const sectionId = entry.target.dataset.section || entry.target.id;
         tocLinks.forEach(link => {
-          const href = link.getAttribute('href')?.replace('#', '');
-          const sectionEl = document.getElementById(href);
-          link.classList.toggle('active', sectionEl?.dataset.section === id || href === entry.target.id);
+          const linkSection = link.dataset.tocSection || link.getAttribute('href')?.replace('#section-', '').replace('#', '');
+          link.classList.toggle('active', linkSection === sectionId);
         });
       }
     });
@@ -1833,6 +1857,61 @@ function showCompletionSummary(container, topicId) {
   });
 
   if (window.lucide) lucide.createIcons();
+}
+
+function renderMiniConceptMap(connections, currentTopicId) {
+  const currentTopic = TOPICS.find(t => t.id === currentTopicId);
+  if (!currentTopic) return '';
+
+  const uniqueTargets = [...new Set(connections.map(c => c.toTopic))]
+    .map(id => TOPICS.find(t => t.id === id))
+    .filter(Boolean)
+    .slice(0, 5); // Max 5 connected topics
+
+  if (uniqueTargets.length === 0) return '';
+
+  const colorMap = {
+    blue: '#3b82f6', green: '#22c55e', red: '#ef4444',
+    purple: '#a855f7', yellow: '#eab308', indigo: '#6366f1'
+  };
+
+  const w = 400, h = 140;
+  const cx = w / 2, cy = h / 2;
+  const radius = 55;
+
+  // Position connected topics around the center
+  const nodes = uniqueTargets.map((t, i) => {
+    const angle = (i / uniqueTargets.length) * Math.PI * 2 - Math.PI / 2;
+    return {
+      x: cx + Math.cos(angle) * radius,
+      y: cy + Math.sin(angle) * radius,
+      topic: t,
+      color: colorMap[t.color] || '#64748b'
+    };
+  });
+
+  const centerColor = colorMap[currentTopic.color] || '#3b82f6';
+
+  return `
+    <div class="mb-4 flex justify-center">
+      <svg viewBox="0 0 ${w} ${h}" class="mini-concept-map" style="max-width: 400px; width: 100%; height: auto;">
+        <!-- Edges -->
+        ${nodes.map(n => `
+          <line x1="${cx}" y1="${cy}" x2="${n.x}" y2="${n.y}" stroke="${n.color}" stroke-width="1.5" stroke-opacity="0.3" stroke-dasharray="4 3"/>
+        `).join('')}
+        <!-- Connected nodes -->
+        ${nodes.map(n => `
+          <a data-route="#/topic/${n.topic.id}" class="cursor-pointer">
+            <circle cx="${n.x}" cy="${n.y}" r="16" fill="${n.color}" fill-opacity="0.12" stroke="${n.color}" stroke-width="1.5"/>
+            <text x="${n.x}" y="${n.y + 28}" text-anchor="middle" fill="currentColor" font-size="8" font-weight="500" class="fill-slate-500 dark:fill-slate-400">${n.topic.title.length > 14 ? n.topic.title.slice(0, 12) + '..' : n.topic.title}</text>
+          </a>
+        `).join('')}
+        <!-- Center node (current topic) -->
+        <circle cx="${cx}" cy="${cy}" r="22" fill="${centerColor}" fill-opacity="0.15" stroke="${centerColor}" stroke-width="2.5"/>
+        <text x="${cx}" y="${cy + 4}" text-anchor="middle" fill="${centerColor}" font-size="9" font-weight="700">${currentTopic.title.length > 16 ? currentTopic.title.slice(0, 14) + '..' : currentTopic.title}</text>
+      </svg>
+    </div>
+  `;
 }
 
 function renderRelatedTopics(connections, currentTopicId) {
