@@ -190,6 +190,9 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- Struggling Terms -->
+          ${renderStrugglingTerms()}
+
           <!-- Lecturers -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -420,6 +423,25 @@ function createHomeView() {
           if (window.lucide) lucide.createIcons();
         });
       }
+
+      // Resolve struggling term names asynchronously
+      (async () => {
+        const fcData = store.get('flashcards') || { reviews: {} };
+        const reviews = fcData.reviews || {};
+        for (const [cardId, r] of Object.entries(reviews)) {
+          if (r.lapses >= 3) {
+            const match = cardId.match(/^(.+)-vocab-(\d+)$/);
+            if (match) {
+              const data = await store.loadTopicData(match[1]);
+              if (data?.vocabulary?.[parseInt(match[2])]) {
+                const elId = `struggling-term-${cardId.replace(/[^a-zA-Z0-9-]/g, '')}`;
+                const el = container.querySelector(`#${elId}`);
+                if (el) el.textContent = data.vocabulary[parseInt(match[2])].term;
+              }
+            }
+          }
+        }
+      })();
 
       // Quick Quiz on home page
       initQuickQuiz(container);
@@ -829,8 +851,66 @@ function renderWeakestTopicSuggestion(progress) {
   `;
 }
 
+function renderStrugglingTerms() {
+  const fcData = store.get('flashcards') || { reviews: {} };
+  const reviews = fcData.reviews || {};
+
+  // Find cards with 3+ lapses (struggling)
+  const struggling = [];
+  Object.entries(reviews).forEach(([cardId, r]) => {
+    if (r.lapses >= 3) {
+      // Parse topic and term index from card ID (format: topicId-vocab-N)
+      const match = cardId.match(/^(.+)-vocab-(\d+)$/);
+      if (match) {
+        struggling.push({ cardId, topicId: match[1], vocabIdx: parseInt(match[2]), lapses: r.lapses, easeFactor: r.easeFactor });
+      }
+    }
+  });
+
+  if (struggling.length === 0) return '';
+
+  // Sort by most lapses first
+  struggling.sort((a, b) => b.lapses - a.lapses);
+  const shown = struggling.slice(0, 6);
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i> Struggling Terms
+        <span class="text-xs text-slate-400 font-normal ml-auto">${struggling.length} term${struggling.length > 1 ? 's' : ''} need attention</span>
+      </h2>
+      <div class="bg-red-50 dark:bg-red-900/10 rounded-xl border border-red-200 dark:border-red-800 p-5">
+        <p class="text-sm text-red-700 dark:text-red-400 mb-4">These flashcard terms have been marked "Again" 3+ times. Consider reviewing the related topics.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          ${shown.map(s => {
+            const topic = TOPICS.find(t => t.id === s.topicId);
+            return `
+              <a data-route="#/topic/${s.topicId}" class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-lg border border-red-100 dark:border-red-900/30 hover:border-red-400 transition-colors cursor-pointer group">
+                <div class="w-8 h-8 rounded-lg bg-${topic?.color || 'slate'}-100 dark:bg-${topic?.color || 'slate'}-900/40 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="${topic?.icon || 'book'}" class="w-4 h-4 text-${topic?.color || 'slate'}-500"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-semibold truncate" id="struggling-term-${s.cardId.replace(/[^a-zA-Z0-9-]/g, '')}">${s.cardId}</div>
+                  <div class="text-xs text-red-500">${s.lapses} lapses</div>
+                </div>
+                <i data-lucide="arrow-right" class="w-4 h-4 text-slate-300 group-hover:text-red-400 flex-shrink-0 transition-colors"></i>
+              </a>
+            `;
+          }).join('')}
+        </div>
+        <div class="mt-4 text-center">
+          <a data-route="#/flashcards" class="text-sm text-red-600 dark:text-red-400 hover:underline cursor-pointer font-medium">
+            Review all struggling cards &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
 function renderChangelog() {
   const changes = [
+    { ver: 'v51', items: ['Exam retry incorrect only', 'Flashcard session summary', 'Struggling terms dashboard widget'] },
     { ver: 'v50', items: ['TOC section read indicators', 'Quick quiz question type filter'] },
     { ver: 'v49', items: ['Exam score sparkline and average', 'Copy exam results to clipboard', 'Flashcard maturity distribution bar', 'Today study time stat'] },
     { ver: 'v48', items: ['Exam flagged question warning dialog', 'Study summary average mastery', 'Overall mastery breakdown'] },

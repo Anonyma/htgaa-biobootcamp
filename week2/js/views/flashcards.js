@@ -446,11 +446,46 @@ function renderCard(card, allCards) {
 
 function renderComplete() {
   const stats = store.getFlashcardStats();
+  const hasSession = sessionStats.reviewed > 0;
+  const sessionAccuracy = hasSession ? Math.round(((sessionStats.good + sessionStats.easy) / sessionStats.reviewed) * 100) : 0;
+  const sessionGrade = sessionAccuracy >= 90 ? 'Excellent' : sessionAccuracy >= 70 ? 'Good' : sessionAccuracy >= 50 ? 'Fair' : 'Needs Work';
+  const gradeColor = sessionAccuracy >= 90 ? 'green' : sessionAccuracy >= 70 ? 'blue' : sessionAccuracy >= 50 ? 'amber' : 'red';
+
   return `
     <div class="text-center py-12">
       <i data-lucide="party-popper" class="w-16 h-16 mx-auto mb-4 text-green-400"></i>
       <h3 class="text-2xl font-bold mb-2">All caught up!</h3>
-      <p class="text-slate-500 mb-6">No cards due for review right now. Come back later for spaced repetition.</p>
+      <p class="text-slate-500 mb-4">No cards due for review right now. Come back later for spaced repetition.</p>
+
+      ${hasSession ? `
+        <!-- Session Summary -->
+        <div class="max-w-sm mx-auto mb-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 text-left">
+          <h4 class="font-bold text-sm mb-3 flex items-center gap-2 justify-center">
+            <i data-lucide="bar-chart-3" class="w-4 h-4 text-${gradeColor}-500"></i> Session Summary
+          </h4>
+          <div class="grid grid-cols-3 gap-3 mb-4">
+            <div class="text-center">
+              <div class="text-xl font-bold text-${gradeColor}-600 dark:text-${gradeColor}-400">${sessionAccuracy}%</div>
+              <div class="text-[10px] text-slate-500">Recall Rate</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-slate-700 dark:text-slate-300">${sessionStats.reviewed}</div>
+              <div class="text-[10px] text-slate-500">Cards Reviewed</div>
+            </div>
+            <div class="text-center">
+              <div class="text-xl font-bold text-${gradeColor}-600 dark:text-${gradeColor}-400">${sessionGrade}</div>
+              <div class="text-[10px] text-slate-500">Performance</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-xs justify-center">
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Again: ${sessionStats.again}</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> Hard: ${sessionStats.hard}</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Good: ${sessionStats.good}</span>
+            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Easy: ${sessionStats.easy}</span>
+          </div>
+        </div>
+      ` : ''}
+
       ${stats.total > 0 ? `
         <div class="max-w-xs mx-auto mb-6">
           <div class="flex items-center gap-1 h-4 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">

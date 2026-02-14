@@ -644,6 +644,12 @@ export function createExamView() {
           hover:from-amber-600 hover:to-orange-600 transition-all min-w-[140px]">
           Try Again
         </button>
+        ${results.some(r => !r.isCorrect) ? `
+        <button id="exam-retry-incorrect" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white font-medium
+          hover:from-red-600 hover:to-rose-600 transition-all min-w-[140px] flex items-center justify-center gap-2">
+          <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Retry Incorrect (${results.filter(r => !r.isCorrect).length})
+        </button>
+        ` : ''}
         <button id="exam-copy-results" class="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 font-medium
           hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[140px] flex items-center justify-center gap-2">
           <i data-lucide="copy" class="w-4 h-4"></i> Copy Results
@@ -669,6 +675,33 @@ export function createExamView() {
     containerEl.querySelector('#exam-retry')?.addEventListener('click', () => {
       state = 'setup';
       renderSetup();
+    });
+
+    // Retry incorrect only
+    containerEl.querySelector('#exam-retry-incorrect')?.addEventListener('click', () => {
+      const incorrectQuestions = results.filter(r => !r.isCorrect).map(r => r.question);
+      if (incorrectQuestions.length === 0) return;
+      // Reset state and start exam with only incorrect questions
+      state = 'running';
+      questions = shuffle(incorrectQuestions).map(q => {
+        const shuffledOptions = q.options.map((opt, idx) => ({ text: opt, originalIndex: idx }));
+        for (let i = shuffledOptions.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+        }
+        return { ...q, shuffledOptions };
+      });
+      currentIndex = 0;
+      answers = {};
+      elapsedSeconds = 0;
+      streak = 0;
+      bestStreak = 0;
+      questionElapsed = [];
+      questionStartTime = Date.now();
+      flaggedQuestions = new Set();
+      // Start timer
+      timerInterval = setInterval(() => { elapsedSeconds++; }, 1000);
+      renderQuestion();
     });
 
     // Copy results to clipboard
