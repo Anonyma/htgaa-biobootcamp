@@ -413,13 +413,21 @@ export function createExamView() {
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <h2 class="font-semibold mb-4">Score by Topic</h2>
         <div class="space-y-3">
-          ${Object.values(topicBreakdown).map(tb => {
+          ${Object.entries(topicBreakdown).map(([tid, tb]) => {
             const tbPct = Math.round((tb.correct / tb.total) * 100);
+            // Calculate average time per question for this topic
+            const topicQIdxs = results.map((r, i) => r.question.topicId === tid ? i : -1).filter(i => i >= 0);
+            const avgTime = topicQIdxs.length > 0 && questionTimes.length > 0
+              ? Math.round(topicQIdxs.reduce((s, i) => s + (questionTimes[i] || 0), 0) / topicQIdxs.length)
+              : null;
             return `
               <div>
                 <div class="flex justify-between text-sm mb-1">
                   <span class="font-medium">${escapeHtml(tb.title)}</span>
-                  <span class="text-slate-500">${tb.correct}/${tb.total} (${tbPct}%)</span>
+                  <span class="text-slate-500">
+                    ${tb.correct}/${tb.total} (${tbPct}%)
+                    ${avgTime !== null ? `<span class="text-slate-400 ml-1">~${avgTime}s/q</span>` : ''}
+                  </span>
                 </div>
                 <div class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
                   <div class="h-full rounded-full transition-all ${tbPct >= 80 ? 'bg-green-500' : tbPct >= 60 ? 'bg-yellow-500' : 'bg-red-500'}"

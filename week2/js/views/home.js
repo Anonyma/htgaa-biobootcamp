@@ -937,6 +937,37 @@ function renderStatsDashboard(progress) {
         </div>
       </div>
 
+      <!-- Overall Mastery -->
+      ${(() => {
+        const topicDataCache = store.get('topicData') || {};
+        const masteryScores = TOPICS.map(t => {
+          const td = topicDataCache[t.id];
+          return td ? store.getTopicMastery(t.id, td) : null;
+        }).filter(Boolean);
+        if (masteryScores.length === 0) return '';
+        const avgMastery = Math.round(masteryScores.reduce((s, m) => s + m.mastery, 0) / masteryScores.length);
+        if (avgMastery === 0) return '';
+        const masteryLabel = avgMastery >= 80 ? 'Expert' : avgMastery >= 60 ? 'Proficient' : avgMastery >= 40 ? 'Learning' : 'Beginner';
+        const masteryGradient = avgMastery >= 80 ? 'from-green-500 to-emerald-500' : avgMastery >= 60 ? 'from-blue-500 to-indigo-500' : avgMastery >= 40 ? 'from-amber-500 to-orange-500' : 'from-slate-400 to-slate-500';
+        return `
+        <div class="mt-4 bg-gradient-to-r ${masteryGradient} rounded-xl p-4 text-white flex items-center gap-4">
+          <div class="relative w-16 h-16 flex-shrink-0">
+            <svg class="w-16 h-16 -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="8"/>
+              <circle cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="8" stroke-linecap="round"
+                stroke-dasharray="264" stroke-dashoffset="${264 - (avgMastery / 100) * 264}"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="text-lg font-bold">${avgMastery}%</span>
+            </div>
+          </div>
+          <div>
+            <div class="font-bold text-lg">Overall Mastery: ${masteryLabel}</div>
+            <div class="text-sm opacity-80">Combines reading progress, quiz accuracy, flashcard reviews, and study time across all topics</div>
+          </div>
+        </div>`;
+      })()}
+
       <!-- Per-topic breakdown -->
       <div class="mt-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
         <table class="w-full text-sm">
@@ -945,6 +976,7 @@ function renderStatsDashboard(progress) {
               <th class="text-left px-4 py-2 font-medium">Topic</th>
               <th class="text-center px-2 py-2 font-medium">Sections</th>
               <th class="text-center px-2 py-2 font-medium">Quiz</th>
+              <th class="text-center px-2 py-2 font-medium hidden sm:table-cell">Mastery</th>
               <th class="text-center px-2 py-2 font-medium hidden sm:table-cell">Status</th>
             </tr>
           </thead>
@@ -954,6 +986,10 @@ function renderStatsDashboard(progress) {
               const st = sectionCounts[topic.id] || 6;
               const quiz = store.getQuizScore(topic.id);
               const isComplete = !!progress[topic.id];
+              const topicData = store.get('topicData')[topic.id];
+              const mastery = topicData ? store.getTopicMastery(topic.id, topicData) : null;
+              const masteryPct = mastery ? mastery.mastery : 0;
+              const masteryColor = masteryPct >= 80 ? 'green' : masteryPct >= 50 ? 'amber' : masteryPct > 0 ? 'red' : 'slate';
               return `<tr class="border-t border-slate-100 dark:border-slate-700/50">
                 <td class="px-4 py-2">
                   <a href="#/topic/${topic.id}" class="flex items-center gap-2 hover:text-blue-500 transition-colors">
@@ -966,6 +1002,16 @@ function renderStatsDashboard(progress) {
                 </td>
                 <td class="text-center px-2 py-2">
                   ${quiz ? `<span class="${quiz.correct === quiz.total ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-slate-500'}">${Math.round(quiz.correct / quiz.total * 100)}%</span>` : '<span class="text-slate-300 dark:text-slate-600">—</span>'}
+                </td>
+                <td class="text-center px-2 py-2 hidden sm:table-cell">
+                  ${mastery && (sr > 0 || quiz) ? `
+                    <div class="flex items-center gap-1.5 justify-center" title="Sections ${mastery.sectionPct}% | Quiz ${mastery.quizPct}% | Cards ${mastery.fcPct}% | Time ${mastery.timePct}%">
+                      <div class="w-12 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+                        <div class="h-full rounded-full bg-${masteryColor}-500 transition-all" style="width:${masteryPct}%"></div>
+                      </div>
+                      <span class="text-xs font-medium text-${masteryColor}-600 dark:text-${masteryColor}-400">${masteryPct}%</span>
+                    </div>
+                  ` : '<span class="text-slate-300 dark:text-slate-600">—</span>'}
                 </td>
                 <td class="text-center px-2 py-2 hidden sm:table-cell">
                   ${isComplete ? '<span class="inline-flex items-center gap-1 text-xs text-green-600 dark:text-green-400"><i data-lucide="check-circle" class="w-3 h-3"></i></span>' : sr > 0 ? '<span class="text-xs text-blue-500">In progress</span>' : '<span class="text-xs text-slate-400">Not started</span>'}
@@ -1169,12 +1215,21 @@ function renderStudyHeatmap() {
       </h2>
       <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
         <!-- Stats row -->
-        <div class="flex items-center gap-6 mb-4 text-sm">
+        <div class="flex items-center gap-6 mb-4 text-sm flex-wrap">
           <div class="flex items-center gap-2">
             <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
             <span class="font-bold text-lg ${streak > 0 ? 'text-orange-500' : 'text-slate-400'}">${streak}</span>
             <span class="text-slate-500 dark:text-slate-400">day streak</span>
           </div>
+          ${(() => {
+            const longest = store.getLongestStreak();
+            return longest > streak && longest >= 2 ? `
+            <div class="flex items-center gap-2">
+              <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
+              <span class="font-bold text-lg text-amber-600 dark:text-amber-400">${longest}</span>
+              <span class="text-slate-500 dark:text-slate-400">best streak</span>
+            </div>` : '';
+          })()}
           <div class="flex items-center gap-2">
             <i data-lucide="activity" class="w-4 h-4 text-green-500"></i>
             <span class="font-bold text-lg text-green-600 dark:text-green-400">${totalSessions}</span>

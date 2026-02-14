@@ -147,6 +147,12 @@ function renderComparison(dataA, dataB, idA, idB) {
             </div>
           </div>
           ${quizScoreA ? `<p class="text-xs mt-2 text-slate-500">Quiz: ${quizScoreA.correct}/${quizScoreA.total} (${Math.round(quizScoreA.correct/quizScoreA.total*100)}%)</p>` : ''}
+          ${(() => {
+            const m = store.getTopicMastery(idA, dataA);
+            if (!m || m.mastery === 0) return '';
+            const c = m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'red';
+            return `<div class="flex items-center gap-2 mt-2"><div class="flex-1 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"><div class="h-full rounded-full bg-${c}-500" style="width:${m.mastery}%"></div></div><span class="text-xs font-bold text-${c}-600 dark:text-${c}-400">${m.mastery}%</span></div>`;
+          })()}
         </div>
         <div class="bg-white dark:bg-slate-800 rounded-xl border-2 border-${metaB?.color || 'blue'}-200 dark:border-${metaB?.color || 'blue'}-800 p-4">
           <div class="flex items-center gap-3">
@@ -157,6 +163,12 @@ function renderComparison(dataA, dataB, idA, idB) {
             </div>
           </div>
           ${quizScoreB ? `<p class="text-xs mt-2 text-slate-500">Quiz: ${quizScoreB.correct}/${quizScoreB.total} (${Math.round(quizScoreB.correct/quizScoreB.total*100)}%)</p>` : ''}
+          ${(() => {
+            const m = store.getTopicMastery(idB, dataB);
+            if (!m || m.mastery === 0) return '';
+            const c = m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'red';
+            return `<div class="flex items-center gap-2 mt-2"><div class="flex-1 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"><div class="h-full rounded-full bg-${c}-500" style="width:${m.mastery}%"></div></div><span class="text-xs font-bold text-${c}-600 dark:text-${c}-400">${m.mastery}%</span></div>`;
+          })()}
         </div>
       </div>
 

@@ -326,6 +326,58 @@ class Store {
     return { read, total: totalSections, pct: totalSections > 0 ? Math.round((read / totalSections) * 100) : 0 };
   }
 
+  // --- Topic Mastery Score ---
+  // Composite metric: 40% sections read, 30% quiz accuracy, 20% flashcard maturity, 10% time spent
+  getTopicMastery(topicId, topicData) {
+    const sectionCounts = { 'sequencing': 7, 'synthesis': 7, 'editing': 7, 'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7 };
+    const totalSections = topicData?.sections?.length || sectionCounts[topicId] || 6;
+    const sectionsRead = this.getSectionsRead(topicId).length;
+    const sectionPct = totalSections > 0 ? sectionsRead / totalSections : 0;
+
+    const quiz = this.getQuizScore(topicId);
+    const quizPct = quiz && quiz.total > 0 ? quiz.correct / quiz.total : 0;
+
+    // Flashcard maturity for this topic's vocab
+    const reviews = this._state.flashcards.reviews || {};
+    let fcMature = 0, fcTotal = 0;
+    const vocabCount = topicData?.vocabulary?.length || 0;
+    for (let i = 0; i < vocabCount; i++) {
+      const cardId = `${topicId}-vocab-${i}`;
+      fcTotal++;
+      const r = reviews[cardId];
+      if (r && r.interval >= 21) fcMature++;
+      else if (r && r.repetitions > 0) fcMature += 0.3;
+    }
+    const fcPct = fcTotal > 0 ? fcMature / fcTotal : 0;
+
+    // Time spent (target: 20+ mins per topic = 100%)
+    let timeSpent = 0;
+    try {
+      const t = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+      timeSpent = t[topicId] || 0;
+    } catch {}
+    const timePct = Math.min(1, timeSpent / 1200); // 20 min = 100%
+
+    const mastery = Math.round((sectionPct * 0.4 + quizPct * 0.3 + fcPct * 0.2 + timePct * 0.1) * 100);
+    return { mastery, sectionPct: Math.round(sectionPct * 100), quizPct: Math.round(quizPct * 100), fcPct: Math.round(fcPct * 100), timePct: Math.round(timePct * 100) };
+  }
+
+  // --- Longest Streak ---
+  getLongestStreak() {
+    const log = this.getStudyLog();
+    const dates = Object.keys(log).filter(d => log[d] > 0).sort();
+    if (dates.length === 0) return 0;
+    let longest = 1, current = 1;
+    for (let i = 1; i < dates.length; i++) {
+      const prev = new Date(dates[i - 1]);
+      const curr = new Date(dates[i]);
+      const diff = (curr - prev) / 86400000;
+      if (diff === 1) { current++; longest = Math.max(longest, current); }
+      else { current = 1; }
+    }
+    return longest;
+  }
+
   // --- Topic Data Cache ---
   async loadTopicData(topicId) {
     if (this._state.topicData[topicId]) return this._state.topicData[topicId];
