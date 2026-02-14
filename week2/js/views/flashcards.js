@@ -5,6 +5,8 @@
 
 import { store, TOPICS } from '../store.js';
 
+let _fcSessionTimerInterval = null;
+
 function createFlashcardsView() {
   let allCards = [];
   let dueCards = [];
@@ -74,7 +76,7 @@ function createFlashcardsView() {
           })()}
 
           <!-- Stats Grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
             <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 text-center">
               <p class="text-2xl font-bold text-red-600 dark:text-red-400" id="fc-due">${dueCards.length}</p>
               <p class="text-xs text-slate-500">Due now</p>
@@ -91,7 +93,48 @@ function createFlashcardsView() {
               <p class="text-2xl font-bold text-green-600 dark:text-green-400" id="fc-mature">${stats.mature}</p>
               <p class="text-xs text-slate-500">Mature</p>
             </div>
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 text-center">
+              <p class="text-2xl font-bold text-violet-600 dark:text-violet-400">${(() => {
+                const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
+                const todayStr = new Date().toISOString().slice(0, 10);
+                return feed.filter(a => a.action === 'flashcard' && new Date(a.time).toISOString().slice(0, 10) === todayStr).length;
+              })()}</p>
+              <p class="text-xs text-slate-500">Today</p>
+            </div>
           </div>
+
+          <!-- Card Maturity Distribution Bar -->
+          ${allCards.length > 0 ? (() => {
+            const reviews = store.get('flashcards').reviews;
+            let newCount = 0, learningCount = 0, matureCount = 0;
+            allCards.forEach(c => {
+              const r = reviews[c.id];
+              if (!r) newCount++;
+              else if (r.interval < 21) learningCount++;
+              else matureCount++;
+            });
+            const total = allCards.length;
+            const newPct = (newCount / total) * 100;
+            const learnPct = (learningCount / total) * 100;
+            const maturePct = (matureCount / total) * 100;
+            return `
+            <div class="mb-6">
+              <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+                <span>Card Maturity</span>
+                <span>${matureCount} mature of ${total}</span>
+              </div>
+              <div class="h-3 rounded-full overflow-hidden flex bg-slate-200 dark:bg-slate-700">
+                ${maturePct > 0 ? `<div class="bg-green-500 transition-all" style="width:${maturePct}%" title="${matureCount} mature"></div>` : ''}
+                ${learnPct > 0 ? `<div class="bg-yellow-400 transition-all" style="width:${learnPct}%" title="${learningCount} learning"></div>` : ''}
+                ${newPct > 0 ? `<div class="bg-blue-400 transition-all" style="width:${newPct}%" title="${newCount} new"></div>` : ''}
+              </div>
+              <div class="flex gap-3 mt-1 text-[10px] text-slate-400">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span> Mature</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400 inline-block"></span> Learning</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-400 inline-block"></span> New</span>
+              </div>
+            </div>`;
+          })() : ''}
 
           <!-- Progress Bar -->
           ${dueCards.length > 0 ? `
@@ -165,10 +208,11 @@ function createFlashcardsView() {
       // Reset session stats
       sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 };
 
-      // Session timer
+      // Session timer (module-level so unmount can clean up without container ref)
       let sessionSeconds = 0;
       const sessionTimerEl = container.querySelector('#fc-session-timer');
-      const sessionTimerInterval = setInterval(() => {
+      if (_fcSessionTimerInterval) clearInterval(_fcSessionTimerInterval);
+      _fcSessionTimerInterval = setInterval(() => {
         sessionSeconds++;
         if (sessionTimerEl) {
           const m = Math.floor(sessionSeconds / 60);
@@ -176,7 +220,6 @@ function createFlashcardsView() {
           sessionTimerEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
         }
       }, 1000);
-      container._fcTimerCleanup = () => clearInterval(sessionTimerInterval);
 
       // Filter buttons
       container.querySelectorAll('.fc-filter').forEach(btn => {
@@ -314,12 +357,15 @@ function createFlashcardsView() {
       keyHandler = onKey;
     },
 
-    unmount(container) {
+    unmount() {
       if (keyHandler) {
         document.removeEventListener('keydown', keyHandler);
         keyHandler = null;
       }
-      if (container?._fcTimerCleanup) container._fcTimerCleanup();
+      if (_fcSessionTimerInterval) {
+        clearInterval(_fcSessionTimerInterval);
+        _fcSessionTimerInterval = null;
+      }
     }
   };
 }

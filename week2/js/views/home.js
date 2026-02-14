@@ -121,12 +121,17 @@ function createHomeView() {
               <a data-route="#/flashcards" class="block p-5 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl border border-violet-200 dark:border-violet-800 hover:border-violet-400 cursor-pointer transition-colors">
                 <i data-lucide="layers" class="w-6 h-6 text-violet-500 mb-2"></i>
                 <h3 class="font-bold">Flashcards</h3>
-                <p class="text-sm text-slate-500 mt-1">Spaced repetition review</p>
+                ${(() => {
+                  const fc = store.getFlashcardStats();
+                  return fc.due > 0
+                    ? `<p class="text-sm text-red-500 mt-1 font-medium">${fc.due} cards due</p>`
+                    : `<p class="text-sm text-slate-500 mt-1">All caught up</p>`;
+                })()}
               </a>
               <a data-route="#/homework" class="block p-5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-xl border border-orange-200 dark:border-orange-800 hover:border-orange-400 cursor-pointer transition-colors">
                 <i data-lucide="clipboard-list" class="w-6 h-6 text-orange-500 mb-2"></i>
                 <h3 class="font-bold">Homework Hub</h3>
-                <p class="text-sm text-slate-500 mt-1">Guidance & checklists</p>
+                <p class="text-sm text-slate-500 mt-1">${getHWStats()} steps done</p>
               </a>
               <a data-route="#/concept-map" class="block p-5 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl border border-cyan-200 dark:border-cyan-800 hover:border-cyan-400 cursor-pointer transition-colors">
                 <i data-lucide="git-branch" class="w-6 h-6 text-cyan-500 mb-2"></i>
@@ -136,7 +141,10 @@ function createHomeView() {
               <a data-route="#/exam" class="block p-5 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800 hover:border-amber-400 cursor-pointer transition-colors">
                 <i data-lucide="trophy" class="w-6 h-6 text-amber-500 mb-2"></i>
                 <h3 class="font-bold">Exam Mode</h3>
-                <p class="text-sm text-slate-500 mt-1">Timed practice quiz</p>
+                ${(() => {
+                  const best = store.getBestExamScore();
+                  return best ? `<p class="text-sm text-amber-600 mt-1">Best: ${best.pct}%</p>` : `<p class="text-sm text-slate-500 mt-1">Timed practice quiz</p>`;
+                })()}
               </a>
               <a data-route="#/compare" class="block p-5 bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl border border-teal-200 dark:border-teal-800 hover:border-teal-400 cursor-pointer transition-colors">
                 <i data-lucide="columns" class="w-6 h-6 text-teal-500 mb-2"></i>
@@ -821,6 +829,15 @@ function renderWeakestTopicSuggestion(progress) {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v49', items: ['Exam score sparkline and average', 'Copy exam results to clipboard', 'Flashcard maturity distribution bar', 'Today study time stat'] },
+    { ver: 'v48', items: ['Exam flagged question warning dialog', 'Study summary average mastery', 'Overall mastery breakdown'] },
+    { ver: 'v47', items: ['Live stats on study tool cards', 'Concept map fullscreen and reset', 'Concept map node statistics'] },
+    { ver: 'v46', items: ['Homework progress bar', 'Auto-expand incomplete HW', 'Glossary back-to-top', 'Exam unanswered counter'] },
+    { ver: 'v45', items: ['Exam flag/bookmark questions', 'Compare mastery breakdown', 'Study summary mastery scores'] },
+    { ver: 'v44', items: ['Glossary search highlighting', 'Exam topic confidence indicator', 'Flashcard today counter', 'Flashcard timer leak fix'] },
+    { ver: 'v43', items: ['Compare view markdown export', 'Last-studied timestamps', 'Daily time tracking'] },
+    { ver: 'v42', items: ['Flashcard session timer', 'Glossary CSV export', 'Topic card mastery display'] },
+    { ver: 'v41', items: ['Exam flashcard link for weak topics', 'Topic word count', 'Daily study goal tracker'] },
     { ver: 'v40', items: ['Per-question timer in exams', 'Enhanced study summary export', 'This changelog'] },
     { ver: 'v39', items: ['Concept map connected nodes panel', 'Cross-topic connections in study summary'] },
     { ver: 'v38', items: ['Practice all flashcards button', 'Glossary letter term counts', 'Per-topic time tracking on dashboard'] },
@@ -981,7 +998,17 @@ function renderStatsDashboard(progress) {
       <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 dark:text-white">
         <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-500"></i> Your Stats
       </h2>
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
+        ${(() => {
+          // Today's study time from activity feed
+          const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
+          const todayActivities = feed.filter(a => new Date(a.time).toISOString().slice(0, 10) === today).length;
+          const todayMins = Math.min(todayActivities * 2, 120); // rough estimate: ~2min per activity
+          return `<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center">
+          <div class="text-2xl font-bold text-cyan-600 dark:text-cyan-400">${todayMins > 0 ? todayMins + 'm' : '—'}</div>
+          <div class="text-xs text-slate-500 mt-1">Today</div>
+        </div>`;
+        })()}
         <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center">
           <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">${formatTime(totalTime)}</div>
           <div class="text-xs text-slate-500 mt-1">Total Study Time</div>

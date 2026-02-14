@@ -44,6 +44,7 @@ export function createExamView() {
   let questionStartTime = 0;
   let questionElapsed = [];
   let questionTimerInterval = null;
+  let flaggedQuestions = new Set();
 
   function cleanupKeyHandler() {
     if (activeKeyHandler) {
@@ -81,10 +82,27 @@ export function createExamView() {
           const best = store.getBestExamScore();
           const scores = store.getExamScores();
           if (!best) return '';
+          const avg = Math.round(scores.reduce((s, sc) => s + sc.pct, 0) / scores.length);
+          // SVG sparkline of past scores
+          const sparkline = scores.length >= 2 ? (() => {
+            const w = 120, h = 32, pad = 2;
+            const pts = scores.map((s, i) => {
+              const x = pad + (i / (scores.length - 1)) * (w - 2 * pad);
+              const y = h - pad - (s.pct / 100) * (h - 2 * pad);
+              return `${x},${y}`;
+            });
+            return `<svg class="inline-block ml-2 align-middle" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+              <polyline points="${pts.join(' ')}" fill="none" stroke="url(#spark-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <defs><linearGradient id="spark-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs>
+              <circle cx="${pts[pts.length - 1].split(',')[0]}" cy="${pts[pts.length - 1].split(',')[1]}" r="3" fill="#f59e0b"/>
+            </svg>`;
+          })() : '';
           return `<div class="mt-3 flex items-center justify-center gap-6 text-sm">
             <span class="text-slate-400"><i data-lucide="trophy" class="w-4 h-4 inline text-amber-500"></i> Best: <strong class="text-slate-700 dark:text-slate-200">${best.pct}%</strong></span>
-            <span class="text-slate-400"><i data-lucide="bar-chart-3" class="w-4 h-4 inline text-blue-500"></i> Attempts: <strong class="text-slate-700 dark:text-slate-200">${scores.length}</strong></span>
-          </div>`;
+            <span class="text-slate-400"><i data-lucide="bar-chart-3" class="w-4 h-4 inline text-blue-500"></i> Avg: <strong class="text-slate-700 dark:text-slate-200">${avg}%</strong></span>
+            <span class="text-slate-400">Attempts: <strong class="text-slate-700 dark:text-slate-200">${scores.length}</strong></span>
+          </div>
+          ${sparkline ? `<div class="mt-2 text-center"><span class="text-xs text-slate-400">Trend</span>${sparkline}</div>` : ''}`;
         })()}
       </div>
 
@@ -205,6 +223,7 @@ export function createExamView() {
     elapsedSeconds = 0;
     streak = 0;
     bestStreak = 0;
+    flaggedQuestions = new Set();
     questionTimes = new Array(questions.length).fill(0);
     questionElapsed = new Array(questions.length).fill(0);
     questionStartTime = Date.now();
@@ -242,8 +261,20 @@ export function createExamView() {
             ${escapeHtml(q.topicTitle)}
           </span>
           ${streak >= 2 ? `<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 animate-pulse">${streak} streak</span>` : ''}
+          ${(() => {
+            const qs = store.getQuizScore(q.topicId);
+            if (!qs || qs.total < 2) return '';
+            const pct = Math.round((qs.correct / qs.total) * 100);
+            if (pct >= 80) return `<span class="text-xs text-green-500" title="Your ${q.topicTitle} quiz score: ${pct}%"><i data-lucide="trending-up" class="w-3 h-3 inline"></i></span>`;
+            if (pct < 50) return `<span class="text-xs text-red-500" title="Your ${q.topicTitle} quiz score: ${pct}%"><i data-lucide="trending-down" class="w-3 h-3 inline"></i></span>`;
+            return '';
+          })()}
         </div>
         <div class="flex items-center gap-3 text-sm">
+          <button id="exam-flag-btn" class="flex items-center gap-1 px-2 py-1 rounded-lg transition-colors ${flaggedQuestions.has(currentIndex) ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600' : 'text-slate-400 hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-orange-900/20'}" title="Flag for review">
+            <i data-lucide="flag" class="w-3.5 h-3.5"></i>
+            ${flaggedQuestions.has(currentIndex) ? '<span class="text-xs">Flagged</span>' : ''}
+          </button>
           <span class="flex items-center gap-1 text-slate-400" title="This question">
             <i data-lucide="timer" class="w-3.5 h-3.5"></i>
             <span id="question-timer" class="font-mono text-xs">${formatTime(questionElapsed[currentIndex] || 0)}</span>
@@ -296,21 +327,28 @@ export function createExamView() {
           ${questions.map((_, i) => `
             <button class="exam-dot w-3 h-3 rounded-full transition-colors ${
               i === currentIndex ? 'bg-amber-500 scale-125' :
+              flaggedQuestions.has(i) ? 'bg-orange-400 ring-1 ring-orange-300' :
               answers[i] !== undefined ? 'bg-blue-400' : 'bg-slate-300 dark:bg-slate-600'
-            }" data-dot-index="${i}"></button>
+            }" data-dot-index="${i}" title="${flaggedQuestions.has(i) ? 'Flagged' : ''}"></button>
           `).join('')}
         </div>
 
-        ${currentIndex === questions.length - 1 && Object.keys(answers).length === questions.length ? `
+        ${Object.keys(answers).length === questions.length ? `
           <button id="exam-finish" class="px-6 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium
             hover:from-amber-600 hover:to-orange-600 transition-all">
-            Finish Exam
+            ${flaggedQuestions.size > 0 ? `Finish (${flaggedQuestions.size} flagged)` : 'Finish Exam'}
           </button>
         ` : `
-          <button id="exam-next" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium
-            hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors ${answers[currentIndex] === undefined ? 'opacity-40' : ''}">
-            Next <i data-lucide="chevron-right" class="w-4 h-4 inline"></i>
-          </button>
+          <div class="flex items-center gap-2">
+            ${(() => {
+              const unanswered = questions.length - Object.keys(answers).length;
+              return unanswered > 0 && unanswered < questions.length ? `<span class="text-xs text-slate-400">${unanswered} left</span>` : '';
+            })()}
+            <button id="exam-next" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium
+              hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors ${answers[currentIndex] === undefined ? 'opacity-40' : ''}">
+              Next <i data-lucide="chevron-right" class="w-4 h-4 inline"></i>
+            </button>
+          </div>
         `}
       </div>
     `;
@@ -354,7 +392,45 @@ export function createExamView() {
     containerEl.querySelector('#exam-next')?.addEventListener('click', () => {
       if (currentIndex < questions.length - 1) navigateTo(currentIndex + 1);
     });
-    containerEl.querySelector('#exam-finish')?.addEventListener('click', finishExam);
+    containerEl.querySelector('#exam-finish')?.addEventListener('click', () => {
+      if (flaggedQuestions.size > 0) {
+        // Show warning with option to review flagged or finish
+        const firstFlagged = [...flaggedQuestions][0];
+        const warning = document.createElement('div');
+        warning.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+        warning.innerHTML = `
+          <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-sm mx-4 shadow-xl border border-slate-200 dark:border-slate-700">
+            <h3 class="font-bold text-lg mb-2 flex items-center gap-2"><i data-lucide="flag" class="w-5 h-5 text-orange-500"></i> ${flaggedQuestions.size} Flagged Question${flaggedQuestions.size > 1 ? 's' : ''}</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">You flagged ${flaggedQuestions.size} question${flaggedQuestions.size > 1 ? 's' : ''} for review. Want to go back and check?</p>
+            <div class="flex gap-2">
+              <button id="exam-review-flagged" class="flex-1 py-2 rounded-xl bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 font-medium text-sm hover:bg-orange-200 transition-colors">Review Flagged</button>
+              <button id="exam-finish-anyway" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium text-sm hover:from-amber-600 hover:to-orange-600 transition-colors">Finish Anyway</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(warning);
+        if (window.lucide) lucide.createIcons();
+        warning.querySelector('#exam-review-flagged').addEventListener('click', () => {
+          warning.remove();
+          navigateTo(firstFlagged);
+        });
+        warning.querySelector('#exam-finish-anyway').addEventListener('click', () => {
+          warning.remove();
+          finishExam();
+        });
+        warning.addEventListener('click', (e) => { if (e.target === warning) warning.remove(); });
+      } else {
+        finishExam();
+      }
+    });
+
+    // Flag button
+    containerEl.querySelector('#exam-flag-btn')?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (flaggedQuestions.has(currentIndex)) flaggedQuestions.delete(currentIndex);
+      else flaggedQuestions.add(currentIndex);
+      renderQuestion();
+    });
 
     // Dot navigation
     containerEl.querySelectorAll('.exam-dot').forEach(dot => {
@@ -372,6 +448,11 @@ export function createExamView() {
       }
       if (e.key === 'ArrowLeft' && currentIndex > 0) {
         navigateTo(currentIndex - 1);
+      }
+      if (e.key === 'f') {
+        if (flaggedQuestions.has(currentIndex)) flaggedQuestions.delete(currentIndex);
+        else flaggedQuestions.add(currentIndex);
+        renderQuestion();
       }
       if (e.key >= '1' && e.key <= '4') {
         const idx = parseInt(e.key) - 1;
@@ -511,6 +592,7 @@ export function createExamView() {
                   <p class="font-medium text-sm mb-1">
                     <span class="text-slate-400">Q${i + 1}</span>
                     <span class="mx-1 px-1.5 py-0.5 rounded text-xs bg-${r.question.topicColor}-100 text-${r.question.topicColor}-700 dark:bg-${r.question.topicColor}-900/30 dark:text-${r.question.topicColor}-400">${escapeHtml(r.question.topicTitle)}</span>
+                    ${flaggedQuestions.has(i) ? '<span class="text-orange-500 text-xs"><i data-lucide="flag" class="w-3 h-3 inline"></i></span>' : ''}
                     ${questionElapsed[i] > 0 ? `<span class="text-slate-400 text-xs ml-1">${questionElapsed[i]}s</span>` : ''}
                   </p>
                   <p class="text-sm mb-2">${escapeHtml(r.question.question)}</p>
@@ -562,6 +644,10 @@ export function createExamView() {
           hover:from-amber-600 hover:to-orange-600 transition-all min-w-[140px]">
           Try Again
         </button>
+        <button id="exam-copy-results" class="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 font-medium
+          hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[140px] flex items-center justify-center gap-2">
+          <i data-lucide="copy" class="w-4 h-4"></i> Copy Results
+        </button>
         ${(() => {
           const weakTids = Object.entries(topicBreakdown)
             .filter(([, tb]) => Math.round((tb.correct / tb.total) * 100) < 80)
@@ -583,6 +669,19 @@ export function createExamView() {
     containerEl.querySelector('#exam-retry')?.addEventListener('click', () => {
       state = 'setup';
       renderSetup();
+    });
+
+    // Copy results to clipboard
+    containerEl.querySelector('#exam-copy-results')?.addEventListener('click', () => {
+      const topicLines = Object.entries(topicBreakdown).map(([, tb]) => {
+        const tbPct = Math.round((tb.correct / tb.total) * 100);
+        return `  ${tb.title}: ${tb.correct}/${tb.total} (${tbPct}%)`;
+      }).join('\n');
+      const text = `HTGAA Week 2 Exam Results\nScore: ${correct}/${questions.length} (${pct}%) — Grade: ${grade}\nTime: ${formatTime(elapsedSeconds)}\n\nBy Topic:\n${topicLines}`;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = containerEl.querySelector('#exam-copy-results');
+        if (btn) { btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!'; if (window.lucide) lucide.createIcons(); }
+      }).catch(() => {});
     });
 
     // Toggle missed-only filter
