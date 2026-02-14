@@ -557,13 +557,22 @@ export function createExamView() {
       })()}
 
       <!-- Actions -->
-      <div class="flex gap-3">
+      <div class="flex gap-3 flex-wrap">
         <button id="exam-retry" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium
-          hover:from-amber-600 hover:to-orange-600 transition-all">
+          hover:from-amber-600 hover:to-orange-600 transition-all min-w-[140px]">
           Try Again
         </button>
+        ${(() => {
+          const weakTids = Object.entries(topicBreakdown)
+            .filter(([, tb]) => Math.round((tb.correct / tb.total) * 100) < 80)
+            .map(([tid]) => tid);
+          if (weakTids.length === 0) return '';
+          return `<a data-route="#/flashcards" class="flex-1 py-3 rounded-xl border border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 font-medium text-center text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-colors cursor-pointer min-w-[140px]">
+            <i data-lucide="layers" class="w-4 h-4 inline mr-1"></i> Review Flashcards
+          </a>`;
+        })()}
         <a data-route="#/" class="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 font-medium text-center
-          hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer">
+          hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer min-w-[140px]">
           Back to Home
         </a>
       </div>

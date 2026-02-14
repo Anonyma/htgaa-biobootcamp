@@ -377,6 +377,25 @@ function createHomeView() {
           window.location.reload();
         }
       });
+      // Study goal setter
+      container.querySelector('.study-goal-btn')?.addEventListener('click', (e) => {
+        const current = parseInt(e.target.dataset.currentGoal) || 30;
+        const goals = [15, 30, 45, 60, 90];
+        const nextIdx = (goals.indexOf(current) + 1) % goals.length;
+        const newGoal = goals[nextIdx];
+        localStorage.setItem('htgaa-week2-daily-goal', newGoal);
+        e.target.dataset.currentGoal = newGoal;
+        // Update display
+        const parent = e.target.closest('.flex.items-center');
+        if (parent) {
+          const label = parent.querySelector('.font-medium');
+          if (label) {
+            const todayTime = parseInt(label.textContent) || 0;
+            label.textContent = `${todayTime}/${newGoal}m today`;
+          }
+        }
+      });
+
       // What's New toggle
       const whatsNewToggle = container.querySelector('#whats-new-toggle');
       if (whatsNewToggle) {
@@ -1302,6 +1321,35 @@ function renderStudyHeatmap() {
             <span class="font-bold text-lg text-blue-600 dark:text-blue-400">${activeDays}</span>
             <span class="text-slate-500 dark:text-slate-400">active days</span>
           </div>
+          ${(() => {
+            const goalKey = 'htgaa-week2-daily-goal';
+            let goal = 30; // default 30 min
+            try { goal = parseInt(localStorage.getItem(goalKey)) || 30; } catch {}
+            let todayTime = 0;
+            try {
+              const ts = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+              const todayStr = new Date().toISOString().slice(0, 10);
+              const dailyLog = JSON.parse(localStorage.getItem('htgaa-week2-daily-time') || '{}');
+              todayTime = Math.floor((dailyLog[todayStr] || 0) / 60);
+            } catch {}
+            const goalPct = Math.min(100, Math.round((todayTime / goal) * 100));
+            const goalColor = goalPct >= 100 ? 'green' : goalPct >= 50 ? 'amber' : 'slate';
+            return `
+          <div class="flex items-center gap-2 ml-auto">
+            <div class="relative w-8 h-8">
+              <svg class="w-8 h-8 -rotate-90" viewBox="0 0 32 32">
+                <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="3"/>
+                <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" class="text-${goalColor}-500" stroke-width="3"
+                  stroke-dasharray="${75.4}" stroke-dashoffset="${75.4 - (goalPct / 100) * 75.4}" stroke-linecap="round"/>
+              </svg>
+              <span class="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-${goalColor}-600 dark:text-${goalColor}-400">${goalPct}%</span>
+            </div>
+            <div class="text-xs">
+              <div class="font-medium text-slate-600 dark:text-slate-300">${todayTime}/${goal}m today</div>
+              <button class="study-goal-btn text-slate-400 hover:text-blue-500 transition-colors" data-current-goal="${goal}">set goal</button>
+            </div>
+          </div>`;
+          })()}
         </div>
         <!-- Heatmap grid -->
         <div class="flex gap-1 items-start overflow-x-auto">

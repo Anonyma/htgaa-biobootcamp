@@ -572,8 +572,12 @@ function renderTopicPage(data, topicId) {
             <h1 class="text-3xl font-extrabold">${data.title}</h1>
           </div>
         </div>
-        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6" data-reading-time="${data.readingTime || 25}">
+        <div class="flex items-center gap-4 text-sm text-slate-500 mb-6 flex-wrap" data-reading-time="${data.readingTime || 25}">
           <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> ${data.readingTime || 25} min read</span>
+          <span class="flex items-center gap-1"><i data-lucide="file-text" class="w-4 h-4"></i> ${(() => {
+            const wc = (data.sections || []).reduce((sum, s) => sum + ((s.content || '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length), 0);
+            return wc > 1000 ? `${(wc / 1000).toFixed(1)}k` : wc;
+          })()} words</span>
           <span class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> ${data.quizQuestions?.length || 0} questions</span>
           ${isComplete ? '<span class="flex items-center gap-1 text-green-600"><i data-lucide="check-circle-2" class="w-4 h-4"></i> Completed</span>' : ''}
           ${quizScore ? `<span class="flex items-center gap-1"><i data-lucide="target" class="w-4 h-4"></i> Quiz: ${quizScore.correct}/${quizScore.total}</span>` : ''}
@@ -1917,6 +1921,9 @@ function initTimeSpent(container, topicId) {
   }
   display.textContent = fmt(elapsed);
 
+  const DAILY_KEY = 'htgaa-week2-daily-time';
+  const todayStr = new Date().toISOString().slice(0, 10);
+
   const interval = setInterval(() => {
     if (document.hidden) return; // pause when tab hidden
     elapsed++;
@@ -1927,6 +1934,10 @@ function initTimeSpent(container, topicId) {
         const t = JSON.parse(localStorage.getItem(TIME_KEY) || '{}');
         t[topicId] = elapsed;
         localStorage.setItem(TIME_KEY, JSON.stringify(t));
+        // Also track daily time
+        const daily = JSON.parse(localStorage.getItem(DAILY_KEY) || '{}');
+        daily[todayStr] = (daily[todayStr] || 0) + 10;
+        localStorage.setItem(DAILY_KEY, JSON.stringify(daily));
       } catch {}
     }
   }, 1000);
