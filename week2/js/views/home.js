@@ -52,6 +52,9 @@ function createHomeView() {
           <!-- Today's Study Plan -->
           ${renderStudyPlan(progress)}
 
+          <!-- Stats Dashboard -->
+          ${renderStatsDashboard(progress)}
+
           <!-- Visual Learning Path -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -388,6 +391,97 @@ function renderBookmarks() {
             <span class="font-medium">${b.sectionTitle}</span>
           </a>
         `).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderStatsDashboard(progress) {
+  // Calculate total time studied
+  let totalTime = 0;
+  try {
+    const t = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+    totalTime = Object.values(t).reduce((sum, s) => sum + s, 0);
+  } catch {}
+
+  const formatTime = (secs) => {
+    if (secs < 60) return `${secs}s`;
+    const mins = Math.floor(secs / 60);
+    if (mins < 60) return `${mins}m`;
+    const hrs = Math.floor(mins / 60);
+    return `${hrs}h ${mins % 60}m`;
+  };
+
+  // Quiz stats
+  let totalQuizCorrect = 0, totalQuizAnswered = 0;
+  TOPICS.forEach(t => {
+    const score = store.getQuizScore(t.id);
+    if (score) {
+      totalQuizCorrect += score.correct;
+      totalQuizAnswered += score.total;
+    }
+  });
+
+  // Section coverage
+  let totalSectionsRead = 0, totalSections = 0;
+  const sectionCounts = { 'sequencing': 7, 'synthesis': 7, 'editing': 7, 'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7 };
+  TOPICS.forEach(t => {
+    totalSectionsRead += store.getSectionsRead(t.id).length;
+    totalSections += sectionCounts[t.id] || 6;
+  });
+
+  // Flashcard stats
+  const fcStats = store.getFlashcardStats();
+
+  // Best exam
+  const bestExam = store.getBestExamScore();
+
+  // Study streak
+  const studyLog = store.getStudyLog();
+  const today = new Date().toISOString().slice(0, 10);
+  let streak = 0;
+  const d = new Date();
+  while (true) {
+    const dateStr = d.toISOString().slice(0, 10);
+    if (studyLog[dateStr]) {
+      streak++;
+      d.setDate(d.getDate() - 1);
+    } else break;
+  }
+
+  // Only show if there's any activity
+  if (totalTime === 0 && totalQuizAnswered === 0 && fcStats.totalReviews === 0) return '';
+
+  return `
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-slate-800 dark:text-white">
+        <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-500"></i> Your Stats
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center">
+          <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">${formatTime(totalTime)}</div>
+          <div class="text-xs text-slate-500 mt-1">Total Study Time</div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center">
+          <div class="text-2xl font-bold text-green-600 dark:text-green-400">${totalQuizAnswered > 0 ? Math.round(totalQuizCorrect / totalQuizAnswered * 100) + '%' : '—'}</div>
+          <div class="text-xs text-slate-500 mt-1">Quiz Accuracy</div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center">
+          <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">${totalSectionsRead}/${totalSections}</div>
+          <div class="text-xs text-slate-500 mt-1">Sections Read</div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center">
+          <div class="text-2xl font-bold text-violet-600 dark:text-violet-400">${fcStats.totalReviews}</div>
+          <div class="text-xs text-slate-500 mt-1">Flashcard Reviews</div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center">
+          <div class="text-2xl font-bold text-amber-600 dark:text-amber-400">${bestExam ? bestExam.pct + '%' : '—'}</div>
+          <div class="text-xs text-slate-500 mt-1">Best Exam Score</div>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3 text-center">
+          <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">${streak > 0 ? streak + 'd' : '—'}</div>
+          <div class="text-xs text-slate-500 mt-1">Study Streak</div>
+        </div>
       </div>
     </section>
   `;

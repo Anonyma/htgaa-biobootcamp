@@ -201,6 +201,9 @@ function createTopicView(topicId) {
         });
       });
 
+      // Vocab quiz interaction
+      initVocabQuiz(container);
+
       // Notes panel
       initNotes(container, topicId);
 
@@ -328,6 +331,8 @@ function renderTopicPage(data, topicId) {
           <span class="flex items-center gap-1" id="time-spent-display"><i data-lucide="timer" class="w-4 h-4"></i> <span id="time-spent-value">0:00</span> spent</span>
         </div>
 
+        ${renderPrerequisites(data.prerequisites, topicId)}
+
         <!-- Learning Objectives -->
         ${data.learningObjectives ? `
         <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-5">
@@ -410,6 +415,9 @@ function renderTopicPage(data, topicId) {
 
       <!-- Quick Review Flashcards -->
       ${data.vocabulary && data.vocabulary.length > 0 ? renderQuickReview(data.vocabulary, topicId) : ''}
+
+      <!-- Vocabulary Quiz -->
+      ${data.vocabulary && data.vocabulary.length >= 4 ? renderVocabQuiz(data.vocabulary, topicId) : ''}
 
       <!-- Bottom strip: Vocab, Connections, References -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -888,6 +896,50 @@ function renderVocabulary(vocab) {
               </div>
             `).join('')}
           </div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderVocabQuiz(vocab, topicId) {
+  // Pick 5 random terms for the quiz
+  const shuffled = [...vocab].sort(() => Math.random() - 0.5);
+  const quizTerms = shuffled.slice(0, Math.min(5, shuffled.length));
+
+  return `
+    <section class="mb-10 vocab-quiz-section" data-topic="${topicId}">
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6">
+        <h3 class="text-lg font-bold mb-1 flex items-center gap-2">
+          <i data-lucide="spell-check" class="w-5 h-5 text-violet-500"></i> Vocabulary Challenge
+        </h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Match each definition to the correct term. Type your answer or pick from the options.</p>
+
+        <div class="vocab-quiz-questions space-y-4">
+          ${quizTerms.map((item, i) => {
+            // Generate 3 wrong answers from other vocab terms
+            const others = vocab.filter(v => v.term !== item.term).sort(() => Math.random() - 0.5).slice(0, 3);
+            const options = [...others.map(o => o.term), item.term].sort(() => Math.random() - 0.5);
+
+            return `
+              <div class="vocab-quiz-q" data-answer="${item.term}" data-index="${i}">
+                <p class="text-sm text-slate-600 dark:text-slate-300 mb-2">
+                  <span class="text-xs font-bold text-violet-500 mr-1">${i + 1}.</span>
+                  ${item.definition}
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  ${options.map(opt => `
+                    <button class="vocab-quiz-opt px-3 py-1.5 text-sm rounded-lg border border-slate-200 dark:border-slate-600 hover:border-violet-400 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors cursor-pointer">${opt}</button>
+                  `).join('')}
+                </div>
+                <p class="vocab-quiz-feedback text-xs mt-1 hidden"></p>
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <div class="vocab-quiz-result mt-4 text-center hidden">
+          <p class="text-lg font-bold"></p>
         </div>
       </div>
     </section>
@@ -1754,6 +1806,98 @@ function showCompletionSummary(container, topicId) {
   });
 
   if (window.lucide) lucide.createIcons();
+}
+
+function initVocabQuiz(container) {
+  const section = container.querySelector('.vocab-quiz-section');
+  if (!section) return;
+
+  let correct = 0;
+  let answered = 0;
+  const total = section.querySelectorAll('.vocab-quiz-q').length;
+
+  section.querySelectorAll('.vocab-quiz-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = btn.closest('.vocab-quiz-q');
+      if (q.classList.contains('answered')) return;
+      q.classList.add('answered');
+
+      const answer = q.dataset.answer;
+      const isCorrect = btn.textContent.trim() === answer;
+      const feedback = q.querySelector('.vocab-quiz-feedback');
+
+      // Disable all options in this question
+      q.querySelectorAll('.vocab-quiz-opt').forEach(opt => {
+        opt.disabled = true;
+        opt.classList.add('pointer-events-none', 'opacity-60');
+        if (opt.textContent.trim() === answer) {
+          opt.classList.remove('opacity-60');
+          opt.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/20', 'text-green-700', 'dark:text-green-400');
+        }
+      });
+
+      if (isCorrect) {
+        correct++;
+        btn.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/20');
+        if (feedback) {
+          feedback.textContent = 'Correct!';
+          feedback.classList.remove('hidden', 'text-red-500');
+          feedback.classList.add('text-green-600');
+        }
+      } else {
+        btn.classList.add('border-red-500', 'bg-red-50', 'dark:bg-red-900/20');
+        if (feedback) {
+          feedback.textContent = `The answer is: ${answer}`;
+          feedback.classList.remove('hidden', 'text-green-600');
+          feedback.classList.add('text-red-500', 'dark:text-red-400');
+        }
+      }
+
+      answered++;
+      if (answered === total) {
+        const result = section.querySelector('.vocab-quiz-result');
+        if (result) {
+          const pct = Math.round((correct / total) * 100);
+          result.querySelector('p').textContent = `${correct}/${total} correct (${pct}%)`;
+          result.classList.remove('hidden');
+        }
+      }
+    });
+  });
+}
+
+function renderPrerequisites(prereqs, currentTopicId) {
+  if (!prereqs || prereqs.length === 0) return '';
+
+  const prereqTopics = prereqs
+    .map(id => TOPICS.find(t => t.id === id))
+    .filter(Boolean);
+
+  if (prereqTopics.length === 0) return '';
+
+  const allComplete = prereqTopics.every(t => store.isTopicComplete(t.id));
+
+  return `
+    <div class="mb-4 px-4 py-3 rounded-xl ${allComplete
+      ? 'bg-green-50 dark:bg-green-900/15 border border-green-200 dark:border-green-800'
+      : 'bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800'}">
+      <div class="flex items-center gap-2 text-sm">
+        <i data-lucide="${allComplete ? 'check-circle-2' : 'alert-triangle'}" class="w-4 h-4 ${allComplete ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'} flex-shrink-0"></i>
+        <span class="${allComplete ? 'text-green-700 dark:text-green-300' : 'text-amber-700 dark:text-amber-300'} font-medium">
+          ${allComplete ? 'Prerequisites completed' : 'Recommended reading first'}:
+        </span>
+        ${prereqTopics.map(t => {
+          const done = store.isTopicComplete(t.id);
+          return `<a data-route="#/topic/${t.id}" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs cursor-pointer transition-colors ${done
+            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200'
+            : 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200'}">
+            <i data-lucide="${done ? 'check' : 'book-open'}" class="w-3 h-3"></i>
+            ${t.title}
+          </a>`;
+        }).join('')}
+      </div>
+    </div>
+  `;
 }
 
 // --- Scroll Position Memory ---
