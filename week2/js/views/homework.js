@@ -193,7 +193,12 @@ function createHomeworkView() {
               <i data-lucide="clipboard-list" class="w-8 h-8 text-orange-500"></i>
               Homework Hub
             </h1>
-            <p class="text-slate-600 dark:text-slate-300 max-w-2xl">Week 2 homework: 5 parts covering gel electrophoresis, Benchling, DNA design, and synthesis ordering. Due Feb 17, 2026.</p>
+            <div class="flex items-center justify-between">
+              <p class="text-slate-600 dark:text-slate-300 max-w-2xl">Week 2 homework: 5 parts covering gel electrophoresis, Benchling, DNA design, and synthesis ordering. Due Feb 17, 2026.</p>
+              <button onclick="window.print()" class="print:hidden px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-sm text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-1 flex-shrink-0">
+                <i data-lucide="printer" class="w-4 h-4"></i> Print
+              </button>
+            </div>
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
               <!-- Due Date -->
@@ -203,6 +208,15 @@ function createHomeworkView() {
                   <span class="text-xs font-semibold text-orange-600 dark:text-orange-400 uppercase">Due Date</span>
                 </div>
                 <div class="text-lg font-bold text-orange-900 dark:text-orange-200">Feb 17, 2026</div>
+                ${(() => {
+                  const due = new Date('2026-02-17');
+                  const now = new Date();
+                  const days = Math.ceil((due - now) / 86400000);
+                  if (days < 0) return `<div class="text-xs text-red-600 dark:text-red-400 font-medium mt-1">Past due</div>`;
+                  if (days === 0) return `<div class="text-xs text-red-600 dark:text-red-400 font-medium mt-1 animate-pulse">Due today!</div>`;
+                  if (days <= 3) return `<div class="text-xs text-red-600 dark:text-red-400 font-medium mt-1">${days} day${days > 1 ? 's' : ''} left</div>`;
+                  return `<div class="text-xs text-slate-500 mt-1">${days} days left</div>`;
+                })()}
               </div>
 
               <!-- Progress -->

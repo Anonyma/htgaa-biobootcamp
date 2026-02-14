@@ -62,10 +62,14 @@ function createGlossaryView() {
               ${letters.map(l => `<a href="#letter-${l}" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-teal-100 dark:hover:bg-teal-800 transition-colors">${l}</a>`).join('')}
             </div>
 
-            <!-- Topic filter -->
-            <div class="flex flex-wrap gap-2 mt-4">
+            <!-- Topic filter + random -->
+            <div class="flex flex-wrap gap-2 mt-4 items-center">
               <button class="glossary-filter active text-xs px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 font-medium transition-colors" data-filter="all">All</button>
               ${TOPICS.map(t => `<button class="glossary-filter text-xs px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-${t.color}-50 dark:hover:bg-${t.color}-900/20 text-slate-500 dark:text-slate-400 transition-colors" data-filter="${t.id}">${t.title}</button>`).join('')}
+              <span class="text-slate-300 dark:text-slate-600">|</span>
+              <button id="glossary-random" class="text-xs px-3 py-1.5 rounded-full border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-colors flex items-center gap-1">
+                <i data-lucide="shuffle" class="w-3 h-3"></i> Random Term
+              </button>
             </div>
           </header>
 
@@ -147,6 +151,21 @@ function createGlossaryView() {
       }
 
       searchInput?.addEventListener('input', applyFilters);
+
+      // Random term button
+      const randomBtn = container.querySelector('#glossary-random');
+      if (randomBtn) {
+        randomBtn.addEventListener('click', () => {
+          // Get all visible terms
+          const visibleTerms = [...terms].filter(t => t.style.display !== 'none');
+          if (visibleTerms.length === 0) return;
+          const randomTerm = visibleTerms[Math.floor(Math.random() * visibleTerms.length)];
+          // Scroll to it and highlight
+          randomTerm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          randomTerm.classList.add('ring-2', 'ring-violet-400', 'ring-offset-2');
+          setTimeout(() => randomTerm.classList.remove('ring-2', 'ring-violet-400', 'ring-offset-2'), 2000);
+        });
+      }
 
       filters.forEach(btn => {
         btn.addEventListener('click', () => {
