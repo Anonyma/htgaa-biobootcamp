@@ -540,6 +540,18 @@ export function createExamView() {
           ~${Math.round(elapsedSeconds / questions.length)}s per question
           ${bestStreak >= 3 ? `<span class="mx-2">|</span> <span class="text-amber-500 font-medium">Best streak: ${bestStreak}</span>` : ''}
         </p>
+        <p class="text-xs text-slate-400 mt-1">
+          ${(() => {
+            const correctTimes = results.filter(r => r.isCorrect).map((_, i) => questionElapsed[results.indexOf(results.filter(r2 => r2.isCorrect)[i])] || 0);
+            const incorrectTimes = results.filter(r => !r.isCorrect).map((_, i) => questionElapsed[results.indexOf(results.filter(r2 => !r2.isCorrect)[i])] || 0);
+            const avgCorrect = correctTimes.length > 0 ? Math.round(correctTimes.reduce((s, t) => s + t, 0) / correctTimes.length) : 0;
+            const avgIncorrect = incorrectTimes.length > 0 ? Math.round(incorrectTimes.reduce((s, t) => s + t, 0) / incorrectTimes.length) : 0;
+            const parts = [];
+            if (correctTimes.length > 0) parts.push(`<span class="text-green-500">Correct: ~${avgCorrect}s avg</span>`);
+            if (incorrectTimes.length > 0) parts.push(`<span class="text-red-400">Incorrect: ~${avgIncorrect}s avg</span>`);
+            return parts.join(' <span class="text-slate-300 mx-1">|</span> ');
+          })()
+        </p>
       </div>
 
       <!-- Topic Breakdown -->

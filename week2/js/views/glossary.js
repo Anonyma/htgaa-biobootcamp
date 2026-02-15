@@ -69,7 +69,10 @@ function createGlossaryView() {
             <!-- Topic filter + random -->
             <div class="flex flex-wrap gap-2 mt-4 items-center">
               <button class="glossary-filter active text-xs px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 font-medium transition-colors" data-filter="all">All</button>
-              ${TOPICS.map(t => `<button class="glossary-filter text-xs px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-${t.color}-50 dark:hover:bg-${t.color}-900/20 text-slate-500 dark:text-slate-400 transition-colors" data-filter="${t.id}">${t.title}</button>`).join('')}
+              ${TOPICS.map(t => {
+                const count = allTerms.filter(at => at.topicId === t.id).length;
+                return `<button class="glossary-filter text-xs px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-${t.color}-50 dark:hover:bg-${t.color}-900/20 text-slate-500 dark:text-slate-400 transition-colors" data-filter="${t.id}">${t.title} <span class="opacity-60">(${count})</span></button>`;
+              }).join('')}
               <span class="text-slate-300 dark:text-slate-600">|</span>
               <button id="glossary-random" class="text-xs px-3 py-1.5 rounded-full border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-colors flex items-center gap-1">
                 <i data-lucide="shuffle" class="w-3 h-3"></i> Random

@@ -947,6 +947,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v58', items: ['Exam correct vs incorrect time analysis', 'Glossary topic filter term counts'] },
     { ver: 'v57', items: ['Flashcard review streak banner', 'Topic mastery ranking leaderboard', 'Exam speed indicators on results'] },
     { ver: 'v56', items: ['Exam slow question warning', 'Flashcard running accuracy', 'Exam time pressure hints'] },
     { ver: 'v55', items: ['Glossary flashcard status badges', 'Study summary time stat'] },
