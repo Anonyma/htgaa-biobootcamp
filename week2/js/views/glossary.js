@@ -55,6 +55,34 @@ function createGlossaryView() {
               </div>
             </div>
 
+            <!-- Flashcard Progress -->
+            ${(() => {
+              const reviews = store.get('flashcards').reviews || {};
+              let mastered = 0, learning = 0, unseen = 0;
+              allTerms.forEach((t, i) => {
+                const topicVocabIdx = allTerms.filter(at => at.topicId === t.topicId).indexOf(t);
+                const cardId = `${t.topicId}-vocab-${topicVocabIdx >= 0 ? topicVocabIdx : i}`;
+                const r = reviews[cardId];
+                if (!r) unseen++;
+                else if (r.interval >= 21) mastered++;
+                else learning++;
+              });
+              if (mastered === 0 && learning === 0) return '';
+              const total = allTerms.length;
+              return `
+              <div class="mt-3 flex items-center gap-3 text-xs">
+                <div class="flex-1 h-2 rounded-full overflow-hidden flex bg-slate-200 dark:bg-slate-700">
+                  ${mastered > 0 ? `<div class="bg-green-500" style="width:${(mastered/total)*100}%" title="${mastered} mastered"></div>` : ''}
+                  ${learning > 0 ? `<div class="bg-yellow-400" style="width:${(learning/total)*100}%" title="${learning} learning"></div>` : ''}
+                </div>
+                <span class="text-slate-500 flex-shrink-0">
+                  <span class="text-green-600 font-medium">${mastered}</span> mastered ·
+                  <span class="text-yellow-600 font-medium">${learning}</span> learning ·
+                  <span class="text-slate-400">${unseen}</span> new
+                </span>
+              </div>`;
+            })()}
+
             <!-- Search -->
             <div class="relative mt-4">
               <i data-lucide="search" class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>

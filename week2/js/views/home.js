@@ -966,6 +966,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v68', items: ['Exam question pool size on setup', 'Glossary flashcard progress bar', 'Streak milestone emojis'] },
     { ver: 'v67', items: ['Flashcard focus-weak mode', 'Overdue flashcard urgency alert', 'Exam improvement from last attempt'] },
     { ver: 'v66', items: ['Glossary term of the day', 'Study summary readiness gauge', 'Exam improvement from last attempt'] },
     { ver: 'v65', items: ['Exam skipped question badges', 'Flashcard daily review goal bar', 'Mastered terms count on dashboard'] },
@@ -1602,7 +1603,7 @@ function renderStudyHeatmap() {
           <div class="flex items-center gap-2">
             <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
             <span class="font-bold text-lg ${streak > 0 ? 'text-orange-500' : 'text-slate-400'}">${streak}</span>
-            <span class="text-slate-500 dark:text-slate-400">day streak</span>
+            <span class="text-slate-500 dark:text-slate-400">day streak${streak >= 7 ? ' 🔥' : streak >= 3 ? ' 💪' : ''}</span>
           </div>
           ${(() => {
             const longest = store.getLongestStreak();

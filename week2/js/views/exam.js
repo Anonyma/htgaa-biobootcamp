@@ -161,6 +161,9 @@ export function createExamView() {
         </div>
       </div>
 
+      <div id="exam-pool-info" class="text-center text-xs text-slate-400 mb-3">
+        <span id="exam-pool-count">Loading question pool...</span>
+      </div>
       <button id="exam-start" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg
         hover:from-amber-600 hover:to-orange-600 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg">
         Start Exam
@@ -199,6 +202,23 @@ export function createExamView() {
 
     // Start button
     containerEl.querySelector('#exam-start')?.addEventListener('click', startExam);
+
+    // Load question pool count asynchronously
+    (async () => {
+      let poolSize = 0;
+      for (const tid of selectedTopics) {
+        const data = await store.loadTopicData(tid);
+        if (data?.quizQuestions) {
+          poolSize += data.quizQuestions.filter(q => q.type === 'multiple-choice').length;
+        }
+      }
+      const poolEl = containerEl.querySelector('#exam-pool-count');
+      if (poolEl) {
+        poolEl.textContent = poolSize > 0
+          ? `Drawing from ${poolSize} available questions across ${selectedTopics.size} topic${selectedTopics.size > 1 ? 's' : ''}`
+          : 'No topics selected';
+      }
+    })();
   }
 
   async function startExam() {
