@@ -1464,6 +1464,16 @@ ul.comparison-cards > li > strong:first-child {
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* Section read flash — brief green highlight when section is first marked as read */
+.section-read-flash {
+  animation: sectionReadFlash 1.2s ease forwards;
+}
+@keyframes sectionReadFlash {
+  0% { background-color: rgba(34, 197, 94, 0); }
+  20% { background-color: rgba(34, 197, 94, 0.3); }
+  100% { background-color: rgba(34, 197, 94, 0); }
+}
+
 /* ===== Deep-Dive Expandable Boxes ===== */
 .deep-dive-box {
   margin: 1.5rem 0;

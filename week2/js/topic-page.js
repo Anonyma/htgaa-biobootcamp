@@ -2942,7 +2942,21 @@ function initSectionProgress(container, topicId) {
 
           // Track section as read
           if (sectionId && topicId) {
+            const wasNew = !store.getSectionsRead(topicId).includes(sectionId);
             store.markSectionRead(topicId, sectionId);
+            // Show brief "section read" indicator on the section number badge
+            if (wasNew) {
+              const badge = entry.target.querySelector('.section-header span:first-child');
+              if (badge) {
+                badge.classList.add('section-read-flash');
+                setTimeout(() => badge.classList.remove('section-read-flash'), 1200);
+              }
+              // Update TOC checkmark (both desktop and mobile)
+              container.querySelectorAll(`.toc-link[data-toc-section="${sectionId}"] span:first-child, .mobile-toc-item[data-section="${sectionId}"] span:first-child`).forEach(dot => {
+                dot.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>';
+                dot.className = 'w-3 h-3 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0';
+              });
+            }
           }
         }
       }
