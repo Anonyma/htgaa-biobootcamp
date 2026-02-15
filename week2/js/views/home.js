@@ -155,6 +155,12 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- Question of the Day -->
+          <div id="qotd-container"></div>
+
+          <!-- Achievements -->
+          ${renderAchievements()}
+
           <!-- Recent Activity Feed -->
           ${renderActivityFeed()}
 
@@ -282,6 +288,9 @@ function createHomeView() {
         const glossaryEl = container.querySelector('#glossary-term-count');
         if (glossaryEl && totalVocab > 0) glossaryEl.textContent = `All ${totalVocab} terms searchable`;
       })();
+
+      // Question of the Day
+      loadQuestionOfDay(container);
 
       // Export Notes
       container.querySelector('#export-notes-btn')?.addEventListener('click', () => {
@@ -825,6 +834,123 @@ function renderDailyGoal() {
         </a>
       ` : ''}
     </div>
+  `;
+}
+
+async function loadQuestionOfDay(container) {
+  const qotdContainer = container.querySelector('#qotd-container');
+  if (!qotdContainer) return;
+
+  const now = new Date();
+  const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+
+  try {
+    const topicIdx = dayOfYear % TOPICS.length;
+    const topic = TOPICS[topicIdx];
+    const data = await store.loadTopicData(topic.id);
+    const questions = (data?.quizQuestions || []).filter(q => q.type === 'multiple-choice');
+    if (questions.length === 0) return;
+
+    const qIdx = dayOfYear % questions.length;
+    const q = questions[qIdx];
+    if (!q) return;
+
+    const qotdKey = `htgaa-week2-qotd-${dayOfYear}`;
+    const already = localStorage.getItem(qotdKey);
+
+    qotdContainer.innerHTML = `
+      <section class="mb-8">
+        <div class="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-900/15 dark:to-blue-900/15 rounded-xl border border-indigo-200/50 dark:border-indigo-800/50 p-5">
+          <div class="flex items-center gap-2 mb-3">
+            <i data-lucide="zap" class="w-4 h-4 text-indigo-500"></i>
+            <span class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider">Question of the Day</span>
+            <span class="text-xs text-slate-400 ml-auto">${topic.title}</span>
+          </div>
+          <p class="text-sm font-medium text-slate-800 dark:text-slate-200 mb-3">${q.question}</p>
+          <div class="space-y-2 qotd-options">
+            ${q.options.map((opt, i) => `
+              <button class="qotd-opt w-full text-left px-3 py-2 rounded-lg border text-sm transition-all ${already ? (i === q.correctIndex ? 'border-green-400 bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-300' : 'border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500') : 'border-slate-200 dark:border-slate-700 hover:border-indigo-400 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer'}" data-idx="${i}" ${already ? 'disabled' : ''}>
+                <span class="font-medium mr-1">${String.fromCharCode(65 + i)}.</span> ${opt}
+              </button>
+            `).join('')}
+          </div>
+          ${already ? `<p class="text-xs text-green-600 dark:text-green-400 mt-2">You answered today's question!</p>` : ''}
+          ${q.explanation ? `<div class="qotd-explanation ${already ? '' : 'hidden'} mt-3 text-xs text-slate-600 dark:text-slate-400 bg-white/50 dark:bg-slate-800/50 rounded-lg p-3">${q.explanation}</div>` : ''}
+        </div>
+      </section>
+    `;
+
+    if (window.lucide) lucide.createIcons();
+
+    if (!already) {
+      qotdContainer.querySelectorAll('.qotd-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.idx);
+          const isCorrect = idx === q.correctIndex;
+          localStorage.setItem(qotdKey, idx.toString());
+
+          qotdContainer.querySelectorAll('.qotd-opt').forEach((b, i) => {
+            b.disabled = true;
+            b.classList.remove('hover:border-indigo-400', 'hover:bg-white', 'dark:hover:bg-slate-800', 'cursor-pointer');
+            if (i === q.correctIndex) {
+              b.classList.add('border-green-400', 'bg-green-50', 'dark:bg-green-900/20', 'text-green-800', 'dark:text-green-300');
+            } else if (i === idx && !isCorrect) {
+              b.classList.add('border-red-400', 'bg-red-50', 'dark:bg-red-900/20', 'text-red-800', 'dark:text-red-300');
+            } else {
+              b.classList.add('text-slate-400', 'dark:text-slate-500');
+            }
+          });
+
+          const expl = qotdContainer.querySelector('.qotd-explanation');
+          if (expl) expl.classList.remove('hidden');
+
+          store.recordStudyActivity('quiz', { quizId: `qotd-${dayOfYear}`, correct: isCorrect });
+        });
+      });
+    }
+  } catch {}
+}
+
+function renderAchievements() {
+  const progress = store.get('progress');
+  const completedCount = TOPICS.filter(t => progress[t.id]).length;
+  const quizzes = store.get('quizzes') || {};
+  const quizCount = Object.keys(quizzes).length;
+  const fc = store.get('flashcards') || { reviews: {} };
+  const fcReviewed = Object.keys(fc.reviews || {}).length;
+  const streak = store.getLongestStreak();
+  const studyLog = store.getStudyLog();
+  const activeDays = Object.keys(studyLog).filter(d => studyLog[d] > 0).length;
+
+  const badges = [
+    { id: 'first-topic', label: 'First Steps', desc: 'Complete your first topic', icon: 'footprints', earned: completedCount >= 1 },
+    { id: 'half-topics', label: 'Halfway', desc: 'Complete 3 topics', icon: 'milestone', earned: completedCount >= 3 },
+    { id: 'all-topics', label: 'Scholar', desc: 'Complete all 6 topics', icon: 'graduation-cap', earned: completedCount >= 6 },
+    { id: 'quiz-10', label: 'Quiz Taker', desc: 'Answer 10 quiz questions', icon: 'clipboard-check', earned: quizCount >= 10 },
+    { id: 'quiz-perfect', label: 'Perfect Score', desc: '100% on a topic quiz', icon: 'star', earned: TOPICS.some(t => { const s = store.getQuizScore(t.id); return s && s.total >= 8 && s.correct === s.total; }) },
+    { id: 'flashcard-25', label: 'Card Collector', desc: 'Review 25 flashcards', icon: 'layers', earned: fcReviewed >= 25 },
+    { id: 'streak-3', label: 'On a Roll', desc: 'Study 3 days in a row', icon: 'flame', earned: streak >= 3 },
+    { id: 'active-5', label: 'Dedicated', desc: 'Study on 5 different days', icon: 'calendar-check', earned: activeDays >= 5 },
+  ];
+
+  const earnedCount = badges.filter(b => b.earned).length;
+  if (earnedCount === 0 && completedCount === 0 && quizCount === 0) return '';
+
+  return `
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+        <i data-lucide="award" class="w-5 h-5 text-amber-500"></i> Achievements
+        <span class="text-xs text-slate-400 font-normal">${earnedCount}/${badges.length}</span>
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        ${badges.map(b => `
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${b.earned ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700'}" title="${b.desc}">
+            <i data-lucide="${b.icon}" class="w-3.5 h-3.5 ${b.earned ? '' : 'opacity-40'}"></i>
+            ${b.label}
+          </div>
+        `).join('')}
+      </div>
+    </section>
   `;
 }
 
