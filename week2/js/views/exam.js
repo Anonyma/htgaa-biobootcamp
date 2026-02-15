@@ -816,6 +816,28 @@ export function createExamView() {
             `).join('')}
           </div>
           <p class="text-xs text-slate-400 text-center mt-2">${scores.length} attempts</p>
+          ${scores.length >= 3 ? (() => {
+            // Cumulative average line
+            const cumAvgs = scores.map((_, i) => {
+              const slice = scores.slice(0, i + 1);
+              return Math.round(slice.reduce((s, sc) => s + sc.pct, 0) / slice.length);
+            });
+            const w = 280, h = 40, pad = 4;
+            const pts = cumAvgs.map((avg, i) => {
+              const x = pad + (i / (cumAvgs.length - 1)) * (w - 2 * pad);
+              const y = h - pad - (avg / 100) * (h - 2 * pad);
+              return `${x},${y}`;
+            });
+            return `
+            <div class="mt-3">
+              <div class="text-[10px] text-slate-400 text-center mb-1">Cumulative Average: ${cumAvgs[cumAvgs.length - 1]}%</div>
+              <svg class="w-full" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+                <line x1="${pad}" y1="${h - pad - (70/100)*(h-2*pad)}" x2="${w-pad}" y2="${h - pad - (70/100)*(h-2*pad)}" stroke="rgba(148,163,184,0.2)" stroke-width="0.5" stroke-dasharray="3,3"/>
+                <polyline points="${pts.join(' ')}" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="${pts[pts.length-1].split(',')[0]}" cy="${pts[pts.length-1].split(',')[1]}" r="2.5" fill="#22c55e"/>
+              </svg>
+            </div>`;
+          })() : ''}
         </div>
         `;
       })()}

@@ -970,6 +970,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v78', items: ['Glossary related terms expand', 'Exam cumulative accuracy trend', 'Study summary quiz/challenge counts'] },
     { ver: 'v77', items: ['Exam topic selection persistence', 'Flashcard copy session results', 'Knowledge radar on dashboard'] },
     { ver: 'v76', items: ['Knowledge radar chart on dashboard', 'Study summary strongest/weakest', 'Exam answer distribution chart'] },
     { ver: 'v75', items: ['Exam confidence labels on review', 'Flashcard session time estimate', 'Glossary word count badges'] },

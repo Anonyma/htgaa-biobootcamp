@@ -167,6 +167,14 @@ function createGlossaryView() {
                           <span class="font-bold text-slate-800 dark:text-slate-200">${t.term}</span>
                           ${fcBadge ? `<span class="ml-1.5 align-middle">${fcBadge}</span>` : ''}
                           <p class="text-slate-500 dark:text-slate-400 mt-0.5">${t.definition}</p>
+                          <div class="glossary-related hidden mt-2 pt-2 border-t border-slate-100 dark:border-slate-700">
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider">Related from ${t.topicTitle}:</span>
+                            <div class="flex flex-wrap gap-1 mt-1">
+                              ${allTerms.filter(at => at.topicId === t.topicId && at.term !== t.term).slice(0, 6).map(rt =>
+                                `<span class="text-[10px] px-1.5 py-0.5 rounded bg-${t.topicColor}-50 dark:bg-${t.topicColor}-900/20 text-${t.topicColor}-600 dark:text-${t.topicColor}-400 cursor-pointer glossary-jump-term" data-jump-term="${rt.term.toLowerCase()}">${rt.term}</span>`
+                              ).join('')}
+                            </div>
+                          </div>
                         </div>
                         <div class="flex items-center gap-1.5 flex-shrink-0">
                           <span class="text-[9px] text-slate-300 dark:text-slate-600" title="${t.definition.split(/\s+/).length} words">${t.definition.split(/\s+/).length}w</span>
@@ -254,6 +262,29 @@ function createGlossaryView() {
       }
 
       searchInput?.addEventListener('input', applyFilters);
+
+      // Related terms expand/collapse and jump
+      container.querySelector('#glossary-content')?.addEventListener('click', (e) => {
+        // Jump to related term
+        const jumpEl = e.target.closest('.glossary-jump-term');
+        if (jumpEl) {
+          const target = jumpEl.dataset.jumpTerm;
+          const termEl = [...terms].find(t => t.dataset.termText === target);
+          if (termEl) {
+            termEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            termEl.classList.add('ring-2', 'ring-teal-400', 'ring-offset-2');
+            setTimeout(() => termEl.classList.remove('ring-2', 'ring-teal-400', 'ring-offset-2'), 2000);
+          }
+          return;
+        }
+        // Toggle related terms on term click (but not on links)
+        if (e.target.closest('a[data-route]') || e.target.closest('.glossary-jump-term')) return;
+        const term = e.target.closest('.glossary-term');
+        if (term) {
+          const related = term.querySelector('.glossary-related');
+          if (related) related.classList.toggle('hidden');
+        }
+      });
 
       // Quiz mode — hide definitions, click to reveal
       const quizBtn = container.querySelector('#glossary-quiz-mode');

@@ -200,6 +200,16 @@ function createStudySummaryView() {
                 </div>`;
               })()}
 
+              ${(() => {
+                const dcCount = data.designChallenges?.length || 0;
+                const qCount = data.quizQuestions?.length || 0;
+                if (dcCount === 0 && qCount === 0) return '';
+                return `<div class="mb-3 flex gap-2 flex-wrap">
+                  ${qCount > 0 ? `<span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 text-blue-600 dark:text-blue-400"><i data-lucide="help-circle" class="w-3 h-3"></i> ${qCount} quiz questions</span>` : ''}
+                  ${dcCount > 0 ? `<span class="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800 text-orange-600 dark:text-orange-400"><i data-lucide="lightbulb" class="w-3 h-3"></i> ${dcCount} design challenges</span>` : ''}
+                </div>`;
+              })()}
+
               ${data.learningObjectives ? `
                 <div class="mb-4">
                   <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Learning Objectives</h3>
