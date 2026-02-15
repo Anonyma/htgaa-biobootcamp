@@ -352,7 +352,16 @@ function createFlashcardsView() {
 
           <!-- Session Timer & Running Stats -->
           <div class="mt-6 text-center text-sm text-slate-400 flex items-center justify-center gap-4 flex-wrap">
-            <span class="flex items-center gap-1"><i data-lucide="timer" class="w-3.5 h-3.5"></i> Session: <span id="fc-session-timer" class="font-mono">0:00</span></span>
+            <span class="flex items-center gap-1"><i data-lucide="timer" class="w-3.5 h-3.5"></i> Session${(() => {
+              try {
+                const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
+                const today = new Date().toISOString().slice(0, 10);
+                const todayFcTimes = feed.filter(a => a.action === 'flashcard' && new Date(a.time).toISOString().slice(0, 10) === today).map(a => a.time);
+                let sessions = 0, lastT = 0;
+                todayFcTimes.sort().forEach(t => { if (t - lastT > 600000) { sessions++; lastT = t; } });
+                return sessions > 0 ? ` #${sessions + 1}` : '';
+              } catch { return ''; }
+            })()}: <span id="fc-session-timer" class="font-mono">0:00</span></span>
             <span class="text-slate-300 dark:text-slate-600">|</span>
             <span id="fc-running-accuracy" class="hidden font-medium"></span>
             <span class="text-slate-300 dark:text-slate-600 hidden" id="fc-accuracy-divider">|</span>

@@ -91,7 +91,11 @@ export function createExamView() {
         ${(() => {
           try {
             const bm = JSON.parse(localStorage.getItem('htgaa-exam-bookmarks') || '[]');
-            return bm.length > 0 ? `<p class="text-xs text-amber-500 mt-2"><i data-lucide="bookmark" class="w-3 h-3 inline"></i> ${bm.length} saved question${bm.length > 1 ? 's' : ''} for review</p>` : '';
+            const seenCount = seenQuestionIds.size;
+            let parts = [];
+            if (bm.length > 0) parts.push(`<span class="text-amber-500"><i data-lucide="bookmark" class="w-3 h-3 inline"></i> ${bm.length} saved</span>`);
+            if (seenCount > 0) parts.push(`<span class="text-emerald-500">${seenCount} questions seen before</span>`);
+            return parts.length > 0 ? `<p class="text-xs mt-2">${parts.join(' <span class="text-slate-300 mx-1">·</span> ')}</p>` : '';
           } catch { return ''; }
         })()}
         ${(() => {

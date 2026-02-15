@@ -542,6 +542,41 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Reading Time Comparison -->
+      ${(() => {
+        const rtA = dataA.readingTime || 0;
+        const rtB = dataB.readingTime || 0;
+        if (rtA === 0 && rtB === 0) return '';
+        const maxRt = Math.max(rtA, rtB, 1);
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <i data-lucide="book-open" class="w-4 h-4 text-indigo-500"></i> Reading Time Comparison
+          </h3>
+          <div class="space-y-3">
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-medium text-${metaA?.color || 'blue'}-600">${metaA?.title}</span>
+                <span class="text-slate-500">${rtA} min</span>
+              </div>
+              <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-full bg-${metaA?.color || 'blue'}-400 rounded-full" style="width:${(rtA/maxRt)*100}%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-xs mb-1">
+                <span class="font-medium text-${metaB?.color || 'blue'}-600">${metaB?.title}</span>
+                <span class="text-slate-500">${rtB} min</span>
+              </div>
+              <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-full bg-${metaB?.color || 'blue'}-400 rounded-full" style="width:${(rtB/maxRt)*100}%"></div>
+              </div>
+            </div>
+            <p class="text-[10px] text-slate-400 text-center">Combined: ${rtA + rtB} min total reading</p>
+          </div>
+        </div>`;
+      })()}
+
       <!-- Design Challenges -->
       ${(() => {
         const dcA = dataA.designChallenges || [];
