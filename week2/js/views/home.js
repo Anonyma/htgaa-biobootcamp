@@ -139,6 +139,9 @@ function createHomeView() {
           <!-- Study Tools (compact row) -->
           <section class="mb-10">
             <div class="flex flex-wrap gap-3 study-tools-row">
+              <a data-route="#/planner" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="timer" class="w-4 h-4 text-emerald-500"></i> Study Planner
+              </a>
               <a data-route="#/digest" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="sunrise" class="w-4 h-4 text-indigo-500"></i> Daily Digest
               </a>

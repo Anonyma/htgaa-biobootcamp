@@ -21,6 +21,7 @@ import { createBookmarksView } from './views/bookmarks.js';
 import { createDailyDigestView } from './views/daily-digest.js';
 import { createTimelineView } from './views/timeline.js';
 import { createMistakesView } from './views/mistakes.js';
+import { createPlannerView } from './views/planner.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -57,7 +58,8 @@ class App {
       .on('/bookmarks', () => createBookmarksView())
       .on('/digest', () => createDailyDigestView())
       .on('/timeline', () => createTimelineView())
-      .on('/mistakes', () => createMistakesView());
+      .on('/mistakes', () => createMistakesView())
+      .on('/planner', () => createPlannerView());
 
     // Start
     this.router.start();
@@ -168,6 +170,10 @@ class App {
 
             <!-- Study Tools -->
             <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 space-y-1">
+              <a data-route="#/planner" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="timer" class="w-4 h-4 text-emerald-500"></i>
+                <span>Study Planner</span>
+              </a>
               <a data-route="#/digest" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="sunrise" class="w-4 h-4 text-indigo-500"></i>
                 <span>Daily Digest</span>
