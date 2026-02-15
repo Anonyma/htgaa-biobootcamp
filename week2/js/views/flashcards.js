@@ -269,6 +269,49 @@ function createFlashcardsView() {
           </div>
           ` : ''}
 
+          <!-- Review Forecast -->
+          ${(() => {
+            const reviews = store.get('flashcards').reviews || {};
+            const now = Date.now();
+            const dayMs = 86400000;
+            const days = [];
+            for (let d = 0; d < 7; d++) {
+              const dayStart = now + d * dayMs;
+              const dayEnd = dayStart + dayMs;
+              let count = 0;
+              Object.values(reviews).forEach(r => {
+                if (r.nextReview && r.nextReview >= dayStart && r.nextReview < dayEnd) count++;
+              });
+              // Day 0 also includes already-overdue cards
+              if (d === 0) {
+                Object.values(reviews).forEach(r => {
+                  if (r.nextReview && r.nextReview < now) count++;
+                });
+              }
+              const label = d === 0 ? 'Today' : d === 1 ? 'Tmrw' : new Date(dayStart).toLocaleDateString('en-US', { weekday: 'short' });
+              days.push({ label, count });
+            }
+            const maxCount = Math.max(...days.map(d => d.count), 1);
+            const totalUpcoming = days.reduce((s, d) => s + d.count, 0);
+            if (totalUpcoming === 0) return '';
+            return `
+            <div class="mb-6">
+              <div class="flex items-center justify-between text-xs text-slate-500 mb-2">
+                <span class="font-medium">7-Day Review Forecast</span>
+                <span>${totalUpcoming} cards upcoming</span>
+              </div>
+              <div class="flex items-end gap-1 h-16">
+                ${days.map(d => `
+                  <div class="flex-1 flex flex-col items-center gap-0.5">
+                    ${d.count > 0 ? `<span class="text-[9px] text-slate-400">${d.count}</span>` : ''}
+                    <div class="w-full rounded-t-sm ${d.count > 0 ? 'bg-violet-400 dark:bg-violet-600' : 'bg-slate-200 dark:bg-slate-700'}" style="height: ${Math.max(2, (d.count / maxCount) * 100)}%"></div>
+                    <span class="text-[9px] text-slate-400">${d.label}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>`;
+          })()}
+
           <!-- Card Area -->
           <div id="fc-card-area">
             ${dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete()}

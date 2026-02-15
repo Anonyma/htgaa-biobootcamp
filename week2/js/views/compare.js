@@ -460,6 +460,44 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Time Invested -->
+      ${(() => {
+        try {
+          const times = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+          const tA = times[idA] || 0;
+          const tB = times[idB] || 0;
+          if (tA === 0 && tB === 0) return '';
+          const fmtTime = (s) => { const m = Math.floor(s / 60); return m >= 60 ? `${Math.floor(m/60)}h ${m%60}m` : `${m}m`; };
+          const maxT = Math.max(tA, tB, 1);
+          return `
+          <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+            <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-cyan-500"></i> Time Invested
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center justify-between text-sm mb-1">
+                  <span class="font-medium text-${metaA?.color || 'blue'}-600">${metaA?.title}</span>
+                  <span class="text-slate-500">${fmtTime(tA)}</span>
+                </div>
+                <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div class="h-full bg-${metaA?.color || 'blue'}-500 rounded-full" style="width:${(tA/maxT)*100}%"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex items-center justify-between text-sm mb-1">
+                  <span class="font-medium text-${metaB?.color || 'blue'}-600">${metaB?.title}</span>
+                  <span class="text-slate-500">${fmtTime(tB)}</span>
+                </div>
+                <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                  <div class="h-full bg-${metaB?.color || 'blue'}-500 rounded-full" style="width:${(tB/maxT)*100}%"></div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        } catch { return ''; }
+      })()}
+
       <!-- Quick links -->
       <div class="flex justify-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
         <a data-route="#/topic/${idA}" class="text-sm text-blue-500 hover:underline cursor-pointer">Read ${metaA?.title}</a>

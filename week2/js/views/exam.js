@@ -703,6 +703,58 @@ export function createExamView() {
         </div>
       </div>
 
+      <!-- Topic Radar Chart -->
+      ${Object.keys(topicBreakdown).length >= 3 ? (() => {
+        const topics = Object.entries(topicBreakdown);
+        const n = topics.length;
+        const cx = 100, cy = 100, r = 75;
+        const angleStep = (2 * Math.PI) / n;
+        // Grid circles
+        const gridCircles = [25, 50, 75, 100].map(pct => {
+          const gr = (pct / 100) * r;
+          return `<circle cx="${cx}" cy="${cy}" r="${gr}" fill="none" stroke="rgba(148,163,184,0.2)" stroke-width="0.5"/>`;
+        }).join('');
+        // Axis lines and labels
+        const axes = topics.map(([, tb], i) => {
+          const angle = -Math.PI / 2 + i * angleStep;
+          const x2 = cx + r * Math.cos(angle);
+          const y2 = cy + r * Math.sin(angle);
+          const lx = cx + (r + 14) * Math.cos(angle);
+          const ly = cy + (r + 14) * Math.sin(angle);
+          const shortTitle = tb.title.length > 10 ? tb.title.substring(0, 9) + '…' : tb.title;
+          return `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="rgba(148,163,184,0.3)" stroke-width="0.5"/>
+            <text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" fill="currentColor" font-size="5" class="text-slate-500">${shortTitle}</text>`;
+        }).join('');
+        // Data polygon
+        const points = topics.map(([, tb], i) => {
+          const pct = Math.round((tb.correct / tb.total) * 100);
+          const angle = -Math.PI / 2 + i * angleStep;
+          const x = cx + (pct / 100) * r * Math.cos(angle);
+          const y = cy + (pct / 100) * r * Math.sin(angle);
+          return `${x},${y}`;
+        }).join(' ');
+        // Data dots
+        const dots = topics.map(([, tb], i) => {
+          const pct = Math.round((tb.correct / tb.total) * 100);
+          const angle = -Math.PI / 2 + i * angleStep;
+          const x = cx + (pct / 100) * r * Math.cos(angle);
+          const y = cy + (pct / 100) * r * Math.sin(angle);
+          return `<circle cx="${x}" cy="${y}" r="2.5" fill="#f59e0b" stroke="white" stroke-width="0.5"/>`;
+        }).join('');
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-2">Topic Radar</h2>
+          <div class="flex justify-center">
+            <svg viewBox="0 0 200 200" class="w-48 h-48 text-slate-600 dark:text-slate-400">
+              ${gridCircles}
+              ${axes}
+              <polygon points="${points}" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" stroke-width="1.5" stroke-linejoin="round"/>
+              ${dots}
+            </svg>
+          </div>
+        </div>`;
+      })() : ''}
+
       <!-- Score History -->
       ${(() => {
         const scores = store.getExamScores();
