@@ -24,7 +24,7 @@ function createHomeView() {
                   genetic codes, gel electrophoresis, and gene expression.
                 </p>
                 <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-100 text-xs">
-                  <span class="font-bold text-white">v111</span> 200+ features built with AI-assisted development
+                  <span class="font-bold text-white">v112</span> 200+ features built with AI-assisted development
                 </div>
                 <div class="flex items-center gap-4 mt-3 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
@@ -158,6 +158,9 @@ function createHomeView() {
 
           <!-- Learning Insights -->
           ${renderLearningInsights()}
+
+          <!-- Mastery Milestones -->
+          ${renderMasteryMilestones()}
 
           <!-- Quick Review -->
           ${renderQuickReview()}
@@ -1039,6 +1042,33 @@ function renderMasteryRanking() {
   `;
 }
 
+function renderMasteryMilestones() {
+  const milestones = [25, 50, 75, 100];
+  const topicMilestones = TOPICS.map(function(t) {
+    const m = store.getTopicMastery(t.id);
+    const mastery = m?.mastery || 0;
+    const next = milestones.find(function(ms) { return mastery < ms; }) || null;
+    const prev = milestones.filter(function(ms) { return mastery >= ms; });
+    return { topic: t, mastery: mastery, next: next, achieved: prev };
+  }).filter(function(tm) { return tm.next !== null; });
+  if (topicMilestones.length === 0) return '';
+  topicMilestones.sort(function(a, b) { return (b.next - b.mastery) - (a.next - a.mastery); });
+  return `
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+      <i data-lucide="milestone" class="w-5 h-5 text-amber-500"></i> Next Milestones
+    </h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+      ${topicMilestones.slice(0, 6).map(function(tm) {
+        var gap = tm.next - tm.mastery;
+        var c = gap <= 10 ? 'green' : gap <= 25 ? 'amber' : 'slate';
+        return '<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3"><div class="flex items-center gap-2 mb-2"><i data-lucide="' + tm.topic.icon + '" class="w-4 h-4 text-' + tm.topic.color + '-500"></i><span class="text-sm font-medium truncate">' + tm.topic.title.split(' ')[0] + '</span></div><div class="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden relative"><div class="h-full bg-' + tm.topic.color + '-400 rounded-full" style="width:' + tm.mastery + '%"></div><div class="absolute top-0 h-full border-r-2 border-' + c + '-500 border-dashed" style="left:' + tm.next + '%"></div></div><div class="flex justify-between text-[10px] mt-1"><span class="text-slate-500">' + tm.mastery + '%</span><span class="font-medium text-' + c + '-600">→ ' + tm.next + '%</span></div></div>';
+      }).join('')}
+    </div>
+  </section>
+  `;
+}
+
 function renderQuickReview() {
   try {
     const items = JSON.parse(localStorage.getItem('htgaa-review-later') || '[]');
@@ -1329,6 +1359,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v112', items: ['Exam time per question histogram', 'Dashboard mastery milestones', 'Glossary sticky letter index'] },
     { ver: 'v111', items: ['Glossary random term button', 'Flashcard reverse mode indicator', 'Compare quiz pool comparison'] },
     { ver: 'v110', items: ['Study summary mastery velocity', 'Exam review-later buttons', 'Dashboard quick review widget'] },
     { ver: 'v109', items: ['Exam difficulty breakdown chart', 'Flashcard 7-day review calendar', 'Dashboard weekly goals tracker'] },

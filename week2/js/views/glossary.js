@@ -214,6 +214,11 @@ function createGlossaryView() {
 
           <div id="glossary-results" class="text-sm text-slate-500 mb-4 hidden"></div>
 
+          <!-- Letter Index -->
+          <div class="flex flex-wrap gap-1 mb-4 sticky top-16 z-10 bg-slate-50 dark:bg-slate-900 py-2 -mx-1 px-1 border-b border-slate-200 dark:border-slate-700">
+            ${letters.map(l => `<a href="#letter-${l}" class="w-7 h-7 rounded flex items-center justify-center text-xs font-bold text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/30 transition-colors">${l}</a>`).join('')}
+          </div>
+
           <div id="glossary-content">
             ${letters.map(l => `
               <div class="glossary-letter-group mb-6" data-letter="${l}">

@@ -1204,6 +1204,24 @@ export function createExamView() {
         </div>`;
       })() : ''}
 
+      <!-- Time per Question Histogram -->
+      ${(() => {
+        const validTimes = questionElapsed.filter(function(t) { return t > 0; });
+        if (validTimes.length < 3) return '';
+        var buckets = [0, 0, 0, 0, 0];
+        var labels = ['<10s', '10-20s', '20-30s', '30-60s', '60s+'];
+        validTimes.forEach(function(t) {
+          if (t < 10) buckets[0]++;
+          else if (t < 20) buckets[1]++;
+          else if (t < 30) buckets[2]++;
+          else if (t < 60) buckets[3]++;
+          else buckets[4]++;
+        });
+        var maxB = Math.max.apply(null, buckets.concat([1]));
+        var avg = Math.round(validTimes.reduce(function(s, t) { return s + t; }, 0) / validTimes.length);
+        return '<div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6"><h2 class="font-semibold mb-3">Time Distribution <span class="text-xs font-normal text-slate-400">avg ' + avg + 's/question</span></h2><div class="flex items-end gap-2 h-16 justify-center">' + buckets.map(function(b, i) { var h = Math.max(4, Math.round((b / maxB) * 56)); return '<div class="flex flex-col items-center gap-0.5"><span class="text-[8px] text-slate-400">' + b + '</span><div class="bg-indigo-400 dark:bg-indigo-600 rounded-sm" style="width:32px;height:' + h + 'px"></div><span class="text-[8px] text-slate-400">' + labels[i] + '</span></div>'; }).join('') + '</div></div>';
+      })()}
+
       <!-- Question Review -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
