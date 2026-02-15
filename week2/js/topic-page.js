@@ -739,7 +739,7 @@ function renderTopicPage(data, topicId) {
       </nav>
 
       <!-- Sections -->
-      ${(data.sections || []).map((section, i) => renderSection(section, i, topicId)).join('')}
+      ${(data.sections || []).map((section, i) => renderSection(section, i, topicId) + (i < (data.sections || []).length - 1 ? '<div class="bio-separator"></div>' : '')).join('')}
 
       <!-- Key Facts (summary after reading) -->
       ${data.keyFacts ? renderKeyFacts(data.keyFacts) : ''}
@@ -2691,11 +2691,16 @@ function initReadingProgress(container) {
 
 /** Fade-in elements as they scroll into view */
 function initScrollReveal(container) {
-  // Tag elements for scroll reveal
+  // Tag elements for scroll reveal — skip first 2 topic sections (they should be immediately visible)
+  const sections = container.querySelectorAll('.topic-section');
   container.querySelectorAll('.topic-section, .sim-container, .inline-diagram, .callout, .callout-insight, .callout-fact, .callout-example, .enhanced-table, .key-fact-card, .pull-quote, .image-placeholder, .deep-dive-box, .try-it-card').forEach((el, index) => {
+    // Immediately reveal first 2 topic sections (no animation = no flash of invisible content)
+    if (el.classList.contains('topic-section') && Array.from(sections).indexOf(el) < 2) {
+      el.classList.add('scroll-reveal', 'revealed');
+      return;
+    }
     if (!el.classList.contains('scroll-reveal')) {
       el.classList.add('scroll-reveal');
-      // Add stagger delay based on index (capped at 6 for CSS)
       el.style.setProperty('--reveal-index', Math.min(index, 6));
     }
   });

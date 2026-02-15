@@ -2064,9 +2064,9 @@ html {
 /* ===== Enhanced Scroll Reveal Stagger ===== */
 .scroll-reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-              transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translateY(12px);
+  transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .scroll-reveal.revealed {
   opacity: 1;
@@ -2813,4 +2813,136 @@ a[data-route]:hover::after {
 .dark .takeaway-callout {
   background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(234,179,8,0.06));
   border-left-color: #fbbf24;
+}
+
+/* ===== P2: Bio-Themed Visual System ===== */
+
+/* DNA helix section separator */
+.bio-separator {
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 8px,
+    #cbd5e1 8px,
+    #cbd5e1 12px,
+    transparent 12px,
+    transparent 20px,
+    #94a3b8 20px,
+    #94a3b8 24px
+  );
+  margin: 2rem 0;
+  opacity: 0.4;
+}
+.dark .bio-separator {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 8px,
+    #475569 8px,
+    #475569 12px,
+    transparent 12px,
+    transparent 20px,
+    #64748b 20px,
+    #64748b 24px
+  );
+}
+
+/* Lab-grid texture for interactive containers */
+.sim-container,
+.interactive-container {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.dark .sim-container,
+.dark .interactive-container {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+}
+
+/* Refined topic section headers */
+.topic-section .section-header h2 {
+  letter-spacing: -0.01em;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/* Section number badges with bio color coding */
+.topic-section .section-header span:first-child {
+  font-weight: 600;
+  font-size: 0.8rem;
+  background: linear-gradient(135deg, #e2e8f0, #f1f5f9);
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+.dark .topic-section .section-header span:first-child {
+  background: linear-gradient(135deg, #334155, #1e293b);
+  color: #94a3b8;
+  border-color: #475569;
+}
+
+/* Chapter header — refined hierarchy */
+header h1 {
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+/* Practice tabs active state */
+.practice-tab.active {
+  box-shadow: 0 1px 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Collapsible section fade gradient — smoother */
+.section-fade {
+  background: linear-gradient(to top, var(--tw-gradient-from, white) 40%, transparent) !important;
+}
+.dark .section-fade {
+  --tw-gradient-from: #0f172a;
+}
+
+/* Module stepper connector animation */
+.module-stepper-connector {
+  transition: background-color 0.5s ease;
+}
+
+/* Quiz slide hover polish */
+.quiz-option:hover {
+  border-color: #93c5fd;
+  background: rgba(59, 130, 246, 0.04);
+}
+.dark .quiz-option:hover {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+/* Resources toggle */
+.resources-chevron {
+  transition: transform 0.2s ease;
+}
+
+/* Cleaner prose content */
+.topic-content p {
+  line-height: 1.75;
+  margin-bottom: 1em;
+}
+.topic-content h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  letter-spacing: -0.01em;
+}
+
+/* Reduce visual noise — muted icons in prose */
+.topic-content .inline-icon {
+  opacity: 0.7;
+}
+
+/* Key facts — gel-lane inspired left border */
+.key-fact-card {
+  border-left: 3px solid;
+  border-image: linear-gradient(to bottom, var(--dna-green) 0%, var(--dna-blue) 100%) 1;
+}
+.dark .key-fact-card {
+  border-image: linear-gradient(to bottom, rgba(16,185,129,0.6) 0%, rgba(59,130,246,0.6) 100%) 1;
 }
