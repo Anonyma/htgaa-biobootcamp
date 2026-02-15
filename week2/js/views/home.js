@@ -100,6 +100,9 @@ function createHomeView() {
           <!-- Continue Reading (primary CTA) -->
           ${renderContinueReading(progress)}
 
+          <!-- Review Schedule -->
+          ${renderReviewSchedule()}
+
           <!-- Today's Study Plan -->
           ${renderStudyPlan(progress)}
 
@@ -1030,6 +1033,56 @@ function renderQuickStats(progress) {
         <span class="font-semibold text-orange-600 dark:text-orange-400">${streak}-day streak</span>
       </span>
       ` : ''}
+    </div>
+  `;
+}
+
+function renderReviewSchedule() {
+  // Check which topics have been studied but may need review
+  const feed = store.getActivityFeed(50);
+  if (feed.length === 0) return '';
+
+  // Find last study time per topic
+  const lastStudied = {};
+  feed.forEach(item => {
+    const topicId = item.detail?.topicId;
+    if (topicId && !lastStudied[topicId]) {
+      lastStudied[topicId] = item.time;
+    }
+  });
+
+  const now = Date.now();
+  const ONE_DAY = 86400000;
+
+  // Topics due for review (studied 1+ days ago, not completed recently)
+  const dueTopics = TOPICS.filter(t => {
+    const last = lastStudied[t.id];
+    if (!last) return false;
+    const daysSince = (now - last) / ONE_DAY;
+    return daysSince >= 1; // Due after 1 day (spaced repetition principle)
+  }).map(t => {
+    const daysSince = Math.floor((now - lastStudied[t.id]) / ONE_DAY);
+    return { ...t, daysSince };
+  }).sort((a, b) => b.daysSince - a.daysSince); // Most overdue first
+
+  if (dueTopics.length === 0) return '';
+
+  return `
+    <div class="mb-6 p-4 bg-violet-50/50 dark:bg-violet-900/10 rounded-xl border border-violet-200/50 dark:border-violet-800/50">
+      <div class="flex items-center gap-2 mb-3">
+        <i data-lucide="alarm-clock" class="w-4 h-4 text-violet-500"></i>
+        <span class="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider">Review Due</span>
+        <span class="text-xs text-slate-400 ml-auto">Spaced repetition</span>
+      </div>
+      <div class="flex flex-wrap gap-2">
+        ${dueTopics.map(t => `
+          <a data-route="#/review/${t.id}" class="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-slate-800 rounded-lg border border-violet-200 dark:border-violet-700 hover:border-violet-400 cursor-pointer transition-colors text-sm">
+            <i data-lucide="${t.icon}" class="w-3.5 h-3.5 text-${t.color}-500"></i>
+            <span class="font-medium text-slate-700 dark:text-slate-300">${t.title}</span>
+            <span class="text-xs text-violet-400">${t.daysSince}d ago</span>
+          </a>
+        `).join('')}
+      </div>
     </div>
   `;
 }
