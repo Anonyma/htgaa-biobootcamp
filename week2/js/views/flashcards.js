@@ -130,6 +130,24 @@ function createFlashcardsView() {
             </div>
           </div>
 
+          <!-- Daily Review Goal -->
+          ${(() => {
+            const dailyGoal = 20;
+            const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
+            const todayStr = new Date().toISOString().slice(0, 10);
+            const todayCount = feed.filter(a => a.action === 'flashcard' && new Date(a.time).toISOString().slice(0, 10) === todayStr).length;
+            const pct = Math.min(100, Math.round((todayCount / dailyGoal) * 100));
+            const goalColor = pct >= 100 ? 'green' : pct >= 50 ? 'blue' : 'slate';
+            return `
+            <div class="mb-4 flex items-center gap-3 text-xs">
+              <span class="text-slate-500 flex-shrink-0">Daily goal:</span>
+              <div class="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div class="h-full bg-${goalColor}-500 rounded-full transition-all" style="width:${pct}%"></div>
+              </div>
+              <span class="text-${goalColor}-600 dark:text-${goalColor}-400 font-medium flex-shrink-0">${todayCount}/${dailyGoal}${pct >= 100 ? ' ✓' : ''}</span>
+            </div>`;
+          })()}
+
           <!-- Average Ease Factor -->
           ${(() => {
             const fcStats = store.getFlashcardStats();

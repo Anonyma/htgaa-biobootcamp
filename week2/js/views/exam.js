@@ -580,6 +580,7 @@ export function createExamView() {
         <h1 class="text-3xl font-bold mb-2">Exam Complete</h1>
         <p class="text-xl text-slate-500">
           <span class="font-bold text-slate-900 dark:text-white">${correct}</span> / ${questions.length} correct
+          ${(() => { const skipped = questions.filter((_, i) => answers[i] === undefined).length; return skipped > 0 ? `<span class="text-slate-400 mx-2">|</span><span class="text-slate-500">${skipped} skipped</span>` : ''; })()}
           <span class="text-slate-400 mx-2">|</span>
           <span class="font-bold text-slate-900 dark:text-white">${pct}%</span>
         </p>
@@ -698,6 +699,7 @@ export function createExamView() {
                   <p class="font-medium text-sm mb-1">
                     <span class="text-slate-400">Q${i + 1}</span>
                     <span class="mx-1 px-1.5 py-0.5 rounded text-xs bg-${r.question.topicColor}-100 text-${r.question.topicColor}-700 dark:bg-${r.question.topicColor}-900/30 dark:text-${r.question.topicColor}-400">${escapeHtml(r.question.topicTitle)}</span>
+                    ${answers[i] === undefined ? '<span class="text-xs px-1.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-600 text-slate-500 dark:text-slate-400 font-medium">Skipped</span>' : ''}
                     ${flaggedQuestions.has(i) ? '<span class="text-orange-500 text-xs"><i data-lucide="flag" class="w-3 h-3 inline"></i></span>' : ''}
                     ${questionElapsed[i] > 0 ? `<span class="text-slate-400 text-xs ml-1">${questionElapsed[i]}s</span>` : ''}
                     ${questionElapsed[i] > 0 ? (() => {

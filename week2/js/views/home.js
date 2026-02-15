@@ -966,6 +966,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v65', items: ['Exam skipped question badges', 'Flashcard daily review goal bar', 'Mastered terms count on dashboard'] },
     { ver: 'v64', items: ['Exam topic history count on setup', 'Flashcard hardest cards list', 'Exam score trend arrow on dashboard'] },
     { ver: 'v63', items: ['Exam early submit with unanswered warning', 'Flashcard new-cards-only mode', 'Dynamic glossary term count'] },
     { ver: 'v62', items: ['Exam fastest/slowest correct highlight', 'Most deliberate answer insight'] },
@@ -2003,8 +2004,11 @@ function getHWStats() {
 
 function getFlashcardStats() {
   const fc = store.get('flashcards') || { reviews: {} };
-  const reviewed = Object.keys(fc.reviews || {}).length;
-  return reviewed > 0 ? `${reviewed}` : '0';
+  const reviews = fc.reviews || {};
+  const reviewed = Object.keys(reviews).length;
+  if (reviewed === 0) return '0';
+  const mastered = Object.values(reviews).filter(r => r.interval >= 21).length;
+  return mastered > 0 ? `${reviewed} (${mastered}★)` : `${reviewed}`;
 }
 
 function getTimeStudied() {
