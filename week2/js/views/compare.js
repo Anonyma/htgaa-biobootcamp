@@ -245,7 +245,7 @@ function renderComparison(dataA, dataB, idA, idB) {
       <!-- Similarity Score -->
       <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
         <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Similarity Analysis</h3>
-        <div class="grid grid-cols-3 gap-4 text-center">
+        <div class="grid grid-cols-3 sm:grid-cols-5 gap-4 text-center">
           ${(() => {
             const vocabOverlap = vocabTermsA.size > 0 && vocabTermsB.size > 0 ? Math.round((sharedTerms.length / Math.min(vocabTermsA.size, vocabTermsB.size)) * 100) : 0;
             const objA = (dataA.learningObjectives || []);
@@ -263,6 +263,14 @@ function renderComparison(dataA, dataB, idA, idB) {
               <div>
                 <div class="text-2xl font-bold text-purple-600">${sharedTerms.length}</div>
                 <div class="text-xs text-slate-500">Shared Terms</div>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-teal-600">${(dataA.vocabulary || []).length + (dataB.vocabulary || []).length}</div>
+                <div class="text-xs text-slate-500">Combined Vocab</div>
+              </div>
+              <div>
+                <div class="text-2xl font-bold text-slate-600">${(dataA.readingTime || 0) + (dataB.readingTime || 0)}m</div>
+                <div class="text-xs text-slate-500">Total Reading</div>
               </div>
             `;
           })()}

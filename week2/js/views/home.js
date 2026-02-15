@@ -966,6 +966,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v69', items: ['Compare combined stats', 'Flashcard last-reviewed timestamp', 'Exam topic question index in review'] },
     { ver: 'v68', items: ['Exam question pool size on setup', 'Glossary flashcard progress bar', 'Streak milestone emojis'] },
     { ver: 'v67', items: ['Flashcard focus-weak mode', 'Overdue flashcard urgency alert', 'Exam improvement from last attempt'] },
     { ver: 'v66', items: ['Glossary term of the day', 'Study summary readiness gauge', 'Exam improvement from last attempt'] },

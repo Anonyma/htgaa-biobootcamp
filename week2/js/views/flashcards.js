@@ -551,7 +551,17 @@ function renderCard(card, allCards) {
             ${(() => {
               const r = store.get('flashcards').reviews[card.id];
               if (r && r.lapses >= 3) return `<span class="text-xs px-2 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">Struggling</span>`;
-              if (r && r.reviewCount > 0) return `<span class="text-xs text-slate-300 dark:text-slate-600">${r.reviewCount} reviews</span>`;
+              if (r && r.reviewCount > 0) {
+                const lastReview = r.nextReview ? new Date(r.nextReview - r.interval * 86400000) : null;
+                const lastStr = lastReview ? (() => {
+                  const diff = Math.floor((Date.now() - lastReview) / 86400000);
+                  if (diff === 0) return 'today';
+                  if (diff === 1) return 'yesterday';
+                  if (diff < 7) return `${diff}d ago`;
+                  return lastReview.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                })() : '';
+                return `<span class="text-xs text-slate-300 dark:text-slate-600">${r.reviewCount}× ${lastStr ? `· ${lastStr}` : ''}</span>`;
+              }
               return '';
             })()}
           </div>
