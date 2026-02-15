@@ -237,11 +237,14 @@ export function createExamView() {
     (async () => {
       let poolSize = 0;
       let easy = 0, medium = 0, hard = 0;
+      const topicCounts = [];
       for (const tid of selectedTopics) {
         const data = await store.loadTopicData(tid);
         if (data?.quizQuestions) {
           const mcqs = data.quizQuestions.filter(q => q.type === 'multiple-choice');
           poolSize += mcqs.length;
+          const topic = TOPICS.find(t => t.id === tid);
+          topicCounts.push({ title: topic?.title || tid, count: mcqs.length, color: topic?.color || 'blue' });
           mcqs.forEach(q => {
             if (q.difficulty === 'easy') easy++;
             else if (q.difficulty === 'hard') hard++;
@@ -258,7 +261,13 @@ export function createExamView() {
       const diffEl = containerEl.querySelector('#exam-difficulty-breakdown');
       if (diffEl && poolSize > 0) {
         diffEl.classList.remove('hidden');
-        diffEl.innerHTML = `<span class="text-green-500">${easy} easy</span> · <span class="text-slate-500">${medium} medium</span> · <span class="text-red-400">${hard} hard</span>`;
+        const topicBars = topicCounts.length > 1 ? `<div class="flex items-center gap-1 justify-center mt-1.5">${topicCounts.map(tc => {
+          const w = Math.max(12, Math.round((tc.count / poolSize) * 200));
+          return `<div class="h-2 rounded-full bg-${tc.color}-400" style="width:${w}px" title="${tc.title}: ${tc.count} questions"></div>`;
+        }).join('')}</div><div class="flex gap-2 justify-center mt-1 flex-wrap">${topicCounts.map(tc =>
+          `<span class="text-[10px] text-slate-400">${tc.title.split(' ')[0]}: ${tc.count}</span>`
+        ).join('')}</div>` : '';
+        diffEl.innerHTML = `<span class="text-green-500">${easy} easy</span> · <span class="text-slate-500">${medium} medium</span> · <span class="text-red-400">${hard} hard</span>${topicBars}`;
       }
     })();
   }

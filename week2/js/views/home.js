@@ -110,6 +110,7 @@ function createHomeView() {
               ${renderStatCard('book-open', 'Sections Read', getSectionsReadStats(), 'indigo')}
               ${renderStatCard('graduation-cap', 'Vocab Mastery', getVocabMastery(), 'emerald')}
               ${renderStatCard('calendar-check', 'Last Active', getLastActive(), 'slate')}
+              ${renderStatCard('gauge', 'Study Pace', getStudyPace(), 'orange')}
             </div>
           </section>
 
@@ -1076,6 +1077,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v92', items: ['Exam topic question bars on setup', 'Dashboard study pace stat', 'Flashcard topic last-reviewed date'] },
     { ver: 'v91', items: ['Exam confidence breakdown in results', 'Compare shared vocabulary panel', 'Study summary vocab mastery %'] },
     { ver: 'v90', items: ['Exam history bar chart on dashboard', 'Flashcard live streak indicator', 'Study summary vocab mastery %'] },
     { ver: 'v89', items: ['Compare reading time bars', 'Flashcard session number today', 'Exam seen questions count on setup'] },
@@ -2333,6 +2335,16 @@ function getLastActive() {
   if (diffDays === 1) return 'Yesterday';
   if (diffDays < 7) return `${diffDays}d ago`;
   return last.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function getStudyPace() {
+  const log = store.getStudyLog();
+  const activeDays = Object.keys(log).filter(d => log[d] > 0);
+  if (activeDays.length === 0) return '—';
+  const totalMin = Object.values(log).reduce((s, v) => s + v, 0);
+  const avgMin = Math.round(totalMin / activeDays.length);
+  if (avgMin < 60) return `${avgMin}m/day`;
+  return `${(avgMin / 60).toFixed(1)}h/day`;
 }
 
 function downloadFile(filename, text) {
