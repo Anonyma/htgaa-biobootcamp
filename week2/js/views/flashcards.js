@@ -350,8 +350,11 @@ function createFlashcardsView() {
             ${dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete()}
           </div>
 
+          <!-- Live Streak -->
+          <div id="fc-live-streak" class="text-center mt-3 transition-all duration-300" style="min-height:24px"></div>
+
           <!-- Session Timer & Running Stats -->
-          <div class="mt-6 text-center text-sm text-slate-400 flex items-center justify-center gap-4 flex-wrap">
+          <div class="mt-4 text-center text-sm text-slate-400 flex items-center justify-center gap-4 flex-wrap">
             <span class="flex items-center gap-1"><i data-lucide="timer" class="w-3.5 h-3.5"></i> Session${(() => {
               try {
                 const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
@@ -560,6 +563,17 @@ function createFlashcardsView() {
           if (sessionStats.streak > sessionStats.bestStreak) sessionStats.bestStreak = sessionStats.streak;
         } else {
           sessionStats.streak = 0;
+        }
+
+        // Update live streak indicator
+        const streakEl = container.querySelector('#fc-live-streak');
+        if (streakEl) {
+          if (sessionStats.streak >= 2) {
+            const flames = sessionStats.streak >= 10 ? '🔥🔥🔥' : sessionStats.streak >= 5 ? '🔥🔥' : '🔥';
+            streakEl.innerHTML = `<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-sm font-bold animate-bounce-once">${flames} ${sessionStats.streak} correct streak!</span>`;
+          } else {
+            streakEl.innerHTML = '';
+          }
         }
 
         // Update running accuracy display

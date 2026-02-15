@@ -70,6 +70,9 @@ function createHomeView() {
           <!-- Topic Mastery Ranking -->
           ${renderMasteryRanking()}
 
+          <!-- Exam History Chart -->
+          ${renderExamHistoryChart()}
+
           <!-- Knowledge Radar -->
           ${renderKnowledgeRadar()}
 
@@ -964,6 +967,56 @@ function renderMasteryRanking() {
   `;
 }
 
+function renderExamHistoryChart() {
+  const scores = store.getExamScores();
+  if (!scores || scores.length === 0) return '';
+
+  const recent = scores.slice(-8);
+  const maxScore = 100;
+  const barW = 28;
+  const gap = 6;
+  const chartH = 60;
+  const svgW = recent.length * (barW + gap);
+
+  const bars = recent.map((s, i) => {
+    const pct = Math.round((s.score / s.total) * 100);
+    const h = Math.max(2, (pct / maxScore) * chartH);
+    const x = i * (barW + gap);
+    const y = chartH - h;
+    const fill = pct >= 80 ? '#22c55e' : pct >= 60 ? '#eab308' : '#ef4444';
+    const date = new Date(s.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="3" fill="${fill}" opacity="0.85"/>
+      <text x="${x + barW / 2}" y="${y - 4}" text-anchor="middle" fill="currentColor" font-size="9" font-weight="bold" class="text-slate-600 dark:text-slate-300">${pct}%</text>
+      <text x="${x + barW / 2}" y="${chartH + 12}" text-anchor="middle" fill="currentColor" font-size="7" class="text-slate-400">${date}</text>`;
+  }).join('');
+
+  const avg = Math.round(recent.reduce((sum, s) => sum + (s.score / s.total) * 100, 0) / recent.length);
+  const trend = recent.length >= 2
+    ? Math.round((recent[recent.length - 1].score / recent[recent.length - 1].total) * 100) -
+      Math.round((recent[0].score / recent[0].total) * 100)
+    : 0;
+  const trendIcon = trend > 0 ? 'trending-up' : trend < 0 ? 'trending-down' : 'minus';
+  const trendColor = trend > 0 ? 'text-green-500' : trend < 0 ? 'text-red-500' : 'text-slate-400';
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="bar-chart-2" class="w-5 h-5 text-blue-500"></i> Exam History
+        <span class="text-xs font-normal text-slate-400 ml-auto">Last ${recent.length} exams &middot; Avg ${avg}%
+          <i data-lucide="${trendIcon}" class="w-3 h-3 ${trendColor} inline ml-1"></i>
+          <span class="${trendColor}">${trend > 0 ? '+' : ''}${trend}%</span>
+        </span>
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 overflow-x-auto">
+        <svg viewBox="0 0 ${svgW} ${chartH + 18}" class="w-full max-w-md mx-auto" style="min-width:${svgW}px">
+          <line x1="0" y1="${chartH}" x2="${svgW}" y2="${chartH}" stroke="rgba(148,163,184,0.2)" stroke-width="0.5"/>
+          ${bars}
+        </svg>
+      </div>
+    </section>
+  `;
+}
+
 function renderStrugglingTerms() {
   const fcData = store.get('flashcards') || { reviews: {} };
   const reviews = fcData.reviews || {};
@@ -1023,6 +1076,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v90', items: ['Exam history bar chart on dashboard', 'Study summary vocab mastery %', 'Flashcard live streak indicator'] },
     { ver: 'v89', items: ['Compare reading time bars', 'Flashcard session number today', 'Exam seen questions count on setup'] },
     { ver: 'v88', items: ['Exam difficulty breakdown on setup', 'Glossary copy term to clipboard', 'Study summary section completion grid'] },
     { ver: 'v87', items: ['Compare design challenge comparison', 'Exam cumulative time on setup', 'Flashcard overall mastery bar'] },

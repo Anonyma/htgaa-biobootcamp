@@ -341,7 +341,20 @@ function createStudySummaryView() {
 
               ${data.vocabulary?.length ? `
                 <div class="mb-4">
-                  <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Vocabulary (${data.vocabulary.length} terms)</h3>
+                  <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Vocabulary (${data.vocabulary.length} terms)${(() => {
+                    const fcData = store.get('flashcards') || { reviews: {} };
+                    const reviews = fcData.reviews || {};
+                    let mastered = 0, reviewed = 0;
+                    data.vocabulary.forEach((v, vi) => {
+                      const cardId = topic.id + '-vocab-' + vi;
+                      const r = reviews[cardId];
+                      if (r) { reviewed++; if (r.interval >= 21) mastered++; }
+                    });
+                    if (reviewed === 0) return '';
+                    const pct = Math.round((mastered / data.vocabulary.length) * 100);
+                    const color = pct >= 75 ? 'text-green-500' : pct >= 40 ? 'text-amber-500' : 'text-red-500';
+                    return ` <span class="${color} text-xs font-normal ml-2">${pct}% mastered</span>`;
+                  })()}</h3>
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-xs">
                     ${data.vocabulary.map(v => `
                       <div class="py-1">
