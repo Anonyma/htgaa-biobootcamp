@@ -14,7 +14,7 @@ function createFlashcardsView() {
   let isFlipped = false;
   let selectedTopic = 'all';
   let keyHandler = null;
-  let sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 };
+  let sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
 
   return {
     async render() {
@@ -352,6 +352,11 @@ function createFlashcardsView() {
         else if (quality === 3) sessionStats.hard++;
         else if (quality === 4) sessionStats.good++;
         else if (quality === 5) sessionStats.easy++;
+        // Per-topic tracking
+        const tid = card.topicId;
+        if (!sessionStats.byTopic[tid]) sessionStats.byTopic[tid] = { reviewed: 0, correct: 0 };
+        sessionStats.byTopic[tid].reviewed++;
+        if (quality >= 4) sessionStats.byTopic[tid].correct++;
 
         // Update running accuracy display
         const accEl = container.querySelector('#fc-running-accuracy');
@@ -542,6 +547,23 @@ function renderComplete() {
             <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Good: ${sessionStats.good}</span>
             <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Easy: ${sessionStats.easy}</span>
           </div>
+          ${Object.keys(sessionStats.byTopic).length > 1 ? `
+          <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+            <p class="text-[10px] text-slate-400 mb-2 text-center uppercase tracking-wider">By Topic</p>
+            <div class="space-y-1.5">
+              ${Object.entries(sessionStats.byTopic).map(([tid, ts]) => {
+                const topic = TOPICS.find(t => t.id === tid);
+                const pct = Math.round((ts.correct / ts.reviewed) * 100);
+                return `<div class="flex items-center gap-2 text-xs">
+                  <i data-lucide="${topic?.icon || 'book'}" class="w-3 h-3 text-${topic?.color || 'slate'}-500 flex-shrink-0"></i>
+                  <span class="flex-1 truncate">${topic?.title || tid}</span>
+                  <span class="font-medium ${pct >= 80 ? 'text-green-600' : pct >= 60 ? 'text-amber-600' : 'text-red-500'}">${pct}%</span>
+                  <span class="text-slate-400">(${ts.reviewed})</span>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+          ` : ''}
         </div>
       ` : ''}
 
