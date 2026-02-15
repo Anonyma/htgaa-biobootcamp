@@ -622,6 +622,47 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Content Size Comparison -->
+      ${(() => {
+        const secA = dataA.sections?.length || 0;
+        const secB = dataB.sections?.length || 0;
+        const vocA = vocabA.length;
+        const vocB = vocabB.length;
+        const qA = dataA.quizQuestions?.length || 0;
+        const qB = dataB.quizQuestions?.length || 0;
+        if (secA === 0 && secB === 0) return '';
+        const metrics = [
+          { label: 'Sections', a: secA, b: secB, icon: 'list' },
+          { label: 'Vocab Terms', a: vocA, b: vocB, icon: 'book-a' },
+          { label: 'Quiz Questions', a: qA, b: qB, icon: 'help-circle' },
+        ];
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <i data-lucide="ruler" class="w-4 h-4 text-slate-500"></i> Content Size
+          </h3>
+          <div class="space-y-2">
+            ${metrics.map(m => {
+              const maxV = Math.max(m.a, m.b, 1);
+              return `
+              <div class="flex items-center gap-3 text-xs">
+                <span class="w-24 text-right font-medium text-${metaA?.color || 'blue'}-600">${m.a}</span>
+                <div class="flex-1 flex gap-1 h-2">
+                  <div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-l-full overflow-hidden flex justify-end">
+                    <div class="h-full bg-${metaA?.color || 'blue'}-400 rounded-l-full" style="width:${(m.a/maxV)*100}%"></div>
+                  </div>
+                  <div class="flex-1 bg-slate-200 dark:bg-slate-700 rounded-r-full overflow-hidden">
+                    <div class="h-full bg-${metaB?.color || 'blue'}-400 rounded-r-full" style="width:${(m.b/maxV)*100}%"></div>
+                  </div>
+                </div>
+                <span class="w-24 font-medium text-${metaB?.color || 'blue'}-600">${m.b}</span>
+              </div>
+              <div class="text-center text-[10px] text-slate-400 -mt-1">${m.label}</div>`;
+            }).join('')}
+          </div>
+        </div>`;
+      })()}
+
       <!-- Reading Time Comparison -->
       ${(() => {
         const rtA = dataA.readingTime || 0;

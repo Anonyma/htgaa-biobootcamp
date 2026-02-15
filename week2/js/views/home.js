@@ -67,6 +67,9 @@ function createHomeView() {
           <!-- Stats Dashboard -->
           ${renderStatsDashboard(progress)}
 
+          <!-- Topics at a Glance -->
+          ${renderTopicsGlance()}
+
           <!-- Topic Mastery Ranking -->
           ${renderMasteryRanking()}
 
@@ -945,6 +948,41 @@ function renderWeakestTopicSuggestion(progress) {
   `;
 }
 
+function renderTopicsGlance() {
+  const topics = TOPICS.map(t => {
+    const m = store.getTopicMastery(t.id, null);
+    const mastery = m?.mastery || 0;
+    const sr = store.getSectionsRead(t.id);
+    const qs = store.getQuizScore(t.id);
+    return { topic: t, mastery, sections: sr, quiz: qs };
+  });
+  if (topics.every(t => t.mastery === 0)) return '';
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="grid-3x3" class="w-5 h-5 text-indigo-500"></i> Topics at a Glance
+      </h2>
+      <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
+        ${topics.map(({ topic, mastery, quiz }) => {
+          const bg = mastery >= 80 ? 'bg-green-100 dark:bg-green-900/20 border-green-300 dark:border-green-700' :
+                     mastery >= 50 ? 'bg-amber-100 dark:bg-amber-900/20 border-amber-300 dark:border-amber-700' :
+                     mastery > 0 ? 'bg-red-100 dark:bg-red-900/20 border-red-300 dark:border-red-700' :
+                     'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700';
+          const qPct = quiz ? Math.round((quiz.correct / quiz.total) * 100) : null;
+          return `
+            <a data-route="#/topic/${topic.id}" class="p-3 rounded-xl border ${bg} cursor-pointer hover:shadow-md transition-all text-center">
+              <i data-lucide="${topic.icon}" class="w-5 h-5 mx-auto text-${topic.color}-500 mb-1"></i>
+              <div class="text-xs font-bold truncate">${topic.title.split(' ')[0]}</div>
+              <div class="text-lg font-bold ${mastery >= 80 ? 'text-green-600' : mastery >= 50 ? 'text-amber-600' : mastery > 0 ? 'text-red-500' : 'text-slate-400'}">${mastery}%</div>
+              ${qPct !== null ? `<div class="text-[9px] text-slate-400">Quiz: ${qPct}%</div>` : ''}
+            </a>`;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function renderMasteryRanking() {
   const ranked = TOPICS.map(t => {
     const m = store.getTopicMastery(t.id, null);
@@ -1190,6 +1228,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v99', items: ['Dashboard topics at a glance grid', 'Compare content size comparison', 'Dashboard estimated completion date'] },
     { ver: 'v98', items: ['Exam print results button', 'Dashboard estimated completion date', 'Glossary term difficulty labels'] },
     { ver: 'v97', items: ['Glossary mini quiz button', 'Compare flashcard maturity', 'Dashboard day streak stat'] },
     { ver: 'v96', items: ['Dashboard learning insights', 'Exam cumulative accuracy chart', 'Study summary progress bar'] },
