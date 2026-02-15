@@ -967,6 +967,9 @@ export function createExamView() {
                     return ` (${fromLetter} → ${toLetter})`;
                   })()}</p>` : ''}
                   ${r.question.explanation ? `<p class="text-xs text-slate-500 mt-1">${escapeHtml(r.question.explanation)}</p>` : ''}
+                  <button class="exam-bookmark-btn mt-2 text-[10px] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-500 hover:border-amber-300 transition-colors" data-q-idx="${i}">
+                    <i data-lucide="bookmark" class="w-3 h-3 inline"></i> Save for review
+                  </button>
                 </div>
               </div>
             </div>
@@ -1101,6 +1104,31 @@ export function createExamView() {
         });
       });
     }
+
+    // Bookmark question buttons
+    containerEl.querySelectorAll('.exam-bookmark-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.qIdx);
+        const r = results[idx];
+        if (!r) return;
+        const saved = JSON.parse(localStorage.getItem('htgaa-exam-bookmarks') || '[]');
+        const bookmark = {
+          question: r.question.question,
+          correctAnswer: r.question.options[r.question.correctIndex],
+          explanation: r.question.explanation || '',
+          topic: r.question.topicTitle,
+          date: Date.now()
+        };
+        // Avoid duplicates by question text
+        if (!saved.some(s => s.question === bookmark.question)) {
+          saved.push(bookmark);
+          localStorage.setItem('htgaa-exam-bookmarks', JSON.stringify(saved));
+        }
+        btn.innerHTML = '<i data-lucide="bookmark-check" class="w-3 h-3 inline"></i> Saved!';
+        btn.classList.add('text-amber-500', 'border-amber-300');
+        if (window.lucide) lucide.createIcons();
+      });
+    });
 
     cleanupKeyHandler();
   }

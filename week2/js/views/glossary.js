@@ -91,7 +91,19 @@ function createGlossaryView() {
 
             <!-- Letter nav -->
             <div class="flex flex-wrap gap-1 mt-4">
-              ${letters.map(l => `<a href="#letter-${l}" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex flex-col items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-teal-100 dark:hover:bg-teal-800 transition-colors relative" title="${grouped[l].length} terms">${l}<span class="text-[8px] font-normal text-slate-400 leading-none">${grouped[l].length}</span></a>`).join('')}
+              ${letters.map(l => {
+                const reviews = store.get('flashcards').reviews || {};
+                const letterTerms = grouped[l];
+                let mastered = 0;
+                letterTerms.forEach(t => {
+                  const topicVocabIdx = allTerms.filter(at => at.topicId === t.topicId).indexOf(t);
+                  const cardId = `${t.topicId}-vocab-${topicVocabIdx >= 0 ? topicVocabIdx : 0}`;
+                  if (reviews[cardId]?.interval >= 21) mastered++;
+                });
+                const pct = letterTerms.length > 0 ? Math.round((mastered / letterTerms.length) * 100) : 0;
+                const dotColor = pct >= 80 ? 'bg-green-400' : pct >= 40 ? 'bg-yellow-400' : pct > 0 ? 'bg-red-400' : '';
+                return `<a href="#letter-${l}" class="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-700 flex flex-col items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-teal-100 dark:hover:bg-teal-800 transition-colors relative" title="${grouped[l].length} terms${pct > 0 ? `, ${pct}% mastered` : ''}">${dotColor ? `<span class="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full ${dotColor}"></span>` : ''}${l}<span class="text-[8px] font-normal text-slate-400 leading-none">${grouped[l].length}</span></a>`;
+              }).join('')}
             </div>
 
             <!-- Topic filter + random -->

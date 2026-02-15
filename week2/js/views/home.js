@@ -116,6 +116,9 @@ function createHomeView() {
           <!-- Study Activity Heatmap -->
           ${renderStudyHeatmap()}
 
+          <!-- Weekly Progress Comparison -->
+          ${renderWeeklyComparison()}
+
           <!-- Study Planner -->
           ${renderStudyPlanner(progress)}
 
@@ -972,6 +975,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v84', items: ['Exam question bookmarks for later review', 'Dashboard weekly progress comparison', 'Glossary letter mastery dots'] },
     { ver: 'v83', items: ['Study summary time per topic bars', 'Flashcard deck position indicator', 'Exam new/seen in results'] },
     { ver: 'v82', items: ['Exam new/seen question counts in results', 'Glossary definition complexity badges', 'Dashboard vocab mastery stat'] },
     { ver: 'v81', items: ['Compare exam exposure stats', 'Flashcard rating distribution chart', 'Exam new question tracking'] },
@@ -2156,6 +2160,49 @@ function getSectionsReadStats() {
   });
   if (total === 0) return '0';
   return `${read}/${total}`;
+}
+
+function renderWeeklyComparison() {
+  const log = store.getStudyLog();
+  const today = new Date();
+  const getWeekDays = (weeksAgo) => {
+    const days = [];
+    for (let d = 6; d >= 0; d--) {
+      const dt = new Date(today);
+      dt.setDate(dt.getDate() - d - (weeksAgo * 7));
+      days.push(dt.toISOString().slice(0, 10));
+    }
+    return days;
+  };
+  const thisWeek = getWeekDays(0);
+  const lastWeek = getWeekDays(1);
+  const thisCount = thisWeek.reduce((s, d) => s + (log[d] || 0), 0);
+  const lastCount = lastWeek.reduce((s, d) => s + (log[d] || 0), 0);
+  if (thisCount === 0 && lastCount === 0) return '';
+  const diff = thisCount - lastCount;
+  const diffPct = lastCount > 0 ? Math.round((diff / lastCount) * 100) : thisCount > 0 ? 100 : 0;
+  const color = diff > 0 ? 'green' : diff < 0 ? 'red' : 'slate';
+  const arrow = diff > 0 ? '↑' : diff < 0 ? '↓' : '—';
+  return `
+  <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+    <h3 class="text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+      <i data-lucide="calendar-range" class="w-4 h-4 text-blue-500"></i> Weekly Comparison
+    </h3>
+    <div class="grid grid-cols-3 gap-4 text-center">
+      <div>
+        <div class="text-xl font-bold text-slate-600 dark:text-slate-300">${lastCount}</div>
+        <div class="text-[10px] text-slate-400">Last Week</div>
+      </div>
+      <div>
+        <div class="text-xl font-bold text-${color}-600 dark:text-${color}-400">${arrow} ${Math.abs(diffPct)}%</div>
+        <div class="text-[10px] text-slate-400">Change</div>
+      </div>
+      <div>
+        <div class="text-xl font-bold text-blue-600 dark:text-blue-400">${thisCount}</div>
+        <div class="text-[10px] text-slate-400">This Week</div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function getVocabMastery() {
