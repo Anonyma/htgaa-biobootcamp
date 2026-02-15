@@ -149,8 +149,14 @@ function createHomeView() {
               <a data-route="#/compare" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="columns" class="w-4 h-4 text-teal-500"></i> Compare
               </a>
+              <a data-route="#/notes" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-amber-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="sticky-note" class="w-4 h-4 text-amber-500"></i> My Notes
+              </a>
             </div>
           </section>
+
+          <!-- Recent Activity Feed -->
+          ${renderActivityFeed()}
 
           <!-- Expandable analytics -->
           <div class="mb-10">
@@ -819,6 +825,64 @@ function renderDailyGoal() {
         </a>
       ` : ''}
     </div>
+  `;
+}
+
+function renderActivityFeed() {
+  const feed = store.getActivityFeed(8);
+  if (feed.length === 0) return '';
+
+  const topicMap = {};
+  TOPICS.forEach(t => { topicMap[t.id] = t; });
+
+  const actionLabels = {
+    section: { icon: 'book-open', color: 'blue', label: 'Read section' },
+    quiz: { icon: 'clipboard-check', color: 'green', label: 'Answered quiz' },
+    flashcard: { icon: 'layers', color: 'violet', label: 'Reviewed flashcard' },
+    complete: { icon: 'check-circle', color: 'emerald', label: 'Completed topic' },
+  };
+
+  const formatTime = (ts) => {
+    const diff = Date.now() - ts;
+    if (diff < 60000) return 'Just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+    const d = new Date(ts);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  };
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="activity" class="w-5 h-5 text-blue-500"></i> Recent Activity
+      </h2>
+      <div class="relative pl-6 space-y-3">
+        <div class="absolute left-2.5 top-1 bottom-1 w-px bg-slate-200 dark:bg-slate-700"></div>
+        ${feed.map(item => {
+          const meta = actionLabels[item.action] || { icon: 'circle', color: 'slate', label: item.action };
+          const topicId = item.detail?.topicId;
+          const topic = topicId ? topicMap[topicId] : null;
+          const detail = item.detail || {};
+          let desc = meta.label;
+          if (item.action === 'section' && detail.sectionId) {
+            desc = `Read "${detail.sectionId.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}"`;
+          } else if (item.action === 'quiz' && detail.correct !== undefined) {
+            desc = detail.correct ? 'Answered correctly' : 'Answered incorrectly';
+          } else if (item.action === 'complete' && topic) {
+            desc = `Completed ${topic.title}`;
+          }
+          return `
+            <div class="relative flex items-start gap-3">
+              <div class="absolute -left-3.5 w-3 h-3 rounded-full bg-${meta.color}-400 border-2 border-white dark:border-slate-900 mt-1 z-10"></div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm text-slate-700 dark:text-slate-300">${desc}${topic ? ` <span class="text-${topic.color}-500 font-medium">${topic.title}</span>` : ''}</p>
+                <p class="text-xs text-slate-400">${formatTime(item.time)}</p>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </section>
   `;
 }
 
