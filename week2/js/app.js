@@ -34,6 +34,7 @@ import { createDiscussionView } from './views/discussion.js';
 import { createShortcutsView } from './views/shortcuts.js';
 import { createStudyLogView } from './views/study-log.js';
 import { createFaqView } from './views/faq.js';
+import { createPrereqsView } from './views/prereqs.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -83,7 +84,8 @@ class App {
       .on('/discussion', () => createDiscussionView())
       .on('/shortcuts', () => createShortcutsView())
       .on('/study-log', () => createStudyLogView())
-      .on('/faq', () => createFaqView());
+      .on('/faq', () => createFaqView())
+      .on('/prereqs', () => createPrereqsView());
 
     // Start
     this.router.start();
@@ -298,6 +300,10 @@ class App {
               <a data-route="#/discussion" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="message-circle" class="w-4 h-4 text-violet-500"></i>
                 <span>Discussion</span>
+              </a>
+              <a data-route="#/prereqs" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="git-branch" class="w-4 h-4 text-teal-500"></i>
+                <span>Prerequisites</span>
               </a>
               <a data-route="#/analytics" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i>
