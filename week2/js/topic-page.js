@@ -538,6 +538,30 @@ function createTopicView(topicId) {
       };
       document.addEventListener('keydown', this._keyHandler);
 
+      // Confidence self-check stars
+      container.querySelectorAll('.confidence-star').forEach(star => {
+        star.addEventListener('click', () => {
+          const objIdx = parseInt(star.dataset.objIdx);
+          const rating = parseInt(star.dataset.rating);
+          store.saveConfidence(topicId, objIdx, rating);
+          // Update stars visually
+          const row = star.closest('.confidence-row');
+          if (row) {
+            row.querySelectorAll('.confidence-star').forEach(s => {
+              const r = parseInt(s.dataset.rating);
+              s.classList.toggle('text-amber-400', r <= rating);
+              s.classList.toggle('text-slate-300', r > rating);
+              s.classList.toggle('dark:text-slate-600', r > rating);
+            });
+            const label = row.querySelector('.confidence-label');
+            if (label) {
+              const labels = ['', 'Not confident', 'Somewhat', 'Getting there', 'Confident', 'Mastered'];
+              label.textContent = labels[rating] || '';
+            }
+          }
+        });
+      });
+
       // Touch swipe navigation between topics
       let touchStartX = 0;
       let touchStartY = 0;
@@ -732,12 +756,14 @@ function renderTopicPage(data, topicId) {
         ${(() => {
           const readSections = store.getSectionsRead(topicId);
           const readSet = new Set(readSections);
+          const topicNotes = store.getNotes(topicId);
           return `<ul class="space-y-1">
           ${(data.sections || []).map((s, i) => `
             <li>
               <a href="#section-${s.id}" class="toc-link text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 block py-0.5 pl-2 border-l-2 border-transparent transition-colors flex items-center gap-1" data-toc-section="${s.id}">
                 ${readSet.has(s.id) ? '<span class="w-3 h-3 rounded-full bg-green-500/20 flex items-center justify-center flex-shrink-0"><span class="w-1.5 h-1.5 rounded-full bg-green-500"></span></span>' : '<span class="w-3 h-3 rounded-full border border-slate-300 dark:border-slate-600 flex-shrink-0"></span>'}
-                ${s.title}
+                <span class="flex-1">${s.title}</span>
+                ${topicNotes[s.id] ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-400 flex-shrink-0" title="Has notes"></span>' : ''}
               </a>
             </li>
           `).join('')}`;
@@ -905,6 +931,9 @@ function renderTopicPage(data, topicId) {
           ${data.references ? renderReferencesCompact(data.references) : ''}
         </div>
       </div>
+
+      <!-- What You've Learned — Reflection Card -->
+      ${renderLearningReflection(data, topicId)}
 
       <!-- Mark Complete / Navigate -->
       <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
@@ -2638,6 +2667,90 @@ function renderQuickReference(cards) {
         }).join('')}
       </div>
     </section>
+  `;
+}
+
+function renderLearningReflection(data, topicId) {
+  if (!data.learningObjectives || data.learningObjectives.length === 0) return '';
+
+  const sectionsRead = new Set(store.getSectionsRead(topicId));
+  const totalSections = (data.sections || []).length;
+  const readCount = sectionsRead.size;
+  const pct = totalSections > 0 ? Math.round((readCount / totalSections) * 100) : 0;
+  const quizScore = store.getQuizScore(topicId);
+  const hasQuiz = quizScore && quizScore.total > 0;
+  const quizPct = hasQuiz ? Math.round((quizScore.correct / quizScore.total) * 100) : 0;
+
+  // Map objectives to completion: each objective corresponds roughly to sections
+  // Mark as "learned" if enough sections are read (proportional)
+  const objectives = data.learningObjectives;
+  const learnedCount = Math.min(objectives.length, Math.floor((readCount / Math.max(totalSections, 1)) * objectives.length));
+  const confidence = store.getConfidence(topicId);
+  const avgConf = store.getAverageConfidence(topicId);
+
+  // Determine overall status
+  const allDone = learnedCount === objectives.length && hasQuiz && quizPct >= 70;
+  const mostDone = pct >= 80;
+  const statusColor = allDone ? 'green' : mostDone ? 'blue' : 'slate';
+  const statusIcon = allDone ? 'award' : mostDone ? 'trending-up' : 'book-open';
+  const statusMsg = allDone
+    ? 'Excellent work! You\'ve covered all learning objectives.'
+    : mostDone
+    ? 'Almost there — finish the remaining sections to complete all objectives.'
+    : pct > 0
+    ? `You've made progress. Keep reading to cover more objectives.`
+    : 'Start reading the sections above to track your learning.';
+
+  const confLabels = ['', 'Not confident', 'Somewhat', 'Getting there', 'Confident', 'Mastered'];
+
+  return `
+    <div class="mt-10 mb-6 bg-gradient-to-br from-${statusColor}-50 to-${statusColor}-100/50 dark:from-${statusColor}-900/20 dark:to-${statusColor}-800/10 border border-${statusColor}-200 dark:border-${statusColor}-800/50 rounded-2xl p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-${statusColor}-100 dark:bg-${statusColor}-900/40 flex items-center justify-center">
+          <i data-lucide="${statusIcon}" class="w-5 h-5 text-${statusColor}-600 dark:text-${statusColor}-400"></i>
+        </div>
+        <div class="flex-1">
+          <h3 class="font-bold text-lg text-${statusColor}-800 dark:text-${statusColor}-300">What You've Learned</h3>
+          <p class="text-xs text-${statusColor}-600/70 dark:text-${statusColor}-400/70">${statusMsg}</p>
+        </div>
+        <div class="text-right">
+          <div class="text-2xl font-bold text-${statusColor}-600 dark:text-${statusColor}-400">${learnedCount}/${objectives.length}</div>
+          <div class="text-xs text-${statusColor}-500/70">objectives</div>
+        </div>
+      </div>
+      <ul class="space-y-3">
+        ${objectives.map((obj, i) => {
+          const learned = i < learnedCount;
+          const objConf = confidence[i]?.rating || 0;
+          return `
+            <li class="flex items-start gap-2.5 ${learned ? '' : 'opacity-50'}">
+              <div class="w-5 h-5 mt-0.5 flex-shrink-0 rounded-full ${learned
+                ? 'bg-green-500 dark:bg-green-600 flex items-center justify-center'
+                : 'border-2 border-slate-300 dark:border-slate-600'
+              }">
+                ${learned ? '<i data-lucide="check" class="w-3 h-3 text-white"></i>' : ''}
+              </div>
+              <div class="flex-1 min-w-0">
+                <span class="text-sm ${learned ? 'text-slate-700 dark:text-slate-200' : 'text-slate-400 dark:text-slate-500'}">${obj}</span>
+                ${learned ? `
+                  <div class="confidence-row flex items-center gap-1 mt-1">
+                    <span class="text-[10px] text-slate-400 mr-1">Confidence:</span>
+                    ${[1,2,3,4,5].map(r => `<button class="confidence-star cursor-pointer text-xs leading-none ${r <= objConf ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'} hover:text-amber-400 transition-colors" data-obj-idx="${i}" data-rating="${r}" title="${confLabels[r]}">&#9733;</button>`).join('')}
+                    <span class="confidence-label text-[10px] text-slate-400 ml-1">${objConf > 0 ? confLabels[objConf] : ''}</span>
+                  </div>
+                ` : ''}
+              </div>
+            </li>
+          `;
+        }).join('')}
+      </ul>
+      <div class="mt-4 pt-4 border-t border-${statusColor}-200/50 dark:border-${statusColor}-700/30 flex items-center gap-4 text-xs text-${statusColor}-600/80 dark:text-${statusColor}-400/80 flex-wrap">
+        <span class="flex items-center gap-1"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> ${readCount}/${totalSections} sections read</span>
+        ${hasQuiz ? `<span class="flex items-center gap-1"><i data-lucide="target" class="w-3.5 h-3.5"></i> Quiz: ${quizPct}%</span>` : ''}
+        ${avgConf > 0 ? `<span class="flex items-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5"></i> Avg confidence: ${avgConf}/5</span>` : ''}
+        ${Object.keys(store.getNotes(topicId)).length > 0 ? `<span class="flex items-center gap-1"><i data-lucide="sticky-note" class="w-3.5 h-3.5"></i> ${Object.keys(store.getNotes(topicId)).length} notes</span>` : ''}
+      </div>
+    </div>
   `;
 }
 

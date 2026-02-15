@@ -419,6 +419,26 @@ class Store {
       .map(([k]) => k);
   }
 
+  // --- Confidence Self-Check ---
+  getConfidence(topicId) {
+    const all = this._loadJSON('htgaa-week2-confidence', {});
+    return all[topicId] || {};
+  }
+
+  saveConfidence(topicId, objectiveIndex, rating) {
+    const all = this._loadJSON('htgaa-week2-confidence', {});
+    if (!all[topicId]) all[topicId] = {};
+    all[topicId][objectiveIndex] = { rating, updated: Date.now() };
+    localStorage.setItem('htgaa-week2-confidence', JSON.stringify(all));
+  }
+
+  getAverageConfidence(topicId) {
+    const ratings = this.getConfidence(topicId);
+    const values = Object.values(ratings).map(r => r.rating);
+    if (values.length === 0) return 0;
+    return Math.round(values.reduce((a, b) => a + b, 0) / values.length * 10) / 10;
+  }
+
   // --- Topic Data Cache ---
   async loadTopicData(topicId) {
     if (this._state.topicData[topicId]) return this._state.topicData[topicId];
