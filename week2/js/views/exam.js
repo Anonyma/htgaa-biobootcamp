@@ -584,6 +584,18 @@ export function createExamView() {
           <span class="text-slate-400 mx-2">|</span>
           <span class="font-bold text-slate-900 dark:text-white">${pct}%</span>
         </p>
+        ${(() => {
+          const allScores = store.getExamScores();
+          // Current score was just saved, so previous is second-to-last
+          if (allScores.length >= 2) {
+            const prev = allScores[allScores.length - 2];
+            const diff = pct - prev.pct;
+            if (diff > 0) return `<p class="text-sm text-green-500 font-medium mt-1">↑ ${diff}% improvement from last attempt</p>`;
+            if (diff < 0) return `<p class="text-sm text-red-400 font-medium mt-1">↓ ${Math.abs(diff)}% from last attempt</p>`;
+            return `<p class="text-sm text-slate-400 mt-1">Same score as last attempt</p>`;
+          }
+          return '';
+        })()}
         <p class="text-sm text-slate-400 mt-1">
           <i data-lucide="clock" class="w-4 h-4 inline"></i> ${formatTime(elapsedSeconds)}
           <span class="mx-2">|</span>

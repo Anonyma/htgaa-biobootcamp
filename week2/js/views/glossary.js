@@ -86,6 +86,25 @@ function createGlossaryView() {
             </div>
           </header>
 
+          <!-- Term of the Day -->
+          ${(() => {
+            if (allTerms.length === 0) return '';
+            // Deterministic "random" based on date
+            const dayNum = Math.floor(Date.now() / 86400000);
+            const idx = dayNum % allTerms.length;
+            const t = allTerms[idx];
+            return `
+            <div class="mb-6 bg-gradient-to-r from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl p-4 border border-teal-200 dark:border-teal-800">
+              <div class="flex items-center gap-2 mb-2">
+                <i data-lucide="sparkle" class="w-4 h-4 text-teal-500"></i>
+                <span class="text-xs font-semibold text-teal-700 dark:text-teal-400 uppercase tracking-wider">Term of the Day</span>
+              </div>
+              <p class="font-bold text-lg text-slate-800 dark:text-slate-200">${t.term}</p>
+              <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">${t.definition}</p>
+              <p class="text-xs text-teal-500 mt-2">From: ${t.topicTitle}</p>
+            </div>`;
+          })()}
+
           <div id="glossary-results" class="text-sm text-slate-500 mb-4 hidden"></div>
 
           <div id="glossary-content">

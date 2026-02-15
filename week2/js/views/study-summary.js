@@ -84,6 +84,33 @@ function createStudySummaryView() {
             </div>
           </div>
 
+          <!-- Exam Readiness Gauge -->
+          ${(() => {
+            const masteries = allData.map(({ topic, data }) => store.getTopicMastery(topic.id, data));
+            const avgMastery = masteries.filter(m => m && m.mastery > 0).length > 0
+              ? Math.round(masteries.filter(m => m).reduce((s, m) => s + m.mastery, 0) / allData.length) : 0;
+            const best = store.getBestExamScore();
+            const examBonus = best ? Math.min(20, Math.round(best.pct / 5)) : 0;
+            const fcStats = store.getFlashcardStats();
+            const fcBonus = fcStats.total > 0 ? Math.min(10, Math.round((fcStats.total / allData.reduce((s, d) => s + (d.data.vocabulary?.length || 0), 0)) * 10)) : 0;
+            const readiness = Math.min(100, Math.round(avgMastery * 0.7 + examBonus + fcBonus));
+            if (readiness === 0) return '';
+            const color = readiness >= 80 ? 'green' : readiness >= 50 ? 'amber' : 'red';
+            const label = readiness >= 80 ? 'Well Prepared' : readiness >= 60 ? 'Getting There' : readiness >= 30 ? 'Keep Studying' : 'Just Starting';
+            return `
+            <div class="mb-8 bg-${color}-50 dark:bg-${color}-900/10 rounded-xl p-5 border border-${color}-200 dark:border-${color}-800 print:bg-${color}-50">
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-full border-4 border-${color}-400 flex items-center justify-center flex-shrink-0">
+                  <span class="text-xl font-bold text-${color}-600">${readiness}%</span>
+                </div>
+                <div>
+                  <h3 class="font-bold text-${color}-800 dark:text-${color}-300">Exam Readiness: ${label}</h3>
+                  <p class="text-xs text-${color}-600 dark:text-${color}-400 mt-1">Based on mastery (70%), exam scores (20%), and flashcard reviews (10%)</p>
+                </div>
+              </div>
+            </div>`;
+          })()}
+
           ${allData.map(({ topic, data }) => `
             <section class="mb-8 page-break-inside-avoid">
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">

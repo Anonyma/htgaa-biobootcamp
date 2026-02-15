@@ -966,6 +966,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v66', items: ['Glossary term of the day', 'Study summary readiness gauge', 'Exam improvement from last attempt'] },
     { ver: 'v65', items: ['Exam skipped question badges', 'Flashcard daily review goal bar', 'Mastered terms count on dashboard'] },
     { ver: 'v64', items: ['Exam topic history count on setup', 'Flashcard hardest cards list', 'Exam score trend arrow on dashboard'] },
     { ver: 'v63', items: ['Exam early submit with unanswered warning', 'Flashcard new-cards-only mode', 'Dynamic glossary term count'] },
