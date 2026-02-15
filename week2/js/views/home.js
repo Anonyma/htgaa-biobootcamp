@@ -177,6 +177,10 @@ function createHomeView() {
               <a data-route="#/timeline" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="milestone" class="w-4 h-4 text-indigo-500"></i> Journey
               </a>
+              <a data-route="#/mistakes" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="circle-x" class="w-4 h-4 text-rose-500"></i> Mistakes
+                ${(() => { const w = store.getAllWrongAnswers(); return w.length > 0 ? `<span class="text-xs text-rose-500 font-bold">${w.length}</span>` : ''; })()}
+              </a>
             </div>
           </section>
 

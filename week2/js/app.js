@@ -20,6 +20,7 @@ import { createWeakPointsView } from './views/weak-points.js';
 import { createBookmarksView } from './views/bookmarks.js';
 import { createDailyDigestView } from './views/daily-digest.js';
 import { createTimelineView } from './views/timeline.js';
+import { createMistakesView } from './views/mistakes.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -55,7 +56,8 @@ class App {
       .on('/weak-points', () => createWeakPointsView())
       .on('/bookmarks', () => createBookmarksView())
       .on('/digest', () => createDailyDigestView())
-      .on('/timeline', () => createTimelineView());
+      .on('/timeline', () => createTimelineView())
+      .on('/mistakes', () => createMistakesView());
 
     // Start
     this.router.start();
@@ -213,6 +215,14 @@ class App {
               <a data-route="#/weak-points" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i>
                 <span>Weak Points</span>
+              </a>
+              <a data-route="#/mistakes" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="circle-x" class="w-4 h-4 text-rose-500"></i>
+                <span class="flex-1">Mistakes</span>
+                ${(() => {
+                  const wrong = store.getAllWrongAnswers();
+                  return wrong.length > 0 ? `<span class="text-xs px-1.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 font-bold">${wrong.length}</span>` : '';
+                })()}
               </a>
               <a data-route="#/bookmarks" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i>
