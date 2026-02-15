@@ -33,6 +33,7 @@ import { createAchievementsView } from './views/achievements.js';
 import { createDiscussionView } from './views/discussion.js';
 import { createShortcutsView } from './views/shortcuts.js';
 import { createStudyLogView } from './views/study-log.js';
+import { createFaqView } from './views/faq.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -81,7 +82,8 @@ class App {
       .on('/achievements', () => createAchievementsView())
       .on('/discussion', () => createDiscussionView())
       .on('/shortcuts', () => createShortcutsView())
-      .on('/study-log', () => createStudyLogView());
+      .on('/study-log', () => createStudyLogView())
+      .on('/faq', () => createFaqView());
 
     // Start
     this.router.start();
@@ -242,6 +244,10 @@ class App {
               <a data-route="#/resources" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="library" class="w-4 h-4 text-teal-500"></i>
                 <span>Resources</span>
+              </a>
+              <a data-route="#/faq" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="help-circle" class="w-4 h-4 text-sky-500"></i>
+                <span>FAQ</span>
               </a>
               <a data-route="#/cheatsheet" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="file-badge" class="w-4 h-4 text-pink-500"></i>

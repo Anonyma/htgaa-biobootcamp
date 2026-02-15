@@ -214,6 +214,9 @@ function createHomeView() {
               <a data-route="#/shortcuts" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="keyboard" class="w-4 h-4 text-slate-500"></i> Shortcuts
               </a>
+              <a data-route="#/faq" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-sky-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="help-circle" class="w-4 h-4 text-sky-500"></i> FAQ
+              </a>
             </div>
           </section>
 
@@ -1723,6 +1726,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v133', items: ['FAQ with 30+ questions', 'Searchable accordion answers', 'Category filtering'] },
     { ver: 'v132', items: ['Study log with heatmap', 'GitHub-style activity calendar', 'Activity timeline and weekly chart'] },
     { ver: 'v131', items: ['Keyboard shortcuts reference', 'Searchable shortcut guide', 'Navigation and study tool shortcuts'] },
     { ver: 'v130', items: ['Discussion prompts', 'Critical thinking questions', 'Study group conversation starters'] },
