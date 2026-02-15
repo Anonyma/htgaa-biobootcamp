@@ -1013,6 +1013,31 @@ export function createExamView() {
         </div>`;
       })()}
 
+      <!-- Cumulative Accuracy -->
+      ${results.length >= 5 ? (() => {
+        let running = 0;
+        const cumPcts = results.map((r, i) => { if (r.isCorrect) running++; return Math.round((running / (i + 1)) * 100); });
+        const w = Math.min(400, cumPcts.length * 12);
+        const h = 36;
+        const pts = cumPcts.map((p, i) => `${(i / (cumPcts.length - 1)) * w},${h - (p / 100) * (h - 4)}`).join(' ');
+        const startPct = cumPcts[0], endPct = cumPcts[cumPcts.length - 1];
+        const trend = endPct - startPct;
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-2">Accuracy Over Time
+            <span class="text-xs font-normal text-slate-400 ml-2">${trend > 0 ? `+${trend}% improving` : trend < 0 ? `${trend}% declining` : 'steady'}</span>
+          </h2>
+          <svg viewBox="0 0 ${w} ${h + 2}" class="w-full" style="max-width:${w}px">
+            <line x1="0" y1="${h - (50 / 100) * (h - 4)}" x2="${w}" y2="${h - (50 / 100) * (h - 4)}" stroke="rgba(148,163,184,0.15)" stroke-width="0.5" stroke-dasharray="3,3"/>
+            <polyline points="${pts}" fill="none" stroke="#6366f1" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="${w}" cy="${h - (endPct / 100) * (h - 4)}" r="3" fill="#6366f1" stroke="white" stroke-width="1"/>
+          </svg>
+          <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+            <span>Q1: ${startPct}%</span><span>Q${cumPcts.length}: ${endPct}%</span>
+          </div>
+        </div>`;
+      })() : ''}
+
       <!-- Question Review -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <div class="flex items-center justify-between mb-4">

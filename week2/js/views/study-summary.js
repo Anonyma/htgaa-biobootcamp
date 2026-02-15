@@ -38,6 +38,22 @@ function createStudySummaryView() {
             </div>
           </header>
 
+          <!-- Overall Progress -->
+          ${(() => {
+            const overallPct = store.getOverallProgress();
+            const barColor = overallPct >= 80 ? 'bg-green-500' : overallPct >= 50 ? 'bg-amber-500' : 'bg-blue-500';
+            return `
+            <div class="mb-6 print:hidden">
+              <div class="flex items-center justify-between text-sm mb-1.5">
+                <span class="font-medium text-slate-700 dark:text-slate-300">Overall Progress</span>
+                <span class="font-bold ${overallPct >= 80 ? 'text-green-600' : overallPct >= 50 ? 'text-amber-600' : 'text-blue-600'}">${overallPct}%</span>
+              </div>
+              <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                <div class="${barColor} h-full rounded-full transition-all duration-500" style="width:${overallPct}%"></div>
+              </div>
+            </div>`;
+          })()}
+
           <!-- Summary stats -->
           <div class="mb-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 print:grid-cols-8">
             <div class="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 print:bg-blue-50">

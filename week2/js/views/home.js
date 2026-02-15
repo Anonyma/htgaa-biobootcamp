@@ -135,6 +135,9 @@ function createHomeView() {
           <!-- Recent Activity -->
           ${renderActivityFeed()}
 
+          <!-- Learning Insights -->
+          ${renderLearningInsights()}
+
           <!-- Quick Actions -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -974,6 +977,63 @@ function renderMasteryRanking() {
   `;
 }
 
+function renderLearningInsights() {
+  const insights = [];
+  const fc = store.getFlashcardStats();
+  const scores = store.getExamScores();
+  const log = store.getStudyLog();
+  const activeDays = Object.keys(log).filter(d => log[d] > 0);
+  const progress = store.get('progress');
+
+  // Insight: studying consistency
+  if (activeDays.length >= 2) {
+    const totalMin = activeDays.reduce((s, d) => s + log[d], 0);
+    const avgMin = Math.round(totalMin / activeDays.length);
+    insights.push({ icon: 'clock', color: 'cyan', text: `You study an average of ${avgMin} minutes per session across ${activeDays.length} days.` });
+  }
+
+  // Insight: exam improvement
+  if (scores.length >= 3) {
+    const first3 = scores.slice(0, 3).reduce((s, sc) => s + sc.pct, 0) / 3;
+    const last3 = scores.slice(-3).reduce((s, sc) => s + sc.pct, 0) / 3;
+    const diff = Math.round(last3 - first3);
+    if (diff > 5) insights.push({ icon: 'trending-up', color: 'green', text: `Your exam scores improved by ${diff}% from your first 3 exams to your last 3.` });
+    else if (diff < -5) insights.push({ icon: 'trending-down', color: 'red', text: `Your recent exam scores dropped by ${Math.abs(diff)}%. Consider reviewing weak topics.` });
+  }
+
+  // Insight: flashcard efficiency
+  if (fc.reviewed >= 20) {
+    const masteredPct = fc.mastered > 0 ? Math.round((fc.mastered / fc.total) * 100) : 0;
+    if (masteredPct >= 50) insights.push({ icon: 'star', color: 'amber', text: `${masteredPct}% of your flashcards are mastered. Great memory retention!` });
+    else if (masteredPct < 20) insights.push({ icon: 'repeat', color: 'violet', text: `Only ${masteredPct}% mastered. Try reviewing cards daily for better retention.` });
+  }
+
+  // Insight: weakest topic
+  const weakest = TOPICS.map(t => ({ topic: t, mastery: store.getTopicMastery(t.id, null)?.mastery || 0 }))
+    .filter(t => t.mastery > 0).sort((a, b) => a.mastery - b.mastery)[0];
+  if (weakest && weakest.mastery < 50) {
+    insights.push({ icon: 'target', color: 'red', text: `${weakest.topic.title} is your weakest topic at ${weakest.mastery}%. Focus here for the biggest improvement.` });
+  }
+
+  if (insights.length === 0) return '';
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="lightbulb" class="w-5 h-5 text-yellow-500"></i> Learning Insights
+      </h2>
+      <div class="space-y-2">
+        ${insights.slice(0, 3).map(ins => `
+          <div class="flex items-start gap-3 p-3 rounded-xl bg-${ins.color}-50 dark:bg-${ins.color}-900/10 border border-${ins.color}-200 dark:border-${ins.color}-800">
+            <i data-lucide="${ins.icon}" class="w-4 h-4 text-${ins.color}-500 flex-shrink-0 mt-0.5"></i>
+            <p class="text-sm text-slate-700 dark:text-slate-300">${ins.text}</p>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function renderMilestoneBadges() {
   const badges = [];
   const progress = store.get('progress');
@@ -1128,6 +1188,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v96', items: ['Dashboard learning insights', 'Exam cumulative accuracy chart', 'Study summary progress bar'] },
     { ver: 'v95', items: ['Dashboard milestone badges', 'Exam per-question time sparkline', 'Flashcard maturity counts in header'] },
     { ver: 'v94', items: ['Exam question quick-jump navigation', 'Dashboard time distribution donut', 'Compare quiz head-to-head'] },
     { ver: 'v93', items: ['Glossary recently viewed terms', 'Study summary time remaining per topic', 'Flashcard topic last-reviewed date'] },
