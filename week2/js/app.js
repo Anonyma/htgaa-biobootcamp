@@ -19,6 +19,7 @@ import { createNotesView } from './views/notes.js';
 import { createWeakPointsView } from './views/weak-points.js';
 import { createBookmarksView } from './views/bookmarks.js';
 import { createDailyDigestView } from './views/daily-digest.js';
+import { createTimelineView } from './views/timeline.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -53,7 +54,8 @@ class App {
       .on('/notes', () => createNotesView())
       .on('/weak-points', () => createWeakPointsView())
       .on('/bookmarks', () => createBookmarksView())
-      .on('/digest', () => createDailyDigestView());
+      .on('/digest', () => createDailyDigestView())
+      .on('/timeline', () => createTimelineView());
 
     // Start
     this.router.start();
@@ -217,6 +219,10 @@ class App {
                 <span class="flex-1">Bookmarks</span>
                 <span id="sidebar-bookmarks-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold"></span>
               </a>
+              <a data-route="#/timeline" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="milestone" class="w-4 h-4 text-indigo-500"></i>
+                <span>Journey</span>
+              </a>
             </div>
 
             <!-- Pomodoro Study Timer -->
@@ -290,6 +296,7 @@ class App {
                   <div class="shortcut-row"><kbd class="shortcut-key">p</kbd><span class="shortcut-desc">Previous topic</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">h</kbd><span class="shortcut-desc">Go home</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">d</kbd><span class="shortcut-desc">Daily digest</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">j</kbd><span class="shortcut-desc">Learning journey</span></div>
                 </div>
               </div>
 
@@ -458,6 +465,9 @@ class App {
       }
       if (e.key === 'd' && !e.metaKey && !e.ctrlKey) {
         window.location.hash = '#/digest';
+      }
+      if (e.key === 'j' && !e.metaKey && !e.ctrlKey) {
+        window.location.hash = '#/timeline';
       }
       if (e.key === 'f' && !e.metaKey && !e.ctrlKey) {
         toggleFocus();

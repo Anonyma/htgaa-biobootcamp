@@ -174,6 +174,9 @@ function createHomeView() {
                 <i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i> Bookmarks
                 ${(() => { const bm = store.getBookmarks(); return bm.length > 0 ? `<span class="text-xs text-blue-500 font-bold">${bm.length}</span>` : ''; })()}
               </a>
+              <a data-route="#/timeline" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="milestone" class="w-4 h-4 text-indigo-500"></i> Journey
+              </a>
             </div>
           </section>
 
