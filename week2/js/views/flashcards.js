@@ -575,6 +575,13 @@ function renderCard(card, allCards) {
         <div class="absolute inset-0 backface-hidden bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-2 border-blue-200 dark:border-blue-800 p-8 flex flex-col items-center justify-center text-center shadow-lg" style="transform: rotateY(180deg); backface-visibility: hidden; -webkit-backface-visibility: hidden;">
           <p class="font-bold text-blue-600 dark:text-blue-400 mb-3 text-lg">${escapeHtml(card.term)}</p>
           <p class="text-sm leading-relaxed max-w-md">${escapeHtml(card.definition)}</p>
+          ${(() => {
+            const r = store.get('flashcards').reviews[card.id];
+            if (!r || !r.easeFactor) return '';
+            const ef = r.easeFactor.toFixed(2);
+            const eColor = r.easeFactor >= 2.5 ? 'green' : r.easeFactor >= 2.0 ? 'blue' : r.easeFactor >= 1.5 ? 'amber' : 'red';
+            return `<p class="text-[10px] text-${eColor}-500 mt-3 opacity-70">Ease: ${ef} · Interval: ${r.interval}d</p>`;
+          })()}
         </div>
       </div>
     </div>

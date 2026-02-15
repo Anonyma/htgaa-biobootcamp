@@ -578,6 +578,10 @@ export function createExamView() {
     const grade = pct >= 90 ? 'A' : pct >= 80 ? 'B' : pct >= 70 ? 'C' : pct >= 60 ? 'D' : 'F';
     const gradeColor = pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red';
 
+    // Check personal best before saving
+    const prevBest = store.getBestExamScore();
+    const isNewBest = !prevBest || pct > prevBest.pct;
+
     // Save score
     store.saveExamScore(correct, questions.length, elapsedSeconds, [...selectedTopics]);
     store.recordStudyActivity();
@@ -598,6 +602,7 @@ export function createExamView() {
           <span class="text-4xl font-bold text-${gradeColor}-600 dark:text-${gradeColor}-400">${grade}</span>
         </div>
         <h1 class="text-3xl font-bold mb-2">Exam Complete</h1>
+        ${isNewBest && prevBest ? `<p class="text-sm font-bold text-amber-500 mb-1">🏆 New Personal Best! (was ${prevBest.pct}%)</p>` : ''}
         <p class="text-xl text-slate-500">
           <span class="font-bold text-slate-900 dark:text-white">${correct}</span> / ${questions.length} correct
           ${(() => { const skipped = questions.filter((_, i) => answers[i] === undefined).length; return skipped > 0 ? `<span class="text-slate-400 mx-2">|</span><span class="text-slate-500">${skipped} skipped</span>` : ''; })()}

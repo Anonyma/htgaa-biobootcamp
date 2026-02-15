@@ -966,6 +966,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v70', items: ['Exam personal best badge', 'Flashcard ease/interval on card back', 'Flashcard last-reviewed date'] },
     { ver: 'v69', items: ['Compare combined stats', 'Flashcard last-reviewed timestamp', 'Exam topic question index in review'] },
     { ver: 'v68', items: ['Exam question pool size on setup', 'Glossary flashcard progress bar', 'Streak milestone emojis'] },
     { ver: 'v67', items: ['Flashcard focus-weak mode', 'Overdue flashcard urgency alert', 'Exam improvement from last attempt'] },
