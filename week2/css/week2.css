@@ -3246,4 +3246,17 @@ h2 {
   .topic-content { font-size: 11pt; line-height: 1.6; }
   .takeaway-callout { border: 1px solid #ddd; break-inside: avoid; }
   .deep-dive-box { break-inside: avoid; }
+  #mobile-bottom-nav { display: none !important; }
+}
+
+/* ===== Mobile Bottom Nav ===== */
+@media (max-width: 1023px) {
+  #app-content { padding-bottom: 64px; }
+  footer { padding-bottom: 64px; }
+}
+#mobile-bottom-nav .mobile-nav-item.active {
+  color: var(--tw-text-opacity, 1);
+}
+@media (min-width: 1024px) {
+  #mobile-bottom-nav { display: none !important; }
 }

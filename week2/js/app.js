@@ -79,6 +79,10 @@ class App {
     store.subscribe('progress', () => this.updateSidebarProgress());
     store.subscribe('topicData', () => this.updateSidebarProgress());
     document.addEventListener('progress-updated', () => this.updateSidebarProgress());
+
+    // Update mobile nav active state on hash change
+    window.addEventListener('hashchange', () => this.updateMobileNavActive());
+    this.updateMobileNavActive();
   }
 
   renderShell() {
@@ -310,6 +314,32 @@ class App {
         <!-- Main Content -->
         <main id="app-content" class="flex-1 min-w-0" role="main" aria-label="Topic content"></main>
       </div>
+
+      <!-- Mobile Bottom Navigation -->
+      <nav id="mobile-bottom-nav" class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-800/95 backdrop-blur border-t border-slate-200 dark:border-slate-700 lg:hidden" role="navigation" aria-label="Quick navigation">
+        <div class="flex justify-around items-center py-2 px-1 max-w-lg mx-auto">
+          <a data-route="#/" class="mobile-nav-item flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors">
+            <i data-lucide="home" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Home</span>
+          </a>
+          <a data-route="#/practice" class="mobile-nav-item flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-orange-600 transition-colors">
+            <i data-lucide="zap" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Practice</span>
+          </a>
+          <a data-route="#/flashcards" class="mobile-nav-item flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-violet-600 transition-colors">
+            <i data-lucide="layers" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Cards</span>
+          </a>
+          <a data-route="#/analytics" class="mobile-nav-item flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-blue-600 transition-colors">
+            <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Stats</span>
+          </a>
+          <a data-route="#/resources" class="mobile-nav-item flex flex-col items-center gap-0.5 px-2 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-teal-600 transition-colors">
+            <i data-lucide="library" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Library</span>
+          </a>
+        </div>
+      </nav>
 
       <!-- Keyboard Shortcuts Modal -->
       <div id="shortcuts-modal" class="shortcuts-modal-overlay hidden">
@@ -651,6 +681,24 @@ class App {
     }
 
     update();
+  }
+
+  updateMobileNavActive() {
+    const hash = window.location.hash || '#/';
+    document.querySelectorAll('#mobile-bottom-nav .mobile-nav-item').forEach(item => {
+      const route = item.getAttribute('data-route');
+      const isActive = (route === '#/' && (hash === '#/' || hash === '')) || (route !== '#/' && hash.startsWith(route));
+      item.classList.toggle('text-blue-600', isActive && route === '#/');
+      item.classList.toggle('text-orange-600', isActive && route === '#/practice');
+      item.classList.toggle('text-violet-600', isActive && route === '#/flashcards');
+      item.classList.toggle('text-teal-600', isActive && route === '#/resources');
+      if (!isActive) {
+        item.classList.remove('text-blue-600', 'text-orange-600', 'text-violet-600', 'text-teal-600');
+        item.classList.add('text-slate-500', 'dark:text-slate-400');
+      } else {
+        item.classList.remove('text-slate-500', 'dark:text-slate-400');
+      }
+    });
   }
 
   updateSidebarProgress() {
