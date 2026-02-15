@@ -155,6 +155,9 @@ function createHomeView() {
               <a data-route="#/notes" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-amber-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="sticky-note" class="w-4 h-4 text-amber-500"></i> My Notes
               </a>
+              <a data-route="#/weak-points" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i> Weak Points
+              </a>
             </div>
           </section>
 

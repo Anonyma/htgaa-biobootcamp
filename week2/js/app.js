@@ -16,6 +16,7 @@ import { createGlossaryView } from './views/glossary.js';
 import { createStudySummaryView } from './views/study-summary.js';
 import { createQuickReviewView } from './views/quick-review.js';
 import { createNotesView } from './views/notes.js';
+import { createWeakPointsView } from './views/weak-points.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -47,7 +48,8 @@ class App {
       .on('/glossary', () => createGlossaryView())
       .on('/review/:id', ({ id }) => createQuickReviewView(id))
       .on('/summary', () => createStudySummaryView())
-      .on('/notes', () => createNotesView());
+      .on('/notes', () => createNotesView())
+      .on('/weak-points', () => createWeakPointsView());
 
     // Start
     this.router.start();
@@ -197,6 +199,10 @@ class App {
                 <i data-lucide="sticky-note" class="w-4 h-4 text-amber-500"></i>
                 <span class="flex-1">My Notes</span>
                 <span id="sidebar-notes-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-bold"></span>
+              </a>
+              <a data-route="#/weak-points" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i>
+                <span>Weak Points</span>
               </a>
             </div>
 
