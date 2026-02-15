@@ -380,6 +380,45 @@ class Store {
     return longest;
   }
 
+  // --- Personal Notes ---
+  getNotes(topicId) {
+    const all = this._loadJSON('htgaa-week2-notes', {});
+    return all[topicId] || {};
+  }
+
+  saveNote(topicId, sectionId, text) {
+    const all = this._loadJSON('htgaa-week2-notes', {});
+    if (!all[topicId]) all[topicId] = {};
+    if (text.trim()) {
+      all[topicId][sectionId] = { text: text.trim(), updated: Date.now() };
+    } else {
+      delete all[topicId][sectionId];
+    }
+    localStorage.setItem('htgaa-week2-notes', JSON.stringify(all));
+  }
+
+  getAllNotes() {
+    return this._loadJSON('htgaa-week2-notes', {});
+  }
+
+  getNotesCount() {
+    const all = this.getAllNotes();
+    return Object.values(all).reduce((sum, topic) => sum + Object.keys(topic).length, 0);
+  }
+
+  // --- Mistakes Review ---
+  getWrongAnswers(topicId) {
+    const entries = Object.entries(this._state.quizzes)
+      .filter(([k, v]) => k.startsWith(topicId + '-') && !v);
+    return entries.map(([k]) => k);
+  }
+
+  getAllWrongAnswers() {
+    return Object.entries(this._state.quizzes)
+      .filter(([, v]) => !v)
+      .map(([k]) => k);
+  }
+
   // --- Topic Data Cache ---
   async loadTopicData(topicId) {
     if (this._state.topicData[topicId]) return this._state.topicData[topicId];

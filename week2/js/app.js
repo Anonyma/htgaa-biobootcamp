@@ -15,6 +15,7 @@ import { createCompareView } from './views/compare.js';
 import { createGlossaryView } from './views/glossary.js';
 import { createStudySummaryView } from './views/study-summary.js';
 import { createQuickReviewView } from './views/quick-review.js';
+import { createNotesView } from './views/notes.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -45,7 +46,8 @@ class App {
       .on('/compare/:a/:b', ({ a, b }) => createCompareView(a, b))
       .on('/glossary', () => createGlossaryView())
       .on('/review/:id', ({ id }) => createQuickReviewView(id))
-      .on('/summary', () => createStudySummaryView());
+      .on('/summary', () => createStudySummaryView())
+      .on('/notes', () => createNotesView());
 
     // Start
     this.router.start();
@@ -190,6 +192,11 @@ class App {
               <a data-route="#/summary" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="file-text" class="w-4 h-4 text-rose-500"></i>
                 <span>Study Summary</span>
+              </a>
+              <a data-route="#/notes" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="sticky-note" class="w-4 h-4 text-amber-500"></i>
+                <span class="flex-1">My Notes</span>
+                <span id="sidebar-notes-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-bold"></span>
               </a>
             </div>
 
@@ -481,6 +488,14 @@ class App {
 
     // Update flashcard due count badge
     this.updateFlashcardBadge();
+
+    // Update notes count badge
+    const notesBadge = document.getElementById('sidebar-notes-count');
+    if (notesBadge) {
+      const count = store.getNotesCount();
+      if (count > 0) { notesBadge.textContent = count; notesBadge.classList.remove('hidden'); }
+      else { notesBadge.classList.add('hidden'); }
+    }
 
     // Update individual topic indicators + progress bars
     TOPICS.forEach(topic => {

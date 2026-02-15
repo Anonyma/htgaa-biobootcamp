@@ -1396,12 +1396,25 @@ function renderQuizSection(questions, topicId) {
           <!-- Results slide -->
           <div class="quiz-slide quiz-results hidden" data-slide="results">
             <div class="text-center py-6">
-              <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+              <div class="quiz-result-icon w-20 h-20 mx-auto mb-4 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                 <i data-lucide="trophy" class="w-10 h-10 text-green-500"></i>
               </div>
               <h3 class="text-2xl font-bold mb-2">Quiz Complete!</h3>
               <p class="text-lg text-slate-600 dark:text-slate-400">You scored <strong class="quiz-final-score text-green-600">0</strong> out of ${questions.length}</p>
-              <button class="quiz-retry mt-4 px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors text-sm">Try Again</button>
+              <p class="quiz-result-message text-sm text-slate-500 mt-1"></p>
+              <div class="flex items-center justify-center gap-3 mt-4">
+                <button class="quiz-retry px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors text-sm">Try Again</button>
+                <button class="quiz-show-review px-5 py-2 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors text-sm hidden">
+                  <i data-lucide="eye" class="w-4 h-4 inline mr-1"></i>Review Mistakes
+                </button>
+              </div>
+            </div>
+            <!-- Mistakes review panel -->
+            <div class="quiz-mistakes-review hidden border-t border-slate-200 dark:border-slate-700 mt-4 pt-4 px-2">
+              <h4 class="text-sm font-bold text-red-600 dark:text-red-400 mb-3 flex items-center gap-2">
+                <i data-lucide="alert-circle" class="w-4 h-4"></i> Questions to Review
+              </h4>
+              <div class="quiz-mistakes-list space-y-3 text-left text-sm"></div>
             </div>
           </div>
         </div>
@@ -1959,6 +1972,52 @@ function initTopicQuizzes(container, topicId) {
       if (finalScore) finalScore.textContent = score;
       progressBar.style.width = '100%';
       quizCard.querySelector('.quiz-nav')?.classList.add('hidden');
+
+      // Result message based on performance
+      const pct = Math.round((score / total) * 100);
+      const msgEl = resultsSlide?.querySelector('.quiz-result-message');
+      const iconContainer = resultsSlide?.querySelector('.quiz-result-icon');
+      if (pct === 100) {
+        if (msgEl) msgEl.textContent = 'Perfect score! You\'ve mastered this material.';
+      } else if (pct >= 80) {
+        if (msgEl) msgEl.textContent = 'Great job! Review the missed questions below to solidify your understanding.';
+      } else if (pct >= 60) {
+        if (msgEl) msgEl.textContent = 'Good effort! Review the mistakes below and re-read the relevant sections.';
+        if (iconContainer) { iconContainer.classList.remove('bg-green-100', 'dark:bg-green-900/30'); iconContainer.classList.add('bg-yellow-100', 'dark:bg-yellow-900/30'); }
+      } else {
+        if (msgEl) msgEl.textContent = 'Keep studying! Review the sections below, then try again.';
+        if (iconContainer) { iconContainer.classList.remove('bg-green-100', 'dark:bg-green-900/30'); iconContainer.classList.add('bg-red-100', 'dark:bg-red-900/30'); }
+      }
+
+      // Populate mistakes review
+      const wrongSlides = [...slides].filter((s, i) => answered.has(i) && dots[i]?.classList.contains('bg-red-500'));
+      const reviewBtn = resultsSlide?.querySelector('.quiz-show-review');
+      const reviewPanel = resultsSlide?.querySelector('.quiz-mistakes-review');
+      const reviewList = resultsSlide?.querySelector('.quiz-mistakes-list');
+
+      if (wrongSlides.length > 0 && reviewBtn && reviewPanel && reviewList) {
+        reviewBtn.classList.remove('hidden');
+        reviewList.innerHTML = wrongSlides.map(slide => {
+          const qText = slide.querySelector('p')?.textContent || 'Question';
+          const correctOption = slide.querySelector('.quiz-option.bg-green-100, .quiz-option.border-green-500');
+          const correctText = correctOption?.textContent?.replace(/^[A-D]\.\s*/, '')?.trim() || '';
+          const explanationEl = slide.querySelector('.quiz-explanation p, .quiz-explanation');
+          const explanation = explanationEl?.textContent?.replace(/^(Explanation:?\s*)/i, '')?.trim() || '';
+          return `
+            <div class="p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800/50 rounded-lg">
+              <p class="font-medium text-slate-700 dark:text-slate-300 mb-1">${qText}</p>
+              <p class="text-green-700 dark:text-green-400 text-xs"><strong>Correct:</strong> ${correctText}</p>
+              ${explanation ? `<p class="text-slate-500 dark:text-slate-400 text-xs mt-1">${explanation.slice(0, 200)}${explanation.length > 200 ? '...' : ''}</p>` : ''}
+            </div>
+          `;
+        }).join('');
+
+        reviewBtn.addEventListener('click', () => {
+          reviewPanel.classList.toggle('hidden');
+          reviewBtn.textContent = reviewPanel.classList.contains('hidden') ? 'Review Mistakes' : 'Hide Review';
+        });
+      }
+
       if (window.lucide) lucide.createIcons();
     }
   });
