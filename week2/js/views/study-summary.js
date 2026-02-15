@@ -135,6 +135,37 @@ function createStudySummaryView() {
             </div>`;
           })()}
 
+          <!-- Strongest/Weakest -->
+          ${(() => {
+            const ranked = allData.map(({ topic, data }) => {
+              const m = store.getTopicMastery(topic.id, data);
+              return { topic, mastery: m?.mastery || 0 };
+            }).filter(r => r.mastery > 0).sort((a, b) => b.mastery - a.mastery);
+            if (ranked.length < 2) return '';
+            const strongest = ranked[0];
+            const weakest = ranked[ranked.length - 1];
+            if (strongest.mastery === weakest.mastery) return '';
+            return `
+            <div class="mb-8 grid grid-cols-2 gap-4 print:grid-cols-2">
+              <div class="bg-green-50 dark:bg-green-900/10 rounded-xl p-4 border border-green-200 dark:border-green-800">
+                <div class="flex items-center gap-2 mb-1">
+                  <i data-lucide="trophy" class="w-4 h-4 text-green-500"></i>
+                  <span class="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wider">Strongest Topic</span>
+                </div>
+                <p class="font-bold text-slate-800 dark:text-slate-200">${strongest.topic.title}</p>
+                <p class="text-sm text-green-600 dark:text-green-400 font-medium">${strongest.mastery}% mastery</p>
+              </div>
+              <div class="bg-amber-50 dark:bg-amber-900/10 rounded-xl p-4 border border-amber-200 dark:border-amber-800">
+                <div class="flex items-center gap-2 mb-1">
+                  <i data-lucide="target" class="w-4 h-4 text-amber-500"></i>
+                  <span class="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Needs Work</span>
+                </div>
+                <p class="font-bold text-slate-800 dark:text-slate-200">${weakest.topic.title}</p>
+                <p class="text-sm text-amber-600 dark:text-amber-400 font-medium">${weakest.mastery}% mastery</p>
+              </div>
+            </div>`;
+          })()}
+
           ${allData.map(({ topic, data }) => `
             <section class="mb-8 page-break-inside-avoid">
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">

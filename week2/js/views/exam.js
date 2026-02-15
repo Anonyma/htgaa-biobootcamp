@@ -844,6 +844,34 @@ export function createExamView() {
         </div>`;
       })()}
 
+      <!-- Answer Distribution -->
+      ${(() => {
+        const dist = {};
+        results.forEach((r, i) => {
+          if (answers[i] === undefined) return;
+          const letter = String.fromCharCode(65 + answers[i]);
+          dist[letter] = (dist[letter] || 0) + 1;
+        });
+        const entries = Object.entries(dist).sort((a, b) => a[0].localeCompare(b[0]));
+        if (entries.length < 2) return '';
+        const maxCount = Math.max(...entries.map(e => e[1]));
+        const answered = Object.values(dist).reduce((s, v) => s + v, 0);
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-3">Answer Distribution</h2>
+          <div class="flex items-end gap-3 h-20">
+            ${entries.map(([letter, count]) => `
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <span class="text-xs text-slate-400">${count}</span>
+                <div class="w-full rounded-t-sm bg-blue-400 dark:bg-blue-600" style="height: ${Math.max(4, (count / maxCount) * 100)}%"></div>
+                <span class="text-xs font-bold text-slate-500">${letter}</span>
+              </div>
+            `).join('')}
+          </div>
+          <p class="text-[10px] text-slate-400 text-center mt-2">${answered} answered · ${questions.length - answered} skipped</p>
+        </div>`;
+      })()}
+
       <!-- Question Review -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <div class="flex items-center justify-between mb-4">

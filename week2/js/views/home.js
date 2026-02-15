@@ -70,6 +70,9 @@ function createHomeView() {
           <!-- Topic Mastery Ranking -->
           ${renderMasteryRanking()}
 
+          <!-- Knowledge Radar -->
+          ${renderKnowledgeRadar()}
+
           <!-- Visual Learning Path -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -967,6 +970,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v76', items: ['Knowledge radar chart on dashboard', 'Study summary strongest/weakest', 'Exam answer distribution chart'] },
     { ver: 'v75', items: ['Exam confidence labels on review', 'Flashcard session time estimate', 'Glossary word count badges'] },
     { ver: 'v74', items: ['Exam difficulty distribution', 'Flashcard topic completion %', 'Sections read dashboard stat'] },
     { ver: 'v73', items: ['Flashcard 7-day review forecast', 'Exam topic radar chart', 'Compare time invested'] },
@@ -2060,6 +2064,64 @@ function getEstimatedRemaining(progress) {
   if (remaining < 60) return `~${remaining}m`;
   const hrs = Math.floor(remaining / 60);
   return `~${hrs}h ${remaining % 60}m`;
+}
+
+function renderKnowledgeRadar() {
+  const topics = TOPICS.map(t => {
+    const m = store.getTopicMastery(t.id, null);
+    return { topic: t, mastery: m?.mastery || 0 };
+  });
+  if (topics.every(t => t.mastery === 0)) return '';
+
+  const n = topics.length;
+  const cx = 100, cy = 100, r = 70;
+  const angleStep = (2 * Math.PI) / n;
+
+  const gridCircles = [25, 50, 75, 100].map(pct => {
+    const gr = (pct / 100) * r;
+    return `<circle cx="${cx}" cy="${cy}" r="${gr}" fill="none" stroke="rgba(148,163,184,0.15)" stroke-width="0.5"/>`;
+  }).join('');
+
+  const axes = topics.map(({ topic }, i) => {
+    const angle = -Math.PI / 2 + i * angleStep;
+    const x2 = cx + r * Math.cos(angle);
+    const y2 = cy + r * Math.sin(angle);
+    const lx = cx + (r + 16) * Math.cos(angle);
+    const ly = cy + (r + 16) * Math.sin(angle);
+    return `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="rgba(148,163,184,0.2)" stroke-width="0.5"/>
+      <text x="${lx}" y="${ly}" text-anchor="middle" dominant-baseline="middle" fill="currentColor" font-size="5.5" class="text-slate-500">${topic.title.split(' ')[0]}</text>`;
+  }).join('');
+
+  const points = topics.map(({ mastery }, i) => {
+    const angle = -Math.PI / 2 + i * angleStep;
+    const x = cx + (mastery / 100) * r * Math.cos(angle);
+    const y = cy + (mastery / 100) * r * Math.sin(angle);
+    return `${x},${y}`;
+  }).join(' ');
+
+  const dots = topics.map(({ topic, mastery }, i) => {
+    const angle = -Math.PI / 2 + i * angleStep;
+    const x = cx + (mastery / 100) * r * Math.cos(angle);
+    const y = cy + (mastery / 100) * r * Math.sin(angle);
+    const colors = { blue: '#3b82f6', green: '#22c55e', red: '#ef4444', purple: '#a855f7', yellow: '#eab308', indigo: '#6366f1' };
+    return `<circle cx="${x}" cy="${y}" r="3" fill="${colors[topic.color] || '#3b82f6'}" stroke="white" stroke-width="1"/>`;
+  }).join('');
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="radar" class="w-5 h-5 text-violet-500"></i> Knowledge Radar
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-6 flex justify-center">
+        <svg viewBox="0 0 200 200" class="w-64 h-64 text-slate-600 dark:text-slate-400">
+          ${gridCircles}
+          ${axes}
+          <polygon points="${points}" fill="rgba(99,102,241,0.12)" stroke="#6366f1" stroke-width="1.5" stroke-linejoin="round"/>
+          ${dots}
+        </svg>
+      </div>
+    </section>
+  `;
 }
 
 function getSectionsReadStats() {
