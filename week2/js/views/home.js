@@ -24,7 +24,7 @@ function createHomeView() {
                   genetic codes, gel electrophoresis, and gene expression.
                 </p>
                 <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-100 text-xs">
-                  <span class="font-bold text-white">v108</span> 200+ features built with AI-assisted development
+                  <span class="font-bold text-white">v109</span> 200+ features built with AI-assisted development
                 </div>
                 <div class="flex items-center gap-4 mt-3 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
@@ -146,6 +146,9 @@ function createHomeView() {
 
           <!-- Flashcard Forecast -->
           ${renderFlashcardForecast()}
+
+          <!-- Weekly Goal -->
+          ${renderWeeklyGoal()}
 
           <!-- Study Planner -->
           ${renderStudyPlanner(progress)}
@@ -1300,6 +1303,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v109', items: ['Exam difficulty breakdown chart', 'Flashcard 7-day review calendar', 'Dashboard weekly goals tracker'] },
     { ver: 'v108', items: ['Exam difficulty badges in review', 'Glossary Anki TSV export', 'Compare combined study plan'] },
     { ver: 'v107', items: ['Exam grade distribution on setup', 'Flashcard daily review comparison', 'Dashboard best study day stat'] },
     { ver: 'v106', items: ['Exam question pool preview', 'Compare mastery race chart', 'Study summary focus areas'] },
@@ -2146,6 +2150,65 @@ function renderFlashcardForecast() {
       </div>
     </section>
   `;
+}
+
+function renderWeeklyGoal() {
+  try {
+    const now = new Date();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - now.getDay());
+    weekStart.setHours(0, 0, 0, 0);
+    const weekKey = weekStart.toISOString().slice(0, 10);
+
+    // Count flashcard reviews this week
+    const fcSessions = JSON.parse(localStorage.getItem('htgaa-fc-sessions') || '[]');
+    let fcThisWeek = 0;
+    fcSessions.forEach(function(s) {
+      if (s.date >= weekKey) fcThisWeek += s.reviewed;
+    });
+
+    // Count exams this week
+    const examScores = store.getExamScores();
+    let examsThisWeek = 0;
+    examScores.forEach(function(s) {
+      if (s.date && new Date(s.date) >= weekStart) examsThisWeek++;
+    });
+
+    // Count study minutes this week
+    const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
+    let studyMinsThisWeek = 0;
+    const times = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+    const totalSecs = Object.values(times).reduce(function(s, v) { return s + v; }, 0);
+    studyMinsThisWeek = Math.round(totalSecs / 60);
+
+    const goals = [
+      { label: 'Flashcards', current: fcThisWeek, target: 30, icon: 'layers', color: 'violet' },
+      { label: 'Exams', current: examsThisWeek, target: 3, icon: 'trophy', color: 'amber' },
+      { label: 'Study mins', current: studyMinsThisWeek, target: 120, icon: 'clock', color: 'cyan' }
+    ];
+
+    const overallPct = Math.min(100, Math.round(goals.reduce(function(s, g) { return s + Math.min(100, (g.current / g.target) * 100); }, 0) / goals.length));
+
+    return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="target" class="w-5 h-5 text-orange-500"></i> Weekly Goals
+        <span class="text-sm font-normal text-slate-400">${overallPct}% complete</span>
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden mb-4">
+          <div class="h-full rounded-full bg-gradient-to-r from-orange-400 to-amber-400 transition-all" style="width:${overallPct}%"></div>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          ${goals.map(function(g) {
+            var pct = Math.min(100, Math.round((g.current / g.target) * 100));
+            return '<div class="text-center"><div class="text-lg font-bold text-' + g.color + '-600 dark:text-' + g.color + '-400">' + g.current + '<span class="text-xs text-slate-400 font-normal">/' + g.target + '</span></div><div class="h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden mt-1 mb-1"><div class="h-full rounded-full bg-' + g.color + '-500" style="width:' + pct + '%"></div></div><div class="text-[10px] text-slate-500">' + g.label + '</div></div>';
+          }).join('')}
+        </div>
+      </div>
+    </section>
+    `;
+  } catch { return ''; }
 }
 
 function renderStudyPlanner(progress) {

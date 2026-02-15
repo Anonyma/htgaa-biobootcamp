@@ -967,6 +967,29 @@ function renderComplete() {
         } catch { return ''; }
       })()}
 
+      ${(() => {
+        // 7-day review streak calendar
+        try {
+          const history = JSON.parse(localStorage.getItem('htgaa-fc-sessions') || '[]');
+          if (history.length === 0) return '';
+          const days = [];
+          for (let i = 6; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const key = d.toISOString().slice(0, 10);
+            const dayEntries = history.filter(function(h) { return h.date.slice(0, 10) === key; });
+            const count = dayEntries.reduce(function(s, e) { return s + e.reviewed; }, 0);
+            days.push({ label: d.toLocaleDateString('en', { weekday: 'short' }).slice(0, 2), count: count, isToday: i === 0 });
+          }
+          var maxC = Math.max.apply(null, days.map(function(d) { return d.count; }).concat([1]));
+          return '<div class="max-w-xs mx-auto mb-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4"><p class="text-[10px] text-slate-400 text-center mb-2 uppercase tracking-wider">7-Day Review Activity</p><div class="flex items-end gap-1.5 justify-center h-12">' + days.map(function(d) {
+            var h = d.count > 0 ? Math.max(8, Math.round((d.count / maxC) * 40)) : 4;
+            var bg = d.count > 0 ? (d.isToday ? 'bg-violet-500' : 'bg-violet-300 dark:bg-violet-600') : 'bg-slate-200 dark:bg-slate-600';
+            return '<div class="flex flex-col items-center gap-0.5"><div class="' + bg + ' rounded-sm" style="width:20px;height:' + h + 'px"></div><span class="text-[8px] text-slate-400' + (d.isToday ? ' font-bold' : '') + '">' + d.label + '</span></div>';
+          }).join('') + '</div></div>';
+        } catch { return ''; }
+      })()}
+
       ${stats.total > 0 ? `
         <div class="max-w-xs mx-auto mb-6">
           <div class="flex items-center gap-1 h-4 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700">

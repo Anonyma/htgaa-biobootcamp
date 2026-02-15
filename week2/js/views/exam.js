@@ -969,6 +969,27 @@ export function createExamView() {
         </div>
       </div>
 
+      <!-- Difficulty Breakdown -->
+      ${(() => {
+        const byDiff = { easy: { correct: 0, total: 0 }, medium: { correct: 0, total: 0 }, hard: { correct: 0, total: 0 } };
+        results.forEach(r => {
+          const d = r.question.difficulty || 'medium';
+          if (!byDiff[d]) byDiff[d] = { correct: 0, total: 0 };
+          byDiff[d].total++;
+          if (r.isCorrect) byDiff[d].correct++;
+        });
+        const hasDiff = Object.values(byDiff).some(v => v.total > 0);
+        if (!hasDiff) return '';
+        const diffColors = { easy: 'green', medium: 'blue', hard: 'red' };
+        return '<div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6"><h2 class="font-semibold mb-4">By Difficulty</h2><div class="grid grid-cols-3 gap-3">' + ['easy', 'medium', 'hard'].map(function(d) {
+          var v = byDiff[d];
+          if (v.total === 0) return '<div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-600"><div class="text-lg font-bold text-slate-400">—</div><div class="text-xs text-slate-400 capitalize">' + d + '</div></div>';
+          var pct = Math.round((v.correct / v.total) * 100);
+          var c = diffColors[d];
+          return '<div class="text-center p-3 rounded-xl bg-' + c + '-50 dark:bg-' + c + '-900/10 border border-' + c + '-200 dark:border-' + c + '-800"><div class="text-xl font-bold text-' + c + '-600">' + pct + '%</div><div class="text-xs text-' + c + '-700 dark:text-' + c + '-400 capitalize">' + d + ' (' + v.correct + '/' + v.total + ')</div></div>';
+        }).join('') + '</div></div>';
+      })()}
+
       <!-- Topic Radar Chart -->
       ${Object.keys(topicBreakdown).length >= 3 ? (() => {
         const topics = Object.entries(topicBreakdown);
