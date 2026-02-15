@@ -192,6 +192,7 @@ function createHomeView() {
               <i data-lucide="chevron-down" class="w-4 h-4"></i> Show analytics & more
             </button>
             <div id="more-dashboard-content" class="hidden mt-8 space-y-10">
+              ${renderStudyHeatmap()}
               ${renderStatsDashboard(progress)}
               ${renderMasteryRanking()}
               ${renderConfidenceOverview()}
