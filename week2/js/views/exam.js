@@ -953,6 +953,38 @@ export function createExamView() {
         </div>`;
       })()}
 
+      <!-- Per-Question Time Sparkline -->
+      ${(() => {
+        const times = questionElapsed.filter(t => t > 0);
+        if (times.length < 3) return '';
+        const maxT = Math.max(...times, 1);
+        const w = Math.min(400, times.length * 14);
+        const h = 40;
+        const pts = questionElapsed.map((t, i) => {
+          const x = (i / (questionElapsed.length - 1)) * w;
+          const y = h - Math.max(2, (t / maxT) * (h - 4));
+          return `${x},${y}`;
+        }).join(' ');
+        const dots = questionElapsed.map((t, i) => {
+          const x = (i / (questionElapsed.length - 1)) * w;
+          const y = h - Math.max(2, (t / maxT) * (h - 4));
+          const color = results[i]?.isCorrect ? '#22c55e' : '#ef4444';
+          return `<circle cx="${x}" cy="${y}" r="2.5" fill="${color}" stroke="white" stroke-width="0.5"/>`;
+        }).join('');
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-3">Time per Question</h2>
+          <svg viewBox="0 0 ${w} ${h + 4}" class="w-full" style="max-width:${w}px">
+            <polyline points="${pts}" fill="none" stroke="rgba(148,163,184,0.3)" stroke-width="1"/>
+            ${dots}
+          </svg>
+          <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+            <span>Q1</span><span>Q${questionElapsed.length}</span>
+          </div>
+          <p class="text-[10px] text-slate-400 text-center mt-1"><span class="text-green-500">●</span> correct <span class="text-red-500 ml-2">●</span> incorrect</p>
+        </div>`;
+      })()}
+
       <!-- Answer Distribution -->
       ${(() => {
         const dist = {};

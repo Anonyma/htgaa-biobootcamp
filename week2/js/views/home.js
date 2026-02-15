@@ -202,6 +202,9 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- Milestone Badges -->
+          ${renderMilestoneBadges()}
+
           <!-- Quick Quiz -->
           <section class="mb-10" id="quick-quiz-section">
             <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
@@ -971,6 +974,51 @@ function renderMasteryRanking() {
   `;
 }
 
+function renderMilestoneBadges() {
+  const badges = [];
+  const progress = store.get('progress');
+  const completed = Object.values(progress).filter(Boolean).length;
+  const fc = store.getFlashcardStats();
+  const scores = store.getExamScores();
+  const best = store.getBestExamScore();
+  const log = store.getStudyLog();
+  const activeDays = Object.keys(log).filter(d => log[d] > 0).length;
+
+  if (completed >= 1) badges.push({ icon: '📖', label: 'First Chapter', desc: 'Read your first topic' });
+  if (completed >= 3) badges.push({ icon: '📚', label: 'Halfway', desc: 'Completed 3 topics' });
+  if (completed >= 6) badges.push({ icon: '🎓', label: 'Scholar', desc: 'All topics complete' });
+  if (fc.reviewed >= 10) badges.push({ icon: '🃏', label: 'Card Shark', desc: '10+ flashcards reviewed' });
+  if (fc.reviewed >= 50) badges.push({ icon: '🧠', label: 'Memory Pro', desc: '50+ flashcards reviewed' });
+  if (scores.length >= 1) badges.push({ icon: '📝', label: 'Test Taker', desc: 'First exam completed' });
+  if (scores.length >= 5) badges.push({ icon: '🏋️', label: 'Exam Grinder', desc: '5+ exams completed' });
+  if (best && best.pct >= 90) badges.push({ icon: '🌟', label: 'A+ Student', desc: '90%+ exam score' });
+  if (best && best.pct === 100) badges.push({ icon: '💯', label: 'Perfect Score', desc: '100% on an exam' });
+  if (activeDays >= 3) badges.push({ icon: '🔥', label: 'Consistent', desc: '3+ study days' });
+  if (activeDays >= 7) badges.push({ icon: '⚡', label: 'Dedicated', desc: '7+ study days' });
+
+  if (badges.length === 0) return '';
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="medal" class="w-5 h-5 text-amber-500"></i> Badges Earned
+        <span class="text-xs font-normal text-slate-400 ml-auto">${badges.length} unlocked</span>
+      </h2>
+      <div class="flex flex-wrap gap-3">
+        ${badges.map(b => `
+          <div class="flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800" title="${b.desc}">
+            <span class="text-xl">${b.icon}</span>
+            <div>
+              <div class="text-xs font-bold text-amber-800 dark:text-amber-300">${b.label}</div>
+              <div class="text-[10px] text-amber-600 dark:text-amber-400">${b.desc}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function renderExamHistoryChart() {
   const scores = store.getExamScores();
   if (!scores || scores.length === 0) return '';
@@ -1080,6 +1128,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v95', items: ['Dashboard milestone badges', 'Exam per-question time sparkline', 'Flashcard maturity counts in header'] },
     { ver: 'v94', items: ['Exam question quick-jump navigation', 'Dashboard time distribution donut', 'Compare quiz head-to-head'] },
     { ver: 'v93', items: ['Glossary recently viewed terms', 'Study summary time remaining per topic', 'Flashcard topic last-reviewed date'] },
     { ver: 'v92', items: ['Exam topic question bars on setup', 'Dashboard study pace stat', 'Flashcard topic last-reviewed date'] },

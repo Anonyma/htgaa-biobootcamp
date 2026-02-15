@@ -56,6 +56,11 @@ function createFlashcardsView() {
                   ${learning > 0 ? `<div class="bg-yellow-400" style="width:${(learning/total)*100}%"></div>` : ''}
                 </div>
                 <span class="text-xs text-slate-500 flex-shrink-0">${masteredPct}% mastered</span>
+              </div>
+              <div class="mt-1.5 flex gap-3 text-[10px]">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> <strong>${mastered}</strong> mastered</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> <strong>${learning}</strong> learning</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"></span> <strong>${total - mastered - learning}</strong> new</span>
               </div>`;
             })()}
           </header>
