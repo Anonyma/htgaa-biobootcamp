@@ -131,6 +131,9 @@ function createStudySummaryView() {
                   <h3 class="font-bold text-${color}-800 dark:text-${color}-300">Exam Readiness: ${label}</h3>
                   <p class="text-xs text-${color}-600 dark:text-${color}-400 mt-1">Based on mastery (70%), exam scores (20%), and flashcard reviews (10%)</p>
                 </div>
+                <div class="ml-auto flex-shrink-0 w-12 h-12 rounded-xl bg-${color}-200 dark:bg-${color}-800 flex items-center justify-center">
+                  <span class="text-xl font-black text-${color}-700 dark:text-${color}-300">${readiness >= 90 ? 'A' : readiness >= 80 ? 'B' : readiness >= 70 ? 'C' : readiness >= 60 ? 'D' : 'F'}</span>
+                </div>
               </div>
             </div>`;
           })()}

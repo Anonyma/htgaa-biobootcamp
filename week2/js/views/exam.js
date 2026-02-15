@@ -89,6 +89,12 @@ export function createExamView() {
         <h1 class="text-3xl font-bold mb-2">Exam Mode</h1>
         <p class="text-slate-500 dark:text-slate-400">Test your knowledge across all topics with a timed quiz</p>
         ${(() => {
+          try {
+            const bm = JSON.parse(localStorage.getItem('htgaa-exam-bookmarks') || '[]');
+            return bm.length > 0 ? `<p class="text-xs text-amber-500 mt-2"><i data-lucide="bookmark" class="w-3 h-3 inline"></i> ${bm.length} saved question${bm.length > 1 ? 's' : ''} for review</p>` : '';
+          } catch { return ''; }
+        })()}
+        ${(() => {
           const best = store.getBestExamScore();
           const scores = store.getExamScores();
           if (!best) return '';

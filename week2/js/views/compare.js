@@ -542,6 +542,37 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Homework Connections -->
+      ${(() => {
+        const hwA = dataA.homeworkConnections || [];
+        const hwB = dataB.homeworkConnections || [];
+        if (hwA.length === 0 && hwB.length === 0) return '';
+        const sharedParts = hwA.filter(a => hwB.some(b => b.hwPart === a.hwPart)).map(a => a.hwPart);
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <i data-lucide="clipboard-list" class="w-4 h-4 text-teal-500"></i> Homework Connections
+            ${sharedParts.length > 0 ? `<span class="text-xs bg-teal-100 dark:bg-teal-900/30 text-teal-600 px-2 py-0.5 rounded-full">${sharedParts.length} shared</span>` : ''}
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              ${hwA.map(h => `
+                <div class="text-xs p-2 rounded-lg ${sharedParts.includes(h.hwPart) ? 'bg-teal-50 dark:bg-teal-900/10 border border-teal-200 dark:border-teal-800' : 'bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700'}">
+                  <span class="font-bold">Part ${h.hwPart}:</span> ${h.title}
+                </div>
+              `).join('') || '<p class="text-xs text-slate-400">No homework links</p>'}
+            </div>
+            <div class="space-y-1.5">
+              ${hwB.map(h => `
+                <div class="text-xs p-2 rounded-lg ${sharedParts.includes(h.hwPart) ? 'bg-teal-50 dark:bg-teal-900/10 border border-teal-200 dark:border-teal-800' : 'bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700'}">
+                  <span class="font-bold">Part ${h.hwPart}:</span> ${h.title}
+                </div>
+              `).join('') || '<p class="text-xs text-slate-400">No homework links</p>'}
+            </div>
+          </div>
+        </div>`;
+      })()}
+
       <!-- Exam Accuracy -->
       ${(() => {
         const scores = store.getExamScores();
