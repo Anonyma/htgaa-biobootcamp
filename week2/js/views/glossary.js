@@ -204,6 +204,12 @@ function createGlossaryView() {
                         <div>
                           <span class="font-bold text-slate-800 dark:text-slate-200">${t.term}</span>
                           ${fcBadge ? `<span class="ml-1.5 align-middle">${fcBadge}</span>` : ''}
+                          ${r && r.easeFactor ? (() => {
+                            const e = r.easeFactor;
+                            const diffLabel = e >= 2.5 ? 'Easy' : e >= 2.0 ? 'Med' : 'Hard';
+                            const diffColor = e >= 2.5 ? 'green' : e >= 2.0 ? 'slate' : 'red';
+                            return `<span class="text-[8px] text-${diffColor}-400 ml-1" title="Ease: ${e.toFixed(2)}">${diffLabel}</span>`;
+                          })() : ''}
                           <p class="text-slate-500 dark:text-slate-400 mt-0.5">${t.definition}</p>
                           <div class="glossary-related hidden mt-2 pt-2 border-t border-slate-100 dark:border-slate-700">
                             <span class="text-[10px] text-slate-400 uppercase tracking-wider">Related from ${t.topicTitle}:</span>

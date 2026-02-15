@@ -115,6 +115,7 @@ function createHomeView() {
               ${renderStatCard('calendar-check', 'Last Active', getLastActive(), 'slate')}
               ${renderStatCard('gauge', 'Study Pace', getStudyPace(), 'orange')}
               ${renderStatCard('flame', 'Day Streak', getDayStreak(), 'red')}
+              ${renderStatCard('calendar', 'Est. Done', getEstCompletionDate(), 'violet')}
             </div>
           </section>
 
@@ -1189,6 +1190,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v98', items: ['Exam print results button', 'Dashboard estimated completion date', 'Glossary term difficulty labels'] },
     { ver: 'v97', items: ['Glossary mini quiz button', 'Compare flashcard maturity', 'Dashboard day streak stat'] },
     { ver: 'v96', items: ['Dashboard learning insights', 'Exam cumulative accuracy chart', 'Study summary progress bar'] },
     { ver: 'v95', items: ['Dashboard milestone badges', 'Exam per-question time sparkline', 'Flashcard maturity counts in header'] },
@@ -2534,6 +2536,24 @@ function getDayStreak() {
     }
   }
   return streak > 0 ? `${streak}d` : '—';
+}
+
+function getEstCompletionDate() {
+  const log = store.getStudyLog();
+  const activeDays = Object.keys(log).filter(d => log[d] > 0);
+  if (activeDays.length < 2) return '—';
+  const overallPct = store.getOverallProgress();
+  if (overallPct >= 100) return 'Done!';
+  if (overallPct === 0) return '—';
+  const firstDay = new Date(activeDays.sort()[0] + 'T00:00:00');
+  const daysElapsed = Math.max(1, Math.ceil((Date.now() - firstDay) / 86400000));
+  const pctPerDay = overallPct / daysElapsed;
+  if (pctPerDay <= 0) return '—';
+  const daysRemaining = Math.ceil((100 - overallPct) / pctPerDay);
+  if (daysRemaining > 30) return `~${Math.ceil(daysRemaining / 7)}w`;
+  if (daysRemaining <= 1) return 'Today';
+  const targetDate = new Date(Date.now() + daysRemaining * 86400000);
+  return targetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 function downloadFile(filename, text) {

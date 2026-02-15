@@ -1150,6 +1150,10 @@ export function createExamView() {
           hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[140px] flex items-center justify-center gap-2">
           <i data-lucide="copy" class="w-4 h-4"></i> Copy Results
         </button>
+        <button id="exam-print-results" class="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-700 font-medium
+          hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors min-w-[140px] flex items-center justify-center gap-2">
+          <i data-lucide="printer" class="w-4 h-4"></i> Print
+        </button>
         ${(() => {
           const weakTids = Object.entries(topicBreakdown)
             .filter(([, tb]) => Math.round((tb.correct / tb.total) * 100) < 80)
@@ -1212,6 +1216,11 @@ export function createExamView() {
         const btn = containerEl.querySelector('#exam-copy-results');
         if (btn) { btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!'; if (window.lucide) lucide.createIcons(); }
       }).catch(() => {});
+    });
+
+    // Print results
+    containerEl.querySelector('#exam-print-results')?.addEventListener('click', () => {
+      window.print();
     });
 
     // Toggle missed-only filter
