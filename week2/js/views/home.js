@@ -125,6 +125,7 @@ function createHomeView() {
               ${renderStatCard('gauge', 'Study Pace', getStudyPace(), 'orange')}
               ${renderStatCard('flame', 'Day Streak', getDayStreak(), 'red')}
               ${renderStatCard('calendar', 'Est. Done', getEstCompletionDate(), 'violet')}
+              ${renderStatCard('star', 'Best Day', getBestStudyDay(), 'yellow')}
             </div>
           </section>
 
@@ -1299,6 +1300,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v107', items: ['Exam grade distribution on setup', 'Flashcard daily review comparison', 'Dashboard best study day stat'] },
     { ver: 'v106', items: ['Exam question pool preview', 'Compare mastery race chart', 'Study summary focus areas'] },
     { ver: 'v105', items: ['Flashcard hard cards mode', 'Dashboard knowledge gaps widget', 'Glossary mastery by topic'] },
     { ver: 'v104', items: ['Study summary efficiency metrics', 'Compare study time recommendation', 'Exam per-topic accuracy trend arrows'] },
@@ -2838,6 +2840,15 @@ function getEstCompletionDate() {
   if (daysRemaining <= 1) return 'Today';
   const targetDate = new Date(Date.now() + daysRemaining * 86400000);
   return targetDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function getBestStudyDay() {
+  const log = store.getStudyLog();
+  const entries = Object.entries(log).filter(([, v]) => v > 0);
+  if (entries.length === 0) return '—';
+  const best = entries.reduce((a, b) => a[1] > b[1] ? a : b);
+  const d = new Date(best[0] + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 function downloadFile(filename, text) {

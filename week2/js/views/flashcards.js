@@ -130,6 +130,25 @@ function createFlashcardsView() {
             `;
           })()}
 
+          <!-- Daily Review Stats -->
+          ${(() => {
+            const reviews = store.get('flashcards').reviews || {};
+            const now = Date.now();
+            const todayStart = new Date().setHours(0, 0, 0, 0);
+            const yesterdayStart = todayStart - 86400000;
+            let todayCount = 0, yesterdayCount = 0;
+            Object.values(reviews).forEach(r => {
+              if (!r.lastReview) return;
+              if (r.lastReview >= todayStart) todayCount++;
+              else if (r.lastReview >= yesterdayStart && r.lastReview < todayStart) yesterdayCount++;
+            });
+            if (todayCount === 0 && yesterdayCount === 0) return '';
+            const diff = todayCount - yesterdayCount;
+            const arrow = diff > 0 ? '↑' : diff < 0 ? '↓' : '→';
+            const color = diff > 0 ? 'green' : diff < 0 ? 'red' : 'slate';
+            return '<div class="mb-4 flex items-center gap-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg px-4 py-2.5 border border-slate-200 dark:border-slate-700"><div class="flex items-center gap-1.5"><span class="text-sm font-bold text-slate-700 dark:text-slate-300">' + todayCount + '</span><span class="text-xs text-slate-400">today</span></div><span class="text-' + color + '-500 text-sm font-bold">' + arrow + '</span><div class="flex items-center gap-1.5"><span class="text-sm font-bold text-slate-500">' + yesterdayCount + '</span><span class="text-xs text-slate-400">yesterday</span></div></div>';
+          })()}
+
           <!-- Review Streak -->
           ${(() => {
             const log = store.getStudyLog();

@@ -129,7 +129,25 @@ export function createExamView() {
             const totalQs = scores.reduce((s, sc) => s + sc.total, 0);
             const mins = Math.floor(totalTime / 60);
             return `Total: ${totalQs} questions in ${mins}m across ${scores.length} attempt${scores.length > 1 ? 's' : ''}`;
-          })()}</div>`;
+          })()}</div>
+          ${(() => {
+            if (scores.length < 3) return '';
+            const grades = { A: 0, B: 0, C: 0, D: 0, F: 0 };
+            scores.forEach(s => {
+              if (s.pct >= 90) grades.A++;
+              else if (s.pct >= 80) grades.B++;
+              else if (s.pct >= 70) grades.C++;
+              else if (s.pct >= 60) grades.D++;
+              else grades.F++;
+            });
+            const maxG = Math.max(...Object.values(grades), 1);
+            const colors = { A: 'green', B: 'blue', C: 'amber', D: 'orange', F: 'red' };
+            return '<div class="mt-3 flex items-end gap-1 justify-center h-8">' + Object.entries(grades).map(function(e) {
+              var g = e[0], c = e[1];
+              var h = Math.max(4, Math.round((c / maxG) * 28));
+              return '<div class="flex flex-col items-center gap-0.5"><span class="text-[8px] text-slate-400">' + c + '</span><div class="bg-' + colors[g] + '-400 rounded-sm" style="width:14px;height:' + h + 'px"></div><span class="text-[8px] font-bold text-slate-400">' + g + '</span></div>';
+            }).join('') + '</div>';
+          })()}`;
         })()}
       </div>
 
