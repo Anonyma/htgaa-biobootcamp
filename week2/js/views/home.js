@@ -59,8 +59,22 @@ function createHomeView() {
                 <div class="flex-1">
                   <h3 class="font-bold text-lg text-indigo-900 dark:text-indigo-200 mb-1">Welcome to your study companion!</h3>
                   <p class="text-sm text-indigo-700 dark:text-indigo-300 leading-relaxed mb-3">
-                    This interactive guide covers everything you need for HTGAA Week 2. Follow the recommended path below, or jump to any topic. Each chapter has reading, simulations, quizzes, and flashcards.
+                    This interactive guide covers everything you need for HTGAA Week 2. Start with the recommended path or jump to any topic.
                   </p>
+                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
+                    <div class="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400">
+                      <i data-lucide="book-open" class="w-3.5 h-3.5"></i> In-depth chapters
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400">
+                      <i data-lucide="flask-conical" class="w-3.5 h-3.5"></i> Interactive sims
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400">
+                      <i data-lucide="brain" class="w-3.5 h-3.5"></i> Quizzes & flashcards
+                    </div>
+                    <div class="flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400">
+                      <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i> Homework guidance
+                    </div>
+                  </div>
                   <div class="flex items-center gap-3">
                     <a data-route="#/topic/central-dogma" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer inline-flex items-center gap-1.5">
                       <i data-lucide="play" class="w-4 h-4"></i> Start Learning
