@@ -181,6 +181,36 @@ function createFlashcardsView() {
             </div>`;
           })() : ''}
 
+          <!-- Hardest Cards -->
+          ${(() => {
+            const reviews = store.get('flashcards').reviews;
+            const reviewed = allCards.filter(c => reviews[c.id] && reviews[c.id].easeFactor);
+            if (reviewed.length < 5) return '';
+            const hardest = [...reviewed]
+              .sort((a, b) => reviews[a.id].easeFactor - reviews[b.id].easeFactor)
+              .slice(0, 5);
+            // Only show if some cards are actually hard (ease < 2.3)
+            if (reviews[hardest[0].id].easeFactor >= 2.3) return '';
+            return `
+            <details class="mb-6">
+              <summary class="text-xs font-semibold text-slate-500 cursor-pointer hover:text-slate-700 dark:hover:text-slate-300 transition-colors flex items-center gap-1">
+                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i> Hardest Cards (lowest ease)
+              </summary>
+              <div class="mt-2 space-y-1">
+                ${hardest.map(c => {
+                  const r = reviews[c.id];
+                  const topic = TOPICS.find(t => t.id === c.topicId);
+                  const easeColor = r.easeFactor < 1.5 ? 'red' : r.easeFactor < 2.0 ? 'amber' : 'slate';
+                  return `<div class="flex items-center gap-2 text-xs py-1.5 px-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                    <span class="font-bold text-${easeColor}-600 dark:text-${easeColor}-400 w-8 text-right">${r.easeFactor.toFixed(1)}</span>
+                    <span class="font-medium truncate flex-1">${c.term}</span>
+                    <span class="text-slate-400 truncate max-w-[100px]">${topic?.title || ''}</span>
+                  </div>`;
+                }).join('')}
+              </div>
+            </details>`;
+          })()}
+
           <!-- Progress Bar -->
           ${dueCards.length > 0 ? `
           <div class="mb-6">

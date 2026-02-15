@@ -147,7 +147,22 @@ function createHomeView() {
                 <h3 class="font-bold">Exam Mode</h3>
                 ${(() => {
                   const best = store.getBestExamScore();
-                  return best ? `<p class="text-sm text-amber-600 mt-1">Best: ${best.pct}%</p>` : `<p class="text-sm text-slate-500 mt-1">Timed practice quiz</p>`;
+                  if (!best) return `<p class="text-sm text-slate-500 mt-1">Timed practice quiz</p>`;
+                  const scores = store.getExamScores();
+                  let trend = '';
+                  if (scores.length >= 3) {
+                    const recent = scores.slice(-3);
+                    const older = scores.slice(-6, -3);
+                    if (older.length > 0) {
+                      const recentAvg = recent.reduce((s, x) => s + x.pct, 0) / recent.length;
+                      const olderAvg = older.reduce((s, x) => s + x.pct, 0) / older.length;
+                      const diff = recentAvg - olderAvg;
+                      if (diff > 5) trend = ' <span class="text-green-500" title="Improving">↑</span>';
+                      else if (diff < -5) trend = ' <span class="text-red-400" title="Declining">↓</span>';
+                      else trend = ' <span class="text-slate-400" title="Steady">→</span>';
+                    }
+                  }
+                  return `<p class="text-sm text-amber-600 mt-1">Best: ${best.pct}%${trend}</p>`;
                 })()}
               </a>
               <a data-route="#/compare" class="block p-5 bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl border border-teal-200 dark:border-teal-800 hover:border-teal-400 cursor-pointer transition-colors">
@@ -951,6 +966,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v64', items: ['Exam topic history count on setup', 'Flashcard hardest cards list', 'Exam score trend arrow on dashboard'] },
     { ver: 'v63', items: ['Exam early submit with unanswered warning', 'Flashcard new-cards-only mode', 'Dynamic glossary term count'] },
     { ver: 'v62', items: ['Exam fastest/slowest correct highlight', 'Most deliberate answer insight'] },
     { ver: 'v61', items: ['Study summary quiz scores', 'Compare learning objectives', 'Per-topic quiz accuracy in summary'] },

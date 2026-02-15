@@ -125,6 +125,16 @@ export function createExamView() {
                 <i data-lucide="check" class="w-3 h-3 ${selectedTopics.has(t.id) ? '' : 'hidden'}"></i>
               </div>
               <span class="text-sm font-medium truncate flex-1">${escapeHtml(t.title)}</span>
+              ${(() => {
+                // Show historical exam accuracy for this topic
+                const scores = store.getExamScores();
+                const topicScores = scores.flatMap(s => {
+                  // Look for per-topic breakdown in recent exams — approximate from stored data
+                  return s.topics && s.topics.includes(t.id) ? [s] : [];
+                });
+                const examHist = topicScores.length > 0 ? `<span class="text-[9px] text-slate-400" title="Included in ${topicScores.length} exam(s)">${topicScores.length}x</span>` : '';
+                return examHist;
+              })()}
               ${mPct > 0 ? `<span class="text-[10px] font-bold text-${mColor}-600 dark:text-${mColor}-400">${mPct}%</span>` : ''}
             </label>`;
           }).join('')}
