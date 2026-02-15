@@ -14,7 +14,7 @@ function createFlashcardsView() {
   let isFlipped = false;
   let selectedTopic = 'all';
   let keyHandler = null;
-  let sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
+  let sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {}, streak: 0, bestStreak: 0 };
 
   return {
     async render() {
@@ -319,7 +319,7 @@ function createFlashcardsView() {
       const sessionStatsEl = container.querySelector('#fc-session-stats');
 
       // Reset session stats
-      sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
+      sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {}, streak: 0, bestStreak: 0 };
 
       // Session timer (module-level so unmount can clean up without container ref)
       let sessionSeconds = 0;
@@ -347,7 +347,7 @@ function createFlashcardsView() {
           dueCards = store.getDueFlashcards(filtered);
           currentIndex = 0;
           isFlipped = false;
-          sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
+          sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {}, streak: 0, bestStreak: 0 };
           cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
           updateProgress();
           if (sessionStatsEl) sessionStatsEl.classList.add('hidden');
@@ -360,7 +360,7 @@ function createFlashcardsView() {
         dueCards = [...filtered]; // treat all as due
         currentIndex = 0;
         isFlipped = false;
-        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
+        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {}, streak: 0, bestStreak: 0 };
         cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
         // Show progress bar
         if (progressBar) progressBar.parentElement.parentElement.classList.remove('hidden');
@@ -375,7 +375,7 @@ function createFlashcardsView() {
         dueCards = filtered.filter(c => !reviews[c.id]);
         currentIndex = 0;
         isFlipped = false;
-        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
+        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {}, streak: 0, bestStreak: 0 };
         cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
         if (progressBar) progressBar.parentElement.parentElement.classList.remove('hidden');
         updateProgress();
@@ -389,7 +389,7 @@ function createFlashcardsView() {
         dueCards = filtered.filter(c => reviews[c.id] && reviews[c.id].easeFactor < 2.0);
         currentIndex = 0;
         isFlipped = false;
-        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
+        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {}, streak: 0, bestStreak: 0 };
         cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
         if (progressBar) progressBar.parentElement.parentElement.classList.remove('hidden');
         updateProgress();
@@ -451,6 +451,13 @@ function createFlashcardsView() {
         if (!sessionStats.byTopic[tid]) sessionStats.byTopic[tid] = { reviewed: 0, correct: 0 };
         sessionStats.byTopic[tid].reviewed++;
         if (quality >= 4) sessionStats.byTopic[tid].correct++;
+        // Track streak
+        if (quality >= 4) {
+          sessionStats.streak++;
+          if (sessionStats.streak > sessionStats.bestStreak) sessionStats.bestStreak = sessionStats.streak;
+        } else {
+          sessionStats.streak = 0;
+        }
 
         // Update running accuracy display
         const accEl = container.querySelector('#fc-running-accuracy');
@@ -652,11 +659,12 @@ function renderComplete() {
               <div class="text-[10px] text-slate-500">Performance</div>
             </div>
           </div>
-          <div class="flex items-center gap-2 text-xs justify-center">
+          <div class="flex items-center gap-2 text-xs justify-center flex-wrap">
             <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Again: ${sessionStats.again}</span>
             <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span> Hard: ${sessionStats.hard}</span>
             <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Good: ${sessionStats.good}</span>
             <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Easy: ${sessionStats.easy}</span>
+            ${sessionStats.bestStreak >= 3 ? `<span class="flex items-center gap-1 text-amber-500 font-medium"><span class="text-xs">🔥</span> Best streak: ${sessionStats.bestStreak}</span>` : ''}
           </div>
           ${Object.keys(sessionStats.byTopic).length > 1 ? `
           <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">

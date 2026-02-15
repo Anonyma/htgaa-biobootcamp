@@ -715,6 +715,39 @@ export function createExamView() {
         `;
       })()}
 
+      <!-- Time Distribution -->
+      ${(() => {
+        const times = questionElapsed.filter(t => t > 0);
+        if (times.length < 3) return '';
+        // Bucket into ranges: 0-10s, 10-20s, 20-30s, 30-60s, 60s+
+        const buckets = [
+          { label: '<10s', min: 0, max: 10, count: 0 },
+          { label: '10-20s', min: 10, max: 20, count: 0 },
+          { label: '20-30s', min: 20, max: 30, count: 0 },
+          { label: '30-60s', min: 30, max: 60, count: 0 },
+          { label: '60s+', min: 60, max: Infinity, count: 0 },
+        ];
+        times.forEach(t => {
+          const b = buckets.find(b => t >= b.min && t < b.max);
+          if (b) b.count++;
+        });
+        const maxCount = Math.max(...buckets.map(b => b.count));
+        if (maxCount === 0) return '';
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-4">Time Distribution</h2>
+          <div class="flex items-end gap-2 h-24">
+            ${buckets.map(b => `
+              <div class="flex-1 flex flex-col items-center gap-1">
+                <span class="text-[10px] text-slate-400">${b.count}</span>
+                <div class="w-full rounded-t-sm ${b.count > 0 ? 'bg-blue-400 dark:bg-blue-600' : 'bg-slate-200 dark:bg-slate-700'}" style="height: ${maxCount > 0 ? Math.max(2, (b.count / maxCount) * 100) : 2}%"></div>
+                <span class="text-[10px] text-slate-500">${b.label}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+      })()}
+
       <!-- Question Review -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <div class="flex items-center justify-between mb-4">
