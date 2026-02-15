@@ -58,19 +58,30 @@ function createHomeView() {
           <!-- Today's Study Plan -->
           ${renderStudyPlan(progress)}
 
+          <!-- Learning Path (visual) -->
+          ${renderLearningPath(progress)}
+
           <!-- Topic Cards (the core content) -->
           <section class="mb-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-500"></i> Topics
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+              <h2 class="text-xl font-bold flex items-center gap-2">
+                <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-500"></i> Topics
+              </h2>
+              <div class="flex gap-2 topic-filters">
+                <button class="filter-pill active px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="all">All</button>
+                <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="foundational">Foundational</button>
+                <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="intermediate">Intermediate</button>
+                <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="advanced">Advanced</button>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 topic-cards-grid">
               ${TOPICS.map((topic, i) => renderTopicCard(topic, i, progress)).join('')}
             </div>
           </section>
 
           <!-- Study Tools (compact row) -->
           <section class="mb-10">
-            <div class="flex flex-wrap gap-3">
+            <div class="flex flex-wrap gap-3 study-tools-row">
               <a data-route="#/flashcards" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i> Flashcards
                 ${(() => { const fc = store.getFlashcardStats(); return fc.due > 0 ? `<span class="text-xs text-red-500 font-bold">${fc.due} due</span>` : ''; })()}
@@ -135,6 +146,22 @@ function createHomeView() {
       });
 
       container._homeUnsub = unsub;
+
+      // Topic filter pills
+      container.querySelectorAll('.topic-filters .filter-pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          container.querySelectorAll('.topic-filters .filter-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const filter = pill.dataset.filter;
+          container.querySelectorAll('.topic-cards-grid .topic-card').forEach(card => {
+            if (filter === 'all' || card.dataset.difficulty === filter) {
+              card.style.display = '';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
 
       // "Show analytics & more" toggle
       const showMoreBtn = container.querySelector('#show-more-dashboard');
@@ -2351,6 +2378,79 @@ function renderLearningPath(progress) {
   `;
 }
 
+function renderLearningPath(progress) {
+  const learningOrder = [
+    { id: 'central-dogma', label: 'Central Dogma', shortLabel: 'Central\nDogma', icon: 'arrow-right-left', color: 'indigo', step: 1 },
+    { id: 'genetic-codes', label: 'Genetic Codes', shortLabel: 'Genetic\nCodes', icon: 'dna', color: 'purple', step: 2 },
+    { id: 'gel-electrophoresis', label: 'Gel Electrophoresis', shortLabel: 'Gel\nElectro.', icon: 'flask-conical', color: 'yellow', step: 3 },
+    { id: 'sequencing', label: 'DNA Sequencing', shortLabel: 'DNA\nSequencing', icon: 'scan-search', color: 'blue', step: 4 },
+    { id: 'synthesis', label: 'DNA Synthesis', shortLabel: 'DNA\nSynthesis', icon: 'pen-tool', color: 'green', step: 5 },
+    { id: 'editing', label: 'Gene Editing', shortLabel: 'Gene\nEditing', icon: 'scissors', color: 'red', step: 6 },
+  ];
+
+  const completedCount = learningOrder.filter(s => progress[s.id]).length;
+  if (completedCount === 6) return ''; // All done, no need to show path
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="route" class="w-5 h-5 text-indigo-500"></i> Recommended Path
+      </h2>
+      <div class="flex items-center gap-1 overflow-x-auto pb-2 learning-path-row" style="scrollbar-width:none">
+        ${learningOrder.map((step, i) => {
+          const isDone = progress[step.id];
+          const isCurrent = !isDone && (i === 0 || progress[learningOrder[i - 1].id]);
+          const isLocked = !isDone && !isCurrent;
+          const sectionsRead = store.getSectionsRead(step.id).length;
+          const totalSections = { 'sequencing': 7, 'synthesis': 7, 'editing': 7, 'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7 }[step.id] || 6;
+          const pct = Math.round((sectionsRead / totalSections) * 100);
+
+          return `
+            <a data-route="#/topic/${step.id}" class="learning-path-step flex-shrink-0 flex flex-col items-center text-center px-3 py-3 rounded-xl cursor-pointer ${
+              isDone ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800' :
+              isCurrent ? 'bg-indigo-50 dark:bg-indigo-900/20 border-2 border-indigo-400 dark:border-indigo-500 shadow-md' :
+              'bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 opacity-60'
+            }" style="min-width:90px;width:90px">
+              <div class="relative mb-1.5">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center ${
+                  isDone ? 'bg-green-100 dark:bg-green-900/40' :
+                  isCurrent ? 'bg-indigo-100 dark:bg-indigo-900/40' :
+                  'bg-slate-100 dark:bg-slate-700'
+                }">
+                  ${isDone
+                    ? '<i data-lucide="check" class="w-5 h-5 text-green-600 dark:text-green-400"></i>'
+                    : `<i data-lucide="${step.icon}" class="w-5 h-5 text-${isCurrent ? step.color : 'slate'}-500"></i>`
+                  }
+                </div>
+                ${isCurrent && pct > 0 ? `
+                  <svg class="absolute inset-0 w-10 h-10 -rotate-90" viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="18" fill="none" stroke="rgba(99,102,241,0.2)" stroke-width="2.5"/>
+                    <circle cx="20" cy="20" r="18" fill="none" stroke="#6366f1" stroke-width="2.5" stroke-linecap="round"
+                      stroke-dasharray="${2*Math.PI*18}" stroke-dashoffset="${2*Math.PI*18*(1-pct/100)}"/>
+                  </svg>
+                ` : ''}
+              </div>
+              <span class="text-[10px] font-semibold leading-tight ${
+                isDone ? 'text-green-700 dark:text-green-300' :
+                isCurrent ? 'text-indigo-700 dark:text-indigo-300' :
+                'text-slate-400 dark:text-slate-500'
+              }" style="white-space:pre-line">${step.shortLabel}</span>
+              ${isCurrent ? '<span class="text-[9px] text-indigo-500 font-bold mt-0.5">CURRENT</span>' : ''}
+            </a>
+            ${i < learningOrder.length - 1 ? `
+              <div class="flex-shrink-0 w-5 flex items-center justify-center learning-path-connector-inline">
+                <svg width="20" height="12" viewBox="0 0 20 12" class="text-slate-300 dark:text-slate-600">
+                  <path d="M0 6 L14 6 M10 2 L16 6 L10 10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            ` : ''}
+          `;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function renderTopicCard(topic, index, progress) {
   const isComplete = progress[topic.id];
   const quizScore = store.getQuizScore(topic.id);
@@ -2384,7 +2484,7 @@ function renderTopicCard(topic, index, progress) {
   const sectionPct = Math.round((sectionsRead / totalSections) * 100);
 
   return `
-    <a data-route="#/topic/${topic.id}" class="topic-card group block bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 hover:border-${topic.color}-400 dark:hover:border-${topic.color}-500 cursor-pointer transition-all">
+    <a data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" class="topic-card group block bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 hover:border-${topic.color}-400 dark:hover:border-${topic.color}-500 cursor-pointer transition-all">
       <div class="flex items-start gap-4">
         <div class="relative w-12 h-12 flex-shrink-0 group-hover:scale-110 transition-transform">
           ${sectionPct > 0 ? `
