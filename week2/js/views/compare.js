@@ -803,6 +803,27 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Study Time Recommendation -->
+      ${(() => {
+        try {
+          const times = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+          const mA = store.getTopicMastery(idA, dataA);
+          const mB = store.getTopicMastery(idB, dataB);
+          const tA = Math.round((times[idA] || 0) / 60);
+          const tB = Math.round((times[idB] || 0) / 60);
+          const mastA = mA?.mastery || 0;
+          const mastB = mB?.mastery || 0;
+          if (tA === 0 && tB === 0) return '';
+          const needA = 100 - mastA;
+          const needB = 100 - mastB;
+          const recommend = needA > needB ? metaA?.title : metaB?.title;
+          const recommendId = needA > needB ? idA : idB;
+          const gap = Math.abs(needA - needB);
+          if (gap < 10) return '';
+          return '<div class="mb-6 bg-blue-50 dark:bg-blue-900/10 rounded-xl p-4 border border-blue-200 dark:border-blue-800"><div class="flex items-center gap-3"><i data-lucide="lightbulb" class="w-5 h-5 text-blue-500 flex-shrink-0"></i><div><p class="text-sm font-medium text-blue-800 dark:text-blue-300">Spend more time on <strong>' + recommend + '</strong></p><p class="text-xs text-blue-600 dark:text-blue-400 mt-0.5">' + (needA > needB ? mastA + '% mastery with ' + tA + 'm spent — needs ' + needA + '% more' : mastB + '% mastery with ' + tB + 'm spent — needs ' + needB + '% more') + '</p></div></div></div>';
+        } catch { return ''; }
+      })()}
+
       <!-- Quick links -->
       <div class="flex justify-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
         <a data-route="#/topic/${idA}" class="text-sm text-blue-500 hover:underline cursor-pointer">Read ${metaA?.title}</a>

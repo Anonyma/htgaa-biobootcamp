@@ -685,12 +685,21 @@ export function createExamView() {
     const grade = pct >= 90 ? 'A' : pct >= 80 ? 'B' : pct >= 70 ? 'C' : pct >= 60 ? 'D' : 'F';
     const gradeColor = pct >= 80 ? 'green' : pct >= 60 ? 'yellow' : 'red';
 
+    // Per-topic breakdown (compute before saving)
+    const topicBreakdown = {};
+    results.forEach(r => {
+      const tid = r.question.topicId;
+      if (!topicBreakdown[tid]) topicBreakdown[tid] = { correct: 0, total: 0, title: r.question.topicTitle, color: r.question.topicColor };
+      topicBreakdown[tid].total++;
+      if (r.isCorrect) topicBreakdown[tid].correct++;
+    });
+
     // Check personal best before saving
     const prevBest = store.getBestExamScore();
     const isNewBest = !prevBest || pct > prevBest.pct;
 
-    // Save score
-    store.saveExamScore(correct, questions.length, elapsedSeconds, [...selectedTopics]);
+    // Save score with topic breakdown
+    store.saveExamScore(correct, questions.length, elapsedSeconds, [...selectedTopics], topicBreakdown);
     store.recordStudyActivity();
 
     // Count new questions before marking as seen
@@ -699,15 +708,6 @@ export function createExamView() {
     // Track seen question IDs
     questions.forEach(q => seenQuestionIds.add(q.id));
     localStorage.setItem('htgaa-exam-seen-qs', JSON.stringify([...seenQuestionIds]));
-
-    // Per-topic breakdown
-    const topicBreakdown = {};
-    results.forEach(r => {
-      const tid = r.question.topicId;
-      if (!topicBreakdown[tid]) topicBreakdown[tid] = { correct: 0, total: 0, title: r.question.topicTitle, color: r.question.topicColor };
-      topicBreakdown[tid].total++;
-      if (r.isCorrect) topicBreakdown[tid].correct++;
-    });
 
     containerEl.innerHTML = `
       <!-- Results Header -->
@@ -903,10 +903,20 @@ export function createExamView() {
             const avgTime = topicQIdxs.length > 0 && questionElapsed.length > 0
               ? Math.round(topicQIdxs.reduce((s, i) => s + (questionElapsed[i] || 0), 0) / topicQIdxs.length)
               : null;
+            // Topic trend from past exams
+            const allScores = store.getExamScores();
+            const pastTopicScores = allScores.slice(0, -1).filter(s => s.topicBreakdown?.[tid]).map(s => s.topicBreakdown[tid]);
+            let trendArrow = '';
+            if (pastTopicScores.length > 0) {
+              const lastPct = Math.round((pastTopicScores[pastTopicScores.length - 1].correct / pastTopicScores[pastTopicScores.length - 1].total) * 100);
+              const diff = tbPct - lastPct;
+              if (diff > 5) trendArrow = '<span class="text-green-500 text-xs ml-1">↑</span>';
+              else if (diff < -5) trendArrow = '<span class="text-red-400 text-xs ml-1">↓</span>';
+            }
             return `
               <div>
                 <div class="flex justify-between text-sm mb-1">
-                  <span class="font-medium">${escapeHtml(tb.title)}</span>
+                  <span class="font-medium">${escapeHtml(tb.title)}${trendArrow}</span>
                   <span class="text-slate-500">
                     ${tb.correct}/${tb.total} (${tbPct}%)
                     ${avgTime !== null ? `<span class="text-slate-400 ml-1">~${avgTime}s/q</span>` : ''}

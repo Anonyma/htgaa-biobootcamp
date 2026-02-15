@@ -1240,6 +1240,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v104', items: ['Study summary efficiency metrics', 'Compare study time recommendation', 'Exam per-topic accuracy trend arrows'] },
     { ver: 'v103', items: ['Glossary mastery by topic breakdown', 'Exam best streak highlight', 'Dashboard topic connections map'] },
     { ver: 'v102', items: ['Exam focus-weak-topics button', 'Compare prerequisite chain', 'Dashboard flashcard review forecast'] },
     { ver: 'v101', items: ['Exam difficulty filter on setup', 'Dashboard recent sessions timeline', 'Flashcard session history tracking'] },

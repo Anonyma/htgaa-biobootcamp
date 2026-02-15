@@ -263,10 +263,12 @@ class Store {
   }
 
   // --- Exam Scores ---
-  saveExamScore(score, total, elapsed, topics) {
+  saveExamScore(score, total, elapsed, topics, topicBreakdown) {
     const key = 'htgaa-week2-exam-scores';
     const scores = this._loadJSON(key, []);
-    scores.push({ score, total, pct: Math.round((score / total) * 100), elapsed, topics, date: Date.now() });
+    const entry = { score, total, pct: Math.round((score / total) * 100), elapsed, topics, date: Date.now() };
+    if (topicBreakdown) entry.topicBreakdown = topicBreakdown;
+    scores.push(entry);
     // Keep last 20 scores
     if (scores.length > 20) scores.splice(0, scores.length - 20);
     localStorage.setItem(key, JSON.stringify(scores));

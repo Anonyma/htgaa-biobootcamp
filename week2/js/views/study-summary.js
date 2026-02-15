@@ -213,6 +213,23 @@ function createStudySummaryView() {
             } catch { return ''; }
           })()}
 
+          <!-- Study Efficiency -->
+          ${(() => {
+            try {
+              const times = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+              const efficiency = allData.map(({ topic, data }) => {
+                const m = store.getTopicMastery(topic.id, data);
+                const secs = times[topic.id] || 0;
+                const mins = Math.round(secs / 60);
+                const mastery = m?.mastery || 0;
+                const eff = mins > 0 ? Math.round(mastery / mins * 10) / 10 : 0;
+                return { topic, mins, mastery, efficiency: eff };
+              }).filter(e => e.mins > 0 && e.mastery > 0).sort((a, b) => b.efficiency - a.efficiency);
+              if (efficiency.length < 2) return '';
+              return '<div class="mb-8 print:mb-4"><h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="gauge" class="w-5 h-5 text-emerald-500"></i> Study Efficiency</h2><p class="text-xs text-slate-400 mb-3">Mastery gained per minute of study time</p><div class="grid grid-cols-' + Math.min(efficiency.length, 3) + ' gap-3">' + efficiency.map(function(e) { var c = e.efficiency >= 3 ? 'green' : e.efficiency >= 1.5 ? 'blue' : 'amber'; return '<div class="text-center p-3 rounded-xl bg-' + c + '-50 dark:bg-' + c + '-900/10 border border-' + c + '-200 dark:border-' + c + '-800"><i data-lucide="' + e.topic.icon + '" class="w-5 h-5 text-' + e.topic.color + '-500 mx-auto mb-1"></i><div class="text-lg font-bold text-' + c + '-600">' + e.efficiency + '</div><div class="text-[10px] text-slate-500">mastery/min</div><div class="text-xs text-slate-400 mt-1">' + e.mastery + '% in ' + e.mins + 'm</div></div>'; }).join('') + '</div></div>';
+            } catch { return ''; }
+          })()}
+
           ${allData.map(({ topic, data }) => `
             <section class="mb-8 page-break-inside-avoid">
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">
