@@ -2533,6 +2533,13 @@ function renderTopicCard(topic, index, progress) {
               <div class="h-full rounded-full bg-${topic.color}-400 transition-all" style="width: ${sectionPct}%"></div>
             </div>
           ` : ''}
+          ${sectionsRead > 0 || isComplete ? `
+            <div class="mt-2 flex justify-end">
+              <a data-route="#/review/${topic.id}" class="text-xs px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors font-medium" onclick="event.stopPropagation()">
+                <i data-lucide="zap" class="w-3 h-3 inline mr-0.5"></i> Quick Review
+              </a>
+            </div>
+          ` : ''}
         </div>
       </div>
     </a>

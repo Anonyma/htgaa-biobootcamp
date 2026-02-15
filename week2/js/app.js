@@ -14,6 +14,7 @@ import { createExamView } from './views/exam.js';
 import { createCompareView } from './views/compare.js';
 import { createGlossaryView } from './views/glossary.js';
 import { createStudySummaryView } from './views/study-summary.js';
+import { createQuickReviewView } from './views/quick-review.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -43,6 +44,7 @@ class App {
       .on('/compare', () => createCompareView())
       .on('/compare/:a/:b', ({ a, b }) => createCompareView(a, b))
       .on('/glossary', () => createGlossaryView())
+      .on('/review/:id', ({ id }) => createQuickReviewView(id))
       .on('/summary', () => createStudySummaryView());
 
     // Start
