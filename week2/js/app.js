@@ -22,6 +22,7 @@ import { createDailyDigestView } from './views/daily-digest.js';
 import { createTimelineView } from './views/timeline.js';
 import { createMistakesView } from './views/mistakes.js';
 import { createPlannerView } from './views/planner.js';
+import { createSettingsView } from './views/settings.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -59,7 +60,8 @@ class App {
       .on('/digest', () => createDailyDigestView())
       .on('/timeline', () => createTimelineView())
       .on('/mistakes', () => createMistakesView())
-      .on('/planner', () => createPlannerView());
+      .on('/planner', () => createPlannerView())
+      .on('/settings', () => createSettingsView());
 
     // Start
     this.router.start();
@@ -238,6 +240,10 @@ class App {
               <a data-route="#/timeline" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="milestone" class="w-4 h-4 text-indigo-500"></i>
                 <span>Journey</span>
+              </a>
+              <a data-route="#/settings" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
+                <span>Settings</span>
               </a>
             </div>
 
