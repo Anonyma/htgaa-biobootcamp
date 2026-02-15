@@ -18,6 +18,7 @@ import { createQuickReviewView } from './views/quick-review.js';
 import { createNotesView } from './views/notes.js';
 import { createWeakPointsView } from './views/weak-points.js';
 import { createBookmarksView } from './views/bookmarks.js';
+import { createDailyDigestView } from './views/daily-digest.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -51,7 +52,8 @@ class App {
       .on('/summary', () => createStudySummaryView())
       .on('/notes', () => createNotesView())
       .on('/weak-points', () => createWeakPointsView())
-      .on('/bookmarks', () => createBookmarksView());
+      .on('/bookmarks', () => createBookmarksView())
+      .on('/digest', () => createDailyDigestView());
 
     // Start
     this.router.start();
@@ -162,6 +164,10 @@ class App {
 
             <!-- Study Tools -->
             <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 space-y-1">
+              <a data-route="#/digest" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="sunrise" class="w-4 h-4 text-indigo-500"></i>
+                <span>Daily Digest</span>
+              </a>
               <a data-route="#/homework" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="clipboard-list" class="w-4 h-4 text-orange-500"></i>
                 <span>Homework</span>
@@ -283,6 +289,7 @@ class App {
                   <div class="shortcut-row"><kbd class="shortcut-key">n</kbd><span class="shortcut-desc">Next topic</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">p</kbd><span class="shortcut-desc">Previous topic</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">h</kbd><span class="shortcut-desc">Go home</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">d</kbd><span class="shortcut-desc">Daily digest</span></div>
                 </div>
               </div>
 
@@ -448,6 +455,9 @@ class App {
       }
       if (e.key === 'h' && !e.metaKey && !e.ctrlKey) {
         window.location.hash = '#/';
+      }
+      if (e.key === 'd' && !e.metaKey && !e.ctrlKey) {
+        window.location.hash = '#/digest';
       }
       if (e.key === 'f' && !e.metaKey && !e.ctrlKey) {
         toggleFocus();

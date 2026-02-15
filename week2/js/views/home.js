@@ -139,6 +139,9 @@ function createHomeView() {
           <!-- Study Tools (compact row) -->
           <section class="mb-10">
             <div class="flex flex-wrap gap-3 study-tools-row">
+              <a data-route="#/digest" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="sunrise" class="w-4 h-4 text-indigo-500"></i> Daily Digest
+              </a>
               <a data-route="#/flashcards" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i> Flashcards
                 ${(() => { const fc = store.getFlashcardStats(); return fc.due > 0 ? `<span class="text-xs text-red-500 font-bold">${fc.due} due</span>` : ''; })()}
