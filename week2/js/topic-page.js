@@ -538,6 +538,33 @@ function createTopicView(topicId) {
       };
       document.addEventListener('keydown', this._keyHandler);
 
+      // Teach It Back — auto-save and hint
+      const teachTextarea = container.querySelector('.teach-back-textarea');
+      if (teachTextarea) {
+        let saveTimeout;
+        teachTextarea.addEventListener('input', () => {
+          clearTimeout(saveTimeout);
+          saveTimeout = setTimeout(() => {
+            const key = teachTextarea.dataset.teachKey;
+            const all = JSON.parse(localStorage.getItem('htgaa-week2-teach-back') || '{}');
+            all[key] = { text: teachTextarea.value, updated: Date.now() };
+            localStorage.setItem('htgaa-week2-teach-back', JSON.stringify(all));
+            const savedLabel = container.querySelector('.teach-back-saved');
+            if (savedLabel) { savedLabel.classList.remove('hidden'); setTimeout(() => savedLabel.classList.add('hidden'), 1500); }
+          }, 800);
+        });
+      }
+      const hintBtn = container.querySelector('.teach-back-hint');
+      if (hintBtn) {
+        hintBtn.addEventListener('click', () => {
+          const hintArea = container.querySelector('.teach-back-hint-text');
+          if (hintArea) {
+            hintArea.textContent = hintBtn.dataset.hint;
+            hintArea.classList.toggle('hidden');
+          }
+        });
+      }
+
       // Confidence self-check stars
       container.querySelectorAll('.confidence-star').forEach(star => {
         star.addEventListener('click', () => {
@@ -934,6 +961,9 @@ function renderTopicPage(data, topicId) {
 
       <!-- What You've Learned — Reflection Card -->
       ${renderLearningReflection(data, topicId)}
+
+      <!-- Teach It Back Prompt -->
+      ${renderTeachItBack(data, topicId)}
 
       <!-- Mark Complete / Navigate -->
       <div class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
@@ -2667,6 +2697,57 @@ function renderQuickReference(cards) {
         }).join('')}
       </div>
     </section>
+  `;
+}
+
+function renderTeachItBack(data, topicId) {
+  const sectionsRead = store.getSectionsRead(topicId);
+  if (sectionsRead.length < 2) return ''; // Need to read some content first
+
+  // Pick a concept to explain — use vocabulary or key facts
+  const concepts = [];
+  if (data.vocabulary) {
+    data.vocabulary.forEach(v => concepts.push({ term: v.term, hint: v.definition }));
+  }
+  if (data.keyFacts) {
+    data.keyFacts.forEach(f => concepts.push({ term: f.title || f.label, hint: f.detail || f.value }));
+  }
+  if (concepts.length === 0) return '';
+
+  // Deterministic daily pick based on topic + day
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
+  const idx = (dayOfYear + topicId.length) % concepts.length;
+  const concept = concepts[idx];
+
+  // Load saved response
+  const saved = store._loadJSON('htgaa-week2-teach-back', {});
+  const key = `${topicId}:${concept.term}`;
+  const savedText = saved[key]?.text || '';
+
+  return `
+    <div class="mt-6 mb-6 bg-gradient-to-r from-violet-50 to-indigo-50 dark:from-violet-900/15 dark:to-indigo-900/15 border border-violet-200 dark:border-violet-800/40 rounded-2xl p-5">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="w-8 h-8 rounded-lg bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center">
+          <i data-lucide="message-circle" class="w-4 h-4 text-violet-600 dark:text-violet-400"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-violet-800 dark:text-violet-300 text-sm">Teach It Back</h3>
+          <p class="text-[10px] text-violet-500 dark:text-violet-400/70">Explaining concepts in your own words strengthens memory</p>
+        </div>
+      </div>
+      <p class="text-sm text-slate-700 dark:text-slate-300 mb-3">
+        Explain <strong class="text-violet-700 dark:text-violet-300">"${concept.term}"</strong> as if teaching a friend who knows nothing about biology:
+      </p>
+      <textarea class="teach-back-textarea w-full h-20 p-3 rounded-lg border border-violet-200 dark:border-violet-700 bg-white/80 dark:bg-slate-800/50 text-sm leading-relaxed resize-y focus:ring-2 focus:ring-violet-400 focus:border-violet-400 outline-none placeholder:text-slate-400"
+        placeholder="Type your explanation here..." data-teach-key="${key}">${savedText}</textarea>
+      <div class="flex items-center justify-between mt-2">
+        <button class="teach-back-hint text-xs text-violet-500 hover:text-violet-700 dark:hover:text-violet-400 cursor-pointer flex items-center gap-1" data-hint="${concept.hint.replace(/"/g, '&quot;')}">
+          <i data-lucide="lightbulb" class="w-3 h-3"></i> Show hint
+        </button>
+        <span class="teach-back-saved text-xs text-green-500 hidden">Saved</span>
+      </div>
+      <div class="teach-back-hint-text hidden mt-2 p-2 bg-white/60 dark:bg-slate-800/60 rounded-lg text-xs text-slate-500 italic"></div>
+    </div>
   `;
 }
 

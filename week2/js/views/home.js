@@ -175,6 +175,7 @@ function createHomeView() {
             <div id="more-dashboard-content" class="hidden mt-8 space-y-10">
               ${renderStatsDashboard(progress)}
               ${renderMasteryRanking()}
+              ${renderConfidenceOverview()}
               ${renderExamHistoryChart()}
 
               <section>
@@ -1252,6 +1253,43 @@ function renderMasteryRanking() {
               <div class="${barColor} h-full rounded-full transition-all" style="width:${r.mastery}%"></div>
             </div>
             <span class="text-sm font-bold w-10 text-right ${r.mastery >= 80 ? 'text-green-600' : r.mastery >= 50 ? 'text-amber-600' : r.mastery > 0 ? 'text-red-500' : 'text-slate-400'}">${r.mastery}%</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderConfidenceOverview() {
+  const topicsWithConf = TOPICS.map(t => {
+    const avg = store.getAverageConfidence(t.id);
+    const conf = store.getConfidence(t.id);
+    const rated = Object.keys(conf).length;
+    return { topic: t, avg, rated };
+  }).filter(t => t.rated > 0);
+
+  if (topicsWithConf.length === 0) return '';
+
+  const overallAvg = topicsWithConf.reduce((s, t) => s + t.avg, 0) / topicsWithConf.length;
+  const confLabels = { 1: 'Low', 2: 'Some', 3: 'Medium', 4: 'High', 5: 'Mastered' };
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="star" class="w-5 h-5 text-amber-500"></i> Confidence Overview
+        <span class="ml-auto text-sm font-normal text-slate-400">Avg: ${overallAvg.toFixed(1)}/5</span>
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
+        ${topicsWithConf.map(t => {
+          const stars = Math.round(t.avg);
+          return `
+          <div class="flex items-center gap-3 px-4 py-3">
+            <i data-lucide="${t.topic.icon}" class="w-4 h-4 text-${t.topic.color}-500 flex-shrink-0"></i>
+            <span class="text-sm font-medium flex-1 truncate">${t.topic.title}</span>
+            <div class="flex gap-0.5">
+              ${[1,2,3,4,5].map(r => `<span class="text-xs ${r <= stars ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'}">&#9733;</span>`).join('')}
+            </div>
+            <span class="text-xs text-slate-400 w-16 text-right">${t.avg.toFixed(1)}/5</span>
           </div>`;
         }).join('')}
       </div>
