@@ -257,6 +257,15 @@ function createFlashcardsView() {
                 <i data-lucide="sparkles" class="w-4 h-4 inline"></i> New Only (${newOnly.length})
               </button>`;
             })()}
+            ${(() => {
+              const reviews = store.get('flashcards').reviews;
+              const filtered = selectedTopic === 'all' ? allCards : allCards.filter(c => c.topicId === selectedTopic);
+              const weak = filtered.filter(c => reviews[c.id] && reviews[c.id].easeFactor < 2.0);
+              if (weak.length === 0) return '';
+              return `<button id="fc-focus-weak" class="px-5 py-2.5 rounded-xl bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-medium hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors">
+                <i data-lucide="target" class="w-4 h-4 inline"></i> Focus Weak (${weak.length})
+              </button>`;
+            })()}
           </div>
           ` : ''}
 
@@ -364,6 +373,20 @@ function createFlashcardsView() {
         const reviews = store.get('flashcards').reviews;
         const filtered = selectedTopic === 'all' ? allCards : allCards.filter(c => c.topicId === selectedTopic);
         dueCards = filtered.filter(c => !reviews[c.id]);
+        currentIndex = 0;
+        isFlipped = false;
+        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
+        cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
+        if (progressBar) progressBar.parentElement.parentElement.classList.remove('hidden');
+        updateProgress();
+        if (window.lucide) window.lucide.createIcons();
+      });
+
+      // Focus Weak button — review cards with low ease factor
+      container.querySelector('#fc-focus-weak')?.addEventListener('click', () => {
+        const reviews = store.get('flashcards').reviews;
+        const filtered = selectedTopic === 'all' ? allCards : allCards.filter(c => c.topicId === selectedTopic);
+        dueCards = filtered.filter(c => reviews[c.id] && reviews[c.id].easeFactor < 2.0);
         currentIndex = 0;
         isFlipped = false;
         sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };

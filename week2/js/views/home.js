@@ -966,6 +966,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v67', items: ['Flashcard focus-weak mode', 'Overdue flashcard urgency alert', 'Exam improvement from last attempt'] },
     { ver: 'v66', items: ['Glossary term of the day', 'Study summary readiness gauge', 'Exam improvement from last attempt'] },
     { ver: 'v65', items: ['Exam skipped question badges', 'Flashcard daily review goal bar', 'Mastered terms count on dashboard'] },
     { ver: 'v64', items: ['Exam topic history count on setup', 'Flashcard hardest cards list', 'Exam score trend arrow on dashboard'] },
@@ -1017,26 +1018,36 @@ function renderReviewReminder() {
   const reviews = fcData.reviews || {};
   const now = Date.now();
 
-  // Count due reviews
+  // Count due reviews and overdue (>24h past due)
   let dueCount = 0;
+  let overdueCount = 0;
+  const oneDayMs = 86400000;
   Object.values(reviews).forEach(r => {
-    if (r.nextReview && r.nextReview <= now) dueCount++;
+    if (r.nextReview && r.nextReview <= now) {
+      dueCount++;
+      if (now - r.nextReview > oneDayMs) overdueCount++;
+    }
   });
 
   if (dueCount === 0) return '';
 
+  const urgent = overdueCount > 5;
+  const borderColor = urgent ? 'red' : 'violet';
+  const bgFrom = urgent ? 'red' : 'violet';
+  const bgTo = urgent ? 'rose' : 'purple';
+
   return `
     <section class="mb-6">
-      <a data-route="#/flashcards" class="block bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl border border-violet-200 dark:border-violet-800 p-4 cursor-pointer hover:border-violet-400 transition-colors">
+      <a data-route="#/flashcards" class="block bg-gradient-to-r from-${bgFrom}-50 to-${bgTo}-50 dark:from-${bgFrom}-900/20 dark:to-${bgTo}-900/20 rounded-xl border border-${borderColor}-200 dark:border-${borderColor}-800 p-4 cursor-pointer hover:border-${borderColor}-400 transition-colors">
         <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center flex-shrink-0">
-            <i data-lucide="brain" class="w-5 h-5 text-violet-600 dark:text-violet-400"></i>
+          <div class="w-10 h-10 rounded-full bg-${borderColor}-100 dark:bg-${borderColor}-900/40 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="${urgent ? 'alert-circle' : 'brain'}" class="w-5 h-5 text-${borderColor}-600 dark:text-${borderColor}-400"></i>
           </div>
           <div class="flex-1">
-            <p class="font-bold text-violet-800 dark:text-violet-300">${dueCount} flashcard${dueCount > 1 ? 's' : ''} due for review</p>
-            <p class="text-xs text-violet-600 dark:text-violet-400">Spaced repetition works best when reviews are done on time. Click to start.</p>
+            <p class="font-bold text-${borderColor}-800 dark:text-${borderColor}-300">${dueCount} flashcard${dueCount > 1 ? 's' : ''} due for review${overdueCount > 0 ? ` (${overdueCount} overdue)` : ''}</p>
+            <p class="text-xs text-${borderColor}-600 dark:text-${borderColor}-400">${urgent ? 'You have many overdue cards — review now to prevent forgetting!' : 'Spaced repetition works best when reviews are done on time. Click to start.'}</p>
           </div>
-          <i data-lucide="arrow-right" class="w-5 h-5 text-violet-400 flex-shrink-0"></i>
+          <i data-lucide="arrow-right" class="w-5 h-5 text-${borderColor}-400 flex-shrink-0"></i>
         </div>
       </a>
     </section>
