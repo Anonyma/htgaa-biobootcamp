@@ -150,6 +150,26 @@ function createGlossaryView() {
             </div>`;
           })()}
 
+          <!-- Recently Viewed -->
+          ${(() => {
+            try {
+              const recent = JSON.parse(localStorage.getItem('htgaa-glossary-recent') || '[]');
+              if (recent.length === 0) return '';
+              const recentTerms = recent.map(r => allTerms.find(t => t.term.toLowerCase() === r)).filter(Boolean).slice(0, 5);
+              if (recentTerms.length === 0) return '';
+              return `
+              <div class="mb-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-2 mb-2">
+                  <i data-lucide="history" class="w-4 h-4 text-slate-400"></i>
+                  <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Recently Viewed</span>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                  ${recentTerms.map(t => `<a href="#letter-${t.term[0].toUpperCase()}" class="glossary-jump-term text-xs px-2.5 py-1 rounded-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:border-teal-400 cursor-pointer transition-colors" data-jump-term="${t.term.toLowerCase()}">${t.term}</a>`).join('')}
+                </div>
+              </div>`;
+            } catch { return ''; }
+          })()}
+
           <div id="glossary-results" class="text-sm text-slate-500 mb-4 hidden"></div>
 
           <div id="glossary-content">
@@ -301,6 +321,16 @@ function createGlossaryView() {
         if (term) {
           const related = term.querySelector('.glossary-related');
           if (related) related.classList.toggle('hidden');
+          // Track recently viewed
+          const termText = term.dataset.termText;
+          if (termText) {
+            try {
+              let recent = JSON.parse(localStorage.getItem('htgaa-glossary-recent') || '[]');
+              recent = recent.filter(r => r !== termText);
+              recent.unshift(termText);
+              localStorage.setItem('htgaa-glossary-recent', JSON.stringify(recent.slice(0, 10)));
+            } catch {}
+          }
         }
       });
 

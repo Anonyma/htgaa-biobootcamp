@@ -212,11 +212,15 @@ function createStudySummaryView() {
               ${(() => {
                 const m = store.getTopicMastery(topic.id, data);
                 if (!m || m.mastery === 0) return '';
-                return `<div class="mb-3 flex gap-4 text-xs text-slate-500 print:text-slate-600">
+                const timeSpent = (() => { try { const ts = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}'); return ts[topic.id] || 0; } catch { return 0; } })();
+                const targetMin = data.readingTime || 30;
+                const remaining = Math.max(0, targetMin - timeSpent);
+                return `<div class="mb-3 flex gap-4 text-xs text-slate-500 print:text-slate-600 flex-wrap">
                   <span>Sections: ${m.sectionPct}%</span>
                   <span>Quiz: ${m.quizPct}%</span>
                   <span>Flashcards: ${m.fcPct}%</span>
                   <span>Time: ${m.timePct}%</span>
+                  ${remaining > 0 ? `<span class="text-amber-500">~${remaining}m remaining</span>` : `<span class="text-green-500">Time goal met</span>`}
                 </div>`;
               })()}
 
