@@ -206,17 +206,40 @@ class App {
               </a>
             </div>
 
-            <!-- Study Timer -->
+            <!-- Pomodoro Study Timer -->
             <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
               <div class="px-3 py-2">
                 <div class="flex items-center justify-between mb-2">
-                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Session Timer</span>
-                  <button id="session-timer-toggle" class="text-xs text-blue-500 hover:text-blue-600 font-medium" title="Start/Pause">
-                    <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
-                  </button>
+                  <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pomodoro Timer</span>
+                  <div class="flex items-center gap-1">
+                    <button id="session-timer-reset" class="text-xs text-slate-400 hover:text-slate-600 font-medium hidden" title="Reset">
+                      <i data-lucide="rotate-ccw" class="w-3 h-3 inline"></i>
+                    </button>
+                    <button id="session-timer-toggle" class="text-xs text-blue-500 hover:text-blue-600 font-medium" title="Start/Pause">
+                      <i data-lucide="play" class="w-3.5 h-3.5 inline"></i>
+                    </button>
+                  </div>
                 </div>
-                <div class="text-2xl font-mono font-bold text-slate-700 dark:text-slate-300" id="session-timer-display">00:00</div>
-                <p class="text-xs text-slate-400 mt-1" id="session-timer-status">Click play to start</p>
+                <div class="flex items-center gap-3">
+                  <div class="relative" style="width:48px;height:48px">
+                    <svg class="-rotate-90" viewBox="0 0 48 48" style="width:48px;height:48px">
+                      <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3" class="text-slate-200 dark:text-slate-700"/>
+                      <circle id="pomodoro-ring" cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3" class="text-blue-500"
+                        stroke-dasharray="125.66" stroke-dashoffset="125.66" stroke-linecap="round" style="transition:stroke-dashoffset 1s linear"/>
+                    </svg>
+                    <span class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-slate-500" id="pomodoro-cycle">1</span>
+                  </div>
+                  <div>
+                    <div class="text-2xl font-mono font-bold text-slate-700 dark:text-slate-300" id="session-timer-display">25:00</div>
+                    <p class="text-xs text-slate-400" id="session-timer-status">25 min focus session</p>
+                  </div>
+                </div>
+                <div class="flex gap-1 mt-2" id="pomodoro-dots">
+                  <span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700" data-dot="1"></span>
+                  <span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700" data-dot="2"></span>
+                  <span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700" data-dot="3"></span>
+                  <span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700" data-dot="4"></span>
+                </div>
               </div>
             </div>
           </div>
@@ -434,13 +457,24 @@ class App {
   initSessionTimer() {
     const display = document.getElementById('session-timer-display');
     const toggleBtn = document.getElementById('session-timer-toggle');
+    const resetBtn = document.getElementById('session-timer-reset');
     const statusEl = document.getElementById('session-timer-status');
+    const ring = document.getElementById('pomodoro-ring');
+    const cycleEl = document.getElementById('pomodoro-cycle');
+    const dotsEl = document.getElementById('pomodoro-dots');
     if (!display || !toggleBtn) return;
 
-    let seconds = 0;
+    const WORK_DURATION = 25 * 60;
+    const BREAK_DURATION = 5 * 60;
+    const LONG_BREAK = 15 * 60;
+    const CIRCUMFERENCE = 125.66;
+
+    let remaining = WORK_DURATION;
     let running = false;
     let interval = null;
-    const POMODORO = 25 * 60; // 25 min
+    let isBreak = false;
+    let cycle = 1;
+    let completedPomodoros = 0;
 
     const fmt = (s) => {
       const m = Math.floor(s / 60);
@@ -448,16 +482,67 @@ class App {
       return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
     };
 
+    const updateRing = () => {
+      if (!ring) return;
+      const total = isBreak ? (cycle % 4 === 0 ? LONG_BREAK : BREAK_DURATION) : WORK_DURATION;
+      const progress = 1 - (remaining / total);
+      ring.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+      ring.classList.toggle('text-blue-500', !isBreak);
+      ring.classList.toggle('text-green-500', isBreak);
+    };
+
+    const updateDots = () => {
+      if (!dotsEl) return;
+      dotsEl.querySelectorAll('[data-dot]').forEach((dot, i) => {
+        dot.className = `w-2 h-2 rounded-full ${i < completedPomodoros ? 'bg-blue-500' : 'bg-slate-200 dark:bg-slate-700'}`;
+      });
+    };
+
     const update = () => {
-      display.textContent = fmt(seconds);
-      // Pomodoro reminder at 25 min
-      if (seconds === POMODORO && statusEl) {
-        statusEl.textContent = 'Time for a 5-min break!';
-        statusEl.classList.add('text-amber-500');
-        // Flash the timer
-        display.classList.add('text-amber-500');
-        setTimeout(() => display.classList.remove('text-amber-500'), 3000);
+      display.textContent = fmt(remaining);
+      updateRing();
+      if (cycleEl) cycleEl.textContent = cycle;
+    };
+
+    const startBreak = () => {
+      isBreak = true;
+      completedPomodoros++;
+      const isLong = completedPomodoros % 4 === 0;
+      remaining = isLong ? LONG_BREAK : BREAK_DURATION;
+      if (statusEl) {
+        statusEl.textContent = isLong ? '15 min long break' : '5 min break';
+        statusEl.classList.add('text-green-500');
+        statusEl.classList.remove('text-blue-500', 'text-amber-500');
       }
+      display.classList.add('text-green-500');
+      display.classList.remove('text-slate-700', 'dark:text-slate-300');
+      updateDots();
+      update();
+    };
+
+    const startWork = () => {
+      isBreak = false;
+      cycle++;
+      remaining = WORK_DURATION;
+      if (statusEl) {
+        statusEl.textContent = 'Focus session';
+        statusEl.classList.remove('text-green-500', 'text-amber-500');
+      }
+      display.classList.remove('text-green-500');
+      update();
+    };
+
+    const tick = () => {
+      if (document.hidden) return;
+      remaining--;
+      if (remaining <= 0) {
+        if (isBreak) {
+          startWork();
+        } else {
+          startBreak();
+        }
+      }
+      update();
     };
 
     toggleBtn.addEventListener('click', () => {
@@ -466,22 +551,39 @@ class App {
         running = false;
         toggleBtn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 inline"></i>';
         if (statusEl) statusEl.textContent = 'Paused';
+        if (resetBtn) resetBtn.classList.remove('hidden');
       } else {
-        interval = setInterval(() => {
-          if (!document.hidden) {
-            seconds++;
-            update();
-          }
-        }, 1000);
+        interval = setInterval(tick, 1000);
         running = true;
         toggleBtn.innerHTML = '<i data-lucide="pause" class="w-3.5 h-3.5 inline"></i>';
         if (statusEl) {
-          statusEl.textContent = 'Studying...';
+          statusEl.textContent = isBreak ? 'Break time' : 'Focus session';
           statusEl.classList.remove('text-amber-500');
         }
+        if (resetBtn) resetBtn.classList.add('hidden');
       }
       if (window.lucide) lucide.createIcons();
     });
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        clearInterval(interval);
+        running = false;
+        isBreak = false;
+        cycle = 1;
+        completedPomodoros = 0;
+        remaining = WORK_DURATION;
+        toggleBtn.innerHTML = '<i data-lucide="play" class="w-3.5 h-3.5 inline"></i>';
+        if (statusEl) { statusEl.textContent = '25 min focus session'; statusEl.className = 'text-xs text-slate-400'; }
+        display.className = 'text-2xl font-mono font-bold text-slate-700 dark:text-slate-300';
+        resetBtn.classList.add('hidden');
+        updateDots();
+        update();
+        if (window.lucide) lucide.createIcons();
+      });
+    }
+
+    update();
   }
 
   updateSidebarProgress() {
