@@ -137,6 +137,36 @@ function createGlossaryView() {
           <!-- Mini Quiz Area -->
           <div id="glossary-mini-quiz-area" class="mb-6 hidden"></div>
 
+          <!-- Mastery by Topic -->
+          ${(() => {
+            const reviews = store.get('flashcards').reviews || {};
+            const topicStats = TOPICS.map(t => {
+              const terms = allTerms.filter(at => at.topicId === t.id);
+              let mastered = 0, learning = 0;
+              terms.forEach((term, i) => {
+                const topicIdx = allTerms.filter(at => at.topicId === t.id).indexOf(term);
+                const cardId = t.id + '-vocab-' + (topicIdx >= 0 ? topicIdx : i);
+                const r = reviews[cardId];
+                if (r?.interval >= 21) mastered++;
+                else if (r) learning++;
+              });
+              return { topic: t, total: terms.length, mastered, learning, newCount: terms.length - mastered - learning };
+            }).filter(ts => ts.total > 0);
+            if (topicStats.every(ts => ts.mastered === 0 && ts.learning === 0)) return '';
+            return `
+            <div class="mb-6 bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
+              <h3 class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-2">
+                <i data-lucide="bar-chart-3" class="w-4 h-4 text-teal-500"></i> Mastery by Topic
+              </h3>
+              <div class="space-y-2">
+                ${topicStats.map(ts => {
+                  const pct = Math.round((ts.mastered / ts.total) * 100);
+                  return '<div class="flex items-center gap-2"><i data-lucide="' + (ts.topic.icon || 'book') + '" class="w-3.5 h-3.5 text-' + ts.topic.color + '-500 flex-shrink-0"></i><span class="text-xs text-slate-600 dark:text-slate-400 w-20 truncate">' + ts.topic.title.split(' ')[0] + '</span><div class="flex-1 h-2 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden flex"><div class="bg-green-500 h-full" style="width:' + ((ts.mastered / ts.total) * 100) + '%"></div><div class="bg-yellow-400 h-full" style="width:' + ((ts.learning / ts.total) * 100) + '%"></div></div><span class="text-[10px] font-bold w-8 text-right ' + (pct >= 80 ? 'text-green-600' : pct >= 40 ? 'text-amber-600' : 'text-slate-400') + '">' + pct + '%</span></div>';
+                }).join('')}
+              </div>
+            </div>`;
+          })()}
+
           <!-- Term of the Day -->
           ${(() => {
             if (allTerms.length === 0) return '';

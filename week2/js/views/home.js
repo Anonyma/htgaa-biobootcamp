@@ -140,6 +140,9 @@ function createHomeView() {
           <!-- Weekly Progress Comparison -->
           ${renderWeeklyComparison()}
 
+          <!-- Topic Connections -->
+          ${renderTopicConnections()}
+
           <!-- Flashcard Forecast -->
           ${renderFlashcardForecast()}
 
@@ -1237,6 +1240,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v103', items: ['Glossary mastery by topic breakdown', 'Exam best streak highlight', 'Dashboard topic connections map'] },
     { ver: 'v102', items: ['Exam focus-weak-topics button', 'Compare prerequisite chain', 'Dashboard flashcard review forecast'] },
     { ver: 'v101', items: ['Exam difficulty filter on setup', 'Dashboard recent sessions timeline', 'Flashcard session history tracking'] },
     { ver: 'v100', items: ['Exam answer change analysis', 'Flashcard session comparison vs previous', 'v100 milestone badge'] },
@@ -1981,6 +1985,59 @@ function renderStudyHeatmap() {
           <div class="w-3 h-3 rounded-sm bg-green-700 dark:bg-green-400"></div>
           <span>More</span>
         </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderTopicConnections() {
+  // Simple connection matrix showing which topics link to which
+  const connections = [
+    { from: 'central-dogma', to: 'sequencing', label: 'reads' },
+    { from: 'central-dogma', to: 'synthesis', label: 'builds' },
+    { from: 'central-dogma', to: 'editing', label: 'modifies' },
+    { from: 'central-dogma', to: 'genetic-codes', label: 'encodes' },
+    { from: 'sequencing', to: 'gel-electrophoresis', label: 'separates' },
+    { from: 'synthesis', to: 'editing', label: 'enables' },
+    { from: 'genetic-codes', to: 'synthesis', label: 'guides' },
+    { from: 'gel-electrophoresis', to: 'editing', label: 'verifies' },
+  ];
+
+  const topicPositions = {};
+  const n = TOPICS.length;
+  const cx = 120, cy = 90, r = 65;
+  TOPICS.forEach((t, i) => {
+    const angle = -Math.PI / 2 + (i / n) * 2 * Math.PI;
+    topicPositions[t.id] = { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle), topic: t };
+  });
+
+  const colors = { blue: '#3b82f6', green: '#22c55e', red: '#ef4444', purple: '#a855f7', yellow: '#eab308', indigo: '#6366f1' };
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="network" class="w-5 h-5 text-indigo-500"></i> Topic Connections
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+        <svg viewBox="0 0 240 180" class="w-full max-w-md mx-auto">
+          ${connections.map(c => {
+            const from = topicPositions[c.from];
+            const to = topicPositions[c.to];
+            if (!from || !to) return '';
+            const mx = (from.x + to.x) / 2;
+            const my = (from.y + to.y) / 2;
+            return '<line x1="' + from.x + '" y1="' + from.y + '" x2="' + to.x + '" y2="' + to.y + '" stroke="rgba(148,163,184,0.3)" stroke-width="1"/><text x="' + mx + '" y="' + (my - 2) + '" text-anchor="middle" font-size="4" fill="rgba(148,163,184,0.6)">' + c.label + '</text>';
+          }).join('')}
+          ${TOPICS.map(t => {
+            const pos = topicPositions[t.id];
+            const m = store.getTopicMastery(t.id, null);
+            const pct = m?.mastery || 0;
+            const fill = colors[t.color] || '#94a3b8';
+            const radius = 12 + (pct / 100) * 6;
+            return '<circle cx="' + pos.x + '" cy="' + pos.y + '" r="' + radius + '" fill="' + fill + '" opacity="0.2"/><circle cx="' + pos.x + '" cy="' + pos.y + '" r="8" fill="' + fill + '" opacity="0.8"/><text x="' + pos.x + '" y="' + (pos.y + 18) + '" text-anchor="middle" font-size="5" fill="currentColor" class="text-slate-600 dark:text-slate-400">' + t.title.split(' ')[0] + '</text>';
+          }).join('')}
+        </svg>
+        <p class="text-xs text-slate-400 text-center mt-2">Node size reflects mastery level</p>
       </div>
     </section>
   `;

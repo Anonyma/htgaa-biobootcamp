@@ -779,6 +779,15 @@ export function createExamView() {
         </div>`;
       })()}
 
+      <!-- Best Streak -->
+      ${bestStreak >= 3 ? `
+      <div class="mb-6 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 rounded-2xl border border-amber-200 dark:border-amber-800 p-5 text-center">
+        <div class="text-3xl mb-1">${bestStreak >= 10 ? '🔥🔥🔥' : bestStreak >= 7 ? '🔥🔥' : '🔥'}</div>
+        <div class="text-2xl font-extrabold text-amber-600 dark:text-amber-400">${bestStreak} in a row!</div>
+        <p class="text-xs text-amber-700 dark:text-amber-500 mt-1">${bestStreak >= 10 ? 'Unstoppable! Perfect focus.' : bestStreak >= 7 ? 'Incredible streak! You really know this.' : 'Great streak! Keep building momentum.'}</p>
+      </div>
+      ` : ''}
+
       <!-- Difficulty Distribution -->
       ${(() => {
         const diffs = { easy: 0, medium: 0, hard: 0 };
