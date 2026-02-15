@@ -208,6 +208,12 @@ function createHomeView() {
               <a data-route="#/discussion" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="message-circle" class="w-4 h-4 text-violet-500"></i> Discussion
               </a>
+              <a data-route="#/study-log" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-green-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="calendar-check" class="w-4 h-4 text-green-500"></i> Study Log
+              </a>
+              <a data-route="#/shortcuts" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="keyboard" class="w-4 h-4 text-slate-500"></i> Shortcuts
+              </a>
             </div>
           </section>
 
@@ -1717,6 +1723,8 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v132', items: ['Study log with heatmap', 'GitHub-style activity calendar', 'Activity timeline and weekly chart'] },
+    { ver: 'v131', items: ['Keyboard shortcuts reference', 'Searchable shortcut guide', 'Navigation and study tool shortcuts'] },
     { ver: 'v130', items: ['Discussion prompts', 'Critical thinking questions', 'Study group conversation starters'] },
     { ver: 'v129', items: ['Achievement badges', '20 unlockable badges', 'Gamified progress tracking'] },
     { ver: 'v128', items: ['Lab protocol quick reference', 'Step-by-step gel lab checklist', 'Troubleshooting guide'] },

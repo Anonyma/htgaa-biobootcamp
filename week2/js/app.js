@@ -31,6 +31,8 @@ import { createConfidenceView } from './views/confidence.js';
 import { createCheatsheetView } from './views/cheatsheet.js';
 import { createAchievementsView } from './views/achievements.js';
 import { createDiscussionView } from './views/discussion.js';
+import { createShortcutsView } from './views/shortcuts.js';
+import { createStudyLogView } from './views/study-log.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -77,7 +79,9 @@ class App {
       .on('/confidence', () => createConfidenceView())
       .on('/cheatsheet', () => createCheatsheetView())
       .on('/achievements', () => createAchievementsView())
-      .on('/discussion', () => createDiscussionView());
+      .on('/discussion', () => createDiscussionView())
+      .on('/shortcuts', () => createShortcutsView())
+      .on('/study-log', () => createStudyLogView());
 
     // Start
     this.router.start();
@@ -292,6 +296,14 @@ class App {
               <a data-route="#/analytics" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i>
                 <span>Analytics</span>
+              </a>
+              <a data-route="#/study-log" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="calendar-check" class="w-4 h-4 text-green-500"></i>
+                <span>Study Log</span>
+              </a>
+              <a data-route="#/shortcuts" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="keyboard" class="w-4 h-4 text-slate-400"></i>
+                <span>Shortcuts</span>
               </a>
               <a data-route="#/settings" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
