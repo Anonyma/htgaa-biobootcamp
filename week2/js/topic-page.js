@@ -411,6 +411,36 @@ function createTopicView(topicId) {
       if (qaTopBtn) {
         qaTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
       }
+
+      // Mobile TOC drawer
+      const qaTocBtn = container.querySelector('#qa-toc-btn');
+      const mobileTocOverlay = container.querySelector('#mobile-toc-overlay');
+      const mobileTocClose = container.querySelector('#mobile-toc-close');
+      if (qaTocBtn && mobileTocOverlay) {
+        const openToc = () => {
+          mobileTocOverlay.style.display = 'block';
+          requestAnimationFrame(() => mobileTocOverlay.classList.add('open'));
+        };
+        const closeToc = () => {
+          mobileTocOverlay.classList.remove('open');
+          setTimeout(() => { mobileTocOverlay.style.display = 'none'; }, 300);
+        };
+        qaTocBtn.addEventListener('click', openToc);
+        if (mobileTocClose) mobileTocClose.addEventListener('click', closeToc);
+        mobileTocOverlay.addEventListener('click', (e) => {
+          if (e.target === mobileTocOverlay) closeToc();
+        });
+        // Close and scroll to section when clicking a TOC item
+        mobileTocOverlay.querySelectorAll('.mobile-toc-item').forEach(item => {
+          item.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeToc();
+            const sectionId = item.dataset.section;
+            const target = sectionId === 'quiz' ? document.getElementById('topic-quiz') : document.getElementById(`section-${sectionId}`);
+            if (target) setTimeout(() => smoothScrollToElement(target), 320);
+          });
+        });
+      }
       const qaQuizLink = container.querySelector('#quick-actions-bar a[href="#topic-quiz"]');
       if (qaQuizLink) {
         qaQuizLink.addEventListener('click', (e) => {
@@ -875,11 +905,54 @@ function renderTopicPage(data, topicId) {
             `}
           </div>
         </div>
+
+        <!-- Smart Study Suggestions -->
+        ${renderStudySuggestions(topicId, data)}
+      </div>
+    </div>
+
+    <!-- Mobile TOC Drawer -->
+    <div id="mobile-toc-overlay" class="mobile-toc-overlay" style="display:none">
+      <div id="mobile-toc-drawer" class="mobile-toc-drawer">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+          <span class="font-bold text-sm text-slate-700 dark:text-slate-300">Contents</span>
+          <button id="mobile-toc-close" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <nav class="p-4 overflow-y-auto max-h-[60vh]">
+          <ul class="space-y-1">
+            ${(data.sections || []).map((s, i) => {
+              const readSet = new Set(store.getSectionsRead(topicId));
+              const wordCount = (s.content || '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+              const readMin = Math.max(1, Math.ceil(wordCount / 200));
+              return `
+              <li>
+                <a href="#section-${s.id}" class="mobile-toc-item flex items-center gap-2 py-2 px-3 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors" data-section="${s.id}">
+                  ${readSet.has(s.id) ? '<span class="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3 h-3 text-green-600 dark:text-green-400"></i></span>' : `<span class="w-5 h-5 rounded-full border border-slate-300 dark:border-slate-600 flex items-center justify-center flex-shrink-0 text-xs text-slate-400">${i + 1}</span>`}
+                  <span class="flex-1">${s.title}</span>
+                  <span class="text-xs text-slate-400">${readMin}m</span>
+                </a>
+              </li>`;
+            }).join('')}
+            <li class="pt-2 border-t border-slate-100 dark:border-slate-700 mt-2">
+              <a href="#topic-quiz" class="mobile-toc-item flex items-center gap-2 py-2 px-3 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 transition-colors" data-section="quiz">
+                <span class="w-5 h-5 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0"><i data-lucide="clipboard-check" class="w-3 h-3 text-amber-600 dark:text-amber-400"></i></span>
+                <span class="flex-1">Quiz</span>
+                ${quizScore ? `<span class="text-xs text-green-600">${quizScore.correct}/${quizScore.total}</span>` : ''}
+              </a>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
 
     <!-- Mobile Quick Actions Toolbar -->
     <div id="quick-actions-bar" class="quick-actions-bar">
+      <button class="quick-action-btn" id="qa-toc-btn" title="Contents">
+        <i data-lucide="list" class="w-5 h-5"></i>
+        <span>Contents</span>
+      </button>
       <a href="#topic-quiz" class="quick-action-btn" title="Quiz">
         <i data-lucide="clipboard-check" class="w-5 h-5"></i>
         <span>Quiz</span>
@@ -939,11 +1012,13 @@ function renderSection(section, index, topicId) {
   const wordCount = (section.content || '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
   const shouldCollapse = wordCount > 300 && index > 0; // Never collapse the first section
 
+  const readMin = Math.max(1, Math.ceil(wordCount / 200));
   return `
     <section id="section-${section.id}" data-section="${section.id}" class="mb-8 scroll-mt-28 topic-section">
       <div class="section-header flex items-center gap-3 mb-4 group">
         <span class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-sm font-mono flex-shrink-0">${index + 1}</span>
         <h2 class="text-2xl font-bold flex-1">${section.title}</h2>
+        <span class="text-xs text-slate-400 flex-shrink-0 hidden sm:block">${readMin} min</span>
         ${store.isBookmarked(topicId, section.id) ? `<span class="bookmark-btn bookmarked p-1.5 rounded-lg" data-bookmark-topic="${topicId}" data-bookmark-section="${section.id}" data-bookmark-title="${section.title}"><i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i></span>` : ''}
         <div class="relative section-menu-wrapper">
           <button class="section-menu-trigger opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" title="Section actions">
@@ -2443,6 +2518,86 @@ function renderQuickReference(cards) {
         }).join('')}
       </div>
     </section>
+  `;
+}
+
+function renderStudySuggestions(currentTopicId, currentData) {
+  const suggestions = [];
+  const currentMastery = store.getTopicMastery(currentTopicId, currentData);
+  const quizScore = store.getQuizScore(currentTopicId);
+
+  // Suggest retaking quiz if score < 70%
+  if (quizScore && quizScore.total > 0 && (quizScore.correct / quizScore.total) < 0.7) {
+    suggestions.push({
+      icon: 'refresh-cw', color: 'amber',
+      title: 'Retake Quiz',
+      desc: `You scored ${Math.round(quizScore.correct / quizScore.total * 100)}% — try again to strengthen recall`,
+      action: '#topic-quiz', actionLabel: 'Go to Quiz', isAnchor: true
+    });
+  }
+
+  // Suggest quiz if not attempted
+  if (!quizScore && currentData.quizQuestions?.length > 0) {
+    suggestions.push({
+      icon: 'clipboard-check', color: 'blue',
+      title: 'Test Your Knowledge',
+      desc: `${currentData.quizQuestions.length} questions available — take the quiz before moving on`,
+      action: '#topic-quiz', actionLabel: 'Start Quiz', isAnchor: true
+    });
+  }
+
+  // Suggest Quick Review
+  suggestions.push({
+    icon: 'zap', color: 'violet',
+    title: 'Quick Review',
+    desc: 'Rapid review of takeaways, flashcards, and check questions',
+    action: `#/review/${currentTopicId}`, actionLabel: 'Start Review', isRoute: true
+  });
+
+  // Find incomplete topics to suggest
+  const incompleteTopic = TOPICS.find(t => t.id !== currentTopicId && !store.isTopicComplete(t.id));
+  if (incompleteTopic) {
+    suggestions.push({
+      icon: 'book-open', color: 'green',
+      title: `Continue to ${incompleteTopic.title}`,
+      desc: 'Keep building your knowledge with the next topic',
+      action: `#/topic/${incompleteTopic.id}`, actionLabel: 'Start Reading', isRoute: true
+    });
+  }
+
+  // Suggest homework hub if > 3 topics complete
+  const completedCount = TOPICS.filter(t => store.isTopicComplete(t.id)).length;
+  if (completedCount >= 3) {
+    suggestions.push({
+      icon: 'flask-conical', color: 'cyan',
+      title: 'Ready for Homework?',
+      desc: `You've completed ${completedCount}/${TOPICS.length} topics — check the homework hub`,
+      action: '#/homework', actionLabel: 'View Homework', isRoute: true
+    });
+  }
+
+  if (suggestions.length === 0) return '';
+
+  return `
+    <div class="mt-8">
+      <h3 class="text-sm font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+        <i data-lucide="compass" class="w-4 h-4"></i> What's Next
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        ${suggestions.slice(0, 4).map(s => `
+          <${s.isAnchor ? 'a href="' + s.action + '"' : 'a data-route="' + s.action + '"'} class="flex items-start gap-3 p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-${s.color}-300 dark:hover:border-${s.color}-700 hover:bg-${s.color}-50/50 dark:hover:bg-${s.color}-900/10 transition-all cursor-pointer group">
+            <div class="w-9 h-9 rounded-lg bg-${s.color}-100 dark:bg-${s.color}-900/30 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="${s.icon}" class="w-4 h-4 text-${s.color}-600 dark:text-${s.color}-400"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-slate-700 dark:text-slate-200 group-hover:text-${s.color}-700 dark:group-hover:text-${s.color}-300 transition-colors">${s.title}</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">${s.desc}</p>
+            </div>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-300 group-hover:text-${s.color}-500 flex-shrink-0 mt-0.5 transition-colors"></i>
+          </a>
+        `).join('')}
+      </div>
+    </div>
   `;
 }
 
