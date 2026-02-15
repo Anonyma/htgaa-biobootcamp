@@ -836,6 +836,19 @@ function renderComparison(dataA, dataB, idA, idB) {
         return '<div class="mb-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5"><h3 class="text-sm font-semibold mb-3 flex items-center gap-2"><i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> Mastery Race</h3><div class="space-y-3"><div class="flex items-center gap-3"><span class="text-xs font-medium w-20 truncate text-' + (metaA?.color || 'blue') + '-600">' + (metaA?.title?.split(' ')[0] || 'A') + '</span><div class="flex-1 h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-' + (metaA?.color || 'blue') + '-500 rounded-full transition-all" style="width:' + mastA + '%"></div></div><span class="text-sm font-bold w-10 text-right">' + mastA + '%</span></div><div class="flex items-center gap-3"><span class="text-xs font-medium w-20 truncate text-' + (metaB?.color || 'blue') + '-600">' + (metaB?.title?.split(' ')[0] || 'B') + '</span><div class="flex-1 h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-' + (metaB?.color || 'blue') + '-500 rounded-full transition-all" style="width:' + mastB + '%"></div></div><span class="text-sm font-bold w-10 text-right">' + mastB + '%</span></div></div>' + (diff > 0 ? '<p class="text-xs text-amber-600 dark:text-amber-400 text-center mt-2 font-medium">' + leader + ' leads by ' + diff + '%</p>' : '<p class="text-xs text-slate-400 text-center mt-2">Both topics at same mastery level</p>') + '</div>';
       })()}
 
+      <!-- Quiz Overlap -->
+      ${(() => {
+        const qA = dataA.quizQuestions || [];
+        const qB = dataB.quizQuestions || [];
+        if (qA.length === 0 && qB.length === 0) return '';
+        const totalQ = qA.length + qB.length;
+        const diffA = { easy: 0, medium: 0, hard: 0 };
+        const diffB = { easy: 0, medium: 0, hard: 0 };
+        qA.forEach(function(q) { var d = q.difficulty || 'medium'; diffA[d] = (diffA[d] || 0) + 1; });
+        qB.forEach(function(q) { var d = q.difficulty || 'medium'; diffB[d] = (diffB[d] || 0) + 1; });
+        return '<div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5"><h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2"><i data-lucide="help-circle" class="w-4 h-4 text-pink-500"></i> Quiz Pool Comparison <span class="text-xs font-normal text-slate-400">' + totalQ + ' total questions</span></h3><div class="grid grid-cols-2 gap-4"><div><p class="text-xs font-medium text-' + (metaA?.color || 'blue') + '-600 mb-2">' + (metaA?.title || '') + ' (' + qA.length + ')</p><div class="flex gap-1.5">' + ['easy', 'medium', 'hard'].map(function(d) { var c = d === 'easy' ? 'green' : d === 'hard' ? 'red' : 'slate'; var n = diffA[d] || 0; return '<span class="text-[10px] px-1.5 py-0.5 rounded bg-' + c + '-100 dark:bg-' + c + '-900/20 text-' + c + '-600">' + d + ': ' + n + '</span>'; }).join('') + '</div></div><div><p class="text-xs font-medium text-' + (metaB?.color || 'blue') + '-600 mb-2">' + (metaB?.title || '') + ' (' + qB.length + ')</p><div class="flex gap-1.5">' + ['easy', 'medium', 'hard'].map(function(d) { var c = d === 'easy' ? 'green' : d === 'hard' ? 'red' : 'slate'; var n = diffB[d] || 0; return '<span class="text-[10px] px-1.5 py-0.5 rounded bg-' + c + '-100 dark:bg-' + c + '-900/20 text-' + c + '-600">' + d + ': ' + n + '</span>'; }).join('') + '</div></div></div></div>';
+      })()}
+
       <!-- Combined Study Plan -->
       ${(() => {
         const progressData = store.get('progress');

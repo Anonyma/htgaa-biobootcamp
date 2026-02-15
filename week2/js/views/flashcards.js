@@ -784,6 +784,7 @@ function renderCard(card, allCards) {
               return '';
             })()}
           </div>
+          ${_fcReverseMode ? '<div class="text-[9px] px-1.5 py-0.5 rounded bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 inline-block mb-2">Definition → Term</div>' : ''}
           <p class="text-2xl font-bold mb-2">${_fcReverseMode ? `<span class="text-base font-normal text-slate-600 dark:text-slate-400 leading-relaxed">${escapeHtml(card.definition)}</span>` : escapeHtml(card.term)}</p>
           <div class="mt-4 flex items-center gap-2 text-slate-400">
             <i data-lucide="flip-horizontal" class="w-4 h-4"></i>

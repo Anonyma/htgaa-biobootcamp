@@ -134,6 +134,9 @@ function createGlossaryView() {
               <button id="glossary-export-anki" class="text-xs px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors flex items-center gap-1">
                 <i data-lucide="layers" class="w-3 h-3"></i> Anki
               </button>
+              <button id="glossary-random-term" class="text-xs px-3 py-1.5 rounded-full border border-cyan-200 dark:border-cyan-700 bg-cyan-50 dark:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 dark:hover:bg-cyan-900/30 transition-colors flex items-center gap-1">
+                <i data-lucide="shuffle" class="w-3 h-3"></i> Random
+              </button>
             </div>
           </header>
 
@@ -468,6 +471,25 @@ function createGlossaryView() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(a.href);
+      });
+
+      // Random term
+      container.querySelector('#glossary-random-term')?.addEventListener('click', () => {
+        if (_allTerms.length === 0) return;
+        const term = _allTerms[Math.floor(Math.random() * _allTerms.length)];
+        const cards = container.querySelectorAll('.glossary-term');
+        cards.forEach(card => {
+          if (card.dataset.termText === term.term.toLowerCase()) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            card.style.transition = 'box-shadow 0.3s, transform 0.3s';
+            card.style.boxShadow = '0 0 0 3px rgba(6,182,212,0.5)';
+            card.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+              card.style.boxShadow = '';
+              card.style.transform = '';
+            }, 2000);
+          }
+        });
       });
 
       // Mini quiz

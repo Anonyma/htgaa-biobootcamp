@@ -24,7 +24,7 @@ function createHomeView() {
                   genetic codes, gel electrophoresis, and gene expression.
                 </p>
                 <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-100 text-xs">
-                  <span class="font-bold text-white">v110</span> 200+ features built with AI-assisted development
+                  <span class="font-bold text-white">v111</span> 200+ features built with AI-assisted development
                 </div>
                 <div class="flex items-center gap-4 mt-3 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
@@ -1329,6 +1329,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v111', items: ['Glossary random term button', 'Flashcard reverse mode indicator', 'Compare quiz pool comparison'] },
     { ver: 'v110', items: ['Study summary mastery velocity', 'Exam review-later buttons', 'Dashboard quick review widget'] },
     { ver: 'v109', items: ['Exam difficulty breakdown chart', 'Flashcard 7-day review calendar', 'Dashboard weekly goals tracker'] },
     { ver: 'v108', items: ['Exam difficulty badges in review', 'Glossary Anki TSV export', 'Compare combined study plan'] },
