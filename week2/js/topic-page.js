@@ -2717,15 +2717,32 @@ function initScrollReveal(container) {
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
+  const revealVisible = () => {
+    container.querySelectorAll('.scroll-reveal:not(.revealed)').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      // Reveal anything that's in or above the viewport
+      if (rect.top < window.innerHeight + 100) {
+        el.classList.add('revealed');
+        observer.unobserve(el);
+      }
+    });
+  };
+
   container.querySelectorAll('.scroll-reveal').forEach(el => {
-    // If element is already in or above viewport, reveal immediately (no flash)
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight + 100) {
-      el.classList.add('revealed');
-    } else {
-      observer.observe(el);
-    }
+    observer.observe(el);
   });
+
+  // Immediately reveal anything already visible
+  revealVisible();
+  // Also catch hash navigation and anchor scrolls
+  window.addEventListener('scroll', revealVisible, { passive: true, once: false });
+  // Clean up scroll listener when all are revealed
+  const checkDone = setInterval(() => {
+    if (container.querySelectorAll('.scroll-reveal:not(.revealed)').length === 0) {
+      window.removeEventListener('scroll', revealVisible);
+      clearInterval(checkDone);
+    }
+  }, 2000);
 }
 
 /** Show current section number as you scroll */
