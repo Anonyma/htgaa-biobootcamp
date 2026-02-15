@@ -617,6 +617,12 @@ export function createExamView() {
                     <span class="mx-1 px-1.5 py-0.5 rounded text-xs bg-${r.question.topicColor}-100 text-${r.question.topicColor}-700 dark:bg-${r.question.topicColor}-900/30 dark:text-${r.question.topicColor}-400">${escapeHtml(r.question.topicTitle)}</span>
                     ${flaggedQuestions.has(i) ? '<span class="text-orange-500 text-xs"><i data-lucide="flag" class="w-3 h-3 inline"></i></span>' : ''}
                     ${questionElapsed[i] > 0 ? `<span class="text-slate-400 text-xs ml-1">${questionElapsed[i]}s</span>` : ''}
+                    ${questionElapsed[i] > 0 ? (() => {
+                      const t = questionElapsed[i];
+                      if (t <= 15) return '<span class="text-xs text-green-500 ml-1" title="Quick answer">⚡</span>';
+                      if (t >= 60) return '<span class="text-xs text-red-400 ml-1" title="Took a while">🐢</span>';
+                      return '';
+                    })() : ''}
                   </p>
                   <p class="text-sm mb-2">${escapeHtml(r.question.question)}</p>
                   ${!r.isCorrect ? `

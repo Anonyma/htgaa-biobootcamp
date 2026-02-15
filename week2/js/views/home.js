@@ -67,6 +67,9 @@ function createHomeView() {
           <!-- Stats Dashboard -->
           ${renderStatsDashboard(progress)}
 
+          <!-- Topic Mastery Ranking -->
+          ${renderMasteryRanking()}
+
           <!-- Visual Learning Path -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -851,6 +854,40 @@ function renderWeakestTopicSuggestion(progress) {
   `;
 }
 
+function renderMasteryRanking() {
+  const ranked = TOPICS.map(t => {
+    const m = store.getTopicMastery(t.id, null);
+    return { topic: t, mastery: m ? m.mastery : 0 };
+  }).sort((a, b) => b.mastery - a.mastery);
+
+  // Only show if at least one topic has mastery > 0
+  if (ranked[0].mastery === 0) return '';
+
+  const medals = ['🥇', '🥈', '🥉'];
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="award" class="w-5 h-5 text-amber-500"></i> Mastery Ranking
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
+        ${ranked.map((r, i) => {
+          const barColor = r.mastery >= 80 ? 'bg-green-500' : r.mastery >= 50 ? 'bg-amber-500' : r.mastery > 0 ? 'bg-red-400' : 'bg-slate-300 dark:bg-slate-600';
+          return `
+          <div class="flex items-center gap-3 px-4 py-3">
+            <span class="w-6 text-center text-sm ${i < 3 && r.mastery > 0 ? '' : 'text-slate-400'}">${i < 3 && r.mastery > 0 ? medals[i] : `#${i + 1}`}</span>
+            <i data-lucide="${r.topic.icon}" class="w-4 h-4 text-${r.topic.color}-500 flex-shrink-0"></i>
+            <span class="text-sm font-medium flex-1 truncate">${r.topic.title}</span>
+            <div class="w-24 h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
+              <div class="${barColor} h-full rounded-full transition-all" style="width:${r.mastery}%"></div>
+            </div>
+            <span class="text-sm font-bold w-10 text-right ${r.mastery >= 80 ? 'text-green-600' : r.mastery >= 50 ? 'text-amber-600' : r.mastery > 0 ? 'text-red-500' : 'text-slate-400'}">${r.mastery}%</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function renderStrugglingTerms() {
   const fcData = store.get('flashcards') || { reviews: {} };
   const reviews = fcData.reviews || {};
@@ -910,6 +947,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v57', items: ['Flashcard review streak banner', 'Topic mastery ranking leaderboard', 'Exam speed indicators on results'] },
     { ver: 'v56', items: ['Exam slow question warning', 'Flashcard running accuracy', 'Exam time pressure hints'] },
     { ver: 'v55', items: ['Glossary flashcard status badges', 'Study summary time stat'] },
     { ver: 'v54', items: ['Knowledge radar chart', 'Flashcard difficulty gauge', 'Weekly progress comparison'] },

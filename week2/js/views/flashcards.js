@@ -75,6 +75,33 @@ function createFlashcardsView() {
             `;
           })()}
 
+          <!-- Review Streak -->
+          ${(() => {
+            const log = store.getStudyLog();
+            const dates = Object.keys(log).filter(d => log[d] > 0).sort().reverse();
+            if (dates.length === 0) return '';
+            const today = new Date().toISOString().slice(0, 10);
+            const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+            let streakDays = 0;
+            if (dates[0] === today || dates[0] === yesterday) {
+              let checkDate = new Date(dates[0] + 'T00:00:00');
+              for (const d of dates) {
+                const dDate = new Date(d + 'T00:00:00');
+                if (Math.abs(checkDate - dDate) <= 86400000) {
+                  streakDays++;
+                  checkDate = new Date(dDate.getTime() - 86400000);
+                } else break;
+              }
+            }
+            if (streakDays < 2) return '';
+            return `
+            <div class="mb-4 flex items-center gap-2 bg-orange-50 dark:bg-orange-900/10 rounded-lg px-4 py-2 border border-orange-200 dark:border-orange-800">
+              <i data-lucide="flame" class="w-4 h-4 text-orange-500 flex-shrink-0"></i>
+              <span class="text-sm font-medium text-orange-700 dark:text-orange-400">${streakDays}-day study streak!</span>
+              <span class="text-xs text-orange-500 ml-auto">Keep it going</span>
+            </div>`;
+          })()}
+
           <!-- Stats Grid -->
           <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
             <div class="bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 text-center">
