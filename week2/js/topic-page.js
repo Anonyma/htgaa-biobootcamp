@@ -180,6 +180,37 @@ function createTopicView(topicId) {
         container.querySelectorAll('.section-menu').forEach(m => { m.classList.add('hidden'); m.style.display = 'none'; });
       });
 
+      // Practice tabs
+      container.querySelectorAll('.practice-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+          const panel = tab.dataset.tab;
+          // Update tab styles
+          container.querySelectorAll('.practice-tab').forEach(t => {
+            t.classList.remove('active', 'bg-blue-100', 'dark:bg-blue-900/30', 'text-blue-700', 'dark:text-blue-300', 'border-blue-200', 'dark:border-blue-800');
+            t.classList.add('bg-slate-100', 'dark:bg-slate-700/50', 'text-slate-600', 'dark:text-slate-400', 'border-slate-200', 'dark:border-slate-700');
+          });
+          tab.classList.add('active', 'bg-blue-100', 'text-blue-700', 'border-blue-200');
+          tab.classList.remove('bg-slate-100', 'text-slate-600', 'border-slate-200');
+          // Show/hide panels
+          container.querySelectorAll('.practice-panel').forEach(p => { p.style.display = 'none'; });
+          const target = container.querySelector(`.practice-panel[data-panel="${panel}"]`);
+          if (target) target.style.display = 'block';
+        });
+      });
+
+      // Resources toggle
+      const resToggle = container.querySelector('.resources-toggle');
+      const resContent = container.querySelector('.resources-content');
+      if (resToggle && resContent) {
+        resToggle.addEventListener('click', () => {
+          const isHidden = resContent.style.display === 'none';
+          resContent.style.display = isHidden ? 'block' : 'none';
+          resContent.classList.toggle('hidden', !isHidden);
+          const chevron = resToggle.querySelector('.resources-chevron');
+          if (chevron) chevron.style.transform = isHidden ? 'rotate(180deg)' : '';
+        });
+      }
+
       // Bookmark buttons
       container.querySelectorAll('.bookmark-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -471,6 +502,52 @@ function saveSectionNote(topicId, sectionId, text) {
   localStorage.setItem(SECTION_NOTES_KEY, JSON.stringify(notes));
 }
 
+function renderModuleStepper(data, topicId) {
+  const readSections = store.getSectionsRead(topicId);
+  const totalSections = (data.sections || []).length;
+  const sectionsRead = readSections.length;
+  const quizScore = store.getQuizScore(topicId);
+  const isComplete = store.isTopicComplete(topicId);
+
+  // Determine current phase
+  let phase = 'learn'; // default
+  if (sectionsRead >= totalSections && !quizScore) phase = 'practice';
+  if (quizScore) phase = 'review';
+  if (isComplete) phase = 'complete';
+
+  const steps = [
+    { id: 'learn', label: 'Learn', icon: 'book-open', detail: `${sectionsRead}/${totalSections} sections`, anchor: `#section-${(data.sections?.[0]?.id) || ''}` },
+    { id: 'practice', label: 'Practice', icon: 'pen-tool', detail: `${data.quizQuestions?.length || 0} questions`, anchor: '#topic-quiz' },
+    { id: 'review', label: 'Review', icon: 'check-circle-2', detail: quizScore ? `${quizScore.correct}/${quizScore.total}` : 'Not started', anchor: '#topic-quiz' },
+  ];
+
+  const phaseOrder = ['learn', 'practice', 'review', 'complete'];
+  const currentIdx = phaseOrder.indexOf(phase);
+
+  return `
+    <div class="flex items-center gap-1 mb-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 border border-slate-200 dark:border-slate-700">
+      ${steps.map((step, i) => {
+        const stepIdx = i;
+        const isDone = currentIdx > stepIdx || phase === 'complete';
+        const isCurrent = currentIdx === stepIdx;
+        const colorClass = isDone ? 'text-green-600 dark:text-green-400' : isCurrent ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400';
+        const bgClass = isDone ? 'bg-green-100 dark:bg-green-900/30' : isCurrent ? 'bg-blue-100 dark:bg-blue-900/30' : 'bg-slate-100 dark:bg-slate-700/50';
+        const connector = i < steps.length - 1 ? `<div class="flex-1 h-0.5 mx-1 ${isDone ? 'bg-green-400' : 'bg-slate-200 dark:bg-slate-700'}"></div>` : '';
+        return `
+          <a href="${step.anchor}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg ${bgClass} ${isCurrent ? 'ring-1 ring-blue-300 dark:ring-blue-700' : ''} cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0">
+            <i data-lucide="${isDone ? 'check-circle-2' : step.icon}" class="w-4 h-4 ${colorClass}"></i>
+            <div>
+              <div class="text-xs font-semibold ${colorClass}">${step.label}</div>
+              <div class="text-[10px] text-slate-400">${step.detail}</div>
+            </div>
+          </a>
+          ${connector}
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
 function renderPrerequisiteBanner(data, topicId) {
   if (!data.prerequisites || data.prerequisites.length === 0) return '';
   const unread = data.prerequisites.filter(preId => {
@@ -609,8 +686,8 @@ function renderTopicPage(data, topicId) {
 
         ${renderPrerequisites(data.prerequisites, topicId)}
 
-        <!-- Mini Concept Map -->
-        ${data.conceptConnections && data.conceptConnections.length > 0 ? renderMiniConceptMap(data.conceptConnections, topicId) : ''}
+        <!-- Module Stepper -->
+        ${renderModuleStepper(data, topicId)}
 
         <!-- Learning Objectives -->
         ${data.learningObjectives ? `
@@ -648,24 +725,6 @@ function renderTopicPage(data, topicId) {
         </div>
       </div>
 
-      <!-- Floating Table of Contents (desktop) -->
-      <div id="floating-toc" class="hidden xl:block fixed right-4 top-32 w-48 z-20">
-        <nav class="bg-white/90 dark:bg-slate-800/90 backdrop-blur rounded-xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm">
-          <h3 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-2">Contents</h3>
-          <ol class="space-y-0.5">
-            ${(data.sections || []).map((s, i) => `
-              <li>
-                <a href="#section-${s.id}" class="toc-link block py-1 text-xs text-slate-500 dark:text-slate-400 hover:text-blue-500 truncate transition-colors">
-                  <span class="text-slate-400 font-mono mr-1">${i + 1}.</span>${s.title}
-                </a>
-              </li>
-            `).join('')}
-            ${data.furtherReading ? '<li><a href="#further-reading" class="toc-link block py-1 text-xs text-slate-500 hover:text-blue-500">Resources</a></li>' : ''}
-            <li><a href="#topic-quiz" class="toc-link block py-1 text-xs text-slate-500 hover:text-blue-500">Quiz</a></li>
-          </ol>
-        </nav>
-      </div>
-
       <!-- Inline Table of Contents (mobile/tablet) -->
       <nav class="mb-8 xl:hidden bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700">
         <h3 class="font-bold text-xs uppercase tracking-wider text-slate-500 mb-2">Contents</h3>
@@ -682,31 +741,66 @@ function renderTopicPage(data, topicId) {
       <!-- Sections -->
       ${(data.sections || []).map((section, i) => renderSection(section, i, topicId)).join('')}
 
-      <!-- Videos -->
-      ${renderVideos(topicId)}
-
-      <!-- Key Facts -->
+      <!-- Key Facts (summary after reading) -->
       ${data.keyFacts ? renderKeyFacts(data.keyFacts) : ''}
 
-      <!-- Further Reading & Resources -->
-      ${data.furtherReading ? renderFurtherReading(data.furtherReading) : ''}
+      <!-- Practice Section (Quiz + Challenges + Review) -->
+      <div id="topic-quiz" class="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+          <i data-lucide="pen-tool" class="w-6 h-6 text-blue-500"></i> Practice
+        </h2>
 
-      <!-- Quiz Section -->
-      ${data.quizQuestions ? renderQuizSection(data.quizQuestions, topicId) : ''}
+        <!-- Practice Tabs -->
+        <div class="flex flex-wrap gap-2 mb-6 practice-tabs">
+          <button class="practice-tab active px-4 py-2 rounded-lg text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 cursor-pointer" data-tab="quiz">
+            <i data-lucide="help-circle" class="w-4 h-4 inline mr-1"></i> Quiz (${data.quizQuestions?.length || 0})
+          </button>
+          ${data.designChallenges && data.designChallenges.length > 0 ? `
+          <button class="practice-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-blue-300" data-tab="challenges">
+            <i data-lucide="lightbulb" class="w-4 h-4 inline mr-1"></i> Challenges (${data.designChallenges.length})
+          </button>` : ''}
+          ${data.vocabulary && data.vocabulary.length > 0 ? `
+          <button class="practice-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-blue-300" data-tab="flashcards">
+            <i data-lucide="layers" class="w-4 h-4 inline mr-1"></i> Flashcards (${data.vocabulary.length})
+          </button>` : ''}
+          ${data.vocabulary && data.vocabulary.length >= 4 ? `
+          <button class="practice-tab px-4 py-2 rounded-lg text-sm font-medium bg-slate-100 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-blue-300" data-tab="vocab-quiz">
+            <i data-lucide="spell-check" class="w-4 h-4 inline mr-1"></i> Vocab Quiz
+          </button>` : ''}
+        </div>
 
-      <!-- Design Challenges -->
-      ${data.designChallenges ? renderDesignChallenges(data.designChallenges) : ''}
+        <!-- Tab Panels -->
+        <div class="practice-panel" data-panel="quiz" style="display:block">
+          ${data.quizQuestions ? renderQuizSection(data.quizQuestions, topicId) : '<p class="text-slate-400 text-sm">No quiz questions yet.</p>'}
+        </div>
+        ${data.designChallenges && data.designChallenges.length > 0 ? `
+        <div class="practice-panel" data-panel="challenges" style="display:none">
+          ${renderDesignChallenges(data.designChallenges)}
+        </div>` : ''}
+        ${data.vocabulary && data.vocabulary.length > 0 ? `
+        <div class="practice-panel" data-panel="flashcards" style="display:none">
+          ${renderQuickReview(data.vocabulary, topicId)}
+        </div>` : ''}
+        ${data.vocabulary && data.vocabulary.length >= 4 ? `
+        <div class="practice-panel" data-panel="vocab-quiz" style="display:none">
+          ${renderVocabQuiz(data.vocabulary, topicId)}
+        </div>` : ''}
+      </div>
 
-      <!-- Quick Review Flashcards -->
-      ${data.vocabulary && data.vocabulary.length > 0 ? renderQuickReview(data.vocabulary, topicId) : ''}
+      <!-- Resources (collapsed by default) -->
+      <div class="mt-10">
+        <button class="resources-toggle flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors cursor-pointer mb-4">
+          <i data-lucide="chevron-down" class="w-4 h-4 resources-chevron"></i>
+          <i data-lucide="library" class="w-4 h-4"></i> Videos, Resources & References
+        </button>
+        <div class="resources-content hidden" style="display:none">
+          ${renderVideos(topicId)}
+          ${data.furtherReading ? renderFurtherReading(data.furtherReading) : ''}
+          ${data.quickReference && data.quickReference.length > 0 ? renderQuickReference(data.quickReference) : ''}
+        </div>
+      </div>
 
-      <!-- Quick Reference Cards -->
-      ${data.quickReference && data.quickReference.length > 0 ? renderQuickReference(data.quickReference) : ''}
-
-      <!-- Vocabulary Quiz -->
-      ${data.vocabulary && data.vocabulary.length >= 4 ? renderVocabQuiz(data.vocabulary, topicId) : ''}
-
-      <!-- Related Topics Cards -->
+      <!-- Related Topics -->
       ${data.conceptConnections && data.conceptConnections.length > 0 ? renderRelatedTopics(data.conceptConnections, topicId) : ''}
 
       <!-- Bottom strip: Vocab, Connections, References -->
@@ -841,12 +935,13 @@ function renderVideoCard(v) {
 }
 
 function renderSection(section, index, topicId) {
-  // Detect history/timeline sections that should be collapsible
-  const isHistorySection = /history|timeline|historical|evolution of/i.test(section.title);
+  // Collapse sections with > 300 words (progressive disclosure)
+  const wordCount = (section.content || '').replace(/<[^>]*>/g, ' ').split(/\s+/).filter(Boolean).length;
+  const shouldCollapse = wordCount > 300 && index > 0; // Never collapse the first section
 
   return `
     <section id="section-${section.id}" data-section="${section.id}" class="mb-8 scroll-mt-28 topic-section">
-      <div class="section-header flex items-center gap-3 mb-4 group ${isHistorySection ? 'cursor-pointer' : ''}" ${isHistorySection ? 'data-collapsible-section' : ''}>
+      <div class="section-header flex items-center gap-3 mb-4 group">
         <span class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-sm font-mono flex-shrink-0">${index + 1}</span>
         <h2 class="text-2xl font-bold flex-1">${section.title}</h2>
         ${store.isBookmarked(topicId, section.id) ? `<span class="bookmark-btn bookmarked p-1.5 rounded-lg" data-bookmark-topic="${topicId}" data-bookmark-section="${section.id}" data-bookmark-title="${section.title}"><i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i></span>` : ''}
@@ -854,7 +949,7 @@ function renderSection(section, index, topicId) {
           <button class="section-menu-trigger opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" title="Section actions">
             <i data-lucide="more-horizontal" class="w-4 h-4 text-slate-400"></i>
           </button>
-          <div class="section-menu hidden absolute right-0 top-full mt-1 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-20 min-w-[160px]">
+          <div class="section-menu hidden absolute right-0 top-full mt-1 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-20 min-w-[160px]" style="display:none">
             <button class="tts-btn w-full text-left px-3 py-1.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2" data-tts-section="${section.id}">
               <i data-lucide="volume-2" class="w-3.5 h-3.5 text-slate-400"></i> Listen
             </button>
@@ -869,15 +964,14 @@ function renderSection(section, index, topicId) {
             </button>
           </div>
         </div>
-        ${isHistorySection ? '<i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 section-chevron transition-transform group-hover:text-blue-500"></i>' : ''}
       </div>
-      <div class="${isHistorySection ? 'section-collapsible-body' : ''}" ${isHistorySection ? 'style="max-height:200px;overflow:hidden;position:relative"' : ''}>
+      <div class="${shouldCollapse ? 'section-collapsible-body' : ''}" ${shouldCollapse ? 'style="max-height:280px;overflow:hidden;position:relative"' : ''}>
         <div class="prose prose-slate dark:prose-invert max-w-none topic-content">
           ${section.content}
         </div>
-        ${isHistorySection ? '<div class="section-fade absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white dark:from-slate-900 pointer-events-none"></div>' : ''}
+        ${shouldCollapse ? '<div class="section-fade absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white dark:from-slate-900 pointer-events-none"></div>' : ''}
       </div>
-      ${isHistorySection ? '<button class="section-expand text-sm text-blue-500 hover:text-blue-600 font-medium mt-2 flex items-center gap-1"><i data-lucide="chevron-down" class="w-4 h-4"></i> Show full section</button>' : ''}
+      ${shouldCollapse ? `<button class="section-expand text-sm text-blue-500 hover:text-blue-600 font-medium mt-2 flex items-center gap-1 cursor-pointer"><i data-lucide="chevron-down" class="w-4 h-4"></i> Continue reading (${Math.ceil(wordCount / 200)} min)</button>` : ''}
 
       ${renderSectionVideos(section.id, topicId)}
 
