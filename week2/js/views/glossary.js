@@ -128,8 +128,14 @@ function createGlossaryView() {
               <button id="glossary-export-csv" class="text-xs px-3 py-1.5 rounded-full border border-teal-200 dark:border-teal-700 bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 hover:bg-teal-100 dark:hover:bg-teal-900/30 transition-colors flex items-center gap-1">
                 <i data-lucide="download" class="w-3 h-3"></i> CSV
               </button>
+              <button id="glossary-mini-quiz" class="text-xs px-3 py-1.5 rounded-full border border-pink-200 dark:border-pink-700 bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/30 transition-colors flex items-center gap-1">
+                <i data-lucide="brain" class="w-3 h-3"></i> Quiz Me
+              </button>
             </div>
           </header>
+
+          <!-- Mini Quiz Area -->
+          <div id="glossary-mini-quiz-area" class="mb-6 hidden"></div>
 
           <!-- Term of the Day -->
           ${(() => {
@@ -404,6 +410,40 @@ function createGlossaryView() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(a.href);
+      });
+
+      // Mini quiz
+      container.querySelector('#glossary-mini-quiz')?.addEventListener('click', () => {
+        const area = container.querySelector('#glossary-mini-quiz-area');
+        if (!area || _allTerms.length < 4) return;
+        area.classList.remove('hidden');
+        // Pick a random term and 3 distractors
+        const shuffled = [..._allTerms].sort(() => Math.random() - 0.5);
+        const correct = shuffled[0];
+        const options = [correct, ...shuffled.slice(1, 4)].sort(() => Math.random() - 0.5);
+        const correctIdx = options.indexOf(correct);
+        area.innerHTML = `
+          <div class="bg-pink-50 dark:bg-pink-900/10 rounded-xl border border-pink-200 dark:border-pink-800 p-5">
+            <p class="text-sm font-bold mb-3">What does this term mean?</p>
+            <p class="text-lg font-bold text-pink-700 dark:text-pink-300 mb-4">${correct.term}</p>
+            <div class="space-y-2" id="mini-quiz-options">
+              ${options.map((o, i) => `
+                <button class="mini-quiz-opt w-full text-left text-sm p-3 rounded-lg border border-pink-200 dark:border-pink-700 hover:bg-pink-100 dark:hover:bg-pink-900/30 transition-colors" data-idx="${i}" data-correct="${i === correctIdx ? '1' : '0'}">
+                  ${o.definition.substring(0, 120)}${o.definition.length > 120 ? '...' : ''}
+                </button>
+              `).join('')}
+            </div>
+          </div>`;
+        area.querySelectorAll('.mini-quiz-opt').forEach(btn => {
+          btn.addEventListener('click', () => {
+            area.querySelectorAll('.mini-quiz-opt').forEach(b => {
+              b.disabled = true;
+              if (b.dataset.correct === '1') b.classList.add('border-green-500', 'bg-green-50', 'dark:bg-green-900/20');
+            });
+            if (btn.dataset.correct !== '1') btn.classList.add('border-red-500', 'bg-red-50', 'dark:bg-red-900/20');
+          });
+        });
+        if (window.lucide) lucide.createIcons();
       });
 
       // Copy term buttons

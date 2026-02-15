@@ -114,6 +114,7 @@ function createHomeView() {
               ${renderStatCard('graduation-cap', 'Vocab Mastery', getVocabMastery(), 'emerald')}
               ${renderStatCard('calendar-check', 'Last Active', getLastActive(), 'slate')}
               ${renderStatCard('gauge', 'Study Pace', getStudyPace(), 'orange')}
+              ${renderStatCard('flame', 'Day Streak', getDayStreak(), 'red')}
             </div>
           </section>
 
@@ -1188,6 +1189,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v97', items: ['Glossary mini quiz button', 'Compare flashcard maturity', 'Dashboard day streak stat'] },
     { ver: 'v96', items: ['Dashboard learning insights', 'Exam cumulative accuracy chart', 'Study summary progress bar'] },
     { ver: 'v95', items: ['Dashboard milestone badges', 'Exam per-question time sparkline', 'Flashcard maturity counts in header'] },
     { ver: 'v94', items: ['Exam question quick-jump navigation', 'Dashboard time distribution donut', 'Compare quiz head-to-head'] },
@@ -2512,6 +2514,26 @@ function getStudyPace() {
   const avgMin = Math.round(totalMin / activeDays.length);
   if (avgMin < 60) return `${avgMin}m/day`;
   return `${(avgMin / 60).toFixed(1)}h/day`;
+}
+
+function getDayStreak() {
+  const log = store.getStudyLog();
+  const today = new Date().toISOString().slice(0, 10);
+  let streak = 0;
+  let d = new Date();
+  while (true) {
+    const key = d.toISOString().slice(0, 10);
+    if (log[key] && log[key] > 0) {
+      streak++;
+      d = new Date(d.getTime() - 86400000);
+    } else if (key === today) {
+      // Today might not have activity yet, check yesterday
+      d = new Date(d.getTime() - 86400000);
+    } else {
+      break;
+    }
+  }
+  return streak > 0 ? `${streak}d` : '—';
 }
 
 function downloadFile(filename, text) {

@@ -581,6 +581,47 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Flashcard Maturity Comparison -->
+      ${(() => {
+        const reviews = store.get('flashcards')?.reviews || {};
+        const countMaturity = (topicId, vocab) => {
+          let mastered = 0, learning = 0, newC = 0;
+          (vocab || []).forEach((v, i) => {
+            const r = reviews[`${topicId}-vocab-${i}`];
+            if (!r) newC++;
+            else if (r.interval >= 21) mastered++;
+            else learning++;
+          });
+          return { mastered, learning, new: newC, total: (vocab || []).length };
+        };
+        const mA = countMaturity(idA, vocabA);
+        const mB = countMaturity(idB, vocabB);
+        if (mA.total === 0 && mB.total === 0) return '';
+        if (mA.mastered + mA.learning === 0 && mB.mastered + mB.learning === 0) return '';
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i> Flashcard Maturity
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            ${[{ m: mA, meta: metaA }, { m: mB, meta: metaB }].map(({ m, meta }) => `
+              <div>
+                <div class="text-xs font-medium text-${meta?.color || 'blue'}-600 mb-1">${meta?.title || ''}</div>
+                <div class="h-3 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex">
+                  ${m.mastered > 0 ? `<div class="bg-green-500" style="width:${(m.mastered/m.total)*100}%"></div>` : ''}
+                  ${m.learning > 0 ? `<div class="bg-yellow-400" style="width:${(m.learning/m.total)*100}%"></div>` : ''}
+                </div>
+                <div class="flex gap-2 mt-1 text-[10px] text-slate-500">
+                  <span class="text-green-600">${m.mastered} mastered</span>
+                  <span class="text-yellow-600">${m.learning} learning</span>
+                  <span>${m.new} new</span>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+      })()}
+
       <!-- Reading Time Comparison -->
       ${(() => {
         const rtA = dataA.readingTime || 0;
