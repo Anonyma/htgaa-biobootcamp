@@ -161,6 +161,9 @@ function createHomeView() {
               <a data-route="#/concept-map" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-cyan-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i> Concept Map
               </a>
+              <a data-route="#/resources" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="library" class="w-4 h-4 text-teal-500"></i> Resources
+              </a>
               <a data-route="#/summary" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="printer" class="w-4 h-4 text-rose-500"></i> Study Summary
               </a>
@@ -1699,6 +1702,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v125', items: ['Resource library', 'Curated videos/tools/references', 'Topic and category filters'] },
     { ver: 'v124', items: ['Quick practice mode', 'Random cross-topic questions', 'Lightweight quiz format'] },
     { ver: 'v123', items: ['Study analytics dashboard', 'Activity charts', 'Topic mastery breakdown'] },
     { ver: 'v122', items: ['Settings view', 'Export/import progress', 'Reset data with confirmation'] },
