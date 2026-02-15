@@ -673,6 +673,40 @@ export function createExamView() {
         </div>`;
       })()}
 
+      <!-- Difficulty Distribution -->
+      ${(() => {
+        const diffs = { easy: 0, medium: 0, hard: 0 };
+        const diffCorrect = { easy: 0, medium: 0, hard: 0 };
+        results.forEach(r => {
+          const d = r.question.difficulty || 'medium';
+          diffs[d] = (diffs[d] || 0) + 1;
+          if (r.isCorrect) diffCorrect[d] = (diffCorrect[d] || 0) + 1;
+        });
+        const hasDiffs = diffs.easy + diffs.hard > 0;
+        if (!hasDiffs) return '';
+        const entries = [
+          { label: 'Easy', count: diffs.easy, correct: diffCorrect.easy, color: 'green', icon: '🟢' },
+          { label: 'Medium', count: diffs.medium, correct: diffCorrect.medium, color: 'amber', icon: '🟡' },
+          { label: 'Hard', count: diffs.hard, correct: diffCorrect.hard, color: 'red', icon: '🔴' },
+        ].filter(e => e.count > 0);
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-3">By Difficulty</h2>
+          <div class="grid grid-cols-${entries.length} gap-3">
+            ${entries.map(e => {
+              const pct = e.count > 0 ? Math.round((e.correct / e.count) * 100) : 0;
+              return `
+              <div class="text-center p-3 rounded-xl bg-${e.color}-50 dark:bg-${e.color}-900/10 border border-${e.color}-200 dark:border-${e.color}-800">
+                <div class="text-lg mb-1">${e.icon}</div>
+                <div class="text-xs font-medium text-${e.color}-700 dark:text-${e.color}-400">${e.label}</div>
+                <div class="text-lg font-bold text-${e.color}-600">${e.correct}/${e.count}</div>
+                <div class="text-[10px] text-slate-400">${pct}% correct</div>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>`;
+      })()}
+
       <!-- Topic Breakdown -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <h2 class="font-semibold mb-4">Score by Topic</h2>

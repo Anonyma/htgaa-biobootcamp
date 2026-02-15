@@ -93,13 +93,14 @@ function createHomeView() {
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
               <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-500"></i> Your Stats
             </h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
               ${renderStatCard('trophy', 'Topics Done', `${Object.values(progress).filter(Boolean).length}/6`, 'amber')}
               ${renderStatCard('help-circle', 'Quiz Score', getQuizStats(), 'blue')}
               ${renderStatCard('check-square', 'HW Steps', getHWStats(), 'green')}
               ${renderStatCard('brain', 'Flashcards', getFlashcardStats(), 'purple')}
               ${renderStatCard('timer', 'Time Studied', getTimeStudied(), 'cyan')}
               ${renderStatCard('hourglass', 'Remaining', getEstimatedRemaining(progress), 'rose')}
+              ${renderStatCard('book-open', 'Sections Read', getSectionsReadStats(), 'indigo')}
               ${renderStatCard('calendar-check', 'Last Active', getLastActive(), 'slate')}
             </div>
           </section>
@@ -966,6 +967,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v74', items: ['Exam difficulty distribution', 'Flashcard topic completion %', 'Sections read dashboard stat'] },
     { ver: 'v73', items: ['Flashcard 7-day review forecast', 'Exam topic radar chart', 'Compare time invested'] },
     { ver: 'v72', items: ['Exam answer change tracking', 'Study summary total Qs answered', 'Glossary sort by topic/status'] },
     { ver: 'v71', items: ['Exam time distribution histogram', 'Flashcard session streak counter', 'Best streak in session summary'] },
@@ -2057,6 +2059,18 @@ function getEstimatedRemaining(progress) {
   if (remaining < 60) return `~${remaining}m`;
   const hrs = Math.floor(remaining / 60);
   return `~${hrs}h ${remaining % 60}m`;
+}
+
+function getSectionsReadStats() {
+  let read = 0;
+  let total = 0;
+  TOPICS.forEach(t => {
+    const sr = store.getSectionsRead(t.id);
+    read += sr.read;
+    total += sr.total;
+  });
+  if (total === 0) return '0';
+  return `${read}/${total}`;
 }
 
 function getLastActive() {

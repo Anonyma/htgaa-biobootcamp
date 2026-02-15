@@ -44,8 +44,13 @@ function createFlashcardsView() {
               All (${allCards.length})
             </button>
             ${TOPICS.map(t => {
-              const count = allCards.filter(c => c.topicId === t.id).length;
-              return `<button class="fc-filter px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600" data-topic="${t.id}">${t.title} (${count})</button>`;
+              const topicCards = allCards.filter(c => c.topicId === t.id);
+              const count = topicCards.length;
+              const reviews = store.get('flashcards').reviews || {};
+              const reviewed = topicCards.filter(c => reviews[c.id]).length;
+              const pct = count > 0 ? Math.round((reviewed / count) * 100) : 0;
+              const pctBadge = pct > 0 ? ` <span class="text-[9px] ${pct >= 100 ? 'text-green-500' : pct >= 50 ? 'text-blue-400' : 'text-slate-400'}">${pct}%</span>` : '';
+              return `<button class="fc-filter px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600" data-topic="${t.id}">${t.title} (${count})${pctBadge}</button>`;
             }).join('')}
           </div>
 
