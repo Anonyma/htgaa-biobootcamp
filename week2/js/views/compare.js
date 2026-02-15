@@ -350,6 +350,17 @@ function renderComparison(dataA, dataB, idA, idB) {
           <i data-lucide="book-open" class="w-5 h-5 text-green-500"></i> Vocabulary
           ${sharedTerms.length > 0 ? `<span class="text-xs font-normal bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full">${sharedTerms.length} shared terms</span>` : ''}
         </h3>
+        ${sharedTerms.length > 0 ? `
+        <div class="mb-4 p-3 rounded-xl bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800">
+          <div class="text-xs font-semibold text-green-700 dark:text-green-400 mb-2">Shared Vocabulary</div>
+          <div class="flex flex-wrap gap-1.5">
+            ${sharedTerms.map(t => `<span class="text-xs px-2 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 font-medium">${t.charAt(0).toUpperCase() + t.slice(1)}</span>`).join('')}
+          </div>
+          <div class="text-[10px] text-green-600 dark:text-green-500 mt-2">
+            ${metaA.title}: ${vocabA.length - sharedTerms.length} unique &middot;
+            ${metaB.title}: ${vocabB.length - sharedTerms.length} unique
+          </div>
+        </div>` : ''}
         <div class="grid grid-cols-2 gap-4">
           <div class="space-y-1.5">
             ${vocabA.map(v => {

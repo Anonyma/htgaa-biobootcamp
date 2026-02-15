@@ -757,6 +757,34 @@ export function createExamView() {
         </div>`;
       })()}
 
+      <!-- Confidence Breakdown -->
+      ${(() => {
+        let high = 0, lucky = 0, misconception = 0, other = 0;
+        results.forEach((r, i) => {
+          const t = questionElapsed[i] || 0;
+          if (r.isCorrect && t > 0 && t <= 20) high++;
+          else if (r.isCorrect && t > 30) lucky++;
+          else if (!r.isCorrect && t <= 10) misconception++;
+          else other++;
+        });
+        if (high + lucky + misconception === 0) return '';
+        const items = [
+          { label: 'High Confidence', count: high, color: 'green', desc: 'Correct & fast' },
+          { label: 'Lucky Guess?', count: lucky, color: 'amber', desc: 'Correct but slow' },
+          { label: 'Misconception', count: misconception, color: 'red', desc: 'Wrong & fast' },
+        ].filter(it => it.count > 0);
+        return `
+        <div class="flex gap-3 mb-6 flex-wrap">
+          ${items.map(it => `
+            <div class="flex-1 min-w-[100px] text-center p-3 rounded-xl bg-${it.color}-50 dark:bg-${it.color}-900/10 border border-${it.color}-200 dark:border-${it.color}-800">
+              <div class="text-2xl font-bold text-${it.color}-600 dark:text-${it.color}-400">${it.count}</div>
+              <div class="text-xs font-medium text-${it.color}-700 dark:text-${it.color}-400">${it.label}</div>
+              <div class="text-[10px] text-slate-400">${it.desc}</div>
+            </div>
+          `).join('')}
+        </div>`;
+      })()}
+
       <!-- Topic Breakdown -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <h2 class="font-semibold mb-4">Score by Topic</h2>

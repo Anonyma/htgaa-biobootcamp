@@ -1076,7 +1076,8 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
-    { ver: 'v90', items: ['Exam history bar chart on dashboard', 'Study summary vocab mastery %', 'Flashcard live streak indicator'] },
+    { ver: 'v91', items: ['Exam confidence breakdown in results', 'Compare shared vocabulary panel', 'Study summary vocab mastery %'] },
+    { ver: 'v90', items: ['Exam history bar chart on dashboard', 'Flashcard live streak indicator', 'Study summary vocab mastery %'] },
     { ver: 'v89', items: ['Compare reading time bars', 'Flashcard session number today', 'Exam seen questions count on setup'] },
     { ver: 'v88', items: ['Exam difficulty breakdown on setup', 'Glossary copy term to clipboard', 'Study summary section completion grid'] },
     { ver: 'v87', items: ['Compare design challenge comparison', 'Exam cumulative time on setup', 'Flashcard overall mastery bar'] },
