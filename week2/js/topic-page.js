@@ -2717,7 +2717,15 @@ function initScrollReveal(container) {
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
-  container.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+  container.querySelectorAll('.scroll-reveal').forEach(el => {
+    // If element is already in or above viewport, reveal immediately (no flash)
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight + 100) {
+      el.classList.add('revealed');
+    } else {
+      observer.observe(el);
+    }
+  });
 }
 
 /** Show current section number as you scroll */
