@@ -23,10 +23,7 @@ function createHomeView() {
                   Master the foundations of DNA sequencing, synthesis, genome editing,
                   genetic codes, gel electrophoresis, and gene expression.
                 </p>
-                <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-100 text-xs">
-                  <span class="font-bold text-white">v115</span> 200+ features built with AI-assisted development
-                </div>
-                <div class="flex items-center gap-4 mt-3 text-sm text-blue-200">
+                <div class="flex items-center gap-4 mt-4 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
                   <span class="flex items-center gap-1"><i data-lucide="flask-conical" class="w-4 h-4"></i> 12+ Simulations</span>
                   <span id="hero-question-count" class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> <span data-count>150+</span> Questions</span>
@@ -55,48 +52,13 @@ function createHomeView() {
           <!-- All Complete Celebration -->
           ${overallPct === 100 ? renderAllCompleteCelebration() : ''}
 
-          <!-- Continue Reading -->
+          <!-- Continue Reading (primary CTA) -->
           ${renderContinueReading(progress)}
-
-          <!-- Weakest Topic Suggestion -->
-          ${renderWeakestTopicSuggestion(progress)}
-
-          <!-- Flashcard Review Reminder -->
-          ${renderReviewReminder()}
 
           <!-- Today's Study Plan -->
           ${renderStudyPlan(progress)}
 
-          <!-- Stats Dashboard -->
-          ${renderStatsDashboard(progress)}
-
-          <!-- Topics at a Glance -->
-          ${renderTopicsGlance()}
-
-          <!-- Topic Mastery Ranking -->
-          ${renderMasteryRanking()}
-
-          <!-- Exam History Chart -->
-          ${renderExamHistoryChart()}
-
-          <!-- Knowledge Radar -->
-          ${renderKnowledgeRadar()}
-
-          <!-- Time Distribution -->
-          ${renderTimeDistribution()}
-
-          <!-- Session Timeline -->
-          ${renderSessionTimeline()}
-
-          <!-- Visual Learning Path -->
-          <section class="mb-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <i data-lucide="route" class="w-5 h-5 text-blue-500"></i> Learning Path
-            </h2>
-            ${renderLearningPath(progress)}
-          </section>
-
-          <!-- Topic Cards (detailed) -->
+          <!-- Topic Cards (the core content) -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
               <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-500"></i> Topics
@@ -106,252 +68,56 @@ function createHomeView() {
             </div>
           </section>
 
-          <!-- Study Stats -->
+          <!-- Study Tools (compact row) -->
           <section class="mb-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-500"></i> Your Stats
-            </h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
-              ${renderStatCard('trophy', 'Topics Done', `${Object.values(progress).filter(Boolean).length}/6`, 'amber')}
-              ${renderStatCard('help-circle', 'Quiz Score', getQuizStats(), 'blue')}
-              ${renderStatCard('check-square', 'HW Steps', getHWStats(), 'green')}
-              ${renderStatCard('brain', 'Flashcards', getFlashcardStats(), 'purple')}
-              ${renderStatCard('timer', 'Time Studied', getTimeStudied(), 'cyan')}
-              ${renderStatCard('hourglass', 'Remaining', getEstimatedRemaining(progress), 'rose')}
-              ${renderStatCard('activity', 'Sessions', getSessionCount(), 'teal')}
-              ${renderStatCard('book-open', 'Sections Read', getSectionsReadStats(), 'indigo')}
-              ${renderStatCard('graduation-cap', 'Vocab Mastery', getVocabMastery(), 'emerald')}
-              ${renderStatCard('calendar-check', 'Last Active', getLastActive(), 'slate')}
-              ${renderStatCard('gauge', 'Study Pace', getStudyPace(), 'orange')}
-              ${renderStatCard('flame', 'Day Streak', getDayStreak(), 'red')}
-              ${renderStatCard('calendar', 'Est. Done', getEstCompletionDate(), 'violet')}
-              ${renderStatCard('star', 'Best Day', getBestStudyDay(), 'yellow')}
-            </div>
-          </section>
-
-          <!-- Bookmarks -->
-          ${renderBookmarks()}
-
-          <!-- Exam Bookmarks -->
-          ${renderExamBookmarks()}
-
-          <!-- Study Activity Heatmap -->
-          ${renderStudyHeatmap()}
-
-          <!-- Weekly Progress Comparison -->
-          ${renderWeeklyComparison()}
-
-          <!-- Topic Connections -->
-          ${renderTopicConnections()}
-
-          <!-- Flashcard Forecast -->
-          ${renderFlashcardForecast()}
-
-          <!-- Completion Forecast -->
-          ${renderCompletionForecast()}
-
-          <!-- Weekly Goal -->
-          ${renderWeeklyGoal()}
-
-          <!-- Study Planner -->
-          ${renderStudyPlanner(progress)}
-
-          <!-- Recent Activity -->
-          ${renderActivityFeed()}
-
-          <!-- Learning Insights -->
-          ${renderLearningInsights()}
-
-          <!-- Mastery Milestones -->
-          ${renderMasteryMilestones()}
-
-          <!-- Quick Review -->
-          ${renderQuickReview()}
-
-          <!-- Study Strengths -->
-          ${renderStudyStrengths()}
-
-          <!-- Knowledge Gaps -->
-          ${renderKnowledgeGaps()}
-
-          <!-- Quick Actions -->
-          <section class="mb-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <i data-lucide="zap" class="w-5 h-5 text-yellow-500"></i> Study Tools
-            </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-              <a data-route="#/flashcards" class="block p-5 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl border border-violet-200 dark:border-violet-800 hover:border-violet-400 cursor-pointer transition-colors">
-                <i data-lucide="layers" class="w-6 h-6 text-violet-500 mb-2"></i>
-                <h3 class="font-bold">Flashcards</h3>
-                ${(() => {
-                  const fc = store.getFlashcardStats();
-                  return fc.due > 0
-                    ? `<p class="text-sm text-red-500 mt-1 font-medium">${fc.due} cards due</p>`
-                    : `<p class="text-sm text-slate-500 mt-1">All caught up</p>`;
-                })()}
+            <div class="flex flex-wrap gap-3">
+              <a data-route="#/flashcards" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i> Flashcards
+                ${(() => { const fc = store.getFlashcardStats(); return fc.due > 0 ? `<span class="text-xs text-red-500 font-bold">${fc.due} due</span>` : ''; })()}
               </a>
-              <a data-route="#/homework" class="block p-5 bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 rounded-xl border border-orange-200 dark:border-orange-800 hover:border-orange-400 cursor-pointer transition-colors">
-                <i data-lucide="clipboard-list" class="w-6 h-6 text-orange-500 mb-2"></i>
-                <h3 class="font-bold">Homework Hub</h3>
-                <p class="text-sm text-slate-500 mt-1">${getHWStats()} steps done</p>
+              <a data-route="#/homework" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-orange-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="clipboard-list" class="w-4 h-4 text-orange-500"></i> Homework
               </a>
-              <a data-route="#/concept-map" class="block p-5 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl border border-cyan-200 dark:border-cyan-800 hover:border-cyan-400 cursor-pointer transition-colors">
-                <i data-lucide="git-branch" class="w-6 h-6 text-cyan-500 mb-2"></i>
-                <h3 class="font-bold">Concept Map</h3>
-                <p class="text-sm text-slate-500 mt-1">How topics connect</p>
+              <a data-route="#/exam" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-amber-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> Exam Mode
               </a>
-              <a data-route="#/exam" class="block p-5 bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800 hover:border-amber-400 cursor-pointer transition-colors">
-                <i data-lucide="trophy" class="w-6 h-6 text-amber-500 mb-2"></i>
-                <h3 class="font-bold">Exam Mode</h3>
-                ${(() => {
-                  const best = store.getBestExamScore();
-                  if (!best) return `<p class="text-sm text-slate-500 mt-1">Timed practice quiz</p>`;
-                  const scores = store.getExamScores();
-                  let trend = '';
-                  if (scores.length >= 3) {
-                    const recent = scores.slice(-3);
-                    const older = scores.slice(-6, -3);
-                    if (older.length > 0) {
-                      const recentAvg = recent.reduce((s, x) => s + x.pct, 0) / recent.length;
-                      const olderAvg = older.reduce((s, x) => s + x.pct, 0) / older.length;
-                      const diff = recentAvg - olderAvg;
-                      if (diff > 5) trend = ' <span class="text-green-500" title="Improving">↑</span>';
-                      else if (diff < -5) trend = ' <span class="text-red-400" title="Declining">↓</span>';
-                      else trend = ' <span class="text-slate-400" title="Steady">→</span>';
-                    }
-                  }
-                  return `<p class="text-sm text-amber-600 mt-1">Best: ${best.pct}%${trend}</p>`;
-                })()}
+              <a data-route="#/glossary" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="book-a" class="w-4 h-4 text-emerald-500"></i> Glossary
               </a>
-              <a data-route="#/compare" class="block p-5 bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-900/20 dark:to-emerald-900/20 rounded-xl border border-teal-200 dark:border-teal-800 hover:border-teal-400 cursor-pointer transition-colors">
-                <i data-lucide="columns" class="w-6 h-6 text-teal-500 mb-2"></i>
-                <h3 class="font-bold">Compare</h3>
-                <p class="text-sm text-slate-500 mt-1">Side-by-side topics</p>
-              </a>
-              <a data-route="#/glossary" class="block p-5 bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800 hover:border-emerald-400 cursor-pointer transition-colors">
-                <i data-lucide="book-a" class="w-6 h-6 text-emerald-500 mb-2"></i>
-                <h3 class="font-bold">Glossary</h3>
-                <p class="text-sm text-slate-500 mt-1" id="glossary-term-count">All terms searchable</p>
-              </a>
-              <a data-route="#/summary" class="block p-5 bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl border border-rose-200 dark:border-rose-800 hover:border-rose-400 cursor-pointer transition-colors">
-                <i data-lucide="file-text" class="w-6 h-6 text-rose-500 mb-2"></i>
-                <h3 class="font-bold">Study Summary</h3>
-                <p class="text-sm text-slate-500 mt-1">Printable review sheet</p>
+              <a data-route="#/concept-map" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-cyan-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i> Concept Map
               </a>
             </div>
           </section>
 
-          <!-- Milestone Badges -->
-          ${renderMilestoneBadges()}
+          <!-- Expandable analytics -->
+          <div class="mb-10">
+            <button id="show-more-dashboard" class="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors mx-auto">
+              <i data-lucide="chevron-down" class="w-4 h-4"></i> Show analytics & more
+            </button>
+            <div id="more-dashboard-content" class="hidden mt-8 space-y-10">
+              ${renderStatsDashboard(progress)}
+              ${renderMasteryRanking()}
+              ${renderExamHistoryChart()}
 
-          <!-- Quick Quiz -->
-          <section class="mb-10" id="quick-quiz-section">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <i data-lucide="brain" class="w-5 h-5 text-purple-500"></i> Quick Quiz
-              <button id="quick-quiz-refresh" class="ml-auto text-xs text-blue-500 hover:text-blue-600 font-medium flex items-center gap-1">
-                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> New Question
-              </button>
-            </h2>
-            <div id="quick-quiz-container" class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
-              <p class="text-sm text-slate-400">Loading question...</p>
-            </div>
-          </section>
-
-          <!-- Vocab of the Day -->
-          <section class="mb-10" id="vocab-day-section">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i> Vocab Spotlight
-              <button id="vocab-day-refresh" class="ml-auto text-xs text-blue-500 hover:text-blue-600 font-medium flex items-center gap-1">
-                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> Another
-              </button>
-            </h2>
-            <div id="vocab-day-container" class="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 rounded-xl border border-amber-200 dark:border-amber-800 p-5">
-              <p class="text-sm text-slate-400">Loading...</p>
-            </div>
-          </section>
-
-          <!-- Struggling Terms -->
-          ${renderStrugglingTerms()}
-
-          <!-- Lecturers -->
-          <section class="mb-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <i data-lucide="users" class="w-5 h-5 text-slate-500"></i> Lecturers
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-              ${renderLecturer('George Church', 'Reading & Writing Life', 'Genetic codes, sequencing, expanded alphabets, CRISPR, MAGE, genome recoding, DNA data storage')}
-              ${renderLecturer('Joe Jacobson', 'Gene Synthesis', 'Phosphoramidite chemistry, chip-based synthesis, error correction, Gibson assembly, bioFPGA')}
-              ${renderLecturer('Emily Leproust', 'DNA Synthesis Development', 'History of chemical synthesis, Twist Bioscience platform, silicon chip synthesis, oligo pools')}
-            </div>
-          </section>
-
-          <!-- Achievements -->
-          ${renderAchievements()}
-
-          <!-- Export & Data -->
-          <section class="mb-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <i data-lucide="download" class="w-5 h-5 text-teal-500"></i> Export Your Data
-            </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              <button id="export-notes-btn" class="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-teal-400 transition-colors cursor-pointer text-left">
-                <i data-lucide="file-text" class="w-5 h-5 text-teal-500 flex-shrink-0"></i>
-                <div>
-                  <div class="font-bold text-sm">Export Notes</div>
-                  <div class="text-xs text-slate-500">Download all your topic notes</div>
+              <section>
+                <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
+                  <i data-lucide="download" class="w-5 h-5 text-teal-500"></i> Export
+                </h2>
+                <div class="flex flex-wrap gap-3">
+                  <button id="export-notes-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 transition-colors cursor-pointer text-sm">
+                    <i data-lucide="file-text" class="w-4 h-4 text-teal-500"></i> Export Notes
+                  </button>
+                  <button id="export-progress-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 transition-colors cursor-pointer text-sm">
+                    <i data-lucide="bar-chart" class="w-4 h-4 text-blue-500"></i> Export Progress
+                  </button>
+                  <button id="reset-progress-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 transition-colors cursor-pointer text-sm">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4 text-red-400"></i> Reset
+                  </button>
                 </div>
-              </button>
-              <button id="export-progress-btn" class="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 transition-colors cursor-pointer text-left">
-                <i data-lucide="bar-chart" class="w-5 h-5 text-blue-500 flex-shrink-0"></i>
-                <div>
-                  <div class="font-bold text-sm">Export Progress</div>
-                  <div class="text-xs text-slate-500">Quiz scores, time, streaks</div>
-                </div>
-              </button>
-              <button id="reset-progress-btn" class="flex items-center gap-3 p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-red-400 transition-colors cursor-pointer text-left">
-                <i data-lucide="rotate-ccw" class="w-5 h-5 text-red-400 flex-shrink-0"></i>
-                <div>
-                  <div class="font-bold text-sm">Reset Progress</div>
-                  <div class="text-xs text-slate-500">Start fresh (keeps notes)</div>
-                </div>
-              </button>
+              </section>
             </div>
-          </section>
-
-          <!-- What's New -->
-          <section class="mb-10">
-            <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-              <i data-lucide="sparkles" class="w-5 h-5 text-violet-500"></i> What's New
-              <button id="whats-new-toggle" class="ml-auto text-xs text-slate-400 hover:text-slate-600 font-normal flex items-center gap-1">
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i> Show all
-              </button>
-            </h2>
-            <div id="whats-new-list">
-              ${renderChangelog()}
-            </div>
-          </section>
-
-          <!-- Quick Links -->
-          <section class="mb-10">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <i data-lucide="link" class="w-5 h-5 text-slate-500"></i> Resources
-            </h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              ${[
-                { name: 'GenBank (NCBI)', url: 'https://www.ncbi.nlm.nih.gov/genbank/' },
-                { name: 'Benchling', url: 'https://benchling.com' },
-                { name: 'Twist Bioscience', url: 'https://www.twistbioscience.com' },
-                { name: 'Addgene RE Reference', url: 'https://www.addgene.org/mol-bio-reference/restriction-enzymes/' },
-                { name: 'DNA Sequencing at 40', url: 'https://www.nature.com/articles/nature24286' },
-                { name: 'Gel Art Lab', url: '#/gel-art-lab' },
-              ].map(link => `
-                <a href="${link.url}" ${link.url.startsWith('#') ? `data-route="${link.url}"` : 'target="_blank" rel="noopener"'} class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-blue-500 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer">
-                  <i data-lucide="external-link" class="w-4 h-4 flex-shrink-0"></i> ${link.name}
-                </a>
-              `).join('')}
-            </div>
-          </section>
-        </main>
+          </div>        </main>
       `;
     },
 
@@ -369,6 +135,21 @@ function createHomeView() {
       });
 
       container._homeUnsub = unsub;
+
+      // "Show analytics & more" toggle
+      const showMoreBtn = container.querySelector('#show-more-dashboard');
+      const moreContent = container.querySelector('#more-dashboard-content');
+      if (showMoreBtn && moreContent) {
+        showMoreBtn.addEventListener('click', () => {
+          const isHidden = moreContent.classList.contains('hidden');
+          moreContent.classList.toggle('hidden');
+          moreContent.style.display = isHidden ? 'block' : 'none';
+          showMoreBtn.innerHTML = isHidden
+            ? '<i data-lucide="chevron-up" class="w-4 h-4"></i> Hide analytics'
+            : '<i data-lucide="chevron-down" class="w-4 h-4"></i> Show analytics & more';
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+      }
 
       // Dynamic question count + glossary count — load all topic data
       (async () => {

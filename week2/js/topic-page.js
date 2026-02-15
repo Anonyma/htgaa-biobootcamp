@@ -162,6 +162,24 @@ function createTopicView(topicId) {
       // Quick review mini-flashcards
       initQuickReview(container, data);
 
+      // Section overflow menu toggles
+      container.querySelectorAll('.section-menu-trigger').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const menu = trigger.nextElementSibling;
+          if (!menu) return;
+          // Close all other menus first
+          container.querySelectorAll('.section-menu').forEach(m => { if (m !== menu) { m.classList.add('hidden'); m.style.display = 'none'; } });
+          const isHidden = menu.classList.contains('hidden');
+          menu.classList.toggle('hidden');
+          menu.style.display = isHidden ? 'block' : 'none';
+        });
+      });
+      // Close menus on click outside
+      document.addEventListener('click', () => {
+        container.querySelectorAll('.section-menu').forEach(m => { m.classList.add('hidden'); m.style.display = 'none'; });
+      });
+
       // Bookmark buttons
       container.querySelectorAll('.bookmark-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -831,18 +849,26 @@ function renderSection(section, index, topicId) {
       <div class="section-header flex items-center gap-3 mb-4 group ${isHistorySection ? 'cursor-pointer' : ''}" ${isHistorySection ? 'data-collapsible-section' : ''}>
         <span class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-sm font-mono flex-shrink-0">${index + 1}</span>
         <h2 class="text-2xl font-bold flex-1">${section.title}</h2>
-        <button class="tts-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" data-tts-section="${section.id}" title="Listen to this section">
-          <i data-lucide="volume-2" class="w-4 h-4 text-slate-400"></i>
-        </button>
-        <button class="section-note-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 ${getSectionNote(topicId, section.id) ? '!opacity-100' : ''}" data-note-topic="${topicId}" data-note-section="${section.id}" title="Add note to this section">
-          <i data-lucide="sticky-note" class="w-4 h-4 ${getSectionNote(topicId, section.id) ? 'text-amber-500' : 'text-slate-400'}"></i>
-        </button>
-        <button class="bookmark-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 ${store.isBookmarked(topicId, section.id) ? 'bookmarked !opacity-100' : ''}" data-bookmark-topic="${topicId}" data-bookmark-section="${section.id}" data-bookmark-title="${section.title}" title="Bookmark this section">
-          <i data-lucide="bookmark" class="w-4 h-4 ${store.isBookmarked(topicId, section.id) ? 'text-blue-500' : 'text-slate-400'}"></i>
-        </button>
-        <button class="share-section-btn opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" data-share-topic="${topicId}" data-share-section="${section.id}" title="Copy link to this section">
-          <i data-lucide="link" class="w-4 h-4 text-slate-400"></i>
-        </button>
+        ${store.isBookmarked(topicId, section.id) ? `<span class="bookmark-btn bookmarked p-1.5 rounded-lg" data-bookmark-topic="${topicId}" data-bookmark-section="${section.id}" data-bookmark-title="${section.title}"><i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i></span>` : ''}
+        <div class="relative section-menu-wrapper">
+          <button class="section-menu-trigger opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 transition-opacity p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700" title="Section actions">
+            <i data-lucide="more-horizontal" class="w-4 h-4 text-slate-400"></i>
+          </button>
+          <div class="section-menu hidden absolute right-0 top-full mt-1 bg-white dark:bg-slate-800 rounded-lg shadow-lg border border-slate-200 dark:border-slate-700 py-1 z-20 min-w-[160px]">
+            <button class="tts-btn w-full text-left px-3 py-1.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2" data-tts-section="${section.id}">
+              <i data-lucide="volume-2" class="w-3.5 h-3.5 text-slate-400"></i> Listen
+            </button>
+            <button class="section-note-btn w-full text-left px-3 py-1.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2" data-note-topic="${topicId}" data-note-section="${section.id}">
+              <i data-lucide="sticky-note" class="w-3.5 h-3.5 ${getSectionNote(topicId, section.id) ? 'text-amber-500' : 'text-slate-400'}"></i> ${getSectionNote(topicId, section.id) ? 'Edit note' : 'Add note'}
+            </button>
+            <button class="bookmark-btn w-full text-left px-3 py-1.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2" data-bookmark-topic="${topicId}" data-bookmark-section="${section.id}" data-bookmark-title="${section.title}">
+              <i data-lucide="bookmark" class="w-3.5 h-3.5 ${store.isBookmarked(topicId, section.id) ? 'text-blue-500' : 'text-slate-400'}"></i> ${store.isBookmarked(topicId, section.id) ? 'Bookmarked' : 'Bookmark'}
+            </button>
+            <button class="share-section-btn w-full text-left px-3 py-1.5 text-sm hover:bg-slate-50 dark:hover:bg-slate-700 flex items-center gap-2" data-share-topic="${topicId}" data-share-section="${section.id}">
+              <i data-lucide="link" class="w-3.5 h-3.5 text-slate-400"></i> Copy link
+            </button>
+          </div>
+        </div>
         ${isHistorySection ? '<i data-lucide="chevron-down" class="w-5 h-5 text-slate-400 section-chevron transition-transform group-hover:text-blue-500"></i>' : ''}
       </div>
       <div class="${isHistorySection ? 'section-collapsible-body' : ''}" ${isHistorySection ? 'style="max-height:200px;overflow:hidden;position:relative"' : ''}>
