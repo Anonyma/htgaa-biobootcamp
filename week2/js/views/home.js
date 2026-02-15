@@ -91,6 +91,9 @@ function createHomeView() {
           <!-- All Complete Celebration -->
           ${overallPct === 100 ? renderAllCompleteCelebration() : ''}
 
+          <!-- Daily Goal -->
+          ${renderDailyGoal()}
+
           <!-- Quick Stats Strip -->
           ${renderQuickStats(progress)}
 
@@ -758,6 +761,65 @@ function renderExamBookmarks() {
       </div>
     </section>`;
   } catch { return ''; }
+}
+
+function renderDailyGoal() {
+  const GOAL_MINUTES = 30;
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Calculate today's study time from activity feed
+  const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
+  const todayActivities = feed.filter(a => new Date(a.time).toISOString().slice(0, 10) === today).length;
+  // Rough estimate: ~2min per activity interaction
+  const todayMin = Math.min(todayActivities * 2, 120);
+
+  // Also count time-spent tracker
+  const timeSpent = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+  const todayTimeKey = `today:${today}`;
+  const trackedMin = Math.floor((timeSpent[todayTimeKey] || 0) / 60);
+  const totalTodayMin = Math.max(todayMin, trackedMin);
+
+  const pct = Math.min(100, Math.round((totalTodayMin / GOAL_MINUTES) * 100));
+  const isComplete = pct >= 100;
+
+  // Don't show if no activity at all and progress is 0
+  const overallPct = store.getOverallProgress();
+  if (overallPct === 0 && totalTodayMin === 0) return '';
+
+  const circumference = 2 * Math.PI * 18;
+  const offset = circumference - (pct / 100) * circumference;
+
+  return `
+    <div class="mb-6 flex items-center gap-4 px-4 py-3 bg-white/70 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+      <div class="relative w-12 h-12 flex-shrink-0">
+        <svg class="w-12 h-12 -rotate-90" viewBox="0 0 40 40">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="3"/>
+          <circle cx="20" cy="20" r="18" fill="none" stroke="${isComplete ? '#22c55e' : '#6366f1'}" stroke-width="3" stroke-linecap="round"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" style="transition: stroke-dashoffset 0.8s ease"/>
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center">
+          ${isComplete ? '<i data-lucide="check" class="w-4 h-4 text-green-500"></i>' : `<span class="text-xs font-bold text-indigo-600 dark:text-indigo-400">${pct}%</span>`}
+        </div>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+          ${isComplete ? 'Daily goal reached!' : 'Daily Goal'}
+        </p>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          ${isComplete ? `${totalTodayMin}m studied today — great work!` : `${totalTodayMin}m of ${GOAL_MINUTES}m today`}
+        </p>
+      </div>
+      ${!isComplete ? `
+        <a data-route="${(() => {
+          const positions = JSON.parse(localStorage.getItem('htgaa-week2-scroll-pos') || '{}');
+          const latest = Object.entries(positions).sort((a, b) => (b[1].ts || 0) - (a[1].ts || 0))[0];
+          return latest ? `#/topic/${latest[0]}` : '#/topic/central-dogma';
+        })()}" class="px-3 py-1.5 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-xs font-medium transition-colors cursor-pointer flex-shrink-0">
+          Continue
+        </a>
+      ` : ''}
+    </div>
+  `;
 }
 
 function renderQuickStats(progress) {
