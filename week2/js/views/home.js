@@ -100,6 +100,7 @@ function createHomeView() {
               ${renderStatCard('brain', 'Flashcards', getFlashcardStats(), 'purple')}
               ${renderStatCard('timer', 'Time Studied', getTimeStudied(), 'cyan')}
               ${renderStatCard('hourglass', 'Remaining', getEstimatedRemaining(progress), 'rose')}
+              ${renderStatCard('calendar-check', 'Last Active', getLastActive(), 'slate')}
             </div>
           </section>
 
@@ -947,6 +948,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v60', items: ['Exam difficulty badges', 'Last active stat on dashboard', 'Question difficulty labels'] },
     { ver: 'v59', items: ['Flashcard per-topic session breakdown', 'Session topic accuracy in completion summary'] },
     { ver: 'v58', items: ['Exam correct vs incorrect time analysis', 'Glossary topic filter term counts'] },
     { ver: 'v57', items: ['Flashcard review streak banner', 'Topic mastery ranking leaderboard', 'Exam speed indicators on results'] },
@@ -2011,6 +2013,19 @@ function getEstimatedRemaining(progress) {
   if (remaining < 60) return `~${remaining}m`;
   const hrs = Math.floor(remaining / 60);
   return `~${hrs}h ${remaining % 60}m`;
+}
+
+function getLastActive() {
+  const log = store.getStudyLog();
+  const dates = Object.keys(log).filter(d => log[d] > 0).sort().reverse();
+  if (dates.length === 0) return 'Never';
+  const last = new Date(dates[0] + 'T12:00:00');
+  const now = new Date();
+  const diffDays = Math.floor((now - last) / 86400000);
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return last.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
 function downloadFile(filename, text) {

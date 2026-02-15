@@ -280,6 +280,11 @@ export function createExamView() {
             ${escapeHtml(q.topicTitle)}
           </span>
           ${streak >= 2 ? `<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 animate-pulse">${streak} streak</span>` : ''}
+          ${q.difficulty ? `<span class="px-2 py-0.5 rounded-full text-xs font-medium ${
+            q.difficulty === 'hard' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' :
+            q.difficulty === 'easy' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' :
+            'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
+          }">${q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1)}</span>` : ''}
           ${(() => {
             const qs = store.getQuizScore(q.topicId);
             if (!qs || qs.total < 2) return '';
