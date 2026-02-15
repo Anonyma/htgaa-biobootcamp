@@ -155,6 +155,9 @@ function createHomeView() {
           <!-- Learning Insights -->
           ${renderLearningInsights()}
 
+          <!-- Knowledge Gaps -->
+          ${renderKnowledgeGaps()}
+
           <!-- Quick Actions -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -1029,6 +1032,62 @@ function renderMasteryRanking() {
   `;
 }
 
+function renderKnowledgeGaps() {
+  const gaps = TOPICS.map(t => {
+    const qs = store.getQuizScore(t.id);
+    const quizPct = qs ? Math.round((qs.correct / qs.total) * 100) : null;
+    const fc = store.getFlashcardStats();
+    const reviews = store.get('flashcards').reviews || {};
+    // Count mastered flashcards for this topic
+    let fcMastered = 0, fcTotal = 0;
+    Object.entries(reviews).forEach(([id, r]) => {
+      if (id.startsWith(t.id + '-')) {
+        fcTotal++;
+        if (r.interval >= 21) fcMastered++;
+      }
+    });
+    const fcPct = fcTotal > 0 ? Math.round((fcMastered / fcTotal) * 100) : null;
+    if (quizPct === null || fcPct === null) return null;
+    const gap = fcPct - quizPct;
+    return { topic: t, quizPct, fcPct, gap };
+  }).filter(g => g && Math.abs(g.gap) > 15).sort((a, b) => Math.abs(b.gap) - Math.abs(a.gap));
+
+  if (gaps.length === 0) return '';
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="puzzle" class="w-5 h-5 text-orange-500"></i> Knowledge Gaps
+      </h2>
+      <div class="space-y-3">
+        ${gaps.map(g => {
+          const isMemoryGap = g.gap > 0; // high flashcard mastery but low quiz scores
+          return `
+          <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+            <div class="flex items-center gap-3">
+              <i data-lucide="${g.topic.icon}" class="w-5 h-5 text-${g.topic.color}-500 flex-shrink-0"></i>
+              <div class="flex-1">
+                <p class="text-sm font-medium">${g.topic.title}</p>
+                <p class="text-xs text-slate-400 mt-0.5">${isMemoryGap ? 'You know the terms but struggle applying them in quizzes' : 'Good quiz scores but vocabulary needs reinforcement'}</p>
+              </div>
+              <div class="flex gap-3 text-center">
+                <div>
+                  <div class="text-sm font-bold ${g.quizPct >= 70 ? 'text-green-600' : 'text-red-500'}">${g.quizPct}%</div>
+                  <div class="text-[9px] text-slate-400">Quiz</div>
+                </div>
+                <div>
+                  <div class="text-sm font-bold ${g.fcPct >= 70 ? 'text-green-600' : 'text-red-500'}">${g.fcPct}%</div>
+                  <div class="text-[9px] text-slate-400">Cards</div>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </section>
+  `;
+}
+
 function renderLearningInsights() {
   const insights = [];
   const fc = store.getFlashcardStats();
@@ -1240,6 +1299,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v105', items: ['Flashcard hard cards mode', 'Dashboard knowledge gaps widget', 'Glossary mastery by topic'] },
     { ver: 'v104', items: ['Study summary efficiency metrics', 'Compare study time recommendation', 'Exam per-topic accuracy trend arrows'] },
     { ver: 'v103', items: ['Glossary mastery by topic breakdown', 'Exam best streak highlight', 'Dashboard topic connections map'] },
     { ver: 'v102', items: ['Exam focus-weak-topics button', 'Compare prerequisite chain', 'Dashboard flashcard review forecast'] },

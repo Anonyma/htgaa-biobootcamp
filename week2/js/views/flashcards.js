@@ -94,6 +94,16 @@ function createFlashcardsView() {
             }).join('')}
           </div>
 
+          <!-- Mode Filters -->
+          <div class="mb-4 flex items-center gap-2 flex-wrap">
+            ${(() => {
+              const reviews = store.get('flashcards').reviews || {};
+              const hardCards = allCards.filter(c => { const r = reviews[c.id]; return r && r.easeFactor < 2.0; });
+              if (hardCards.length === 0) return '';
+              return '<button class="fc-mode-filter px-3 py-1.5 rounded-lg text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors" data-mode="hard"><i data-lucide="alert-triangle" class="w-3 h-3 inline"></i> Hard Cards (' + hardCards.length + ')</button>';
+            })()}
+          </div>
+
           <!-- Struggling Cards Alert -->
           ${(() => {
             const reviews = store.get('flashcards').reviews;
@@ -455,6 +465,19 @@ function createFlashcardsView() {
           updateProgress();
           if (sessionStatsEl) sessionStatsEl.classList.add('hidden');
         });
+      });
+
+      // Hard cards mode
+      container.querySelector('.fc-mode-filter[data-mode="hard"]')?.addEventListener('click', () => {
+        const reviews = store.get('flashcards').reviews || {};
+        const hardCards = allCards.filter(c => { const r = reviews[c.id]; return r && r.easeFactor < 2.0; });
+        dueCards = [...hardCards];
+        currentIndex = 0;
+        isFlipped = false;
+        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {}, streak: 0, bestStreak: 0 };
+        cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
+        updateProgress();
+        if (sessionStatsEl) sessionStatsEl.classList.add('hidden');
       });
 
       // Review All button (practice mode - review all, not just due)
