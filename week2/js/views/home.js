@@ -49,6 +49,31 @@ function createHomeView() {
         </header>
 
         <main class="max-w-5xl mx-auto px-4 py-8">
+          <!-- Welcome Banner (first-time users) -->
+          ${overallPct === 0 && !localStorage.getItem('htgaa-week2-welcomed') ? `
+            <div id="welcome-banner" class="mb-8 bg-gradient-to-r from-indigo-50 to-blue-50 dark:from-indigo-900/20 dark:to-blue-900/20 rounded-xl border border-indigo-200 dark:border-indigo-800 p-6">
+              <div class="flex items-start gap-4">
+                <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="sparkles" class="w-5 h-5 text-indigo-500"></i>
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-bold text-lg text-indigo-900 dark:text-indigo-200 mb-1">Welcome to your study companion!</h3>
+                  <p class="text-sm text-indigo-700 dark:text-indigo-300 leading-relaxed mb-3">
+                    This interactive guide covers everything you need for HTGAA Week 2. Follow the recommended path below, or jump to any topic. Each chapter has reading, simulations, quizzes, and flashcards.
+                  </p>
+                  <div class="flex items-center gap-3">
+                    <a data-route="#/topic/central-dogma" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition-colors cursor-pointer inline-flex items-center gap-1.5">
+                      <i data-lucide="play" class="w-4 h-4"></i> Start Learning
+                    </a>
+                    <button id="dismiss-welcome" class="text-xs text-indigo-400 hover:text-indigo-600 transition-colors">
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ` : ''}
+
           <!-- All Complete Celebration -->
           ${overallPct === 100 ? renderAllCompleteCelebration() : ''}
 
@@ -152,6 +177,18 @@ function createHomeView() {
       });
 
       container._homeUnsub = unsub;
+
+      // Dismiss welcome banner
+      container.querySelector('#dismiss-welcome')?.addEventListener('click', () => {
+        localStorage.setItem('htgaa-week2-welcomed', '1');
+        const banner = container.querySelector('#welcome-banner');
+        if (banner) {
+          banner.style.transition = 'opacity 0.3s, transform 0.3s';
+          banner.style.opacity = '0';
+          banner.style.transform = 'translateY(-10px)';
+          setTimeout(() => banner.remove(), 300);
+        }
+      });
 
       // Topic filter pills
       container.querySelectorAll('.topic-filters .filter-pill').forEach(pill => {
