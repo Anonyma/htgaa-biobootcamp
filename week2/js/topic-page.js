@@ -645,7 +645,7 @@ function renderTopicPage(data, topicId) {
 
   return `
     <!-- Reading Progress Bar -->
-    <div id="reading-progress" class="fixed top-[57px] left-0 right-0 h-1 bg-slate-200 dark:bg-slate-700 z-40">
+    <div id="reading-progress" class="fixed top-[57px] left-0 right-0 h-1 bg-slate-200 dark:bg-slate-700 z-40" role="progressbar" aria-label="Reading progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
       <div id="reading-progress-bar" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-150" style="width:0%"></div>
     </div>
 
@@ -905,7 +905,7 @@ function renderTopicPage(data, topicId) {
         })()}
 
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <button id="mark-complete-btn"
+          <button id="mark-complete-btn" aria-label="${isComplete ? 'Mark topic as incomplete' : 'Mark topic as complete'}"
             class="px-6 py-3 rounded-xl font-semibold transition-all ${isComplete
               ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-2 border-green-300 dark:border-green-700'
               : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl'
@@ -2846,6 +2846,7 @@ function initReadingProgress(container) {
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
     bar.style.width = pct + '%';
+    bar.parentElement.setAttribute('aria-valuenow', Math.round(pct));
 
     // Update time remaining
     if (timeRemainingEl && timeRemainingVal) {
