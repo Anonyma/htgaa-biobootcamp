@@ -97,8 +97,14 @@ function createHomeView() {
           <!-- Quick Stats Strip -->
           ${renderQuickStats(progress)}
 
+          <!-- Session Recap -->
+          ${renderSessionRecap()}
+
           <!-- Continue Reading (primary CTA) -->
           ${renderContinueReading(progress)}
+
+          <!-- Suggested Next Steps -->
+          ${renderNextSteps(progress)}
 
           <!-- Review Schedule -->
           ${renderReviewSchedule()}
@@ -115,11 +121,14 @@ function createHomeView() {
               <h2 class="text-xl font-bold flex items-center gap-2">
                 <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-500"></i> Topics
               </h2>
-              <div class="flex gap-2 topic-filters">
+              <div class="flex gap-2 topic-filters flex-wrap">
                 <button class="filter-pill active px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="all">All</button>
                 <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="foundational">Foundational</button>
                 <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="intermediate">Intermediate</button>
                 <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="advanced">Advanced</button>
+                <button id="surprise-topic" class="px-3 py-1 text-xs font-medium rounded-full border border-purple-300 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors flex items-center gap-1">
+                  <i data-lucide="shuffle" class="w-3 h-3"></i> Surprise Me
+                </button>
               </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 topic-cards-grid">
@@ -257,6 +266,18 @@ function createHomeView() {
           });
         });
       });
+
+      // "Surprise Me" — navigate to a random incomplete topic
+      const surpriseBtn = container.querySelector('#surprise-topic');
+      if (surpriseBtn) {
+        surpriseBtn.addEventListener('click', () => {
+          const progress = store.get('progress');
+          const incomplete = TOPICS.filter(t => !progress[t.id]);
+          const pool = incomplete.length > 0 ? incomplete : TOPICS;
+          const pick = pool[Math.floor(Math.random() * pool.length)];
+          window.location.hash = `#/topic/${pick.id}`;
+        });
+      }
 
       // "Show analytics & more" toggle
       const showMoreBtn = container.querySelector('#show-more-dashboard');
@@ -1658,6 +1679,9 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v118', items: ['Session recap card', 'Suggested next steps', 'Surprise Me random topic'] },
+    { ver: 'v117', items: ['Bookmarks aggregation view', 'Pomodoro timer upgrade', 'Weak points analysis'] },
+    { ver: 'v116', items: ['Learning reflection card', 'Teach It Back prompts', 'Confidence self-check'] },
     { ver: 'v115', items: ['Exam half-time score split', 'Glossary letter count badges', 'Dashboard study strengths'] },
     { ver: 'v114', items: ['Exam review-topic links', 'Dashboard completion forecast', 'Compare study order recommendation'] },
     { ver: 'v113', items: ['Exam career stats in results', 'Flashcard mastery donut chart', 'Study summary knowledge map'] },
@@ -1839,6 +1863,165 @@ function renderAllCompleteCelebration() {
         <a data-route="#/flashcards" class="px-4 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg font-semibold hover:bg-slate-50 dark:hover:bg-slate-600 cursor-pointer transition-colors text-sm">Review Flashcards</a>
       </div>
     </section>
+  `;
+}
+
+function renderSessionRecap() {
+  // Show what the user accomplished since they opened the app this session
+  const SESSION_KEY = 'htgaa-week2-session-start';
+  const now = Date.now();
+
+  // Get or set session start time (resets after 4 hours idle)
+  let sessionStart = parseInt(localStorage.getItem(SESSION_KEY) || '0');
+  if (!sessionStart || now - sessionStart > 4 * 3600000) {
+    sessionStart = now;
+    localStorage.setItem(SESSION_KEY, sessionStart.toString());
+  }
+
+  // Count activity since session start
+  const feed = store.getActivityFeed(100);
+  const sessionFeed = feed.filter(a => a.time >= sessionStart);
+  if (sessionFeed.length < 2) return ''; // Don't show for very little activity
+
+  const sectionsRead = new Set();
+  let quizzesAnswered = 0;
+  let quizzesCorrect = 0;
+  let topicsVisited = new Set();
+
+  sessionFeed.forEach(item => {
+    if (item.action === 'section' && item.detail?.topicId && item.detail?.sectionId) {
+      sectionsRead.add(`${item.detail.topicId}:${item.detail.sectionId}`);
+      topicsVisited.add(item.detail.topicId);
+    }
+    if (item.action === 'quiz') {
+      quizzesAnswered++;
+      if (item.detail?.correct) quizzesCorrect++;
+      if (item.detail?.topicId) topicsVisited.add(item.detail.topicId);
+    }
+    if (item.detail?.topicId) topicsVisited.add(item.detail.topicId);
+  });
+
+  const sessionMinutes = Math.floor((now - sessionStart) / 60000);
+  if (sessionMinutes < 1) return '';
+
+  const stats = [];
+  if (sectionsRead.size > 0) stats.push(`<span class="font-semibold text-blue-600 dark:text-blue-400">${sectionsRead.size}</span> section${sectionsRead.size > 1 ? 's' : ''} read`);
+  if (quizzesAnswered > 0) stats.push(`<span class="font-semibold text-green-600 dark:text-green-400">${quizzesCorrect}/${quizzesAnswered}</span> quiz answers`);
+  if (topicsVisited.size > 0) stats.push(`<span class="font-semibold text-purple-600 dark:text-purple-400">${topicsVisited.size}</span> topic${topicsVisited.size > 1 ? 's' : ''} visited`);
+
+  return `
+    <div class="mb-6 p-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/15 dark:to-teal-900/15 rounded-xl border border-emerald-200/60 dark:border-emerald-800/50">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0">
+          <i data-lucide="zap" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-0.5">This Session</p>
+          <p class="text-sm text-slate-600 dark:text-slate-400">
+            ${stats.join(' · ')} · <span class="text-slate-400">${sessionMinutes}m</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderNextSteps(progress) {
+  const steps = [];
+  const completedCount = TOPICS.filter(t => progress[t.id]).length;
+
+  // 1. Check if any topic is partially read — suggest continuing
+  const partialTopics = TOPICS.filter(t => {
+    if (progress[t.id]) return false;
+    const sr = store.getSectionsRead(t.id).length;
+    return sr > 0;
+  }).sort((a, b) => {
+    const srA = store.getSectionsRead(a.id).length;
+    const srB = store.getSectionsRead(b.id).length;
+    return srB - srA; // Most progress first
+  });
+
+  if (partialTopics.length > 0) {
+    const t = partialTopics[0];
+    const sr = store.getSectionsRead(t.id).length;
+    const sectionCounts = { 'sequencing': 7, 'synthesis': 7, 'editing': 7, 'genetic-codes': 6, 'gel-electrophoresis': 6, 'central-dogma': 7 };
+    const total = sectionCounts[t.id] || 6;
+    steps.push({
+      icon: 'book-open', color: 'blue',
+      text: `Finish <strong>${t.title}</strong> (${sr}/${total} sections done)`,
+      route: `#/topic/${t.id}`, label: 'Continue'
+    });
+  }
+
+  // 2. Check if quizzes haven't been taken for completed reading
+  const needsQuiz = TOPICS.filter(t => {
+    const sr = store.getSectionsRead(t.id).length;
+    const qs = store.getQuizScore(t.id);
+    return sr >= 3 && !qs;
+  });
+  if (needsQuiz.length > 0) {
+    const t = needsQuiz[0];
+    steps.push({
+      icon: 'clipboard-check', color: 'green',
+      text: `Take the <strong>${t.title}</strong> quiz to test your understanding`,
+      route: `#/topic/${t.id}`, label: 'Quiz'
+    });
+  }
+
+  // 3. Check if flashcards are due
+  const fcStats = store.getFlashcardStats();
+  if (fcStats.due > 0) {
+    steps.push({
+      icon: 'layers', color: 'violet',
+      text: `Review <strong>${fcStats.due} due flashcard${fcStats.due > 1 ? 's' : ''}</strong> before they pile up`,
+      route: '#/flashcards', label: 'Review'
+    });
+  }
+
+  // 4. Suggest starting a new topic if all current ones are far along
+  if (partialTopics.length === 0 && completedCount < TOPICS.length) {
+    const unstarted = TOPICS.filter(t => !progress[t.id] && store.getSectionsRead(t.id).length === 0);
+    // Recommend in suggested order
+    const order = ['central-dogma', 'gel-electrophoresis', 'genetic-codes', 'sequencing', 'synthesis', 'editing'];
+    const next = order.find(id => unstarted.find(t => t.id === id));
+    if (next) {
+      const topic = TOPICS.find(t => t.id === next);
+      steps.push({
+        icon: 'play', color: 'indigo',
+        text: `Start <strong>${topic.title}</strong> — the next recommended topic`,
+        route: `#/topic/${next}`, label: 'Start'
+      });
+    }
+  }
+
+  // 5. Practice exam suggestion
+  if (completedCount >= 3 && !store.getBestExamScore()) {
+    steps.push({
+      icon: 'trophy', color: 'amber',
+      text: `Try a <strong>practice exam</strong> to test across topics`,
+      route: '#/exam', label: 'Exam'
+    });
+  }
+
+  if (steps.length === 0) return '';
+
+  return `
+    <div class="mb-6">
+      <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+        <i data-lucide="compass" class="w-3.5 h-3.5"></i> Suggested Next Steps
+      </p>
+      <div class="space-y-2">
+        ${steps.slice(0, 3).map(s => `
+          <a data-route="${s.route}" class="flex items-center gap-3 p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-${s.color}-400 dark:hover:border-${s.color}-600 cursor-pointer transition-colors group">
+            <div class="w-8 h-8 rounded-lg bg-${s.color}-100 dark:bg-${s.color}-900/30 flex items-center justify-center flex-shrink-0">
+              <i data-lucide="${s.icon}" class="w-4 h-4 text-${s.color}-500"></i>
+            </div>
+            <p class="text-sm text-slate-600 dark:text-slate-300 flex-1">${s.text}</p>
+            <span class="text-xs font-medium text-${s.color}-500 group-hover:text-${s.color}-600 flex-shrink-0">${s.label} &rarr;</span>
+          </a>
+        `).join('')}
+      </div>
+    </div>
   `;
 }
 
