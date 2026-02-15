@@ -24,7 +24,7 @@ function createHomeView() {
                   genetic codes, gel electrophoresis, and gene expression.
                 </p>
                 <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-100 text-xs">
-                  <span class="font-bold text-white">v114</span> 200+ features built with AI-assisted development
+                  <span class="font-bold text-white">v115</span> 200+ features built with AI-assisted development
                 </div>
                 <div class="flex items-center gap-4 mt-3 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
@@ -167,6 +167,9 @@ function createHomeView() {
 
           <!-- Quick Review -->
           ${renderQuickReview()}
+
+          <!-- Study Strengths -->
+          ${renderStudyStrengths()}
 
           <!-- Knowledge Gaps -->
           ${renderKnowledgeGaps()}
@@ -1095,6 +1098,43 @@ function renderQuickReview() {
   } catch { return ''; }
 }
 
+function renderStudyStrengths() {
+  const dims = [
+    { key: 'sectionPct', label: 'Reading', icon: 'book-open', color: 'blue' },
+    { key: 'quizPct', label: 'Quizzes', icon: 'help-circle', color: 'green' },
+    { key: 'fcPct', label: 'Flashcards', icon: 'layers', color: 'violet' },
+    { key: 'timePct', label: 'Study Time', icon: 'clock', color: 'cyan' }
+  ];
+  const avgDims = {};
+  let count = 0;
+  TOPICS.forEach(function(t) {
+    var m = store.getTopicMastery(t.id);
+    if (!m || m.mastery === 0) return;
+    count++;
+    dims.forEach(function(d) { avgDims[d.key] = (avgDims[d.key] || 0) + (m[d.key] || 0); });
+  });
+  if (count < 2) return '';
+  dims.forEach(function(d) { avgDims[d.key] = Math.round(avgDims[d.key] / count); });
+  const sorted = dims.slice().sort(function(a, b) { return avgDims[b.key] - avgDims[a.key]; });
+  const strongest = sorted[0];
+  const weakest = sorted[sorted.length - 1];
+  return `
+  <section class="mb-10">
+    <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+      <i data-lucide="sparkles" class="w-5 h-5 text-amber-500"></i> Your Strengths
+    </h2>
+    <div class="grid grid-cols-4 gap-3">
+      ${sorted.map(function(d) {
+        var val = avgDims[d.key];
+        var isTop = d.key === strongest.key;
+        var isBottom = d.key === weakest.key;
+        return '<div class="bg-white dark:bg-slate-800 rounded-xl border ' + (isTop ? 'border-green-300 dark:border-green-700' : isBottom ? 'border-red-300 dark:border-red-700' : 'border-slate-200 dark:border-slate-700') + ' p-3 text-center"><i data-lucide="' + d.icon + '" class="w-5 h-5 text-' + d.color + '-500 mx-auto mb-1"></i><div class="text-lg font-bold ' + (isTop ? 'text-green-600' : isBottom ? 'text-red-500' : 'text-slate-700 dark:text-slate-300') + '">' + val + '%</div><div class="text-[10px] text-slate-500">' + d.label + '</div>' + (isTop ? '<div class="text-[8px] text-green-600 mt-1 font-bold">Strongest</div>' : '') + (isBottom ? '<div class="text-[8px] text-red-500 mt-1 font-bold">Needs work</div>' : '') + '</div>';
+      }).join('')}
+    </div>
+  </section>
+  `;
+}
+
 function renderKnowledgeGaps() {
   const gaps = TOPICS.map(t => {
     const qs = store.getQuizScore(t.id);
@@ -1362,6 +1402,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v115', items: ['Exam half-time score split', 'Glossary letter count badges', 'Dashboard study strengths'] },
     { ver: 'v114', items: ['Exam review-topic links', 'Dashboard completion forecast', 'Compare study order recommendation'] },
     { ver: 'v113', items: ['Exam career stats in results', 'Flashcard mastery donut chart', 'Study summary knowledge map'] },
     { ver: 'v112', items: ['Exam time per question histogram', 'Dashboard mastery milestones', 'Glossary sticky letter index'] },

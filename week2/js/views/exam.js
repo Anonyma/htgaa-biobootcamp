@@ -975,27 +975,6 @@ export function createExamView() {
         </div>
       </div>
 
-      <!-- Difficulty Breakdown -->
-      ${(() => {
-        const byDiff = { easy: { correct: 0, total: 0 }, medium: { correct: 0, total: 0 }, hard: { correct: 0, total: 0 } };
-        results.forEach(r => {
-          const d = r.question.difficulty || 'medium';
-          if (!byDiff[d]) byDiff[d] = { correct: 0, total: 0 };
-          byDiff[d].total++;
-          if (r.isCorrect) byDiff[d].correct++;
-        });
-        const hasDiff = Object.values(byDiff).some(v => v.total > 0);
-        if (!hasDiff) return '';
-        const diffColors = { easy: 'green', medium: 'blue', hard: 'red' };
-        return '<div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6"><h2 class="font-semibold mb-4">By Difficulty</h2><div class="grid grid-cols-3 gap-3">' + ['easy', 'medium', 'hard'].map(function(d) {
-          var v = byDiff[d];
-          if (v.total === 0) return '<div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-600"><div class="text-lg font-bold text-slate-400">—</div><div class="text-xs text-slate-400 capitalize">' + d + '</div></div>';
-          var pct = Math.round((v.correct / v.total) * 100);
-          var c = diffColors[d];
-          return '<div class="text-center p-3 rounded-xl bg-' + c + '-50 dark:bg-' + c + '-900/10 border border-' + c + '-200 dark:border-' + c + '-800"><div class="text-xl font-bold text-' + c + '-600">' + pct + '%</div><div class="text-xs text-' + c + '-700 dark:text-' + c + '-400 capitalize">' + d + ' (' + v.correct + '/' + v.total + ')</div></div>';
-        }).join('') + '</div></div>';
-      })()}
-
       <!-- Topic Radar Chart -->
       ${Object.keys(topicBreakdown).length >= 3 ? (() => {
         const topics = Object.entries(topicBreakdown);
@@ -1207,6 +1186,35 @@ export function createExamView() {
           <div class="flex justify-between text-[10px] text-slate-400 mt-1">
             <span>Q1: ${startPct}%</span><span>Q${cumPcts.length}: ${endPct}%</span>
           </div>
+        </div>`;
+      })() : ''}
+
+      <!-- Half-Time Score -->
+      ${results.length >= 6 ? (() => {
+        const mid = Math.floor(results.length / 2);
+        const firstHalf = results.slice(0, mid);
+        const secondHalf = results.slice(mid);
+        const firstCorrect = firstHalf.filter(r => r.isCorrect).length;
+        const secondCorrect = secondHalf.filter(r => r.isCorrect).length;
+        const firstPct = Math.round((firstCorrect / firstHalf.length) * 100);
+        const secondPct = Math.round((secondCorrect / secondHalf.length) * 100);
+        const diff = secondPct - firstPct;
+        const verdict = diff > 10 ? 'Strong finish!' : diff < -10 ? 'Started strong, faded late' : 'Consistent throughout';
+        const vColor = diff > 10 ? 'green' : diff < -10 ? 'amber' : 'blue';
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-3">First Half vs Second Half</h2>
+          <div class="grid grid-cols-2 gap-4 mb-2">
+            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-700/30">
+              <div class="text-2xl font-bold text-slate-700 dark:text-slate-300">${firstPct}%</div>
+              <div class="text-xs text-slate-400">Q1-${mid} (${firstCorrect}/${firstHalf.length})</div>
+            </div>
+            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-700/30">
+              <div class="text-2xl font-bold text-slate-700 dark:text-slate-300">${secondPct}%</div>
+              <div class="text-xs text-slate-400">Q${mid + 1}-${results.length} (${secondCorrect}/${secondHalf.length})</div>
+            </div>
+          </div>
+          <p class="text-xs text-${vColor}-600 dark:text-${vColor}-400 text-center font-medium">${verdict}</p>
         </div>`;
       })() : ''}
 
