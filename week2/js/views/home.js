@@ -98,6 +98,12 @@ function createHomeView() {
               <a data-route="#/concept-map" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-cyan-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i> Concept Map
               </a>
+              <a data-route="#/summary" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="printer" class="w-4 h-4 text-rose-500"></i> Study Summary
+              </a>
+              <a data-route="#/compare" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="columns" class="w-4 h-4 text-teal-500"></i> Compare
+              </a>
             </div>
           </section>
 
