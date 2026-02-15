@@ -24,6 +24,7 @@ import { createMistakesView } from './views/mistakes.js';
 import { createPlannerView } from './views/planner.js';
 import { createSettingsView } from './views/settings.js';
 import { createAnalyticsView } from './views/analytics.js';
+import { createQuickPracticeView } from './views/quick-practice.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -63,7 +64,8 @@ class App {
       .on('/mistakes', () => createMistakesView())
       .on('/planner', () => createPlannerView())
       .on('/settings', () => createSettingsView())
-      .on('/analytics', () => createAnalyticsView());
+      .on('/analytics', () => createAnalyticsView())
+      .on('/practice', () => createQuickPracticeView());
 
     // Start
     this.router.start();
@@ -194,6 +196,10 @@ class App {
               <a data-route="#/concept-map" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i>
                 <span>Concept Map</span>
+              </a>
+              <a data-route="#/practice" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="zap" class="w-4 h-4 text-orange-500"></i>
+                <span>Quick Practice</span>
               </a>
               <a data-route="#/exam" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>

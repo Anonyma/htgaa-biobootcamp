@@ -184,6 +184,9 @@ function createHomeView() {
                 <i data-lucide="circle-x" class="w-4 h-4 text-rose-500"></i> Mistakes
                 ${(() => { const w = store.getAllWrongAnswers(); return w.length > 0 ? `<span class="text-xs text-rose-500 font-bold">${w.length}</span>` : ''; })()}
               </a>
+              <a data-route="#/practice" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-orange-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="zap" class="w-4 h-4 text-orange-500"></i> Quick Practice
+              </a>
               <a data-route="#/analytics" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i> Analytics
               </a>
@@ -1696,6 +1699,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v124', items: ['Quick practice mode', 'Random cross-topic questions', 'Lightweight quiz format'] },
     { ver: 'v123', items: ['Study analytics dashboard', 'Activity charts', 'Topic mastery breakdown'] },
     { ver: 'v122', items: ['Settings view', 'Export/import progress', 'Reset data with confirmation'] },
     { ver: 'v121', items: ['Study session planner', 'Time-based personalized plans', '10/25/45/90 min options'] },
