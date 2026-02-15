@@ -1,0 +1,1051 @@
+Skip to Main Content
+Accessibility Overview
+HTGAA 2026- Shared screen with speaker view
+Jan 19, 2026 08:36 AM
+Loaded: 0.00%
+00:00:00/02:55:19
+Speed
+Audio Transcript
+Chat Messages
+David S. Kong, MIT Media Lab, Faculty
+00:00:11
+Hello, hello, and welcome, everyone!
+Welcome, welcome, everyone.
+Tugce Naz Demir, Listener, Stuttgart, Germany
+00:00:18
+Yorktown.
+David S. Kong, MIT Media Lab, Faculty
+00:00:19
+From all around the world.
+And we're gonna mute everybody.
+Liu, yu kai listener Taiwan
+00:00:26
+Hello!
+TA, Lifefabs Institute, London, UK
+00:00:28
+Welcome!
+David S. Kong, MIT Media Lab, Faculty
+00:00:30
+So we're gonna, we're gonna mute you all for now, but, please do say hello in the chat, and welcome yourselves, introduce yourselves.
+For all of the TAs as well, please, please do introduce yourselves.
+Welcome, welcome. We'll just continue to, let folks pop in here, but, please mute yourselves for now.
+And we are so excited to see you all.
+Okay…
+So, we're gonna continue to admit folks, but we are actually gonna get started, because we have an extremely packed agenda today, so…
+My fellow TAs, I'm gonna, stop admitting folks, so if y'all that are co-hosts can just, keep admitting students as we go, that would be fantastic.
+So… Let me go back here to begin.
+Welcome everyone to the How to Grow Almost Anything 2026 Boot Camp, the Bio Bootcamp. So this is actually not the official start of the class, but, this is our… our pre-class kickoff for those of you that are newer to biology and the life sciences and experimental lab work and so on.
+My name is Dr. David Kong. I'm the head of the faculty and head director here at How to Grow Almost Anything.
+We've got an amazing, amazing crew of TAs, instructors, and just so many fabulous people that are involved in making this course happen.
+I'm gonna speak now for about 7 minutes, and I'm gonna go very quickly, as we have a very, very packed agenda, so, so just as a wording. But please do introduce yourselves in the chat, say hello, share where you are from, what city and what country you're from in the world, and also feel free to share a one-word emotion, if you would like, or anything else about yourself in the chat. So, and we'll do that as we, keep talking and going forward.
+true.
+And, shout out to one of our former TAs and students, Pat, for helping with this animation and this background here. And also, just to briefly mention this,
+image that you're seeing, which is our 26 logo, is real experimental data, and it's created by a bunch of RTAs, so we're really proud of this. But welcome again to How to Grow. Very briefly, and we're gonna remind everybody, today.
+And for the whole week, mute your sound, keep your video on if possible, we'd love to see your faces. And, just as a naming convention, if you can add your city and your country as well, that'd be great. And also, if you're a registered MIT or Harvard student, it'd be great to know that, and also if you're a listener. So if you're not a registered student at MIT Harvard, you know, you mentioned that you're a listener, and please feel free to use the chat to ask questions. We've got a lot of
+TAs here that are ready to assist. And you'll note this Zoom background, some of us have this Zoom background if you're a TA, and also folks have actually said TA in their, in their names.
+So you can see folks there. And now I'm going to speak very quickly just to cover a bunch of ground.
+But how to grow, briefly, you know, we take, again, MIT and Harvard students are part of our course who take it in person at MIT, but we also, as many of you are here in this Zoom room, joining from all around the world.
+Last year, we had almost 1,300 students from all around the world participate. This year, we're expecting a similar number of folks that are excited to join and be a part of this course.
+And I'm gonna say this one other time later for folks that are joining late, but just to clarify right from the start.
+there's 3 ways for students to participate in How to Grow, okay? The first is as a registered MIT or Harvard student, okay? So this means you are at… you are a student at MIT or Harvard, you are taking the course, officially, receiving course credit, okay?
+The two other major ways to participate
+are as what are called global listeners, meaning you are welcome to join our class and pop in on the Zoom. So when class happens live at MIT and Harvard, we broadcast the course, much like we're doing right now via Zoom, and so you're able to participate live, ask questions in the chat, there are TAs there that are going to be helping to curate that process.
+You'll also have access to all the web materials. We post all the homeworks, we post all of the, lab assignments, we also post all of the, the online, the lectures.
+And then we also have a discourse, which we're launching for the first time this year, and so you'll also have partial access to that discourse. We're gonna have a few channels where you can participate and engage with anybody, okay?
+Now, so that's sort of the global listener level, where you can come and pop in as you like.
+The other level, which we do have limited enrollment for, okay, we call committed listeners, alright? So, committed listeners, these are not MIT Harvard students, you can be anywhere around the world, and this, at this level, you work and are doing all of the homeworks every single week alongside the MIT and Harvard students.
+and you are also trying to do a student final project, you're also working on big group network-wide projects, and you're also taking the course as part of a learning cohort with one of our 15 virtual nodes, which I'll mention very briefly later, okay? And so, we have 15 nodes all around the world. If you happen to be close enough in person to one of those nodes, you can talk with the folks in those nodes, and then try to join in person.
+Or, you can participate as a virtual learner.
+alongside a learning cohort with that node, okay? So, but this is a full participation in the course, and at the end of it, if you complete all the homework and you complete the assignments appropriately, we'll give you a certificate that says that you have officially completed as a committed listener, okay? Now,
+it's not just saying, yes, I want to be a committed listener. We actually make you do a bunch of things before that's possible. And some of the big ones are coming to class, which starts at the beginning of February, and then also doing the first homework and making yourself a website and so on. So there's a bunch of things you have to do. We don't just say yes automatically, you actually have to do a bunch of work to get there.
+And then, you can join a node and then participate, as a committed listener, okay? So those are the two big ways that you can join and participate. Global listener or a committed listener, or as an MIT or Harvard student.
+And so now, and I'll stay as well, I'm gonna finish talking in just a few minutes, and then I'll stay in the chat as well, and we can answer questions, but that's the high level.
+Okay.
+I want to acknowledge as well, this is last year's TA group, but we have an amazing group of instructors, 100 TAs this year, more than 100 TAs that are supporting all the nodes around the world. This is last year's group. We're gonna shove fresh slides in class number one. But just to acknowledge that there's an amazing teaching team and an amazing group of faculty as well, that are going to be teaching and instructing over the course of this journey, over the next, you know, 3 or 4 months.
+I'll quickly just go over the curriculum. We cover principles and practices, so why to grow almost anything, read, writing, and editing DNA, lab automation and cloud biology.
+I'm gonna skip through this video, even though it's very cool. We do some artwork as well, but a lot of this is gonna be about programmability of automation systems, both open source liquid handling robots and what we call cloud labs, which we'll talk about later.
+Protein design using all of the latest AI tools is a big area, and this field evolves and grows very quickly, quickly. Genetic circuit, design and applications, cell-free systems, bioproduction.
+We have a few wildcard weeks where we'll cover a variety of topics at the cutting edge of synthetic biology and biological engineering.
+Building genomes and genome engineering.
+Advanced measurement and imaging technologies, frugal science, microfluidics, biodesign and biofabrication, potentially even ecosystem augmentation.
+on other topics as well, but just a very, very brief overview of the weekly, the weekly, kind of topics. And additionally, there's skills building, so every single week as well, there are labs that are associated with those, those weeks, which again, this boot camp is going to start covering some of the basics of how, the lab fundamentals that you'll need.
+The other major part, and this is for our committed listeners, okay? If you're a committed listener, you'll be working also on a student final project, and these are really, really amazing. Over the years. This includes… what I'm going to share very quickly includes MIT Harvard student final projects, as well as, some of our committed listener projects, you know, microfluidic wearables, architectural design, bacterial shading structures.
+Biosensors, biomaterials, a really incredible, you know, modular hardware,
+computationally designed proteins. A huge kind of ethos here is using the skills that you're developing each week and applying those, to a final project that is something reflective of what you care about and a project that is of your personal passion. And so, instructors in the various nodes help them support that.
+And so that's one of our exciting elements, and again, I mentioned this, this little certificate that you get, if you complete all of the weekly homeworks along with the final projects. And we also do a little graduation, in the summertime with all of our graduating students.
+Okay. Also, again, this is for committed listeners. As I mentioned, this year we have 15 nodes around the world that are participating, where, again, you could go physically in person, or even if you're not physically in person, learn in the same time zone as students in that group, okay? So, this includes,
+in New York with GenSpace, in the West Coast with, Celsius, formerly Celsius, now Biopunk Community Lab.
+In Quito, Ecuador, Victoria Makerspace in Ottawa, Canada, Life Labs Institute, you can see Danny actually at Life Labs right now.
+In London, in South Korea, with Designer Cells, Bio Club Tokyo, with Gayorg and others. And we've got 4… we've got, 8 new nodes, or 6 new nodes that have come online in the United States. So, Hartnell College in, Salinas, California, Chi-Town Bio in Illinois.
+Iowa State University, William & Mary in Virginia, Duke in Durham, and also our colleagues at BUG. Shout out to Joel here in Maryland. So again, a lot of really amazing new spaces for U.S. students to come and engage with our learning community.
+And another brief thing to mention is that a few years ago, we started doing research projects together as a network, so all of the nodes, and this is, again, for our committed listeners, being able to work and actually doing network-wide research projects.
+We did one on phase therapy, which we're going to talk a little bit more about today, so I won't go into detail now, where students designed lysis proteins from all around the world, and we did some microfluidics together, and each one of these little pixels is a different student design from one of our network-wide projects.
+We did a network-wide project in Racaro called Artificial Neural Networks in Cells. This is led by one of my graduate students, Evan Holbrook.
+In collaboration with Ron Weiss. And this year, we are starting a new project on something called 20 Things to Do With a Cloud Lab. So, one big topic of research, and also one of the lab modules is going to be on laboratory automation and cloud labs, and applying that to creativity and learning. So, a lot of really exciting, curricula, network-wide projects and beyond.
+And I really want to acknowledge and shout out, an incredible group of 22 companies that are supporting How to Grow.
+And, the… I should mention this here as well, members of those companies are also going to be mentoring student projects, and part of one of our goals, we're actually launching a How to Grow Almost Anything Careers program.
+And one of the ideas is for our students, and it's particularly the ones that are committed listeners and our global students, or sorry, our MIT Harvard students, to be engaging with those companies for potential internships and job opportunities and beyond. So…
+really excited about that. And also, just a shout out to some of our amazing advisors that are also supporting, the course and the growth of this network. So,
+I will stop there. I know that is a lot of slides that I've shared, but we've got a lot to go through today, and I'm now gonna turn it over, to Dominika. So, Dominika, let me actually, for… just to do a little Zoom,
+Give me one moment here, I want to highlight Dominika.
+Hold on, give me one second.
+Where are you, Dominic?
+TA, Dominika Wawrzyniak, Genspace
+00:13:02
+Oh, I'm scared.
+David S. Kong, MIT Media Lab, Faculty
+00:13:04
+Oh, there you are. Here, let me, let me, just spotlight you. Okay, great. So, everyone, this is Dominika, and…
+If we can all just give a, a big round of applause to Dominika, and also an amazing team who have been working so, so hard on organizing this bootcamp. So, we've got 3 epic sessions coming.
+Today, Monday, also Wednesday, also Friday, and several office hours that we've got, set up for you all. So again, just please, you know, big, big gratitude for the teaching team for all the hard work in making all this happen.
+And Dominica, I'm gonna turn it over to you, and I'm also gonna hang around in the chat for those that have questions, but…
+TA, Dominika Wawrzyniak, Genspace
+00:13:39
+David, one more thing, sorry. Can you allow me to share my screen on my second account that is locked in? Sorry.
+David S. Kong, MIT Media Lab, Faculty
+00:13:46
+Yes, you can also do that for yourself, because you're a co-host here, so… Quicker, okay.
+But let me, let me, let me make sure that's okay.
+Alright.
+And as more folks enter… Yeah, great.
+So… Dominica.
+The floor is yours.
+TA, Dominika Wawrzyniak, Genspace
+00:14:08
+Thank you very much, David, for this fantastic introduction.
+I'm just going to go over, so I'm your host for today. Welcome, everyone, to the Bio Bootcamp 2026.
+We are going to start off today, with a bunch of bio basics. We are going to talk about
+some basics of molecular biology and biology in general that we think is going to be very important for you and for your success here at How to Grow Almost Anything.
+We are also going to talk about some global projects today, and we are also going to show you how to onboard onto some of our,
+Of our social,
+platforms for you to communicate on. So, today poses the first day of the Bio Bootcamp, and as you might have known, and as you might have been informed on, the Bio Bootcamp will be going through the entirety of this week. So today is number one.
+Wednesday is going to be BioBootCamp Day 2, where you are going to hear a bit more about wet lab methods and some practical methods that might come in hand when you're in the lab. And on Day 3, we are going to talk about some virtual tools that, might be practical for you when doing science and research.
+On Tuesday and Monday next week, we are also offering office hours. These office hours are an opportunity for you to ask some questions and to get some technical help.
+If you do not get help already today, and then the next Bio Bootcamp days.
+So…
+Yeah, please, feel welcomed to today, and we are going to start the day with Anna Therese Mehra, who is going to talk about the central dogma of biology and its applications in synthetic biology.
+So, Anth Therese, you're here?
+TA, Anna-Therese Mehra, USA, Harvard
+00:16:24
+Aye?
+TA, Dominika Wawrzyniak, Genspace
+00:16:26
+Yes, so the floors are yours. Let's start with the Buy Bootcamp 2026.
+TA, Anna-Therese Mehra, USA, Harvard
+00:16:33
+Great! Everyone can see my screen?
+Hi, I'm Ana Thereres Mera, and just by way of introduction, I graduated from Harvard in 2024, and I have an interest in gene technology and rare genetic diseases.
+So, today I'll be discussing the central themes of molecular biology, and integrating those themes into the synthetic biology concepts that you will utilize in this course.
+And I thought I'd make this lecture a little more interesting by pointing out certain genetic diseases that occur as a result of changes in normal molecular biological function, and how gene technology pushes those boundaries and offers hope now to thousands of individuals struggling with genetic diseases.
+And a case in point of curing genetic diseases is that of Victoria Gray, a 40-year-old woman who suffered her entire life with sickle cell anemia. And with the advent of CRISPR gene technology, however, for which the Nobel Prize was awarded in 2020, her genome, her DNA, was essentially edited with a one-time therapeutic treatment.
+And that cured her of a lifetime of excruciating pain and hardship from sickle cell anemia. And another cure of a genetic case by gene technology was baby KJ down at Penn, who was recently cured of the debilitating, rare metabolic condition CPS1,
+through a personalized CRISPR treatment, and he is now a thriving, healthy 18-month-old baby.
+And let me remind you that CRISPR gene editing was derived from the ancient method of bacteria used to defend themselves against viruses.
+So, for the sake of molecular biology and those living organisms that are so instrumental in modern biology, let's begin with a nod to the phylogenetic tree of life, before we get into some of the more highly complex machinery of the human cell.
+So I'll just spend a few minutes talking about the phylogenetic tree of life, a concept you should be familiar with.
+This is a conceptual framework illustrating evolutionary relationships among all living organisms. It depicts divergence and common ancestry of species, and basically reveals and explains the evolutionary history of life on Earth.
+It delineates lines of evolutionary descent of different species, organisms, or genes from a common ancestor.
+The three domains, bacteria, archaea, and eukarya, show descent from a common ancestor. Since much of the strongest evidence for evolution comes in the form of common ancestry, it's important to understand phylogenies in order to fully appreciate the overwhelming evidence supporting the theory of evolution.
+As you can see, bacteria represent the most diverse and numerous group of microorganisms. They are prokaryotic, meaning they lack a true nucleus and lack membrane-bound organelles.
+They're found in varied environments, showcasing incredible adaptability, and playing crucial roles in ecological processes. And let's not forget that CRISPR gene editing, which received the Nobel Prize for Doudna and Sharpentier back in 2020, was derived from ancient bacteria's immune mechanisms, so never discount simple bacteria.
+Archaea are also prokaryotic organisms, but they differ significantly from bacteria in terms of their genetics and biochemistry and cell membrane structure. Archaea inhabit extreme environments, such as hot springs or deep-sea hydrothermal vents, or very acidic or alkaline environments. And molecular evidence has confirmed that they are a separate domain of life.
+from bacteria.
+Eukarya are characterized by a nucleus and membrane-bound organelles. Eukarya is divided into multiple kingdoms, including plants, animals, including us, fungi, and protists.
+And the evolution of eukaryotes is marked by endosymbiotic events, where certain organelles like mitochondria or chloroplasts originating from free-living bacteria became integrated into ancient eukaryotic cells.
+Now, keep in mind that the development of rapid genome sequencing has caused this phylogenetic tree to be dynamically changed over time and refined, as we receive more insights into the intricate web of life's evolutionary history.
+And another important point here is the term LUCA, last universal common ancestor. This is a term you should all be familiar with. It's given to the hypothesized common ancestral cell from which the three domains of life originated from, but it's important to remember, this is simply a hypothesis.
+So, now this lecture will become way more interesting as we get into the fascinating organism known as the human body. We'll start with very basic concepts and then delve into more of the specific mechanisms.
+So as I said earlier, I'll be mentioning specific rare diseases as they relate to the topic at hand. And here's a very basic illustration showing the structural levels of the human body.
+These are the levels of organization. From the tiniest functional unit, called the cell, cells then make up tissues. Tissues make up more complex structures known as organs and organ systems. Heart, lung, brain, kidneys.
+But the cell is the fundamental unit of life, and within the cell are numerous organelles, each with a very specific structure and function.
+Structure and function is a recurring theme in molecular biology. Structure often defines function.
+And we humans consist of trillions of cells, and the most significant organelle within our cells is the nucleus. It is within the nucleus that our genetic material.
+Radu Ticiu
+00:22:59
+That's the truth is.
+TA, Anna-Therese Mehra, USA, Harvard
+00:23:00
+Known as deoxyribonucleic acid, or DNA, is housed. And remember that it's the DNA of any living organism that carries the instructions for the development and functioning of that living organism.
+And here we see a striking picture of the cell with its nucleus well emphasized. Again, the structure that houses the DNA.
+So now we'll delve into the actual structure of DNA, or the genetic material. This is a helpful schematic to keep straight in your mind the different appearances of DNA when it is completely compacted in the nucleus of the cell and when it's unraveled.
+So when DNA replicates itself, and also when it serves as the blueprint for making protein, it obviously must unravel. But when DNA is compacted, it appears in the classic X shape you're all familiar with, known as a chromosome.
+Now, human beings have 23 pairs of chromosomes, compacted in classic 46X shapes in the nucleus. A karyotype is a lab-produced image of those 23 pairs.
+When chromosomes are not in pairs of 2 on the karyotype, this indicates a specific deviation from what is normal.
+For example, 3 copies of chromosome 21 is indicative of trisomy 21, or Down syndrome.
+A single copy of pair number 7 is known as monosomy 7, which is a rare genetic condition associated with a number of blood disorders, including leukemia.
+Chromosome pair 23 are the sex chromosomes, XX for female, XY for males. If a female only has one X chromosome, this is known as Turner syndrome, which causes a few medical issues.
+And there are numerous other chromosomal disorders indicative of genetic diseases.
+And given the rise of gene technology, there is much work to be accomplished and cures on the horizon. And importantly, gene technology can now offer realistic hope to such patients.
+But getting back to the structure of DNA, so here we see the schematic of the typical X structure of a chromosome, and as it's unraveled, we see the finer structure of DNA coiled around spherical structures known as histone proteins.
+And then, unraveling the DNA further, we see the classic double helix structure of DNA, discovered by Watson and Crick in 1958.
+Now, at this point, it's very important to keep straight in your mind the two major processes, or functions, that our genetic material, DNA, performs.
+One process is replication, in which the DNA literally replicates itself in order to constantly maintain the presence of genetic material in each new cell that we produce.
+As human beings, we must always maintain those 46 chromosomes. That's DNA replication. The other major function that DNA performs is protein synthesis, which a single strand of the double helix is used as a blueprint for instructions to create protein.
+And why proteins in particular?
+Proteins are crucial to the functioning of all cells.
+It is DNA's direction of the protein synthesis that determines the type of cell, tissue, or organ that develops, and its DNA, or the genetic code's direction of protein synthesis, that determination of traits depend on.
+Numerous cell functions depend on proteins, so you must keep straight in your mind, when we're talking about DNA, are we referring to replication, or functioning to make proteins?
+Now, this gets very obvious in time, but it might be confusing if you're first learning about this. And once again, as the word implies, replication is used to reproduce our genetic material.
+Protein synthesis is a process by which DNA is used as a genetic blueprint to create proteins for proper cell functioning.
+And before we get into these two processes of replication and protein synthesis, let's go deeper into the structure of DNA.
+The overall structure of DNA is known as a double helix.
+The double helix is essentially formed from two anti-parallel strands.
+And they each have directionality, known as 5' to 3', and 3' to 5'. One strand is anti-parallel to each other.
+Now, the actual definition of anti-parallel is to move in opposite directions while remaining parallel.
+With regard to DNA, this movement becomes relevant when DNA unravels and protein synthesis begins.
+And this is really understood once you understand the mechanism of protein synthesis. So, just remember, directionality.
+But back to the structure. The sugar phosphate backbone of the helix refers to the repeating pattern of alternating sugar and phosphate groups, acting as the sides of the double helix ladder.
+Between the sides of the ladder are the rungs, the nitrogenous bases, adenine, guanine, cytosine, thiamine.
+And each grouping of sugar group, phosphate group, and nitrogenous base is known as a nucleotide.
+The nucleotide is the basic building block of a nucleic acid, such as DNA, but there is another type of nucleic acid, ribonucleic acid, or RNA.
+And two basic differences in the structure is that RNA consists of a single strand, and rather than the nitrogenous base thiamine, as in DNA, RNA contains uracin. Also, DNA contains the sugar deoxyribose, while RNA contains the sugar ribose.
+Now, a word on bonding within the DNA molecule. So the sugar phosphate backbone covalent bonds are much stronger than the other type of bond holding the two strands together, hydrogen bonding. And these hydrogen bonds are meant to be broken during the process of DNA replication.
+Specifically, the nucleotides with nitrogenous base adenine, referred to as A, will form two hydrogen bonds with the thymine-nitrogenous base, and the nitrogenous base C, cytosine, forms three hydrogen bonds with G, guanine.
+Okay, so now that we have a basic understanding of the structure of the DNA double helix, we can move into one of DNA's functions, that is, protein synthesis.
+Once again, to make proteins, because numerous functions of the cell depend on the work of proteins.
+And remember, this is obviously not DNA replication.
+So, we must begin by understanding what is known as the central dogma of molecular biology. This describes the flow of genetic information in cells, and that information is transmitted from DNA to mRNA to protein through two main steps. Transcription.
+In which the DNA code is transmitted to mRNA, and the other step is translation, in which the mRNA transcript is being translated into actual protein.
+So DNA holds the master blueprint. mRNA is a transcript that carries the instructions to cellular machinery in order to build proteins to ensure proper cell functioning.
+So, let's take the first part of DNA transcription, where the double-stranded DNA unravels, and a single strand of DNA, the template, is used to make the messenger mRNA transcript.
+This process occurs in the nucleus, and for any given protein, what we're transcribing is actually just a segment of the DNA molecule. A segment of DNA is known as a gene.
+The mRNA transcript is created from the DNA blueprint, or gene, and it is complementary to the segment of DNA.
+A word on complementarity. This is a crucial principle when talking about DNA versus RNA. Complementarity of nitrogenous bases in DNA and mRNA refers to the pairing of bases, and the rules are that ATGC bases of DNA will pair, respectively with UACG of the RNA.
+That's for protein synthesis, whereas for DNA replication, ATGC will pair with TACG, the difference being that RNA contains uracil instead of thiamine.
+So getting back to transcription, where we have the mRNA transcript being derived from a single strand of DNA, the first step in transcription is initiation.
+And that occurs when an enzyme called RNA polymerase, a protein, binds to the region of DNA, or gene, called the promoter of the gene. And this signals the DNA to unwind so the enzyme, RNA polymerase, can read the bases in one of the DNA strands.
+The second step, elongation, is the addition of nucleotides to the growing mRNA strand.
+The RNA polymerase enzyme reads the unwound DNA strand as it builds the mRNA with a sequence of bases complementary to the original DNA template.
+The third step, termination, is the final step in transcription, and that occurs when the RNA polymerase reaches a stop sequence termination in the DNA template. The mRNA strand is complete, and it detaches from the DNA.
+Certain structures are added to the mRNA, such as a methyl cap and a poly-A tail. Then the mRNA is free to exit the nucleus for further processing in the cytoplasm of the cell.
+So we have an mRNA transcript, simply a strand of nitrogenous bases, a message complementary to the DNA segment. And it's called messenger RNA because it is bringing a message from the DNA in the nucleus to the cytoplasm, where it will be decoded into a string of amino acids, forming a protein. This decoding is known as
+translation.
+During translation in the cytoplasm, a cellular structure known as the ribosome, shown in aqua, literally moves along the mRNA transcript and reads the three nucleotide-based groupings, known as, codons. Codons make up the mRNA transcript.
+Each 3-base codon represents one of 20 amino acids, or a start or stop instruction. And the molecules which bring the correct amino acid to the mRNA transcript is known as a transfer RNA, or tRNA molecule. The mRNA codon, in turn, is complementary to the tRNA 3-base anticodon.
+The tRNA molecules carry successive amino acids that are called for by the three nucleotide codons.
+And the start codon for all proteins is AUG.
+The genetic code is comprised of all of the codons for the 20 amino acids, plus start and stop instructions. And AUG specifies the amino acid methionine, and acts as a signal to begin the process of translation.
+So translation is the translating of the mRNA transcript into a polypeptide of amino acids, using codons as the guide, which tells the tRNA which amino acids to pick up and transfer to the mRNA molecule.
+Here we see a tRNA molecule, here is the amino acid attachment site at the 3' end, and here is the anticodon, which orients itself upon the mRNA codon. And here we see the genetic code.
+And once the polypeptide chain is complete, the protein folds into a particular shape, where it can then perform its function in the cell.
+A rare yet well-known disorder should be mentioned at this point. Phenylketonuria, or PKU, is a rare genetic disease for which all of us born in the US were tested as newborns by a simple blood test from our tiny little heels, a heel prick. PKU is a result of a deletion of a single base in codon during translation.
+And this single base deletion causes what's known as a frameshift mutation.
+In which the rest of the codons are rendered useless.
+And this mutation has serious consequences if not detected immediately, because it alters the reading frame, and a stop signal is generated prematurely. So, in effect, the protein, an enzyme known as phenylalanine hydroxylase, which normally breaks down phenylalanine, is ineffective.
+And if the disorder is undetected and untreated, the buildup of phenylalanine causes severe intellectual and developmental disabilities.
+But when detected, the treatment is simply the exclusion of phenylalanine from a person's lifelong diet, and that remarkably results in a normal, healthy child. So genetic testing for PKU is imperative for newborns.
+Yet another rare disease, which is quite devastating and strikes young individuals, is known as Friedrich's ataxia, a neuromuscular disorder. This disorder results from a mutation in the gene coding for frataxin protein.
+Specifically, it's caused by a GAA-based gene segment that has repeated expansion to over a thousand times the normal 5 to 33 times, which results in a reduced production of the wild-type frataxin protein.
+This is near and dear to my heart, since I'm currently working on a Friedrich's ataxia project, and these awesome FA patients so patiently await a cure.
+As I mentioned earlier, one of DNA's functions is to act as a blueprint for protein synthesis, which we just reviewed, so we need to digress for a moment and talk about a common class of proteins known as an enzyme.
+Enzymes are a class of molecules that are ubiquitous and very powerful within molecular biology, and upon which many functions of the cell depend. So let's talk about their structure and function.
+Enzymes are catalysts that speed up reactions in the cell by millions of times. It is critical to note that these processes would be very difficult to happen spontaneously.
+You can picture enzymes as proteins in the cell, causing reactions to be completed at super lightning speed, rather than taking millions of years.
+Now, when proteins act as enzymes, this is a different function from when proteins are lodged within the cell membrane and act as gatekeepers or channels, or proteins that perform structural functions in the cell.
+So for the purpose of this lecture, I'm going to focus on proteins that are enzymes.
+The key to enzyme function is that they speed up cellular processes by lowering the activation energy required for a specific reaction to occur. Basically, when the substrate of a reaction binds with a perfect fit to the binding site of the enzyme, the reaction is catalyzed.
+Delving into the concept of how enzymes work, one key concept is that the catalytic activity of the enzyme depends on its conformational structure. Even a minor change in the native conformation of a protein may result in the loss of its catalytic activity.
+This is because there must be a highly specific fit between the substrate at the active site of the enzyme.
+The active site is where the substrate binds, while the catalytic site is within the active site, directly involved in the chemical reaction catalyzed by the enzyme.
+Here we see an illustration of another enzyme concept, that the enzyme does not get used up in the conversion of substrate to product, but rather it strategically positions itself in order to the sub… in relation to the substrate, physically, in order for products to form.
+And, as mentioned, enzymes lower the activation energy of a chemical reaction. And they do this by orienting substrate molecules in a particular manner to facilitate a reaction. And it's important to remember we wouldn't have life without enzymes, since they're so critical in these basic success of chemical reactions for life.
+Another aspect of enzymes is the fact that they work optimally at a unique pH and unique temperature. For example, if you raise the temperature above their optimal temperature too much, the enzyme will get denatured, meaning its structure will unravel into its original string of amino acids due to the heat, and it will no longer be able to function, as we see on the graph on the right.
+And similarly, an enzyme that's too basic or acidic will cause the enzyme to be non-functional as well.
+And now, to wake everyone up, I think this slide is a good reminder for the lab that the unique 3D protein structure of enzymes allows them to bring substrate molecules together, and this requires the enzymes to be kept frozen so that they don't get denatured and destroyed at a higher temperature before they're ready to use. So please, please, do not leave your enzymes out on the lab bench.
+And in the context of PCR, a particular reaction we'll discuss later, a buffer is given to ensure that the optimal pH is maintained in the reaction. But it's up to you to protect the enzymes at the correct cold temperature. So remember this little blue creature.
+So now that we've discussed the structure of DNA and enzymes as proteins, we will discuss the process of DNA replication, whereby a cell makes an individual copy of its DNA, identical copy, and it's a fundamental process in cell division, ensuring that each daughter cell receives a complete set of genetic info as cells grow and heal and replace old cells.
+The process of replication can be summarized in several steps, beginning with initiation, where the DNA replication begins at specific sites on the DNA molecule called origins of replication.
+Remember that DNA is double-stranded, so enzymes called helicases unwind and separate the two DNA strands, forming a replication bubble.
+DNA helicase enzymes break the hydrogen bonds between complementary nucleotide bases, causing the DNA strands to unwind and separate, and the region where the strands are separated is known as the replication fork.
+In addition, single-stranded binding proteins bind to the separated two DNA strands, preventing them from re-annealing and stabilizing the replication fork.
+DNA replication then requires the synthesis of short RNA primers to provide a starting point for DNA polymerase, an enzyme which is responsible for generating the new DNA.
+Importantly, the polymerase enzyme adds nucleotides to the growing DNA chain in a 5' to 3' direction, using existing DNA strand as a template. The nucleotides are incorporated, are complementary to the template.
+And the leading strand is synthesized continuously in the direction of the replication fork, while the lagging strand is synthesized in the opposite direction in short 3' to 5' Okazaki fragments.
+The overall synthesis for that strand, however, is 5' to 3' as well. That's an important point, that overall synthesis is always 5' to 3'.
+The enzyme DNA ligase joins the Okazaki fragments by catalyzing the formation of phosphodiester bonds, that backbone, between adjacent DNA fragments.
+And DNA replication continues in this bi-direction until the entire DNA molecule is replicated.
+And the termination process involves specific DNA sequences signaling the end of replication. And additionally, other enzymes check the DNA to be successfully copied without errors. They basically proofread the DNA to ensure that replication was successful.
+And this slide illustrates the semi-conservative nature of DNA replication, in which each new DNA strand is comprised of one newly made strand and one old strand. The DNA is half-conserved in the new molecule.
+So, we just completed two functions of DNA, its replication, and prior to that, protein synthesis.
+So now with the fundamentals of DNA replication and protein synthesis completed, I'm going to shift to a new topic, the cells, where these processes take place.
+That is, eukaryotic versus prokaryotic cells. These differ significantly in their organization, which reflects distinctions in cellular complexity, and most notably, the presence of membrane-bound organelles.
+One key difference between the two is that eukaryotes have a true nucleus that houses the genetic material, or DNA.
+The nucleus is surrounded by a double membrane called the nuclear envelope, which contains nuclear pores for molecular exchange.
+Prokaryotes lack a true nucleus. The genetic material is found typically in a singular, circular DNA molecule located in the nucleoid region.
+Of the cytoplasm. Another key difference is eukaryotes contain membrane-bound organelles, such as endoplasmic reticulum, Golgi apparatus, lysosomes, mitochondria, and others.
+Whereas prokaryotes do not contain membrane-bound organelles.
+Such as the ER, Golgi, mitochondria, whereas the cytoplasm of eukaryotes has a cytoskeleton providing structural support and aiding in intracellular transport. And in contrast, prokaryotes contain a simple cell wall for structural support.
+And significantly, eukaryotes have multiple linear chromosomes in the nucleus, while prokaryotic DNA is typically a single, circular chromosome.
+Here we see that singular circular chromosome, where replication begins at one origin point, the origin of replication, and continues outward along the circle in two directions.
+Importantly, prokaryotes usually only have one chromosome, whereas eukaryotes have multiple chromosomes, many more genes, and replication can begin in multiple places simultaneously on the linear DNA.
+Also, in prokaryotes, transcription and translation are coupled together, occurring in the cytoplasm. And in contrast, eukaryotic cells have membrane-bound nucleus separating transcription and translation spatially. To review, transcription occurs in the nucleus, where mRNA is synthesized and processed and spliced to be exported to the cytoplasm
+Translation occurs in the cytoplasm.
+Here's a structure of bacteria, a type of prokaryotic cell.
+The flagellum is used to propel motion, to propel the bacteria forward. And it's important to note that there can be multiple plasmids in bacteria. There's one here, but there can be multiple.
+Plasmid is a small, circular, double-stranded DNA molecule that exists independently of chromosomal DNA in bacteria and other microorganisms. Plasmids are not essential for survival, but they can carry additional functions or adaptive traits, and they often confer selective advantages to the bacterial host under specific environmental conditions.
+For example, a plasmid carrying antibiotic-resistant genes can allow the bacteria to survive in the present of antibiotics.
+And they're commonly used as vectors in gene engineering to introduce foreign genes into the bacteria for the production of proteins or recombinant DNA and the creation of genetically modified organisms. And in this class, we will put DNA in the plasmids inside bacteria to harness the bacteria to make particular proteins.
+So in this next portion of the lecture, I'll describe some tools we can adapt to synthetic biology. And one such example is polymerase chain reaction, PCR.
+So today, there's a relatively fast and easy way to obtain large amounts of DNA sequencing of interest, the polymerase chain reaction, which uses the power of DNA replication to amplify DNA enormously in a very short period of time.
+As we've mentioned, cells replicate their DNA before they divide, and this doubles the amount of the cell's DNA.
+PCR essentially mimics cellular DNA replication in the test tube by repeatedly copying the target DNA over and over to produce millions of copies of DNA.
+But in contrast to cellular DNA replication, which amplifies the cell's entire DNA during a replication cycle, PCR performs targeted amplification to replicate only a segment of interest of DNA bounded by two primers that determine where the DNA polymerase begins replication.
+You'll be designing primers in this course, and they have specific sequences to ensure that only the location of interest of DNA gets amplified.
+There's 3 steps, denaturation, annealing, and extension. They each occur at a different temperature.
+Since PCR is essentially a type of DNA replication, you need all of those ingredients. The template containing the target DNA that you want, primers to initiate synthesis of new DNA strands.
+Thermostable DNA polymerase to carry out synthesis. This DNA polymerase needs to be heat-stable because heat is used to separate the two strands in each cycle. DNTPs, nucleotides, which are DNA building blocks necessary to build the new DNA strands.
+The primers are short synthetic DNA… single-stranded DNA molecules, and their sequence matches a region of the DNA template. And to make primers of the correct sequence that bind to the template, it is necessary to know a little bit of the sequence on either side of the region of DNA to be amplified.
+And DNA polymerases and DNTPs are commercially available. So first, the reagents are all mixed together. Primers are present in great excess over the template, and this is important because each newly DNA strand starts from a primer.
+So the first step involves separating the two strands of target DNA, heating to near boiling.
+Next, the solution is cooled to a temperature that favors complementary DNA sequences finding each other and making base pairs, called annealing. Since primers are present in great excess, the complementary sequences they target are readily found and base pair to the primers, which directs the synthesis of DNA. And only when a primer annees to a DNA strand
+Can replication occur, since DNA polymerase enzymes require a primer to be in the synthesis?
+Then in the third step, DNA polymerase replicates DNA by extension from the 3' end of the primer, but still making the new DNA strand in the 5' to 3' direction.
+And at the end of the first cycle, there's twice as many DNA molecules as, like, as in DNA replication. But in PCR, this process is repeated 25 to 30 times, so there's a theoretical yield of 230, over a billion times more DNA than we started with.
+And the temperature cycles are controlled in a thermocycler, which repeatedly raises and lowers the temperatures according to a set program. And each cycle can be completed in a few minutes. And the resulting DNA is analyzed on an agarose gel, and it might also be sequenced to ensure that it's of the correct size and the desired fragment.
+And I've included a PCR video, please take a look at that after.
+Sanger sequencing, chain termination method, this is a method used for nucleotide sequencing. So, this can be performed manually or through an automated machine, and also follows three basic steps.
+So, sequencing involves the DNA sequence of interest, which is used as a template for a special type of PCR, chain termination PCR. And this works similarly to standard PCR, but there's one major difference. The addition of modified
+denucleotides, called D-deoxyribonucleotides, DDNTPs rather than DNTPs. In the extension step of PCR, DNA polymerase adds DNTPs to the growing DNA strand, which catalyzes the formation of the phosphodiester bond, extending in the 5' to 3' direction. But in chain termination PCR,
+The user mixes a low ratio of chain-terminating DDNTPs in with the normal DNTPs in the PCR reaction. And DDNTPs lack the 3' hydroxyl required for phosphodiester bond formation. So, therefore, when we… the DNA polymerase incorporates a DDNTP at random, extension stops, and the DNA strand can no longer be
+built.
+And the result is millions of billions to oligonucleotide copies, or fragments, of the DNA sequence of interest, all at different lengths.
+And they all end in the terminating DDNTP. And in automated Sanger sequencing, all four types of DDNTPs, DDATP, DDTTP, DDGTP, and DDCTP, are mixed in a single reaction, and each have a unique fluorescent label.
+In the second step, chain-terminated oligonucleotides, the fragments, are separated by size via gel electrophoresis.
+So, how this works is that a DNA sample is loaded onto one side of the gel, and an electric current is applied. Since DNA is negatively charged, the positive electrode on the opposite side of the gel will pull the DNA, and the speed at which the fragments move is determined by size.
+So the smaller the fragment of DNA template is, the less friction it'll experience, and it will move faster. So as a result, the fragments will be arranged from smallest to largest, reading the gel from bottom to top, bottom, smallest, top, largest.
+And in manual Sanger sequencing, for example, there's four different lanes of the gel with 4 of the different PCR reactions, so that you can know which of the chain-terminating DDNTPs, A, T, G, C, are in the four columns.
+And the last step simply involves reading the gel to determine the sequence of
+the template DNA of interest. And because DNA polymerase only synthesizes DNA in the 5' to 3' direction, starting at the provided primer, each terminal DDNTP will correspond to a specific nucleotide of interest in the original sequence. For example, the shortest fragment terminates at the first nucleotide from the 5' end.
+The second shortest fragment terminates at the second nucleotide. Therefore, by reading the gel basically from smallest to largest, we can determine the original sequence of the template from 5' to 3'.
+And in manual Sanger sequencing, the user reads all four lanes of the gel at once, moving from bottom to top, using the lane to determine A, T, G, or C.
+For example, if the bottom band found corresponds to DGGTP, then the smallest fragment terminates with GDP GTP, and we know that that's the first nucleotide, G. And in automated Sanger sequencing, a computer uses fluorescence to call the identity of each terminal DDNTP. This works by a laser exciting fluorescent tags in each band.
+And a computer detects the resulting light emitted.
+And this is another illustration of that.
+So, I will finish with one last example of nature harnessed in biology, CRISPR-Cas9 gene editing techniques. And this is a powerful tool for precise gene editing, and it allows scientists to target specific DNA sequences within a genome and modify or replace them with high accuracy.
+And CRISPR technology is versatile. It applies to a wide range of organisms, from plants to humans, and its flexibility makes it a versatile tool for genetic research and therapeutic applications, as mentioned in the case of Victoria Gray.
+who, through CRISPR, was cured of sickle cell anemia. And compared to previous gene editors, CRISPR is relatively simple to use, and it's now used around the world.
+Although the costs of such treatment remain considerable, gene… CRISPR gene therapy offers realistic hope for such patients.
+And essentially, CRISPR-Cas9 is a genetic technique akin to genomic scissors that remove and replace a piece of defective DNA, and can also turn genes on or off.
+It's adapted from a naturally occurring genome editing system in bacteria.
+CRISPR stands for Clustered Regularly Interspaced Short Palindromic Repeats. So these gene sequences found in prokaryotic genomes
+Bacterial, or archaeal, are derived from the DNA of bacteriophage viruses that previously infected the prokaryote, which they then use to recognize DNA of similar viruses in subsequent infections.
+CRISPR acts like a genetic vaccination card, if you will, which holds a record of the previous viral infections in the bacterial genome. And when attacked by a virus, the bacteria produces RNA segments, transcripts, of the CRISPR gene array to target the incoming virus's DNA, and then disables the virus by cutting it up with an enzyme known as CAS.
+So in the lab, researchers utilize this ingenious gene editing tool into a cell's own DNA repair mechanism to add or delete pieces of DNA, or to even replace segments of DNA that already exist with a newly customized sequence.
+And it's important to note in closing that the tremendous hope that CRISPR gene editing offers to countless patients around the globe, but this technology is not to be used without careful consideration of the ethical ramifications of such a powerful tool.
+And I've actually written about this topic in the Harvard Science Review. And it's interesting for you all to keep up with the current guidelines discussed by the global scientific community, most recently at the third international summit on Human Genome Editing.
+And I'll end on this hopeful note with these Nobel laureates, Emmanuel Charpentier and Jennifer Doudna, upon their receipt of the Nobel Prize for CRISPR.
+And we hope you enjoy the course!
+TA, Dominika Wawrzyniak, Genspace
+00:59:46
+Amazing! Everyone, give an applause for Anna Theresa Mera, and the very first dog of our buy bootcamp.
+Yeah, wonderful presentation. We are going to continue.
+With… My presentation, let's look it up.
+There we go…
+Hmm.
+Okay, sorry, I'm starting off immediately.
+Alright.
+Can you guys see my screen? Okay, perfect. Good, so…
+Welcome to the next part of the BioBootCamp. Now that we have heard some of the biobasics from Anna Therese, Michelle and I are going to dive further into genomics and DNA design.
+Okay, and here's the overview. I'm going to first start off with the basic biology of genomes and genes, and some basics of the work with DNA in general. And once we have that down, Michelle is going to finally introduce you guys to some exciting, novel gene editing tools. So, yeah, welcome.
+Genome and genome biology. Let's start with some numbers. You heard from Emma Therese how DNA is built. A base pair is 2 nanometers in length and 0.34 nanometers from base pair to base pair.
+Genomes across species range widely by size. E. coli, for example, has a genome of 4.6 million base pairs.
+The humans show a genome size of 3.1 gigabase pairs in the haploid, and 6 gigabase pairs in the diploid state. That means that the human diploid genome is approximately 2 meters long.
+However, animal cells are, at max, 100 micrometers big, so how does the genome really fit into a cell?
+And the secret is that the genome is organized.
+It is tightly packaged. The eukaryotic genome is incredibly organized. DNA is first wrapped, around proteins called histones.
+forming the so-called nucleosomes. The nucleosomes are then further folded and condensed into a 30 nanometer chromatin fiber, which is then further compacted into a higher-order chromatin structure that ultimately shows as condensed chromosomes during the mitotic phase, as you can see here.
+And things work a little bit different for the prokaryotic genome.
+the prokaryotic genome, the bacterial chromosome, is not packaged into chromatin at all, and it's circular. This circularity leads to torsional stress within the ring that compacts the bacterial genome into this so-called supercoiling form.
+Further, bacteria also carry plasmids, which are circular coding DNA that is not part of the bacterial genome.
+and can be transferred from one bacteria to the other via a process called the horizontal gene transfer, that you can see here. Keep those differences in mind, and remember this…
+a plasmid thing that I just talked about.
+Coming back to the human genome, of its million base pairs, only 1.5% of the whole genome encodes
+proteins, the biomachines that keep an organism running. However, due to brewery, we are only going to focus on the protein coding regions and the introns, which also make up a human gene.
+Because this is what we perhaps plan on editing on after all.
+There we go.
+Eukaryotic genes follow a very specific anatomy. We have an upstream and a downstream region, which usually helps to regulate the gene expression.
+Then you have the promoter region, that…
+to which the DNA polymerase, RNA polymerase that Teresa just talked about binds, and which marks the start of the transcription. And then, surrounding the coding sequence.
+where the actual protein is encoded, you also have two untranslated regions, the 5' UTR and the 3' UTR, respectively, which are important for regulating the gene expression even more. And then lastly, you have the coding sequence.
+Which encodes the protein. When we look closer at the eukaryotic coding sequence, we notice that the coding sequence is
+interspersed with introns. After transcription.
+which you can see here, the primary transcript. The introns are removed during the so-called splicing process, leaving the protein mRNA behind for translation, the production of the protein.
+The prokaryotic genes, on the other hand, do not go through splicing. They don't eat it. Their genomes are structured in operands, consisting of structural genes that encode a bunch of proteins.
+Subsequently.
+Radu Ticiu
+01:05:32
+And this marks the fundamental difference.
+TA, Dominika Wawrzyniak, Genspace
+01:05:36
+rents, but…
+TA, Inger Le Gué, Lifefabs London (UK)
+01:05:48
+Dominika, you seem to be muted.
+TA, Dominika Wawrzyniak, Genspace
+01:05:51
+Oh, my apologies. So I think I will start at the beginning of the slide again. Prokaryotic genes, on the other hand, do not go through splicing. The genomes are structured in an operon, consisting of structural genes that encode a bunch of proteins subsequently.
+And this marks the fundamental difference between prokaryotic and eukaryotic genomes. Prokaryotic genomes do not need mRNA processing at all.
+And this becomes incredibly important when you want to introduce eukaryotic genes into bacterial host cells. You need to use the coding sequence only.
+And another thing to consider
+Remember that the coding sequence is made up of triplet codons, which encode a single amino acid. The genome is actually very degenerate, meaning that multiple codons can encode
+the same amino acid, as you can see, for example, here with leucine, with 4 codons here, and 2 codons here.
+But synonymous codons do not necessarily mean they behave the same way during translation. Different species will use different sets of codons more frequently for certain amino acids than others, which you can see in this table here. Probably
+That's because of different tRNA abundances per species, per organism. Without codon optimization, codons of transgenes that are rarely used in the host species might get expressed more slowly.
+And this difference in the folding of the protein chain during the translation
+could affect protein function. So, whenever you design DNA, always consider codon frequency of the host cell you are planning on implementing that gene when designing recombinant DNA.
+Now, moving on to another topic, genomic mutations. Any kind of change to the DNA sequence is considered a mutation.
+They occur most of the time randomly, and in most organisms, they accumulate with age. It is said that humans pass on an average of 60 mutations onto their children.
+A way to differentiate between mutations is by classifying them into large-scale mutations and small-scale mutations. Large-scale mutations, for example.
+Our chromosome… chromosomal alterations, as displayed here.
+For example.
+Take the deletion. Deletion is when a segment of DNA is lost, completely lost. So there is a whole entire missing segment in the chromosome.
+These usually result in a bunch of missing genes from the genome. A duplication is when a certain segment is duplicated, or multiplicated.
+You have inversions where a segment is inverted. We have insertions when a segment of a DNA from one chromosome is added onto another unrelated chromosome.
+And you have the translocation, when two segments from different chromosomes, change their positions. So, depending on what kind of large genomic chromosome alteration you have, it's always going to have a large effect on the cell, but some of them might be to a lesser degree than others.
+then… However, what we will be focusing on
+In this presentation are point mutations, because these are very relevant to you guys.
+So… When it comes to point mutations, it is important to understand that,
+That the location is very important.
+To, has a very important effect on the protein function.
+As you might remember, the majority of genomes is non-coding. Of the genome is non-coding. If a mutation lands into those non-coding regions, it is likely nothing will happen, or very little will happen. However, a mutation in a coding region
+will likely affect the protein one way or another, also depending on what type of mutation you will get. So, a mutation in an intron here
+Probably not a big problem. A mutation in the coding region?
+Probably a problem.
+So, types of genomic mutations. Here are the types. Let's assume a random triplet codon of a random coding sequence, encoding this lysin.
+A silent mutation.
+Is going to… is a mutation in where a base pair changes… a base pair change results in the same amino acid.
+So, this can cause, and usually causes, no issues. But if you remember codon usage, it can turn into a codon that is less frequently used by the organism. So, this might lead to translational speed changes.
+If an amino acid change leads to a stop codon, for example,
+we get a nonsense mutation, and we get a truncated protein. If this occurs early during translation, so very early in the genome, the expressed protein is most likely to be defect, and we have a problem.
+If you have a missense mutation.
+There are different scenarios that can play out.
+MSS mutation is when the base pair change leads to a different amino acid, but not all changes impact the protein similarly. If the new amino acid has similar properties as the old one.
+The… The change might not impact protein function too badly, but if the amino acid
+It's different.
+structure of the protein might be affected. And whenever the structure of the protein is affected, the protein function is affected.
+Alright.
+Now, there is also another important type of a small-scale mutation to point out, which is the frameshift mutation.
+These occur when you insert or delete a number of base pairs that is non-divisible by 3, because as you might remember.
+the codon or amino acid is encoded by a codon triplet. So, if you have a change, a mutation that results in an amino acid change that is unlike 3,
+All the subsequent codons are now going to be shifted and out of frame, out of frame mutation.
+All, leading to… this can lead to a whole bunch of different amino acids being then expressed.
+If you… it can also lead to a stop codon being expressed. So, both of those scenarios are really bad news for a protein in general.
+However, it is not a frameshift when you have a change that is divisible by 3.
+You might lose out on an amino acid, but technically, all the other amino acids are still there, so perhaps you might get away with it if the amino acid is not very important to the protein function.
+If it affects protein function, though, The protein is screwed.
+So now we have those basics down, and we are going to move on and talk about how to work with DNA.
+Why do we want to design DNA in the first place? Nowadays, there are many things that DNA design has enabled, ranging from novel drugs.
+To biofuels, to art.
+In this course particularly, we are going to design DNA many times, including genes that, for example.
+Encode pigment, as you can see here, what we have done in the past, that can be used for biopainting.
+I'm going to talk quickly about the synthetic biology design cycle, because this is something that you're going to encounter over and over again during the, the course of
+This course.
+So, we start off with design.
+design in the context of synthetic biology means that you design your gene, your DNA, your genome, or you design a pathway. It can also include designing experiments that you want to perform.
+With your novel organism. And also, during the design phase, you select a chassis, which is, the very host org… the organism that you want to modify.
+Then we go on to the build phase. In the build phase, we try to build what you have designed. So this means… that might include DNA assembly, gene editing, the creation of synthetic chromosomes, even.
+And we introduce whatever you've built into your chassis. So now we have a genomically modified organism.
+In the test phase, we test out the properties of your genomically modified organisms. That might include PCR, that we have just heard about from Anna Therese.
+Protein biochemistry, next-gen sequencing, flow cytometry, mass spectrometry, microfluidics, all really big words that you're going to, to learn about during the, during the course.
+And then, once we have performed our experiments, we are heading over to data analysis. We are checking, has everything worked? If not, what do we need to change? We might have to redesign the experiments, or the whole premise of the experiment, or the whole idea.
+And, if everything has worked, we might head over to modeling and simulations.
+So, how to engineer DNA?
+We need to get some basics down first. Anytime you work with DNA, whether you want to engineer it or analyze its output, you're probably going to want to put it into a host cell.
+This process is called molecular cloning.
+It is composed of four basic steps. Isolation and generation of the DNA fragment of interest, joining into a vector, introduction into the host cell, and selection of the cloned sequences.
+I'm just going to talk about that in a theoretical way. You're going to hear about the practical steps of this process later on in the BioBootCamp.
+When you engineer DNA, you need to plan all these steps in advance. So I'm going to quickly comment on how you should consider them when designing DNA.
+But you will hear more practical steps, as I said, on the second day of Bio Bootcamp, so definitely turn in on Wednesday.
+The DNA template. Let's start with that. You want to analyze, modify, or just use the gene. Where do you get it from? The target DNA can be derived from the genome of a target organism, for example. If it's from bacteria, you just isolate the genome and perform a PCR.
+However, it can get a bit more complicated for eukaryotic genomes, eukaryotic cells and for eukaryotic genes.
+Since you need to eliminate the introns first, as I have mentioned before. Always consider what the domain of your organism is. A way easier way to get your DNA of interest, however, is from plasmids.
+Which, some of them you can order, and you are paying a lot of money for it, usually, and some of them you could acquire by asking colleagues, or by collaborating with other labs or groups, or by collaborating with some nodes, doing how to grow almost anything.
+Otherwise, you can use the PCR methods and gene editing to get your DNA, or have it ordered as a fragment. But whatever you do, if you want to express DNA from one organism to another, just keep in mind, the codon usage.
+The next part is the vector. So, there are…
+various kinds of vectors. What are vectors? It is…
+It is basically your little package in which you introduce into and selectively maintain your recombinant DNA in host cells. So there are various types of vectors, but in this course, it's most likely a bacterial plasmid that you're going to be using.
+Keep in mind, even within the bacterial plasmids,
+There are different types that are optimized for different applications. You can control… you can have plasmas that are specialized for controlled expression, for protein purification.
+For visualization of cellular processes, for measuring and quantifying, and for genome and gene editing. So, always do your research and figure out what fits your application the best.
+The bacterial plasmids.
+Anna Therese has mentioned that already, but just a refresher, like all vectors, the bacterial vector will contain an origin of replication.
+Some selective markers, and a multiple cloning side, which is very interesting for you, because the multiple cloning side is where you include or insert your recombinant or your designed fragment.
+And now, you need to choose the host cell. So, your chassis. The host cell needs to be chosen depending on the research goal, of course. A popular host cell that we're going to use a lot is Asherichia coli.
+It can accept a wide range of vectors, and it is available in a variety of strains.
+that are also specialized for different purposes. Some are, for example, better for cloning, some are better for protein expression. It is always good to look up and be very informed.
+In general, you have three, or a bunch of different, domains you can choose from. You have prokaryotic, chastises, which are
+different types of bacteria and strains that you can choose. You also have eukaryotic host cells, which can include mammalian cells, insect cells, whole organisms, like mice.
+And these may be your choice in the real world if you want to, investigate DNA modifications or RNA processing of eukaryotes in particular.
+But the, advantage of prokaryotic, host cells is that they are fast, easy, and high throughput.
+You might be, you might be able to come to a compromise for your application, if you choose, fungi, or, for example, the bakeries, like Saccharomyces cerevisiae, that, combines prokaryotic
+Easiness of handling in the lab.
+And eukaryotic properties, such as certain DNA modifications that you can only find in eukaryotes. So, it's always good to do your research in the designing phase of the synthetic biology design cycle to figure out what you need.
+Now, we are going to talk about How to modify DNA.
+So, there is… you can generally differentiate between targeted modification, which requires that you know the sequence, and you know how the sequence looks like.
+And then there's also random modification.
+Random modification can include physical methods, like UV radiation, heat, and shear stress. As you might know, it is always advised to wear sunscreen to prevent yourself from UV radiation costs.
+mutations. And then there are also chemical methods, like intercalating agents based on a logo, reacting chemicals, and so on. But we are going to talk about targeted modification. And one way to directly modify,
+DNA sequence is via enzymes, which we have also heard about from other theories already.
+So, the genetic toolkit enzymes. All methods of DNA engineering that we are going to discuss moving forward involve enzymes in one way or another. A very important group of enzymes are nucleases, enzymes that degrade nucleic acids by breaking the phosphodiester bond between nucleotides.
+One type of nucleases are restriction endonucleases.
+And restriction endonucleases, again, are classified into 5 different moor types.
+But only 3 of those types are of interest for us today. One of them are, the cars.
+enzyme and artificial enzymes, which Michelle is going to talk about later on, but I'm going to talk about type 2 endonucleases, which are what lab scientists commonly refer to when they mention restriction enzymes. So, let's talk about restriction enzymes for a little bit.
+So, restriction endonucleases type 2. There are some examples of restriction endonucleases of type 2 that you're going to encounter in the lab during
+In the lab, or during the How to Grow Almost Anything course. These envelopes cut DNA very specifically, following a recognition sequence that is usually palindromic, so…
+It, here you can see a palindromic sequence. Once they cut, they create different types of ends.
+One of them can be a blunt end, that you can see here, and one of them can be a sticky end, which is an end where you get a single-stranded overhang.
+And depending on what your application is, you might choose one over the other.
+You also have a bunch of other nucleases that you can use in the lab that cuts less sequence-specific, and
+or either just broadly DNA or RNA molecules in general. So, those types of nucleases, for example, include the dysoxyribonuclease 1, DNase 1, which cuts DNA phosphodiester bonds very non-specifically.
+Another one is the S1 endonuclease, which splits single-stranded DNA ends only.
+You have RNAs that split RNA sequence, RNAs only, and you have the extra free nuclease, which chews up the 3' ends of DNA specifically.
+So, these can also be… are frequently used in the wet lab.
+And next to nucleases, you also have a full arsenal of other enzymes in your lab toolkit, all listed here. But perhaps the most frequently used would be the DNA polymerase.
+Here, and ligases. So the DNA polymerase amplifies DNA in a 5' to 3' direction. We've just heard about that from another theories as well. It's used in the PCR, and it requires primers, which you are going to sign a bunch of during the duration of this course.
+Ligases, on the other hand, make phosphodiester bonds, so it just needs a 5' phosphate group and a 3OH group.
+And it… you can ligate two different fragments that way, which is super, super useful for you.
+We also have reverse transcriptases, which are of viral origin, that allow you to translate RNA into DNA.
+You have alkaline phosphatases, which remove the 5' phosphate groups if you want to prevent unwanted ligation. You have the polynucleotide kinase, which adds a 5' phosphate if you want a ligation reaction.
+And you have terminal transferases, which, adds nucleotides to any available free OH terminus, which you can use for, for example, radioisotope-labeled nucleotides.
+And this leads me to my sources, and to the end of my presentation.
+And I'm going to stop my share here, and…
+invite Michelle to come on.
+Thank you very much for your attention, and Michelle, the floor is yours.
+Speaker, Michelle Yue, USA, Harvard/MIT
+01:26:37
+Thank you, Dominika, for the wonderful segue into our next section on genome engineering methods. Hi, everyone. As an introduction, I'm Michelle, and I'm a graduate of William & Mary, which is actually one of our new nodes this year, which is really exciting, and I'm a second-year medical student in the Harvard-MIT program in Health Sciences and Technology.
+I previously worked in the church lab, and this is my third year being a How to Grow Almost Anything TA.
+So, now let's jump into some content. Today, we'll be introducing you to two major strategies used in genome engineering. The first major strategy involves site-specific recombinases, and the second major strategy involves nucleases that make double-stranded breaks in DNA, which are then repaired.
+I'll first talk a little bit about site-specific recombinases, then I'll talk about strategies like using zinc finger nucleases, talons, and the CRISPR-Cas9 system, which fit into the second category of genome engineering methods.
+As a general mechanistic overview, site-specific recombinases recognize and bind to two specific, predefined short DNA sequences, which we call recognition sites.
+These recognition sites are inserted into the genomic region of interest, and they're really important because they define the boundaries of the DNA segment that will later be recombined.
+Once the SSR binds to these recognition sites, it makes a double-stranded break, then the SSR helps recombine the DNA strands, repairing the double-stranded break.
+Common methods that use SSR are the CRE LOGSP system, where CRE is the SSR, and LOGSP is the recognition site it binds to, as well as the FLIP FRT system, where FLIP is the SSR, and FRT is the recognition site.
+You can see an example of, Cree binding to the loss pre-recognition sites in the diagram on the screen.
+And while that previous diagram showed how CRE can be used to delete a gene segment, SSRs are very versatile, and we can use them to create not just deletions, but also inversions, insertions, replacements, and translocations.
+Now, in addition to SSR-based strategies, another category of genome engineering methods involves using nucleases that create double-stranded breaks in DNA.
+So, the first general… the general mechanism for the strategy is that, first, in nuclease, it creates a double-stranded break at a specific DNA sequence, then the double-stranded break triggers cell repair mechanisms.
+If no DNA template is provided, then non-homologous end joining, it typically repairs double-stranded break.
+And during this process, the two ends of the DNA at the break site are either directly ligated, or connected back together, or processed. For example, they're trimmed or they're filled in to make the ends suitable for ligation.
+It's important to know that non-homologous end joining is very error-prone.
+So, it often leads to indel mutations, which are insertions or deletions, indel, of nucleotides at the break site. And this can actually be used to our advantage, because indeles can create frameshift mutations if the indel is disrupting the reading frame, and this often causes the protein to misfold, or be truncated, or shrunken down, which leads to a loss of function of the gene.
+In, in-frame mutations, they can also happen, and these, can also impair gene function.
+If a nuclease creates double-stranded breaks at multiple sites on the same DNA molecule, non-homologous end joining can also create larger deletions.
+In this case, the DNA segment between the two breaks is removed, and the ends that remain join together.
+So, non-homologous end joining happens when you don't have a DNA template for repairing the double-stranded brig, but on the other hand, if a homologous DNA template is provided, the homology-directed repair mechanism can make precise modifications in the gene of interest.
+So, for example, you can correct mutations in genes by providing a DNA template that has the correct sequence, and this correct sequence will be used to repair a mutation at the double-stranded break site.
+An application example of this would be gene therapy for correcting disease-causing mutations. And you can also create mutations by providing a DNA template that contains a mutation you want to incorporate into the genome.
+Examples of these types of genome engineering strategies include methods that use zinc finger nucleases, talons, and CRISPR-Cas9, which you've probably heard of, but we'll go into a little bit more detail about these specific strategies.
+On the screen, you can see a diagram of how zinc finger nucleases work. You might be wondering, what are zinc fingers?
+So, zinc fingers are modular protein domains with zinc ion coordination centers, and it's important because they recognize DNA triplets. This means that if you link multiple zinc fingers together in a specific order, you can recognize specific DNA sequence, sequences of predefined lengths.
+When you combine this series of zinc fingers with the type 2 endonuclease, FOK1, that's when you get a zinc finger nucleus, or ZFN.
+And these ZFNs, they act as dimers, where left and right ZFNs find opposite DNA strands.
+Once they bind, their endonucleases dimerize and create a double-stranded break. These double-stranded breaks can then be repaired by cellular machinery that we've already discussed, which are the non-homologous end-joining and homology-directed repair pathways.
+or mechanisms.
+Next, we'll talk about talons.
+Which are transcription activator-like effector nucleases. Talens follow very similar principles as sink finger nucleases, but they have some different mechanistic features.
+Similar to zinc fingers, talons, or tails, transcription activator-like effectors, are DNA binding proteins. However, tails are proteins that have all but two amino acid residues conserved.
+The two non-conserved amino acids in each tail determine what specific nucleotide each tail binds to. The arrow on the screen points to which amino acids correspond with which nucleotide
+Also, similar to zinc fingers, the order of tails in a sequence can be customized and engineered to bind to specific nucleotide sequences. And when a tail sequence is joined with the FOK1 endonuclease, it becomes a talon.
+Talons, like zinc fingeronucleases, they act as dimers and induce double-stranded breaks, which is then repaired by non-homologous end-joining or homology-directed repair.
+Which we discussed earlier. So, you can see that there are a lot of parallels in the mechanisms used by zinc fingers, nucleases, and talons.
+The final genome engineering method we'll discuss today is the CRISPR-Cas9 system, which has been a really hot topic and widely used method in recent history. The two main components in the CRISPR-Cas9 system are Cas9 and a single-guide RNA.
+The endonuclease in the CRISPR-Cas9 system is Cas9, and Cas9 recognizes a pan-sequence or a protospacer adjacent motif sequence in the target DNA.
+Then, the single-guide RNA binds to the target DNA. Specifically, the single-guide RNA is made up of CRISPR RNA and a trans-activating RNA, also called a tracer RNA,
+In case you didn't know, CRISPR stands for Clustered Regularly Interspaced Short Palindromic repeats, which Anatres mentioned earlier. And CRISPR-RNA is complementary, and binds to the target DNA. The tracer RNA, it binds to the Cas9 complex, also.
+Once the single-guide RNA binds to the target DNA, Cas9 creates a double-stranded break in the DNA, and this double-stranded break is repaired by these cellular repair mechanisms that we've briefly talked about previously… already.
+To be mindful of the time, I won't go into super detail about this, but it's important to know that there are different categories of gene function modifications that we can make.
+In particular, we can create gene knockouts, which causes complete or partial loss of gene function, gene knock-ins, which introduces a specific genetic modification at a specific region in the genome, gene knockdowns or gene silencing, which reduces or temporarily suppress gene expression, and gene activation.
+Which increases or temporarily activates gene expression.
+The last thing I want to cover is that the time at which you edit genes matters. In genetics, we make the distinction between somatic versus germline mutations, and we do the same with gene editing.
+Similar to somatic gene mutations, somatic gene editing is where you target the gene editing to a specific population of cells within an organism.
+For example, as in gene therapies that target a specific organ or a specific cell type.
+Important to note, it's not all of the cells in the organisms that have, the modification you introduce through this gene editing. Only the population of cells that's targeted, and the population of cells that it produces through cell division.
+Also, as long as the gametes are not targeted, or do not have their genomes edited, somatic gene mutations are not passed on to the offspring. But on the other hand, similar to germline gene mutations, germline gene editing happens when you edit the gametes that then divide and become an organism. So in other words, all of the subsequent cells that the gametes divide into after fertilization, which is all of the cells in the organism, theoretically.
+Have the gene modification that you introduced.
+And this distinction is really important to keep in mind, especially when thinking about how research intersects with, policy and with ethics.
+and the broader society. So, we'll be discussing the relationship between ethics and synthetic biology early on in the semester, and ethics is something that we really want you to integrate into all of the research that you do throughout this class and beyond.
+So that's the conclusion of my section on genome engineering methods. We're going to shift back to Dominika now, and thank you so much for being here today.
+TA, Dominika Wawrzyniak, Genspace
+01:37:30
+Thank you, Michelle, for finishing off the session. Yeah, so… Let me go on… Screen share…
+Oh, nope, that's the wrong one.
+Stop it… There we go, should be the right one.
+Apologies.
+Alright.
+That should fix it.
+Alright, there we go.
+So,
+You might be surprised to see me here again. I am taking over from Lisa Riedmeyer, who unfortunately spontaneously couldn't make it, so I'm going to present her presentation on her stat today.
+We are going to talk about a very exciting topic for us, because it is one of the topics that
+We are going to talk a bit more closely about in one of the global projects that we offer at How to Grow Almost Anything, and that you're going to hear about.
+So, patch therapy, a tale of Bacteria and viruses. Originally created by Lisa Riedmeier, presented by me.
+So, a killer lives among us. It kills trillions of organisms per day. It's one of the deadliest entities on our planet. It's living on our skin, in our intestine, and all around us, and it is the bacteriophage.
+Very mechanical-looking thing. It is composed of an icosahedral head, which contains its DNA and RNA. It has a long tail, and it has fibro legs. Looks kind of funny.
+It's a virus, and it is very, very tiny. It infects bacteria, and as you can see, if we compare it to an E. coli, it's so much more smaller, and it's even smaller when you compare it to a eukaryotic cell that you can see here.
+So, how many are there?
+there are, I've looked this number up, non-millions of phages, around, and they are around wherever there are humans, and wherever there are bacteria.
+Or particularly wherever there are bacteria. And that includes the bacteria inside us and on us. So, you have a bunch of bacteriophages in you at this point right now.
+And if you were to put the bacteriophages end-to-end, they would spend approximately 10 million light years, or the distance between the Earth and the Sun.
+Oh, Jesus Christ. In this huge number that I cannot, name right now.
+So… Should you be worried about this? Is this a problem for the human? No.
+They only really target bacteria.
+And, very specific bacteria at that. But how do they affect them? So, the bacteriophage is very specific for some kind of receptor molecule on the host bacteria cell. So it attaches
+then it kind of pricks the bacterial cell wall and introduces its phage DNA,
+into the inside of the bacterial cell. The phage DNA then, turns on a bunch of host factor machinery to produce its, phage… to replicate its phage DNA,
+And phage proteins are being made, and those phage proteins then allow to reassemble the phage particles.
+And then the particle breaks out, and this is where the bacterial cell, most of the time, dies.
+So, and this is how they're spread within a bacterial cell, colony or culture.
+In order to attach, as well.
+Some of them will need different parts of the bacterial cell. So, each bacteriophage will attach on different parts of the bacteria, depending on what the bacterial host is.
+And phages are very specific, which is great. They can… their host range ranges from
+A very particular strain of a very particular bacterial species to
+Perhaps all bacteria, or a lot of bacteria of a certain genre.
+And as you can see here, for example, the BRB01 phage will only, will only infect Sifovarid, which are of a class of the Sifoveridae, will only infect bacterio… bacterodis.
+Of this kind, for example. So, very specific.
+and very efficient killers. And, if you look how it… to us, how it looks like is, you can see it here. This is, for example, a bacterial long, meaning that
+The surface that, that little lawn that you are seeing here, all of that is bacteria.
+But once you put the bacteria, the phages on, you will notice those little holes, and those little holes are dead bacteria.
+bacteriophages have managed to infect one bacterial cell, and they manage to spread out to the neighboring bacterial cells, and they are forming those so-called plaques. And this assay
+It's called a pluckacy, which… You can, remember for later.
+Why should you care about phages? They only infect bacteria, so why should I care?
+The short answer is, we screwed up. We humans, we screwed up. In the past, you could easily die from breathing in a bug, cutting your finger, eating leftovers, and infection, if you were unlucky, could kill you.
+Until this guy came along, Alexander Fleming, who discovered antibiotica, as some of you might know. He basically discarded, and,
+a fungi-infected plate on which he had bacteria on, but when he looked at the plate, he noticed that wherever there is fungi, there are no bacteria. So, this interested him, and what followed was the,
+Was the development of the penicillin antibiotic.
+And so, antibiotics became a thing.
+But we overdid it. We just continue to overconsume antibiotics, and you can see here the GBD super region.
+super regions, we can see that all of them, since decades, have shown an increase of antibiotic use. We over-prescribe, we overuse, and we use those antibiotics wrongly. So, we finish the antibiotic treatment before the doctor said we should. So.
+Unfortunately, this leads to resistance, and one of those resistance strains is called methicillin-resistant staphylococcus. Oh, that's wrong. That's MRSA.
+Mrsa.
+And there are also tons of other superbugs by now. So, what is a superbug? A superbug are strains of bacteria that are resistant to most of the antibiotics and other medications commonly used to treat the infection they cause.
+A few examples of superbugs include resistant bacteria that can cause pneumonia, UDIs, and skin infections.
+And yeah, it is, proposed, that by 2050, the deaths from those superbugs, from those multi-resistant strains, is going to be equal to cancer. So, these are pretty bad news.
+Right.
+And we are already experiencing some of them right now. We have a bunch of cases that are popping up
+of people dying from MRSA or other similar strains.
+And just to clear up, why methicillin in particular? Methicillin used to be the, the backup drug for people who are resistant against penicillin, which was one of the very first antibiotic developed, as I've just, told you about.
+But nowadays, methicillin only works 50% of the time, and whenever a Staphylococcus is resistant against methicillin, it is also resistant against other drugs of that class, which are beta-lactams, because of just one mutation. So, we have multiple cases of this.
+The days of dying from cutting your fingers could come back. So, what do we do?
+We need a new medication to treat superbugs, and they just could save us.
+So, the concept of phage therapy. You have a bacterium.
+you have, an inventor called Felix D. Harrell, And he thought that
+Since bacteria have, like, those things, those phages that affect them very specifically, they could efficiently kill bacteria.
+And they also do not target any human cells, which is great.
+And they target only very specific bacteria, unlike antibiotics, which only… which affect bacteria all over the place, even healthy ones.
+And so, all of these things combined, if we apply phages, we might lessen antibiotic resistance risks, and we might enable personalized treatment, because
+As synthetic biologists, and as biologists in general, we can modify those phages.
+So, just to demonstrate, the phage specificity on this example, we have cocci, we have, bacillae, and we have, those spiral-looking, bacteria. So,
+A page might… Kill off, the bacilli.
+But it might lead cocci and,
+spiral-looking bacteria alive, which is great, because we don't want to kill all the bacteria in a human. Some of them are very useful.
+A personal story on phage therapy. This is Tom Patterson and Stephanie Strat D. So, Tom Patterson, while on a trip in Egypt, which I'm not sure if it is related to his disease, but he fell violently ill.
+And as it turns out, he has an abscess in his abdomen that is growing, and it's full of multi-resistant bacteria.
+There's no treatment, he has been treated with more than 3 antibiotics already, all to no avail, and he's in the process of dying of kidney malfunction, or kidney death.
+But luckily, he was married to an epidemiologist's wife, Stephanie Stratty. And so Stephanie Stratti, in trying to save her husband, went in and did her research, and she came across phage therapy.
+Which, at this point, was not an established therapy yet. So, she reached out to a bunch of, clinicians, the FDA and the Navy.
+to convince them of applying this novel, new emerging therapy, phage therapy, on her husband. And at this point, no phage therapy had been approved by the FDA. So, via some kind of,
+permission pipeline. They then allowed her, allowed clinicians to apply phage therapy of him, and within just a couple weeks, he was full… made a full recovery.
+So, she then turned into an expert on stage therapy, so…
+Good for that guy to have the right wife at the right time.
+Why don't we just continue using phage therapy, then? Sounds very promising, right?
+Well, bacteria can get resistant, as they have before. So, we have lots of germs, and some of them are drug-resistant.
+We apply an antibiotic or any kind of therapy.
+All of them are killed, except perhaps one that has some kind of mutate… some kind of property that might help it.
+And the drug-resistant bacteria is now able to grow and take over.
+And…
+because of the horizontal gene transfer that I explained in my talk earlier, it might give the drug resistance to other bacteria via plasmids. So, that's great. Now we have different kinds of multidrug-resistant bacteria.
+Not cool. So, how do bacteria get resistant?
+In particular.
+So, remember the phage cycle?
+This is the point when we might… where a bacteria cell might be developing resistance, because here is the point where we have
+a bunch of phage particles, a bunch of phage proteins in there, interacting with the host factors. And,
+If a bacteria cell just turn, happens to have a certain mutation that prevents biosynthesis, or some part of the, of the biosynthetic cycle, or some part of the
+phage cycle, If it turns out to impede one of those steps, then you have a… resistant bacteria.
+Bad news. So, an example for this might be, for example, here. We have…
+the MS2 phage, for example. The MS2 phage has an L protein. The L protein, helps the MS2 phage to escape out of a bacterial host.
+So, the phage produces… or, like, the phage DNA starts to produce This L protein. It's unfolded.
+And usually in an E. coli, because the MS2 phage infects particularly E. coli, it makes use of a chaperone, of a protein within the E. coli to properly fold its phage L protein.
+So now it's folded, and…
+Now, the protein can be used to lyse the phages out of the E. coli.
+the chaperone being called DNAJ.
+But, as I have explained, earlier, just a single nucleotide change can lead to a different amino acid. And if it's a very different amino acid, most of the time it leads to a dysfunctional protein. But sometimes, you can get a gain of function.
+And… This might be helpful for a bacteria if it's exposed to a lot of pressure from phages.
+So, we have the bacterial protein, we have the phage protein. They click, the phage protein gets its job done.
+No mu… and…
+it, does its phage cycle. But, if the bacterial protein is mutated at this active center, where the phage protein can bind.
+suddenly the page protein cannot bind. Suddenly the page protein is dysfunctional.
+And… The bacterial strain has gained resistance to the phage.
+So…
+just as the bacteria can adapt to the phages, however, phages can adapt to the bacteria. So, there's an alternative pathway for the L protein, which is
+Slow.
+folding on its own, without a chaperone. As we have heard earlier, enzymes can help speeding up certain processes. That doesn't mean that those processes are, impossible without the enzyme. So the unfolded protein can fold and self into a functional protein.
+However, it takes a bit longer, but it can do it practically.
+So, the process that I just described is, like, a very known process. You have a phage that can infect a bacteria, then the bacteria becomes resistant, and the phage cannot infect it anymore, but then the phage adapts, and then can infect the adapted bacteria.
+And then the bacteria adapts again, and the phage cannot infect it anymore, and so on and so forth. It's an arms race. So, both actors interact, and at some point, one of them eventually wins.
+We can engineer pages.
+Potentially, to overcome the resistance and create a superphage that will not… that will be not tricked out by a bacterial mutation.
+Remember, I talked about E. coli just now? So, this is how E. coli looks like. This is how it looks like in the lab. It, leads to this cloudy,
+This is a fresh medium, and this is medium after overnight incubation of E. coli cells. Turns very, very cloudy.
+Which means there's billions of E. coli in here.
+And on the plate, we see a bunch of E. coli colonies here. It would look like this.
+E. coli has its own phage, which I mentioned before. It's the MS2 phage.
+it looks like this, very simple, very easy, and when a phage enters an E. coli bacteria alone, it causes, just as I've discussed with the plaque assay, those plaques, so…
+Each plaque means that there was one phage that managed to infect one bacteria, and then it managed to spread to the surrounding bacterial cells, creating this plaque.
+So this is how the, MS2 phage looks like structurally.
+It has no tail, it has no legs, like the T4 phage that I showed at the very beginning.
+Its genome is a single-stranded RNA, so it's not DNA, it's RNA, and it's almost 10 times smaller than a T4 phage. It's very simple, it's only composed of a maturation protein, its genome.
+A capsid protein, and the lysis protein, which is not displayed here.
+And… but it is displayed here. So this is how the MS2 phage genome looks like. It's a single-stranded RNA, as I just mentioned.
+it's composed of just 4 genes. Just 4 genes make, and allow the phage to be created. So, we have a code protein, we have a replicase.
+We have a maturation protein, and we have the L protein, which overlaps, because the phage genome is most of the time very compact, so this is an alternative reading frame, which encodes for this protein, the lysis protein.
+Sorry.
+And, what does this L protein do? And how does MS2 phage work? So, in those, those circles here, this, this graph, shows the E. coli growth.
+just on its own. So, just on its own, E. coli grows, reaches eventually stationary phase, it grows at 37 degrees, and eventually it later then falls off, because you have saturated the media. So, this is how the growth looks for a healthy E. coli colony. But.
+If we get an MS2 phage, like in those… in the graph with the squares,
+the E. coli population quickly drops off.
+to zero. So this means the phage has killed off
+most of the E. coli. Like, very, very quickly, just after less than 60 minutes.
+However, if we get E. coli resistance, because the E. coli has, under pressure, selective pressure of the phage, developed a mutation that was helpful.
+The, the growth curve can be somehow recapitulated. See, this is the mutated… Is that right?
+This is the mutated E. coli, and with the MS2 phage, but the MS2 phage is not as effective as it used to be, due to E. coli resistance.
+So, the group project that I'm going to talk about
+Started off with us wanting to engineer the L protein.
+Because, as you might remember, it's dependent on the DNAJ chaperone of the bacterial host, and that DNAJ chaperone can mutate to not do the L protein folding anymore. And then this thing happens.
+And we want to bring it back. We want to make the phage, effective again.
+So, what can we do? We can try to create more lysis, like, express molysis protein, or make the phage express molysis protein. We can increase the lysis protein stability, so it's more likely to fold into its correct shape. We can increase toxicity. We can try to lessen resistance risk.
+And this is what we have tried to do in the last couple… in the last two years.
+And you can become a part of that.
+And if we manage to establish such an… a phage that is resistant against, or that precedes resistant mechanisms, and,
+precedes a resistant mechanism of bacteria, We might be able…
+to create FH therapy, also in combination, perhaps, with, different types of antibiotic treatments.
+Creating a favorable clinical outcome, and reducing the risk of resistance building, because we are attacking it with many things at once.
+So, the take-home messages.
+For this talk.
+Pages are pretty cool.
+Phages are viruses that infect bacteria.
+Bacteria can mutate the DNA to become resistant.
+Bacteria can be resistant against antibiotics and against phages, but it's hard to be resistant against both in a combined therapy.
+And scientists have tools to modify phages and make them more equipped to battle resistant bacteria, which is something that we are attempting also as How to Grow Almost Anything team.
+And, yep, this leads me to the end of this talk.
+Yeah, I think I've ended the screen share, right? Okay, cool.
+Yeah, so we are going to move on…
+Phew, it's a lot. We are going to move on to our next talk?
+Which is… Genetic Circuits by Johannes Stein. Johannes, are you here?
+TA, Johannes Stein
+02:01:15
+Yes, hi.
+TA, Dominika Wawrzyniak, Genspace
+02:01:16
+Okay, I'm stopping screen share.
+Yes, we are looking forward to your, presentation. The floor is yours.
+TA, Johannes Stein
+02:01:24
+Nice, thank you. Can everyone see my slides?
+Brief thumbs up, Dominika? Perfect, super. So, hi everyone. My name is Johannes. I'm a group leader at the Max Planck Institute for Molecular Genetics in Berlin. Just recently started my lab here, and I've been a postdoc for the
+four… roughly four years before that in the church lab, and I had the pleasure of already teaching this course last year, and I'm happy to briefly introduce you to the topic of genetic circuits.
+So, briefly, let's look at the agenda for today's talk. We'll cover what is a circuit, what really does it mean in biology, we'll look at some examples of genetic circuits that occur in nature, and a very famous example here called the luck operon.
+Then we'll look into synthetic genetic circuits and what the building blocks are that are available to build them, and also, briefly at the end, look into some applications in biotech medicine and agriculture.
+So, what really is a genetic circuit, and what is their importance for synthetic biology?
+if I am… when preparing this talk, let's say an overall general definition that we… that is really, kind of.
+Pointing it down is a circuit is a system that transforms inputs into outputs through connected functional components.
+And many of you will have come across the term circuit in the context of maybe more
+electrical engineering, which may at first seem quite far away from biology, but we will see throughout this presentation that actually it has many analogies. So let's start off with looking at this very simple form of an electric circle, which is a pair of batteries connected to a simple switch
+And a glow wire, or a lamp.
+So, no matter how complex it can be, all circuits are more or less… can be reduced to this scheme of input that is transformed into an output. In our case, the input is the light switch that is applied, and then
+And there's a pathway to perform a desired task. In our case, this is electrons flowing through the wire, heating it up, until the desired output is achieved, the light starts emitting, the light bulb starts emitting.
+And what is now the analogy to biology? Well, in each cell of our body, actually only a subset of all those 20,000 genes that are coding for a protein is active at any given time.
+Such that every different cell type, for example, brain cells or heart cells, liver or skin, they all need to know which of the genes to turn on and off to perform the dedicated tasks, and
+This is really governed by a massive network of genetic circuits.
+But before we head into biology, let's just briefly appreciate that in order to build circuits, one needs to understand and leverage the underlying mechanisms of their building blocks.
+And we know that the more building blocks one has at hand, the more complex and powerful of a technology we are able to build.
+As we just heard, cellular function is encoded by a massive network of genetic circuits, and this figure is from a paper on the hallmarks of cancer.
+I think it strikingly illustrates the complexity of such interconnected biological processes.
+And there are really, two main ways people have approached genetic circuits. One would be the systems biology way.
+Where system biology really summarizes approaches that look at circuits inside cells. So they try to extract what the underlying biological building blocks are and how they function, what might be the design principles that really nature has chosen for these circuits.
+And to answer this, scientists use integrated analyses of gene networks, of proteins, of metabolites, both at the level of cells, but also at the level of whole organisms.
+And you might have heard about these omics approaches, genomics, transcriptomics, or proteomics, that really refers to the study of all the genes, of all the proteins, of all the mRNA molecules.
+And this creates massive amounts of data and high throughput acquisitions.
+So this, as you can imagine, maybe understanding such complex pathways
+As, for example, in the case of cancer, is extremely important for developing new therapeutic strategies, and also new drugs to battle all sorts of disease at the most effective circuit step that you can find.
+And the second… Big topic is now synthetic biology, because with today's capabilities of genetic engineering.
+that you've just had a brief introduction to throughout the bootcamp. Synthetic biologists are now really in the position to come in as engineers to repurpose the known modules of genetic circuits.
+But they are not constrained only to the building blocks that nature has come up with, but with the advent of technologies such as protein design, which we will hear more about in this talk.
+We're actually now in the position to construct an entirely new component with novel applications. And this is why this arrow now points more towards into the cell. It designs synthetic genetic circuits that can be plugged in into living cells to both induce or modulate function.
+So let's move on and look at a very famous genetic circuit example, the luck operon in the bacteria E. coli.
+So the lacoparan refers to a set of genes that produce enzymes that govern lactose import and digestion to provide these bacteria with energy.
+And it consists of this promoter region, which is followed by an operator region, and then three protein-coding genes that code for, like Z, like Y and luck A, three proteins that
+That, govern this metabolic, pathway.
+So, Anath Therese and the others have already nicely introduced how transcription can turn a gene into RNA, which then gets translated into proteins, but since we are now coming towards the end, let's just briefly recap what we've learned already about this mechanism. So.
+RNA polymerase binds to the promoter region, and as it moves across the gene, into the gene body, it starts making mRNA, and these mRNA molecules then become translated to produce the proteins that are required for lactose digestion.
+And, so far, so good now. Let's look at the main energy source for E. coli. So the main energy source for E. coli is actually not lactose. It is glucose. And…
+This has led to E. coli evolve a smart mechanism that allows it to save the energy to make these proteins if they are actually not needed. For example, if lactose is not even present, or if sufficient glucose, its favorite food source, is available in the environment.
+This is achieved
+by a protein called the LUCK repressor, which can bind to this operator region, and then introduce this conformational change of the double-stranded DNA that prevents polymerase. It bumps into the repressor, so it prevents it to be… to these genes to be transcribed
+into mRNA.
+And this is how it looks. I find this a very fascinating and beautiful mechanism of how this repressor protein can bind and prevent these genes from becoming active.
+The…
+But how can the luck operon be activated in case it is needed? So, for example, if we need to now, or E. coli now needs to rely on lactose as an energy source, how can it become de-repressed?
+So if lactose is present, a lactose isomer called allolactose can bind to the repressor, which induces a conformational change to the repressor itself, causing it to unbind here from the operator region.
+And thereby enabling to transcribe… sorry, RNA polymerase to transcribe. So this is really the food source itself, which tells the bacteria to switch on and produce the proteins required for it to be consumed.
+But maybe some of you might now ask yourselves, what happens if, if both are present? So, right, there can be also the case that glucose and lactose are present, and glucose is E. coli's favorite food choice.
+So,
+E. coli has evolved a smart second mechanism to ensure that it is efficient in its energy management, and to focus on glucose whenever possible.
+So, this is how it looks. When glucose levels are low, two proteins, CM and CAP, bind to this capsite.
+And this helps, actually, polymerase to efficiently, very efficiently,
+translate these proteins such that more of the lactose can be consumed. However, if there's high glucose present, no CM is actually made and kept… cannot bind this
+the operon region, such that transcription only occurs at a very low level. This is really what we would call a genetic toggle switch, helping the cell, the bacteria to differentiate between those two mechanisms.
+And as you can imagine, deciphering such a mechanism was quite a leap in the history of science, and also in understanding how genes are regulated, and won Francois Jacu and Jacques Moneau the Nobel Prize in 1965.
+And it also has had a profound impact on synthetic biology, since understanding architectures such as the luck operon, combined with growing capabilities in rewriting and recoding DNA-inspired, inducible expression systems by enabling
+really precise temporal control when turning on and off a gene. Again, much in analogy with our initial example.
+So, before moving on, I'd like to briefly, only briefly, introduce another very popular class of genetic switches, which is the TED off and the TED-on system nets. So these I cannot cover in detail today, but you will encounter both of these systems repeatedly throughout this course, so it's important to just really
+Briefly recapitulate, or just cover what they are.
+They are both systems that rely on the small molecule called doxycycline, which many of you might have heard, that allows us to control transcription. And in the TED-off system, a gene is actively expressed in the absence of doxycycline, and adding it
+Adding doxycycline turns that gene off by repressing transcription, and in contrast, the teton system works in the opposite way.
+Initially, the gene is silent, and by adding doxycycline.
+And this switches transcription on, leading to active dream expression.
+Alright, and now with these two genetic components, or circuit components at hand.
+And we can combine these ideas in one of the most famous examples of a synthetic genetic circuit, the so-called repressilator, which was introduced by Ilovitz and Leibler in the year 2000.
+So the repressulator was one of the first
+Synthetic genetic circuits to demonstrate what's called oscillatory gene expression.
+It consists of three repressor proteins that inhibit each other in form of a closed loop
+In this implementation, the luck in…
+repressor inhibits TED-R, and TEDR inhibits the lambda repressor, and the lambda repressor itself feeds back again into inhibiting LUC-L.
+So each repressor shuts off the next one in the cycle.
+And their expression levels rise and fall sequentially over time. So if you follow this color code, yellow, blue, and red in this plot over time.
+You can clearly see each of those proteins peak in turn, then gets repressed as the next one comes up, and really no single protein ever stays at the maximum, but its abundance is always determined by the position in this oscillation cycle.
+And to read out this behavior experimentally, authors had a very cool idea to use a fluorescent protein called GFP, or green fluorescent protein.
+So GFP emits green light when excited with a laser, which makes it an ideal reporter for gene expression in living bacteria.
+And to look at GFP, they introduced a second plasmid to the cells.
+in which GFP expression gets repressed whenever TEDR is abundant, whenever we are basically here.
+And, so when TEDR levels are high, GFP is off, and when TEDR levels drop, GFP turns on again.
+And if this circuit truly oscillates, you would therefore expect that the fluorescence turns off and on periodically.
+And this is exactly what's happening. So in this video, on the paper, I'm showing you that you… that there are really individual bacteria where you… which exhibit oscillating fluorescence intensity over time.
+Thereby directly visualizing the dynamics of this synthetic genetic circuit in live cells.
+All right, so, coming towards the end of this presentation, let's just look at what, really, available billing blocks of kinetic circuits might be nowadays.
+And…
+We will start with, for example, input modules. These can, for instance, process and detect environmental cues, or cellular cues. This could be, what are the sensors? Proteins, RNA molecules that can detect or sense specific molecules.
+or environmental changes, such as pH, or temperature drops.
+There could also be receptors that sit in the membrane of living cells, or also sense changes in intracellular protein compositions.
+Or they are also promoters, which can be inducible or constitutive, also able to control the transcription of downstream genes.
+Then we have logic modules, which perform computational operations, such as maybe the electro… electro engineers among you, of course, know all of these, and or not NOR-based inputs.
+These could be transcriptional regulators, heard about them, right? Repressors so far. CRISPR-CAS system, which the earlier talks have already talked about. Could be protein-protein interactions, which could split proteins to perform logical operations
+And it also consists of design scaffolds.
+Then we have memory modules, which have the simple function of storing information.
+And we've heard about this. These could be genetic toggle switches. They flip between two stable states. Again, this refers to what we've seen already with LUCL or TEDR. They could be recombinase system.
+systems like the CRE-LOXP, which probably many of you will hear throughout this talk, CRISPR-based recorders, they write inputs into genomic DNA using the Cas enzymes.
+And then, there will be processing modules, which can either…
+modulate, such as amplify, delay signals within the circuit. This could be constructive feedback loops, positive, negative.
+synthetic transcription factors. These are proteins that can bind to DNA and modulate expression levels or RNA switches, riboswitches being a famous example here.
+And then we've seen already a famous output module, which generates a desired cellular response or a readout. We've just seen GFP being a very famous and neat tool here.
+But there could be also therapeutic outputs, expression of proteins for cell signaling, for instance, or something that induces apoptosis, which is cell death. So this is, of course, also an observable that you can see experimentally, or metabolic outputs.
+They're cells that produce small molecules or metabolites that you can easily detect.
+And then there are, for example, communication modules, where the function of these is that it should enable information transfer between cells or systems.
+famous things to maybe keep in mind would be quorum sensing systems, or molecules, again, that become excreted
+Which already brings me maybe to the last slide of this overview. Degradation modules control the decay or turnover of proteins, RNA, metabolites over time. These can be degron tags.
+or RNA destabilizing elements, these would then reduce, for example, protein abundance or RNA abundance, and also
+Enzymatic systems exist, which are pathways to degrade specific metabolites.
+And now I think this is one of the most exciting, advances of the field, and also super… will be super powerful, is already now, and will… will still continue to become even more powerful, is this field of de novo protein design, where we can
+Now, repurpose the known amino acids to really build new proteins that do not exist in nature and really equip cells with novel functions
+And really boost our ability to design ever more complex genetic circuits.
+Alright, so…
+In… let's just have one slide on industrial examples. So, in biotechnology, for example, genetic circuits can dynamically regulate metabolic pathways using feedback instead of constant overexpression. This allows us to use cells to maximize production.
+While avoiding toxic intermediates, for example.
+Then in gene therapy, circuits can be combined to multiple, or to… can be used to combine multiple molecular signals. These could be genetic variants or tissue-specific cues to activate
+Therapeutic genes only in the correct cells where you want them to become active.
+Then, for example, in the microbiome, engineered bacteria can act as controllers.
+For example, they could sense when the pH in stomach changes, or they can actively stabilize it, while they could also include built-in safety switches to prevent activity outside of the specific target organ.
+And finally, also, a very cool example would be smart plants, which could… where genetic circuits are used to activate trades only when they are needed. For instance, in response to severe weather conditions, to drought, temperature.
+Or at the developmental stage, reducing unnecessary metabolic burdens and environmental exposure.
+And across all these examples, the core idea is always the same. Genetic circuits enable context-dependent decision-making inside living cells, or living systems.
+So, this brings me already to my key takeaway slides. So, what can you take away from this genetic circuits overview talk? Gene regulation can be understood as information processing via genetic circuits.
+We've looked at, the luck operon as a famous natural genetic circuit, inspired, and which inspired now also the design of synthetic ones.
+And the molecular components of genetic circuits can be recombined to engineer new circuits.
+And really, synthetic genetic circuits now allow programmable modular control of cell behavior with application potential across
+incredibly diverse areas. Agriculture, biotechnology, biomedicine, therapeutics, and so on.
+So, with this.
+I'm at the end of my presentation. I'd like to thank you for your attention. I wish you a lot of fun. All the best throughout this course, and I look forward to seeing some of you around. So, thanks a lot.
+TA, Dominika Wawrzyniak, Genspace
+02:24:05
+All right, thank you so much, Johannes, for this amazing, interesting talk. We are going to move on to ice.
+Are you on here?
+TA, Cholpisit Ice Kiattisewee, MIT, Cambridge
+02:24:21
+I'm here, can you hear me?
+TA, Dominika Wawrzyniak, Genspace
+02:24:23
+Yes, we can hear you. How about you share your screen and start?
+TA, Cholpisit Ice Kiattisewee, MIT, Cambridge
+02:24:27
+Let's see…
+TA, Dominika Wawrzyniak, Genspace
+02:24:29
+Thank you.
+TA, Cholpisit Ice Kiattisewee, MIT, Cambridge
+02:24:31
+Screen. Screen.
+Team…
+Do you see my screen pop up?
+TA, Dominika Wawrzyniak, Genspace
+02:24:51
+Yes.
+All is well.
+TA, Cholpisit Ice Kiattisewee, MIT, Cambridge
+02:24:53
+Alright.
+Alright, so I hope it works okay, but if the animation looks a little bit weird, I'm sorry about that. I'll fix it, if it needs to. The screen resolution seems to change a bit. Hi everyone, my name is Ice.
+the name is hard to pronounce, it's Thai names, so just ignore it, and, just call me ICE, and you'll see me, through the course as part of the TA team. So…
+The talk I would like to share with you guys here is to work around the colored proteins, so that we can use it for some of the bioart application that we're gonna have here in this year of How to Grow Almost Anything course.
+What I show you in the
+in the title slide here is how to turn some of the colored protein into some kind of art. So you can see that this strawberry is going to be pretty hard to draw on if you have only one color. But in the case where you have multiple colors, in the multiple shades.
+is possible to turn it into this kind of beautiful artwork. So, before we go into, the deeper story about how we make these kind of artwork, I wanted to share you, to you on how these works can be
+you know, can be worked around, using the basics of biochemistry and some of the genetic engineering we've had. So this can be connected to a lot of works, that people have been talking today.
+So… To get started, I hope this slide goes well.
+Yeah, I want to show you first, you know, how these colors in nature sort of form, so this is, you know, some images that I got when you just tried to search around the colors in nature. You can see that, you know, a lot of colors were already available in nature, and most of these colors were formed for different purposes. So you can see that the chase of yellow and the chase of red were kind of different, and you see all
+A lot of these different trades as we move forward through the course as well.
+So, if you go a little bit deeper, you know.
+For some of you who live in the geographics where you can have different seasons, you see these kind of different shades in the autumn or in the fall, and they are composed of different kind of pigments.
+So, how do these pigments form, and how do the nature sort of control how these were made its dependence on different kind of, you know, biomolecular compounds, or the structure by itself?
+So, I just want to clarify here that most of the… most of the things that you've seen on the left-hand side on these, you know, different shades of leaves, of autumn leaves, were based on the compound itself.
+But if you go to some kind of, you know, colorful, vibrant colors on the right-hand side, it's actually from the structure itself.
+So these are not compounds. It was, like, the butterfly or the bears were having, like, some critical structure in their,
+in the feathers or in the wings, so that they can behave similar to how you can see these bubbles here. And, you know, you can program them pretty easily, if it's a compound, but it's gonna be a lot harder if you have to make these microstructures so that it can reflect the lights.
+So, in this right-hand side is the process called iridescence, and we're not going to go too far on that one, I just want to make sure that there's some colors that may not be as easy for us to modify or program in biology. We're not going to go too far on that, but these are some examples of the bacteria that can
+be engineered, so that they can have these kind of colors, similar to how the birds or the butterfly can have as well.
+Now that we show you that, we're gonna move forward to the one that was, like, a lot simpler to work on, on the left-hand side.
+So…
+These pigments, that can give you different colors in nature, compose of different kind of structures. So, this porphyrin is one of the most abundant colored molecules.
+in the, in the nature. The reason of that is because these puffering core, when they're bound to different,
+different metal ions. They can get… give you this kind of, chlorophyll or green-like leaves color, or they can give you this kind of bloody, kind of molecule in hemoglobin. This is a picture from, you know, the food that they had in Thailand, in my home country, where it's, you know, a kind of bloody LARP, that people like to eat.
+I wouldn't recommend it.
+Eating it if you're not used to it, because it's pretty unique and it's very spicy.
+There are some other, you know, compounds, for example, melanins, that was, like, the main compounds, there was, the pigments in our skin, or the animal fur.
+And also these kind of anthocyanins compounds that are found in wines or in grapes. So, you see that there are some common structures or common key things in these molecules. If you don't have chemistry background, that's fine. I just want to show you that there are a lot of these double bonds where you can have these, kind of, like, underlined, line in this chemical structure. These are one of the main reasons that these compounds has the
+Color at all, because it can function in the physical properties, so they can give you distinct color.
+So, there are also a lot of other compounds in the nature, for example, this carotenoids compound that were found in both animal and fruits and vegetables, that I want to emphasize that, like, these other compounds are pretty simple.
+And, like, will be, repurposed in a lot of natural systems, such as the vitamin that was, was the key compound that, benefits our,
+you know, our diet, so you will be, you know, informed, since you were a kid, that you should eat a lot of these colored, vegetables, because they are something that is useful for you. They're, like, important vitamins, so that you can turn into a very functional and important compounds later on.
+The group of compounds that I want to show you, and turn us toward the colored protein is this group of spatial compounds, where it's composed of just a few amino acids, and it was found a lot in the coral.
+And also, like, you know, that organism that was related to the coral. So, in this case, it's very unique because, this kind of compound is actually composed in the protein, and the protein will just form this kind of
+Core structure, so that it gives you this kind of vibrant color, instead of these, you know.
+uniquely different biopigments found in the wild. So, why do we care about these, you know, spatial coral protein or coral pigments? It's because if you try to engineer these processes.
+if you're trying to make these carotenoids, for example, the acacentine, the red compound that was found in shrimp, and also, like, it was eaten by, you know, flamingo, and then they have this pink color, it was composed of a lot of, like, complex metabolic pathway in order to make these biopigments.
+if we are… if we were to make these compounds in E. coli, for example, you have to introduce a lot of the genes. So if you count all the way here, it's like CRT, E, B, L, Y, Z, and W. That's more than 5 genes that you have to work around in order to make E. coli color. But if you use this compound.
+this compound, this protein called MUCP that came from this Aquaporama pora, from this stony coral, it can actually give you these colorful, blue and purple, shade of protein, so that you can just have to engulf just one protein to give the… to get this color.
+So that's why in our process, if we were to use this for the bioart, it's a lot easier to just use one or a few protein encoding sequence, so that we can make these kind of colors for the bioart applications further downstream.
+So,
+Knowing this, I want to go into a little bit of physics. I'll go very fast, but, like, if you're interested, you know, we can chat further. The way that we work around this color is dependent on the physics itself, right? You see the leaf that is green, it doesn't mean that the leaf was making the green color, it was the way that our eyes perceive this greenness. So you see this kind of, like, absorption or the reflectance spectrum, you see that
+you know, the leaf is actually absorbing the blue and the red color, and then it just left the green and yellow part to be reflected to our eyes. So most of the leaves will appear, you know, green or yellow, most of them.
+And that's based on this core structure of the chlorophyll that has the magnesium compound inside the core chlorophyll structure.
+If we were to go for some other different process that is not just absorption of color, the simplest one is gonna be the fluorescent or phosphorescent compound, where it's just, like, you know, take the energy in the form of light, and then store it, and also
+emitted back. So, if you… if you know when,
+In your house, if you have some of these kind of, like, phosphorescent or fluorescent stars on the… on your ceiling, these are one of the processes where the light was absorbed and stored and then emitted to you later.
+So, you know, there are a lot of, like, processes around here. I just added as a note. I don't want to go too far, in the talk here, but I wanted to introduce you to this kind of.
+luminescence and fluorescence that was occurring in the nature. So, if you go to the ocean, you see a lot of things that was emitting the light in the nighttime.
+And there are some processes that were required for these jellyfish or mushrooms, so that they can emit and lure some of the
+you know, some of the smaller organisms that they can interact with. The first time that the fluorescence was discovered was by studying these jellyfish, where it was found to be bioluminescence. Luminescence is, you know, the way that you just turn the
+the chemical energy into light, and this is similar to, like, how you turn the light bulb on using electricity and turn it into light. But fluorescent is a different process. For fluorescent, you turn… you shine the light in, and they store the light, and…
+also, emit the light back in another form. So, this is light turning to light, you know. On the left-hand side is a Jabonski diagram, where it was, like, the way it was… the physics was involved in this process. Let's, you know, skip that a little bit, but, you know,
+It's actually… the color was relying on the process in which it absorbed and reflect, emit the actual energy in the form of light.
+So, the GFP is actually the first protein that was found on the edge of these jellyfish. So, they study about it, and they found that even though all these jellyfish cells can give these burial medicines, there are some of the cells on the edge that can give these fluorescent processes. They can give this fluorescent signal upon they were collecting the light, and just emit the light afterward.
+So this AVGFP, you know, was studied and can be used in a lot of processes, in a lot of biological study downstream, and it was give… it was awarded the Nobel Prize in Chemistry in 2008. You know, Zamu Shinomura was the one who discovered the GFP, Martin Chaffee was the one who used it in a lot of biological study, and Roger Xian is the one who engineered these proteins to have very different and broad colors
+So that we can use downstream in the biological study and also in the bioart that we are going to use in this project.
+So this is an example of how you can turn these, you know, artistic
+fluorescent protein to draw these, you know, La Jolla Beach, that was given in the noble talk from Roja Xian.
+And the reason that we are coming back to this kind of process is because, like, it's a lot easier and more modular these days to work around the DNA synthesis and DNA engineering so that we can make and, you know, remake these processes much easier in a very, fun way as well. You see that at the end.
+So, the way the Greens4% protein works is by having this core structure, similar to what I showed in the earlier slide, and it's going to be in the middle of this better barrel-like protein, so it looks like a barrel, right? You know, if you see, you know, how the beer making or winemaking were made, you know, this looks like the barrel that was used to incubate those things.
+And this molecular, chromophore is gonna be buried inside this beta-barrel-like protein.
+So, the way that this compound was made is by having these three different amino acid side chains, where they do the process called autocatalysis. So they actually undergo the chemical reaction between these, you know, core amino acids, and just turn into this core chromophore that can give you the fluorescent color.
+like, you know, something similar to my shirt right here.
+So, you know, this is the more, you know,
+like, chemical reaction mechanism, I like this process, and I want to give it here for those who like chemistry, but, you know, the only thing I want you to take away is that, this chemical structure is inside, you know, the beta barrel. It was protected, from the other molecule that may take the energy away in the other form instead of the light, so this
+to force this fluorescent protein to give away the energy in the form of light, rather than, you know, the other interaction, like heat or the transfer by just, you know, hitting each other or something like that.
+And the other important thing that I want to emphasize here is that most of the process to make this chromophore require oxygen as another core molecule to interact. So that gives you another hint that, like, if you're trying to work in the system where it doesn't have oxygen, this percent protein was a lot harder to work with, because it doesn't have oxygen to oxidize themselves into this active form.
+Active chromocor form.
+So, you know, when people do engineer these fluorescent proteins, most of the time, it was engineered in multiple ways. The easiest approach to engineer these fluorescent proteins, chromoproteins, is to change the way the color works. So what you can see on the left-hand side here is the different fluorescent proteins.
+where they can take the light, and it is under, you know, black light or UV light, they can just turn itself into these different, you know, cyan, green, yellow, and red frosted proteins.
+And there are also these forms of proteins that are colored, but doesn't have the fluorescent. So, not fluorescent, it means that it has color, but, you know, when it's supposed to shine, it doesn't return the light. So we call these chromoproteins instead of fluorescent proteins. And they have different properties, right? Sometimes you want the light to come back, and sometimes you don't want it, and the way that they behave are also different, so that's why
+You know, we're gonna include the chromoproteins in our study as well.
+This is the way the Chromebook 14 sort of, like, you know, showed the structure, and these are four.
+different chromoproteins that were aligned with each other. You can see that they're very similar, and they're also very similar to how the fluorescent protein that was discovered. Interestingly, these chromoproteins were discovered way later
+than the fluorescent protein, partly because the method that was used to study the genetics of these compounds or these proteins were very uniquely different, and it was assumed that all these are just frozen proteins, but the group of
+Chrome proteins that doesn't first, and just was found, like, later in the… in the scientific process.
+So, again, you know, these are the difference at the core, you know, chromophore of this chromoprotein. They give you different colors because they have difference, in this chemical structure inside. Again, no need to dig deeper, but what I want to show here is that they're kind of different.
+It might be difficult for you to look further on what the difference
+is, but, you know, if you look at the far right here, this is the S-sulfur right here, and this one is, like, you know, oxygen and nitrogen in states, so those are the key differences that change the way the light will absorb and give them, you know, a very uniquely different color at the end.
+In terms of engineering, you know, most of the time, these core compounds were used, or were targeted as an engineering process, so that you can turn the different fluorescent protein into a different color. So if you start with a green color, you can actually make
+you know, some blue or orange or red, colors from these kind of core structures, so it's gonna have the core, beta barrel-like structure, but at the end of the day, they would give you a different,
+color output. So, this is, you know, some examples you can see here. You can also read some papers that was attached here to see further, how it was approached, to make these core different, chromo 4 engineering.
+Another note around the engineering of the fluorescent proteins is that you can also engineer the same colored protein to have different properties. And most of the time, when scientists were trying to study this fluorescent proteins, they're trying to make them brighter and also more stable.
+So that's another thing that I want to emphasize here, you know, since the 2025, there are also this paper that make this new image chart to use, MJ Juniper and other things.
+that are way brighter than the previous version proteins. So these are the processes still ongoing, and I'm not entirely sure, you know, when the engineering campaign will end, but we have a lot of things that were already good to begin with, but we are also trying to make it much better and much appropriate for different usage, in our, you know, workforce. And to be honest, you know, if you were to work with this version protein at the end.
+They are very bright compared to the original frozen proteins, you know, per protein.
+The chromoprotein engineering can also follow the same route, where you can do a lot of engineering at the core chromophore, and generate these distinct colors at the end of the day.
+We also have, like, several groups of chromoproteins in our collection, so that we can use them as, you know, one of the cool approach to do the drawing that we wanted to do at the end.
+And finally, there's some other engineering around, you know, different properties, like, this is the figure from the paper, they're trying to engineer this protein for lace oligomerizability. So they engineered these monomeric
+red fluorescent protein to have different color, instead of using these native fluorescent pro… sorry, native chromoprotein that tends to make inclusion bodies, or tends to make, you know, a flocculation of them together. And most of the time, this kind of, like, big chunk of protein inside the cells is not that healthy for the bacteria.
+So…
+There are also some other approaches by trying to make the dimer a sort of tandem dimer, so that, you know, if you turn them into a dimer already, it's less likely to form a dimer with the other fluorescent protein, something like that.
+You know, in our How to Grow Almost Anything team, in the, you know, in the past.
+Summer, and also, like, after the end of the previous class, we acquired a lot of these frozen proteins that was already available in the database, and tried to turn these into these kind of beautiful drawings.
+When we found the starting point of this process, we tried to push further, and thanks to a lot of our team members, we are trying to mix the colors, and also trying to
+tune the colors for the different properties as well. So this is gonna be the projects that we are gonna try to work around by trying to use the diverse colors that we have already, gathered in our process.
+to make a much more beautiful artwork in the end. So these are, you know, some…
+examples of the artwork that was already made by our team, and, you know, you can make a lot of the different colorful artworks using the process, but you can also just, you know, try to do it by your hands, that was possible, but if you have the machine.
+that was able to dot, these proteins very… these, you know, E. coli or bacteria very efficiently, you can have a very different and, you know.
+very fine-tune dotedWorks at the end. So, if you're interested, you know, this is the website that Ronan has made, and you can also upload some pictures so that you can turn Reddit into this kind of dot art, and they will just
+return the file so that the… this kind of artwork can be used to plot in, you know, in our cloud lab. It was… was under collaboration with Gingo Bioworks, right away. So, I think you… you guys, you know, should be able to try this process really…
+you know, very readily on the website, and if there is any, you know, interest in trying to use this further in some kind of different, bio art, I think it would be a great starting point for all of us to explore further with this year of how to grow almost anything. I think that's the end of my presentation, and thanks, everyone, for…
+You know, for your interest in this process.
+And glad we can make a lot of cool artwork this year.
+TA, Dominika Wawrzyniak, Genspace
+02:47:19
+All right, thanks so much, Ice, for this amazing and very visually pleasing talk. Yeah, guys, so we have reached the last talk of the day. I am going to just check if our last speaker's here… Derek, are you here?
+TA, Derek Jacoby, Victoria, Canada
+02:47:37
+Yep, sure am.
+TA, Dominika Wawrzyniak, Genspace
+02:47:39
+Cool, yeah! So Derek is going to introduce you guys into a very important communication platform, so please stay on. We might go a little bit over time, but it's going to be so important that you want to stay on. So yeah, Derek, the floor is yours.
+TA, Derek Jacoby, Victoria, Canada
+02:47:55
+Great, thanks so much. And I don't think we'll go over time. What I have to say here is actually fairly short and sweet. So we're trying a new communication platform today. In past years, we've used Slack, but the class has gotten big enough and out of hand enough that it's not proven the best communication modality. Slack is very good for kind of fast, transient messages, but not for building on knowledge year after year and in categories
+in the way that, it, happens in this class. I'm going to share my screen for just a moment here.
+And, should see a login for a test user that I created onto our Discourse account last night. So you should have all gotten an invite to Discourse. I know a bunch of you have, because I've been seeing the introduction emails flow in, and man, it's awesome seeing everybody give their intro here. I'm really enjoying the background everybody has.
+Yeah, yeah, course, and kind of the ideas and interests that they're bringing to it. It's going to be a really, really neat year. I'm looking forward to discourse as being one of the central points of that, though, and it's your primary place that you can go ask questions, that you can engage with your other students, outside of class times.
+During class times, of course, the chat and the Zoom sessions is a wonderful way to engage everybody, and I like our side conversation chats just as well as I do the presentations at some point. People bring such neat ideas to this. But afterwards, you need a place to go.
+And so I'm going to encourage everybody to come in here to Discourse, and when you log in, you'll see a view that just shows the latest threads, but then you can also go into categories. Oops.
+And categories will evolve over the course. So right now, you just see General and Boot Camp, but as we start to have classes in the course, you'll see a category emerge for each of the classes, and that will allow us to break things down topically into those classes.
+And so I've urged you first to come in and just add your information to general and post in the student introductions categories. Feel free to browse some of the TA introductions, although most of them didn't do quite as good a job as you all did as the students of saying who they are and where they're from. They're more just, hi, I'm this person. And so, really do follow some of the interests of the other students and describe yourself.
+The other place you can describe yourself just a little bit in here, I'm gonna drop down to, and sorry, I've got some Zoom stuff in front of me,
+To preferences, I drop down my icon, and in Preferences.
+You can do a couple of things that'll really help people learn who you are.
+The first is change your picture. Just put something there that represents you a little bit more than a big number 2. It doesn't have to be your face. If it is, that's great. It can be your picture, but also just something unique and identifying.
+Welcome to change your name if we didn't get that quite right in the introduction, or how you want to be addressed. You can also add a little bit about yourself, and where you're from, and in your website, particularly for committed listeners.
+You might list your website for how to grow almost anything. We'll talk a bit more about that global listener, committed listener split as we get into the course itself, if that hasn't been mentioned yet.
+So those are the basic customization places that I would like to point you to.
+The next thing that I would like to point out, that some people have been using a bit already, is the chat feature in Discourse.
+And so you see that there's this everyone channel, and people are doing some introductions in everyone, and that's just fine, but things that are printed in the chat portion here generally don't have the persistence of things that appear in the main categories.
+If they appear here in the main category, somebody can search for you if they, if you later make a comment and they want to see your introduction. If you post it in the chat, it's going to go away fairly quickly and never be seen again.
+So if you want something to be persistent, I would encourage you to include it in one of the general posting categories. If you want something to really just be transient and there for a minute and gone for a minute.
+Probably the chat is the better place to do it.
+You might also notice in chat that you can directly message anybody else that you talk to in a category. And so, it is worth, if you have a follow-up on somebody's question, that might be, you know, something not of interest to everybody, but you just want to say, oh, my dog had that condition, and you know how to fix it if they've posted something that's relevant, take that to a chat forum. If it's of interest to everybody, and you think that it might be
+things other people will jump into, by all means, put it in the forum. I want the main forum postings to be where most of the active discussion is, and people will jump on and really kind of extend the discussion. Y'all have such neat backgrounds that it's going to lead to some really neat extensions to the topics that we talk about in the course.
+So I think that's actually most of the brief intro that I had here. As I said, it was going to be a really quick, short one, and want to get us finished on time here, but if you have any problems with the forum, I'll just close off that you're welcome to ask me on the forum, of course. The other TAs will also be on the forum.
+But if those problems are about getting access to the forum.
+Please send me an email, and my email came out to you in the email that you got with your forum credentials. If you didn't get that email, ask here in chat, or you send a reply to your course introduction email, reply all, ideally, because then the TAs will get it, and we'll get you onto the forum.
+There may be just a few of you that joined the course just in the last day or so that haven't been added yet, and you'll be added later today.
+I think that's all you've got from me. Thank you so much.
+TA, Dominika Wawrzyniak, Genspace
+02:53:49
+All right, thank you so much, Derek, for this introduction.
+To the Discord server. So, I think this might be marking the end of the day.
+Number one, after how to grow almost anything, buy a bootcamp.
+And, I want to thank all of the speakers for the amazing talks that were given today. I think it was super exciting.
+And I hope you guys feel the excitement of synthetic biology as much as we feel it. And, just some information.
+In the last minutes. So, the next Buyer Bootcamp days are going to be on Wednesday, the 21st, and Friday the 23rd, starting from 9am Eastern Standard Time. So, please don't forget to tune in. All of these days include very important and very critical information for you that might be very helpful in, succeeding in this course.
+And another thing, tomorrow.
+at, 6am and 8 a.m. EST, very early for the people here at the East Coast and, here in the US in general, but perhaps very comfortable for the rest of the world, we are going to have our first office hour.
+It's going to be an opportunity for you to ask any kind of question that you didn't get an answer to today, so please tune in.
+Resume autoscrolling

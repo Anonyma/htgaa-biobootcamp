@@ -112,7 +112,7 @@ function initSeqCompare(container) {
     const textColor = isDark ? '#94a3b8' : '#64748b';
 
     const svg = d3.select(chartEl).append('svg')
-      .attr('width', w).attr('height', h);
+      .attr('width', w).attr('height', h).attr('viewBox', `0 0 ${w} ${h}`).style('max-width', '100%');
 
     const numAxes = metrics.length;
     const angleSlice = (2 * Math.PI) / numAxes;
@@ -190,9 +190,13 @@ function initSeqCompare(container) {
     const isDark = document.documentElement.classList.contains('dark');
     const textColor = isDark ? '#94a3b8' : '#64748b';
 
+    const totalW = w + margin.left + margin.right;
+    const totalH = h + margin.top + margin.bottom;
     const svg = d3.select(chartEl).append('svg')
-      .attr('width', w + margin.left + margin.right)
-      .attr('height', h + margin.top + margin.bottom)
+      .attr('width', totalW)
+      .attr('height', totalH)
+      .attr('viewBox', `0 0 ${totalW} ${totalH}`)
+      .style('max-width', '100%')
       .append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
     const active = platforms.filter(p => activePlatforms.has(p.name));

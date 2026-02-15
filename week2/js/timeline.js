@@ -77,11 +77,19 @@ function drawTimeline(container, events, categories) {
   const isDark = document.documentElement.classList.contains('dark');
   const margin = { top: 30, right: 40, bottom: 30, left: 40 };
   const totalWidth = Math.max(container.clientWidth, events.length * 60 + margin.left + margin.right);
-  const height = 400 - margin.top - margin.bottom;
+  const totalHeight = 400;
+  const height = totalHeight - margin.top - margin.bottom;
 
-  const svg = d3.select(container).append('svg')
+  // Wrap in a scrollable container if timeline is wider than its parent
+  const wrapper = d3.select(container).append('div')
+    .style('overflow-x', 'auto')
+    .style('max-width', '100%');
+
+  const svg = wrapper.append('svg')
     .attr('width', totalWidth)
-    .attr('height', height + margin.top + margin.bottom)
+    .attr('height', totalHeight)
+    .attr('viewBox', `0 0 ${totalWidth} ${totalHeight}`)
+    .style('min-width', `${totalWidth}px`)
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 

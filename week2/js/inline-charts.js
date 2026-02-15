@@ -90,7 +90,7 @@ function renderPlatformRadar(el) {
     const numAxes = metrics.length;
     const angleSlice = (2 * Math.PI) / numAxes;
 
-    const svg = d3.select(chartArea).append('svg').attr('width', w).attr('height', h);
+    const svg = d3.select(chartArea).append('svg').attr('width', w).attr('height', h).attr('viewBox', `0 0 ${w} ${h}`).style('max-width', '100%');
 
     // Grid
     [2, 4, 6, 8, 10].forEach(level => {

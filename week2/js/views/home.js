@@ -34,8 +34,8 @@ function createHomeView() {
                 </div>
               </div>
               <div class="flex flex-col items-center">
-                <div class="relative w-28 h-28">
-                  <svg class="progress-ring w-28 h-28 -rotate-90" viewBox="0 0 100 100">
+                <div class="relative w-28 h-28" style="width:112px;height:112px">
+                  <svg class="progress-ring w-28 h-28 -rotate-90" viewBox="0 0 100 100" style="width:112px;height:112px">
                     <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
                     <circle id="hero-progress-circle" cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="8"
                             stroke-dasharray="264" stroke-dashoffset="${264 - (overallPct / 100) * 264}" stroke-linecap="round"
@@ -1808,8 +1808,8 @@ function renderStatsDashboard(progress) {
         const masteryGradient = avgMastery >= 80 ? 'from-green-500 to-emerald-500' : avgMastery >= 60 ? 'from-blue-500 to-indigo-500' : avgMastery >= 40 ? 'from-amber-500 to-orange-500' : 'from-slate-400 to-slate-500';
         return `
         <div class="mt-4 bg-gradient-to-r ${masteryGradient} rounded-xl p-4 text-white flex items-center gap-4">
-          <div class="relative w-16 h-16 flex-shrink-0">
-            <svg class="w-16 h-16 -rotate-90" viewBox="0 0 100 100">
+          <div class="relative w-16 h-16 flex-shrink-0" style="width:64px;height:64px">
+            <svg class="w-16 h-16 -rotate-90" viewBox="0 0 100 100" style="width:64px;height:64px">
               <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="8"/>
               <circle cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="8" stroke-linecap="round"
                 stroke-dasharray="264" stroke-dashoffset="${264 - (avgMastery / 100) * 264}"/>

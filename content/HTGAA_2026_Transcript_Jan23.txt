@@ -1,0 +1,28 @@
+HTGAA 2026 - Zoom Recording (Jan 23, 2026)
+Title: HTGAA 2026 - Shared screen with speaker view
+Date: Jan 23, 2026 08:20 AM
+Duration: 2:51:27
+
+TRANSCRIPT:
+
+So, um, in the next section, uh, we're gonna keep it practical and beginner-friendly. We'll walk through, um, the fundamentals.
+
+You're gonna need to work with DNA in an editor, and BenchLing is one of the best platforms for doing just that. So, super useful for everything in this course. And then, finally, we're gonna finish off with HGA infrastructure with Greg, so he's gonna give us a quick demo of some of the new infrastructure we're gonna be using.
+
+It might feel a little bit jumpy, but if you feel, get lost, no worries. I just, you know, share the links to you, so you can always catch up. And whenever you see a demo on the bottom right of a slide, that's our cue to switch over.
+
+Also, I like, you know, to put in some memes on my slides, so if you ever see an arrow, you know, like this.
+
+So, this is, it's called, expected and indented error, indented block. This is just Python saying, hey, your spacing is off, which is a super common error.
+
+Just wanna let you know, like, debugging plays a big part in coding. Everyone does it all the time, so we'll go over it together to make it feel way less scary.
+
+Alright, let's get started.
+
+Also, lab data is messy. Files can be huge, the format is weird, and sometimes the data is sensitive and shouldn't be uploaded.
+
+And on top of that, you also need, like, very specific, processing steps, like filtering out, like, bad wheels, normalizing by control, and summarize and replicate. That's exactly, exactly the kind of work Python is perfect for.
+
+So, in today's section, we're gonna keep it practical and beginner-friendly. We'll walk through, the fundamentals, not as computer science theory, but as tools for handling real data.
+
+The goal is, by the end, you will understand what the code, is doing, you'll be able to read it, debug it, like, debug the common errors, and hopefully see, how Python can become a useful extension of your current workflow.

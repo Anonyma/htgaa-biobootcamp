@@ -97,7 +97,7 @@ class App {
       </nav>
 
       <!-- Search Modal -->
-      <div id="search-modal" class="fixed inset-0 z-[100] hidden">
+      <div id="search-modal" class="fixed inset-0 z-[100] hidden" style="display:none">
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" id="search-backdrop"></div>
         <div class="relative max-w-2xl mx-auto mt-20 px-4">
           <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
@@ -118,8 +118,8 @@ class App {
           <div class="p-4">
             <!-- Progress -->
             <div class="mb-6 text-center">
-              <div class="relative w-16 h-16 mx-auto mb-2">
-                <svg class="w-16 h-16 -rotate-90" viewBox="0 0 100 100">
+              <div class="relative w-16 h-16 mx-auto mb-2" style="width:64px;height:64px">
+                <svg class="w-16 h-16 -rotate-90" viewBox="0 0 100 100" style="width:64px;height:64px">
                   <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="8" class="text-slate-200 dark:text-slate-700"/>
                   <circle id="sidebar-progress-ring" cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="8"
                           stroke-dasharray="264" stroke-dashoffset="264" stroke-linecap="round"

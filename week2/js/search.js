@@ -324,6 +324,7 @@ class SearchUI {
   open() {
     this._ensureIndex();
     this.modal.classList.remove('hidden');
+    this.modal.style.display = 'block';
     this.input.value = '';
     this.input.focus();
     this.resultsEl.innerHTML = this._emptyStateHtml();
@@ -334,6 +335,7 @@ class SearchUI {
 
   close() {
     this.modal.classList.add('hidden');
+    this.modal.style.display = 'none';
     this.input.value = '';
     this.selectedIdx = -1;
     this.results = [];
