@@ -1693,6 +1693,9 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v121', items: ['Study session planner', 'Time-based personalized plans', '10/25/45/90 min options'] },
+    { ver: 'v120', items: ['Mistake review view', 'Cross-topic wrong answers', 'Correct answer explanations'] },
+    { ver: 'v119', items: ['Learning journey timeline', 'Achievement badges (10 types)', 'Daily digest view'] },
     { ver: 'v118', items: ['Session recap card', 'Suggested next steps', 'Surprise Me random topic'] },
     { ver: 'v117', items: ['Bookmarks aggregation view', 'Pomodoro timer upgrade', 'Weak points analysis'] },
     { ver: 'v116', items: ['Learning reflection card', 'Teach It Back prompts', 'Confidence self-check'] },
