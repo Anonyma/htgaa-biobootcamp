@@ -239,7 +239,7 @@ function createFlashcardsView() {
           <div class="mb-6">
             <div class="flex items-center justify-between text-xs text-slate-500 mb-2">
               <span>Session Progress</span>
-              <span id="fc-progress-text">0 / ${dueCards.length}</span>
+              <span id="fc-progress-text">0 / ${dueCards.length} · ~${Math.ceil(dueCards.length * 0.5)} min</span>
             </div>
             <div class="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
               <div id="fc-progress-bar" class="h-full bg-gradient-to-r from-violet-500 to-blue-500 transition-all duration-300" style="width: 0%"></div>
@@ -449,7 +449,9 @@ function createFlashcardsView() {
         if (progressBar && progressText) {
           const progress = (sessionStats.reviewed / dueCards.length) * 100;
           progressBar.style.width = `${progress}%`;
-          progressText.textContent = `${sessionStats.reviewed} / ${dueCards.length}`;
+          const remaining = dueCards.length - sessionStats.reviewed;
+          const estMin = remaining > 0 ? ` · ~${Math.ceil(remaining * 0.5)} min` : '';
+          progressText.textContent = `${sessionStats.reviewed} / ${dueCards.length}${estMin}`;
         }
 
         // Update stats cards

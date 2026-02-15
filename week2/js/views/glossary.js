@@ -168,7 +168,10 @@ function createGlossaryView() {
                           ${fcBadge ? `<span class="ml-1.5 align-middle">${fcBadge}</span>` : ''}
                           <p class="text-slate-500 dark:text-slate-400 mt-0.5">${t.definition}</p>
                         </div>
-                        <a data-route="#/topic/${t.topicId}" class="flex-shrink-0 text-xs px-2 py-1 rounded-full bg-${t.topicColor}-100 dark:bg-${t.topicColor}-900/30 text-${t.topicColor}-600 dark:text-${t.topicColor}-400 cursor-pointer hover:underline whitespace-nowrap">${t.topicTitle}</a>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                          <span class="text-[9px] text-slate-300 dark:text-slate-600" title="${t.definition.split(/\s+/).length} words">${t.definition.split(/\s+/).length}w</span>
+                          <a data-route="#/topic/${t.topicId}" class="text-xs px-2 py-1 rounded-full bg-${t.topicColor}-100 dark:bg-${t.topicColor}-900/30 text-${t.topicColor}-600 dark:text-${t.topicColor}-400 cursor-pointer hover:underline whitespace-nowrap">${t.topicTitle}</a>
+                        </div>
                       </div>
                     </div>`;
                   }).join('')}

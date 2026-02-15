@@ -967,6 +967,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v75', items: ['Exam confidence labels on review', 'Flashcard session time estimate', 'Glossary word count badges'] },
     { ver: 'v74', items: ['Exam difficulty distribution', 'Flashcard topic completion %', 'Sections read dashboard stat'] },
     { ver: 'v73', items: ['Flashcard 7-day review forecast', 'Exam topic radar chart', 'Compare time invested'] },
     { ver: 'v72', items: ['Exam answer change tracking', 'Study summary total Qs answered', 'Glossary sort by topic/status'] },

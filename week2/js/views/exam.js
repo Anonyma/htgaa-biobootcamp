@@ -874,6 +874,14 @@ export function createExamView() {
                       if (t >= 60) return '<span class="text-xs text-red-400 ml-1" title="Took a while">🐢</span>';
                       return '';
                     })() : ''}
+                    ${(() => {
+                      // Confidence: correct+fast=high, correct+slow=medium, incorrect=low
+                      const t = questionElapsed[i] || 0;
+                      if (r.isCorrect && t > 0 && t <= 20) return '<span class="text-[9px] px-1 py-0.5 rounded bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 ml-1">High confidence</span>';
+                      if (r.isCorrect && t > 30) return '<span class="text-[9px] px-1 py-0.5 rounded bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 ml-1">Lucky guess?</span>';
+                      if (!r.isCorrect && t <= 10) return '<span class="text-[9px] px-1 py-0.5 rounded bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 ml-1">Misconception</span>';
+                      return '';
+                    })()}
                   </p>
                   <p class="text-sm mb-2">${escapeHtml(r.question.question)}</p>
                   ${!r.isCorrect ? `
