@@ -107,6 +107,17 @@ function createStudySummaryView() {
                 </div>`;
               })()}
 
+              ${(() => {
+                const qs = store.getQuizScore(topic.id);
+                if (!qs) return '';
+                const pct = Math.round((qs.correct / qs.total) * 100);
+                const c = pct >= 80 ? 'green' : pct >= 60 ? 'amber' : 'red';
+                return `<div class="mb-3 inline-flex items-center gap-2 text-xs px-3 py-1.5 rounded-lg bg-${c}-50 dark:bg-${c}-900/10 border border-${c}-200 dark:border-${c}-800">
+                  <i data-lucide="help-circle" class="w-3 h-3 text-${c}-500"></i>
+                  <span class="text-${c}-700 dark:text-${c}-400 font-medium">Quiz: ${qs.correct}/${qs.total} (${pct}%)</span>
+                </div>`;
+              })()}
+
               ${data.learningObjectives ? `
                 <div class="mb-4">
                   <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Learning Objectives</h3>

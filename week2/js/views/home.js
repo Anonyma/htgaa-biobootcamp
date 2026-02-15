@@ -948,6 +948,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v61', items: ['Study summary quiz scores', 'Compare learning objectives', 'Per-topic quiz accuracy in summary'] },
     { ver: 'v60', items: ['Exam difficulty badges', 'Last active stat on dashboard', 'Question difficulty labels'] },
     { ver: 'v59', items: ['Flashcard per-topic session breakdown', 'Session topic accuracy in completion summary'] },
     { ver: 'v58', items: ['Exam correct vs incorrect time analysis', 'Glossary topic filter term counts'] },

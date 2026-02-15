@@ -296,6 +296,23 @@ function renderComparison(dataA, dataB, idA, idB) {
       </div>
       ` : ''}
 
+      <!-- Learning Objectives -->
+      ${(dataA.learningObjectives?.length || dataB.learningObjectives?.length) ? `
+      <div class="mb-8">
+        <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
+          <i data-lucide="target" class="w-5 h-5 text-indigo-500"></i> Learning Objectives
+        </h3>
+        <div class="grid grid-cols-2 gap-4">
+          <ul class="space-y-1.5 text-sm text-slate-600 dark:text-slate-400">
+            ${(dataA.learningObjectives || []).map(obj => `<li class="flex items-start gap-2"><span class="text-${metaA?.color || 'blue'}-400 mt-1 flex-shrink-0">&#x2022;</span> ${obj}</li>`).join('')}
+          </ul>
+          <ul class="space-y-1.5 text-sm text-slate-600 dark:text-slate-400">
+            ${(dataB.learningObjectives || []).map(obj => `<li class="flex items-start gap-2"><span class="text-${metaB?.color || 'blue'}-400 mt-1 flex-shrink-0">&#x2022;</span> ${obj}</li>`).join('')}
+          </ul>
+        </div>
+      </div>
+      ` : ''}
+
       <!-- Key Facts Side by Side -->
       <div class="mb-8">
         <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
