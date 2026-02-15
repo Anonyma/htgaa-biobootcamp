@@ -207,6 +207,15 @@ function createHomeView() {
         }
       });
 
+      // Prefetch topic data on hover for instant navigation
+      container.querySelectorAll('.topic-card[data-route]').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          const route = card.dataset.route;
+          const topicMatch = route?.match(/#\/topic\/(.+)/);
+          if (topicMatch) store.loadTopicData(topicMatch[1]); // fire-and-forget
+        }, { once: true, passive: true });
+      });
+
       // Topic filter pills
       container.querySelectorAll('.topic-filters .filter-pill').forEach(pill => {
         pill.addEventListener('click', () => {
@@ -236,6 +245,13 @@ function createHomeView() {
             : '<i data-lucide="chevron-down" class="w-4 h-4"></i> Show analytics & more';
           if (typeof lucide !== 'undefined') lucide.createIcons();
         });
+      }
+
+      // Prefetch "Continue Reading" topic data for instant navigation
+      const continueLink = container.querySelector('.mb-6 a[data-route^="#/topic/"]');
+      if (continueLink) {
+        const topicMatch = continueLink.dataset.route?.match(/#\/topic\/(.+)/);
+        if (topicMatch) store.loadTopicData(topicMatch[1]);
       }
 
       // Dynamic question count + glossary count — load all topic data
