@@ -971,6 +971,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v81', items: ['Compare exam exposure stats', 'Flashcard rating distribution chart', 'Exam new question tracking'] },
     { ver: 'v80', items: ['Dashboard sessions stat', 'Study summary homework connections', 'Exam new question badges'] },
     { ver: 'v79', items: ['Flashcard reverse mode', 'Exam enhanced streak indicator', 'Compare flashcard mastery'] },
     { ver: 'v78', items: ['Glossary related terms expand', 'Exam cumulative accuracy trend', 'Study summary quiz/challenge counts'] },

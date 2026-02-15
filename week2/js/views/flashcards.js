@@ -756,6 +756,27 @@ function renderComplete() {
             <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500"></span> Easy: ${sessionStats.easy}</span>
             ${sessionStats.bestStreak >= 3 ? `<span class="flex items-center gap-1 text-amber-500 font-medium"><span class="text-xs">🔥</span> Best streak: ${sessionStats.bestStreak}</span>` : ''}
           </div>
+          ${sessionStats.reviewed >= 3 ? `
+          <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
+            <p class="text-[10px] text-slate-400 mb-1.5 text-center uppercase tracking-wider">Rating Distribution</p>
+            <div class="flex items-end gap-1 justify-center h-10">
+              ${[
+                { label: 'A', count: sessionStats.again, color: 'bg-red-400' },
+                { label: 'H', count: sessionStats.hard, color: 'bg-yellow-400' },
+                { label: 'G', count: sessionStats.good, color: 'bg-green-400' },
+                { label: 'E', count: sessionStats.easy, color: 'bg-blue-400' }
+              ].map(b => {
+                const maxC = Math.max(sessionStats.again, sessionStats.hard, sessionStats.good, sessionStats.easy, 1);
+                const h = Math.max(4, Math.round((b.count / maxC) * 32));
+                return `<div class="flex flex-col items-center gap-0.5">
+                  <span class="text-[8px] text-slate-400">${b.count}</span>
+                  <div class="${b.color} rounded-sm" style="width:16px;height:${h}px"></div>
+                  <span class="text-[8px] text-slate-400">${b.label}</span>
+                </div>`;
+              }).join('')}
+            </div>
+          </div>
+          ` : ''}
           ${Object.keys(sessionStats.byTopic).length > 1 ? `
           <div class="mt-3 pt-3 border-t border-slate-200 dark:border-slate-700">
             <p class="text-[10px] text-slate-400 mb-2 text-center uppercase tracking-wider">By Topic</p>

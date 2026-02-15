@@ -542,6 +542,36 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Exam Accuracy -->
+      ${(() => {
+        const scores = store.getExamScores();
+        if (scores.length === 0) return '';
+        // Count how often each topic was included and approximate accuracy
+        let countA = 0, countB = 0;
+        scores.forEach(s => {
+          if (s.topics?.includes(idA)) countA++;
+          if (s.topics?.includes(idB)) countB++;
+        });
+        if (countA === 0 && countB === 0) return '';
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> Exam Exposure
+          </h3>
+          <div class="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <div class="text-2xl font-bold text-${metaA?.color || 'blue'}-600">${countA}</div>
+              <div class="text-xs text-slate-500">exams including ${metaA?.title}</div>
+            </div>
+            <div>
+              <div class="text-2xl font-bold text-${metaB?.color || 'blue'}-600">${countB}</div>
+              <div class="text-xs text-slate-500">exams including ${metaB?.title}</div>
+            </div>
+          </div>
+          ${countA !== countB ? `<p class="text-xs text-slate-400 text-center mt-2">Consider including ${countA < countB ? metaA?.title : metaB?.title} in more exam sessions</p>` : ''}
+        </div>`;
+      })()}
+
       <!-- Quick links -->
       <div class="flex justify-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
         <a data-route="#/topic/${idA}" class="text-sm text-blue-500 hover:underline cursor-pointer">Read ${metaA?.title}</a>
