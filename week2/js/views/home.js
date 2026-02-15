@@ -966,6 +966,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v72', items: ['Exam answer change tracking', 'Study summary total Qs answered', 'Glossary sort by topic/status'] },
     { ver: 'v71', items: ['Exam time distribution histogram', 'Flashcard session streak counter', 'Best streak in session summary'] },
     { ver: 'v70', items: ['Exam personal best badge', 'Flashcard ease/interval on card back', 'Flashcard last-reviewed date'] },
     { ver: 'v69', items: ['Compare combined stats', 'Flashcard last-reviewed timestamp', 'Exam topic question index in review'] },

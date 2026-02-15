@@ -45,6 +45,7 @@ export function createExamView() {
   let questionElapsed = [];
   let questionTimerInterval = null;
   let flaggedQuestions = new Set();
+  let answerChanges = {}; // track {questionIdx: [{from, to, time}]}
 
   function cleanupKeyHandler() {
     if (activeKeyHandler) {
@@ -259,6 +260,7 @@ export function createExamView() {
     streak = 0;
     bestStreak = 0;
     flaggedQuestions = new Set();
+    answerChanges = {};
     questionTimes = new Array(questions.length).fill(0);
     questionElapsed = new Array(questions.length).fill(0);
     questionStartTime = Date.now();
@@ -423,7 +425,14 @@ export function createExamView() {
     containerEl.querySelectorAll('.exam-option').forEach(btn => {
       btn.addEventListener('click', () => {
         const wasUnanswered = answers[currentIndex] === undefined;
-        answers[currentIndex] = parseInt(btn.dataset.optionIndex);
+        const prevAnswer = answers[currentIndex];
+        const newAnswer = parseInt(btn.dataset.optionIndex);
+        // Track answer changes
+        if (!wasUnanswered && prevAnswer !== newAnswer) {
+          if (!answerChanges[currentIndex]) answerChanges[currentIndex] = [];
+          answerChanges[currentIndex].push({ from: prevAnswer, to: newAnswer, time: elapsedSeconds });
+        }
+        answers[currentIndex] = newAnswer;
         // Track question time
         questionTimes[currentIndex] = elapsedSeconds;
         // Track streak
@@ -626,6 +635,7 @@ export function createExamView() {
           <span class="mx-2">|</span>
           ~${Math.round(elapsedSeconds / questions.length)}s per question
           ${bestStreak >= 3 ? `<span class="mx-2">|</span> <span class="text-amber-500 font-medium">Best streak: ${bestStreak}</span>` : ''}
+          ${Object.keys(answerChanges).length > 0 ? `<span class="mx-2">|</span> <span class="text-violet-500">${Object.keys(answerChanges).length} answer${Object.keys(answerChanges).length > 1 ? 's' : ''} changed</span>` : ''}
         </p>
         ${(() => {
           const correctIdxs = results.map((r, i) => r.isCorrect ? i : -1).filter(i => i >= 0);
@@ -784,6 +794,13 @@ export function createExamView() {
                     <p class="text-xs text-red-600 dark:text-red-400">Your answer: ${escapeHtml(r.question.shuffledOptions[r.selectedIdx]?.text || 'Skipped')}</p>
                     <p class="text-xs text-green-600 dark:text-green-400">Correct: ${escapeHtml(r.question.options[r.question.correctIndex])}</p>
                   ` : ''}
+                  ${answerChanges[i]?.length ? `<p class="text-xs text-violet-500 mt-1"><i data-lucide="repeat" class="w-3 h-3 inline"></i> Changed answer ${answerChanges[i].length}x${(() => {
+                    const changes = answerChanges[i];
+                    const lastChange = changes[changes.length - 1];
+                    const fromLetter = String.fromCharCode(65 + lastChange.from);
+                    const toLetter = String.fromCharCode(65 + lastChange.to);
+                    return ` (${fromLetter} → ${toLetter})`;
+                  })()}</p>` : ''}
                   ${r.question.explanation ? `<p class="text-xs text-slate-500 mt-1">${escapeHtml(r.question.explanation)}</p>` : ''}
                 </div>
               </div>
@@ -883,6 +900,7 @@ export function createExamView() {
       questionElapsed = [];
       questionStartTime = Date.now();
       flaggedQuestions = new Set();
+      answerChanges = {};
       // Start timer
       timerInterval = setInterval(() => { elapsedSeconds++; }, 1000);
       renderQuestion();

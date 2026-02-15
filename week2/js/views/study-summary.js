@@ -39,7 +39,7 @@ function createStudySummaryView() {
           </header>
 
           <!-- Summary stats -->
-          <div class="mb-8 grid grid-cols-2 sm:grid-cols-6 gap-3 print:grid-cols-6">
+          <div class="mb-8 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 print:grid-cols-8">
             <div class="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20 print:bg-blue-50">
               <div class="text-2xl font-bold text-blue-600">${allData.length}</div>
               <div class="text-xs text-slate-500">Topics</div>
@@ -80,6 +80,30 @@ function createStudySummaryView() {
                   return `<div class="text-2xl font-bold text-cyan-600">0m</div>
                   <div class="text-xs text-slate-500">Time Studied</div>`;
                 }
+              })()}
+            </div>
+            <div class="text-center p-3 rounded-lg bg-rose-50 dark:bg-rose-900/20 print:bg-rose-50">
+              ${(() => {
+                const scores = store.getExamScores();
+                const examQs = scores.reduce((s, sc) => s + sc.total, 0);
+                let quizQs = 0;
+                TOPICS.forEach(t => {
+                  const qs = store.getQuizScore(t.id);
+                  if (qs) quizQs += qs.total;
+                });
+                const total = examQs + quizQs;
+                return `<div class="text-2xl font-bold text-rose-600">${total}</div>
+                <div class="text-xs text-slate-500">Qs Answered</div>`;
+              })()}
+            </div>
+            <div class="text-center p-3 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 print:bg-indigo-50">
+              ${(() => {
+                const fc = store.get('flashcards') || { reviews: {} };
+                const reviews = Object.values(fc.reviews || {});
+                const total = reviews.length;
+                const due = reviews.filter(r => r.nextReview && r.nextReview <= Date.now()).length;
+                return `<div class="text-2xl font-bold text-indigo-600">${total}</div>
+                <div class="text-xs text-slate-500">Cards Seen${due > 0 ? ` (${due} due)` : ''}</div>`;
               })()}
             </div>
           </div>

@@ -102,6 +102,11 @@ function createGlossaryView() {
                 return `<button class="glossary-filter text-xs px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-${t.color}-50 dark:hover:bg-${t.color}-900/20 text-slate-500 dark:text-slate-400 transition-colors" data-filter="${t.id}">${t.title} <span class="opacity-60">(${count})</span></button>`;
               }).join('')}
               <span class="text-slate-300 dark:text-slate-600">|</span>
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider">Sort:</span>
+              <button class="glossary-sort text-xs px-2 py-1 rounded-full border border-slate-200 dark:border-slate-700 bg-teal-50 dark:bg-teal-900/20 text-teal-600 dark:text-teal-400 font-medium transition-colors" data-sort="alpha">A-Z</button>
+              <button class="glossary-sort text-xs px-2 py-1 rounded-full border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" data-sort="topic">By Topic</button>
+              <button class="glossary-sort text-xs px-2 py-1 rounded-full border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" data-sort="status">By Status</button>
+              <span class="text-slate-300 dark:text-slate-600">|</span>
               <button id="glossary-random" class="text-xs px-3 py-1.5 rounded-full border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900/30 transition-colors flex items-center gap-1">
                 <i data-lucide="shuffle" class="w-3 h-3"></i> Random
               </button>
@@ -348,6 +353,76 @@ function createGlossaryView() {
           btn.classList.remove('text-slate-500', 'dark:text-slate-400');
           activeFilter = btn.dataset.filter;
           applyFilters();
+        });
+      });
+
+      // Sort buttons
+      const sortBtns = container.querySelectorAll('.glossary-sort');
+      const contentEl = container.querySelector('#glossary-content');
+      sortBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sortBtns.forEach(b => {
+            b.classList.remove('bg-teal-50', 'dark:bg-teal-900/20', 'text-teal-600', 'dark:text-teal-400', 'font-medium');
+            b.classList.add('text-slate-500', 'dark:text-slate-400');
+          });
+          btn.classList.add('bg-teal-50', 'dark:bg-teal-900/20', 'text-teal-600', 'dark:text-teal-400', 'font-medium');
+          btn.classList.remove('text-slate-500', 'dark:text-slate-400');
+          const mode = btn.dataset.sort;
+          const reviews = store.get('flashcards').reviews || {};
+          // Re-sort _allTerms
+          let sorted;
+          if (mode === 'topic') {
+            sorted = [..._allTerms].sort((a, b) => a.topicId.localeCompare(b.topicId) || a.term.localeCompare(b.term));
+          } else if (mode === 'status') {
+            const getStatus = (t) => {
+              const topicTerms = _allTerms.filter(at => at.topicId === t.topicId);
+              const idx = topicTerms.indexOf(t);
+              const cardId = `${t.topicId}-vocab-${idx >= 0 ? idx : 0}`;
+              const r = reviews[cardId];
+              if (!r) return 2; // new (show first)
+              if (r.interval >= 21) return 3; // mastered (show last)
+              return 1; // learning (show second)
+            };
+            sorted = [..._allTerms].sort((a, b) => getStatus(a) - getStatus(b) || a.term.localeCompare(b.term));
+          } else {
+            sorted = [..._allTerms].sort((a, b) => a.term.localeCompare(b.term));
+          }
+          // Re-order DOM elements
+          const termEls = [...contentEl.querySelectorAll('.glossary-term')];
+          const termMap = {};
+          termEls.forEach(el => {
+            const key = el.querySelector('.font-bold')?.textContent?.trim() + '|' + el.dataset.topic;
+            termMap[key] = el;
+          });
+          // For alpha/topic/status sort, hide letter groups and show flat list
+          if (mode !== 'alpha') {
+            letterGroups.forEach(g => g.style.display = 'none');
+            // Create/show a flat container
+            let flatEl = contentEl.querySelector('#glossary-flat');
+            if (!flatEl) {
+              flatEl = document.createElement('div');
+              flatEl.id = 'glossary-flat';
+              flatEl.className = 'space-y-3';
+              contentEl.appendChild(flatEl);
+            }
+            flatEl.innerHTML = '';
+            flatEl.style.display = 'block';
+            sorted.forEach(t => {
+              const key = t.term + '|' + t.topicId;
+              const el = termMap[key];
+              if (el) flatEl.appendChild(el.cloneNode(true));
+            });
+            // Re-bind topic filters to cloned elements
+            flatEl.querySelectorAll('.glossary-term').forEach(el => {
+              el.style.display = (activeFilter === 'all' || el.dataset.topic === activeFilter) ? '' : 'none';
+            });
+          } else {
+            // Restore alphabetical letter groups
+            const flatEl = contentEl.querySelector('#glossary-flat');
+            if (flatEl) flatEl.style.display = 'none';
+            letterGroups.forEach(g => g.style.display = '');
+            applyFilters();
+          }
         });
       });
     },
