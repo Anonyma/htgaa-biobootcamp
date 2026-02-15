@@ -204,6 +204,19 @@ function createFlashcardsView() {
             </div>
           </div>
 
+          <!-- Mastery Donut -->
+          ${(() => {
+            var total = stats.newCards + stats.learning + stats.mature;
+            if (total === 0) return '';
+            var mPct = Math.round((stats.mature / total) * 100);
+            var lPct = Math.round((stats.learning / total) * 100);
+            var r = 40, cx = 50, cy = 50, c = 2 * Math.PI * r;
+            var mLen = (stats.mature / total) * c;
+            var lLen = (stats.learning / total) * c;
+            var nLen = c - mLen - lLen;
+            return '<div class="mb-4 flex items-center justify-center gap-4"><svg viewBox="0 0 100 100" class="w-20 h-20"><circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#e2e8f0" stroke-width="10"/><circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#22c55e" stroke-width="10" stroke-dasharray="' + mLen + ' ' + (c - mLen) + '" stroke-dashoffset="0" transform="rotate(-90 50 50)"/><circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#eab308" stroke-width="10" stroke-dasharray="' + lLen + ' ' + (c - lLen) + '" stroke-dashoffset="' + (-mLen) + '" transform="rotate(-90 50 50)"/><text x="50" y="54" text-anchor="middle" class="text-sm font-bold fill-current text-slate-700 dark:text-white" style="font-size:14px">' + mPct + '%</text></svg><div class="text-xs space-y-1"><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-green-500"></span> Mastered: ' + stats.mature + '</div><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span> Learning: ' + stats.learning + '</div><div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-slate-300"></span> New: ' + stats.newCards + '</div></div></div>';
+          })()}
+
           <!-- Daily Review Goal -->
           ${(() => {
             const dailyGoal = 20;

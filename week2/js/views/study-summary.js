@@ -272,6 +272,20 @@ function createStudySummaryView() {
             } catch { return ''; }
           })()}
 
+          <!-- Knowledge Map -->
+          ${(() => {
+            var topicStats = allData.map(function(d) {
+              var m = store.getTopicMastery(d.topic.id, d.data);
+              return { topic: d.topic, sectionPct: m?.sectionPct || 0, quizPct: m?.quizPct || 0, fcPct: m?.fcPct || 0, timePct: m?.timePct || 0, mastery: m?.mastery || 0 };
+            }).filter(function(s) { return s.mastery > 0; });
+            if (topicStats.length === 0) return '';
+            return '<div class="mb-8 print:mb-4"><h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="radar" class="w-5 h-5 text-purple-500"></i> Knowledge Map</h2><div class="grid grid-cols-2 md:grid-cols-3 gap-3">' + topicStats.map(function(s) {
+              var dims = [s.sectionPct, s.quizPct, s.fcPct, s.timePct];
+              var labels = ['Read', 'Quiz', 'Cards', 'Time'];
+              return '<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3"><div class="flex items-center gap-2 mb-2"><i data-lucide="' + s.topic.icon + '" class="w-4 h-4 text-' + s.topic.color + '-500"></i><span class="text-sm font-medium">' + s.topic.title.split(' ')[0] + '</span><span class="text-xs text-slate-400 ml-auto">' + s.mastery + '%</span></div><div class="space-y-1">' + dims.map(function(v, i) { return '<div class="flex items-center gap-2"><span class="text-[9px] w-8 text-slate-400">' + labels[i] + '</span><div class="flex-1 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-' + s.topic.color + '-400 rounded-full" style="width:' + v + '%"></div></div><span class="text-[9px] text-slate-400">' + v + '</span></div>'; }).join('') + '</div></div>';
+            }).join('') + '</div></div>';
+          })()}
+
           ${allData.map(({ topic, data }) => `
             <section class="mb-8 page-break-inside-avoid">
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">

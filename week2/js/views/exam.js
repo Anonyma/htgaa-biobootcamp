@@ -754,6 +754,12 @@ export function createExamView() {
         </div>
         <h1 class="text-3xl font-bold mb-2">Exam Complete</h1>
         ${isNewBest && prevBest ? `<p class="text-sm font-bold text-amber-500 mb-1">🏆 New Personal Best! (was ${prevBest.pct}%)</p>` : ''}
+        ${(() => {
+          const all = store.getExamScores();
+          if (all.length < 2) return '';
+          const avg = Math.round(all.reduce(function(s, e) { return s + e.pct; }, 0) / all.length);
+          return '<p class="text-xs text-slate-400 mt-0.5">Attempt #' + all.length + ' · Career avg: ' + avg + '%</p>';
+        })()}
         <p class="text-xl text-slate-500">
           <span class="font-bold text-slate-900 dark:text-white">${correct}</span> / ${questions.length} correct
           ${(() => { const skipped = questions.filter((_, i) => answers[i] === undefined).length; return skipped > 0 ? `<span class="text-slate-400 mx-2">|</span><span class="text-slate-500">${skipped} skipped</span>` : ''; })()}
