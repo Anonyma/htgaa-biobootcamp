@@ -193,6 +193,15 @@ function createHomeView() {
               <a data-route="#/analytics" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i> Analytics
               </a>
+              <a data-route="#/confidence" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-cyan-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="gauge" class="w-4 h-4 text-cyan-500"></i> Confidence
+              </a>
+              <a data-route="#/cheatsheet" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-pink-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="file-badge" class="w-4 h-4 text-pink-500"></i> Cheat Sheet
+              </a>
+              <a data-route="#/lab-protocol" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-lime-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="test-tubes" class="w-4 h-4 text-lime-500"></i> Lab Protocol
+              </a>
             </div>
           </section>
 
@@ -1702,6 +1711,9 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v128', items: ['Lab protocol quick reference', 'Step-by-step gel lab checklist', 'Troubleshooting guide'] },
+    { ver: 'v127', items: ['Cheat sheet view', 'Printable one-page reference card', 'Key formulas and facts'] },
+    { ver: 'v126', items: ['Confidence tracker', 'Self-rated topic understanding', 'Personalized study recommendations'] },
     { ver: 'v125', items: ['Resource library', 'Curated videos/tools/references', 'Topic and category filters'] },
     { ver: 'v124', items: ['Quick practice mode', 'Random cross-topic questions', 'Lightweight quiz format'] },
     { ver: 'v123', items: ['Study analytics dashboard', 'Activity charts', 'Topic mastery breakdown'] },

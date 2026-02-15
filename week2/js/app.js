@@ -26,6 +26,9 @@ import { createSettingsView } from './views/settings.js';
 import { createAnalyticsView } from './views/analytics.js';
 import { createQuickPracticeView } from './views/quick-practice.js';
 import { createResourcesView } from './views/resources.js';
+import { createLabProtocolView } from './views/lab-protocol.js';
+import { createConfidenceView } from './views/confidence.js';
+import { createCheatsheetView } from './views/cheatsheet.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -67,7 +70,10 @@ class App {
       .on('/settings', () => createSettingsView())
       .on('/analytics', () => createAnalyticsView())
       .on('/practice', () => createQuickPracticeView())
-      .on('/resources', () => createResourcesView());
+      .on('/resources', () => createResourcesView())
+      .on('/lab-protocol', () => createLabProtocolView())
+      .on('/confidence', () => createConfidenceView())
+      .on('/cheatsheet', () => createCheatsheetView());
 
     // Start
     this.router.start();
@@ -229,6 +235,14 @@ class App {
                 <i data-lucide="library" class="w-4 h-4 text-teal-500"></i>
                 <span>Resources</span>
               </a>
+              <a data-route="#/cheatsheet" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="file-badge" class="w-4 h-4 text-pink-500"></i>
+                <span>Cheat Sheet</span>
+              </a>
+              <a data-route="#/lab-protocol" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="test-tubes" class="w-4 h-4 text-lime-500"></i>
+                <span>Lab Protocol</span>
+              </a>
               <a data-route="#/summary" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="file-text" class="w-4 h-4 text-rose-500"></i>
                 <span>Study Summary</span>
@@ -237,6 +251,10 @@ class App {
                 <i data-lucide="sticky-note" class="w-4 h-4 text-amber-500"></i>
                 <span class="flex-1">My Notes</span>
                 <span id="sidebar-notes-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-bold"></span>
+              </a>
+              <a data-route="#/confidence" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="gauge" class="w-4 h-4 text-cyan-500"></i>
+                <span>Confidence</span>
               </a>
               <a data-route="#/weak-points" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i>
