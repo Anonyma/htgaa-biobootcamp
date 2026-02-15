@@ -471,6 +471,34 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Quiz Head-to-Head -->
+      ${(() => {
+        if (!quizScoreA && !quizScoreB) return '';
+        const pctA = quizScoreA ? Math.round((quizScoreA.correct / quizScoreA.total) * 100) : 0;
+        const pctB = quizScoreB ? Math.round((quizScoreB.correct / quizScoreB.total) * 100) : 0;
+        const winner = pctA > pctB ? 'A' : pctB > pctA ? 'B' : 'tie';
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <i data-lucide="swords" class="w-4 h-4 text-amber-500"></i> Quiz Head-to-Head
+          </h3>
+          <div class="grid grid-cols-3 gap-3 items-center text-center">
+            <div>
+              <div class="text-2xl font-bold text-${metaA?.color || 'blue'}-600">${pctA}%</div>
+              <div class="text-xs text-slate-500">${quizScoreA ? `${quizScoreA.correct}/${quizScoreA.total}` : 'Not taken'}</div>
+              ${winner === 'A' ? '<div class="text-xs text-amber-500 font-bold mt-1">Winner</div>' : ''}
+            </div>
+            <div class="text-2xl text-slate-300">vs</div>
+            <div>
+              <div class="text-2xl font-bold text-${metaB?.color || 'blue'}-600">${pctB}%</div>
+              <div class="text-xs text-slate-500">${quizScoreB ? `${quizScoreB.correct}/${quizScoreB.total}` : 'Not taken'}</div>
+              ${winner === 'B' ? '<div class="text-xs text-amber-500 font-bold mt-1">Winner</div>' : ''}
+            </div>
+          </div>
+          ${winner === 'tie' && pctA > 0 ? '<p class="text-xs text-center text-slate-400 mt-2">Tied!</p>' : ''}
+        </div>`;
+      })()}
+
       <!-- Time Invested -->
       ${(() => {
         try {

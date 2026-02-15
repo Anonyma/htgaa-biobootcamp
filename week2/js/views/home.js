@@ -76,6 +76,9 @@ function createHomeView() {
           <!-- Knowledge Radar -->
           ${renderKnowledgeRadar()}
 
+          <!-- Time Distribution -->
+          ${renderTimeDistribution()}
+
           <!-- Visual Learning Path -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -1077,6 +1080,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v94', items: ['Exam question quick-jump navigation', 'Dashboard time distribution donut', 'Compare quiz head-to-head'] },
     { ver: 'v93', items: ['Glossary recently viewed terms', 'Study summary time remaining per topic', 'Flashcard topic last-reviewed date'] },
     { ver: 'v92', items: ['Exam topic question bars on setup', 'Dashboard study pace stat', 'Flashcard topic last-reviewed date'] },
     { ver: 'v91', items: ['Exam confidence breakdown in results', 'Compare shared vocabulary panel', 'Study summary vocab mastery %'] },
@@ -2188,6 +2192,58 @@ function getEstimatedRemaining(progress) {
   if (remaining < 60) return `~${remaining}m`;
   const hrs = Math.floor(remaining / 60);
   return `~${hrs}h ${remaining % 60}m`;
+}
+
+function renderTimeDistribution() {
+  let timeData;
+  try { timeData = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}'); } catch { return ''; }
+  const segments = TOPICS.map(t => ({ topic: t, minutes: timeData[t.id] || 0 })).filter(s => s.minutes > 0);
+  if (segments.length === 0) return '';
+
+  const total = segments.reduce((s, seg) => s + seg.minutes, 0);
+  const colors = { blue: '#3b82f6', green: '#22c55e', red: '#ef4444', purple: '#a855f7', yellow: '#eab308', indigo: '#6366f1' };
+  const cx = 60, cy = 60, r = 50, innerR = 30;
+
+  let startAngle = -Math.PI / 2;
+  const arcs = segments.map(seg => {
+    const sweep = (seg.minutes / total) * 2 * Math.PI;
+    const endAngle = startAngle + sweep;
+    const largeArc = sweep > Math.PI ? 1 : 0;
+    const x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
+    const x2 = cx + r * Math.cos(endAngle), y2 = cy + r * Math.sin(endAngle);
+    const ix1 = cx + innerR * Math.cos(endAngle), iy1 = cy + innerR * Math.sin(endAngle);
+    const ix2 = cx + innerR * Math.cos(startAngle), iy2 = cy + innerR * Math.sin(startAngle);
+    const path = `M${x1},${y1} A${r},${r} 0 ${largeArc} 1 ${x2},${y2} L${ix1},${iy1} A${innerR},${innerR} 0 ${largeArc} 0 ${ix2},${iy2} Z`;
+    startAngle = endAngle;
+    return `<path d="${path}" fill="${colors[seg.topic.color] || '#94a3b8'}" opacity="0.8"/>`;
+  }).join('');
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="pie-chart" class="w-5 h-5 text-violet-500"></i> Time Distribution
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div class="flex items-center gap-6">
+          <svg viewBox="0 0 120 120" class="w-28 h-28 flex-shrink-0">
+            ${arcs}
+            <text x="${cx}" y="${cy - 4}" text-anchor="middle" fill="currentColor" font-size="12" font-weight="bold" class="text-slate-700 dark:text-slate-200">${total}</text>
+            <text x="${cx}" y="${cy + 8}" text-anchor="middle" fill="currentColor" font-size="6" class="text-slate-400">min</text>
+          </svg>
+          <div class="flex-1 grid grid-cols-2 gap-2">
+            ${segments.sort((a, b) => b.minutes - a.minutes).map(seg => `
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-sm flex-shrink-0" style="background:${colors[seg.topic.color] || '#94a3b8'}"></span>
+                <span class="text-xs text-slate-600 dark:text-slate-400 truncate">${seg.topic.title.split(' ')[0]}</span>
+                <span class="text-xs font-bold ml-auto">${seg.minutes}m</span>
+                <span class="text-[10px] text-slate-400">${Math.round((seg.minutes / total) * 100)}%</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </section>
+  `;
 }
 
 function renderKnowledgeRadar() {

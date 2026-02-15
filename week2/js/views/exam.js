@@ -991,9 +991,13 @@ export function createExamView() {
             </button>
           ` : ''}
         </div>
+        <!-- Question Quick Jump -->
+        <div class="flex flex-wrap gap-1 mb-4">
+          ${results.map((r, i) => `<a href="#exam-q-${i}" class="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${r.isCorrect ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'} hover:ring-2 hover:ring-blue-400 transition-all" title="Q${i + 1}: ${r.isCorrect ? 'Correct' : 'Incorrect'}">${i + 1}</a>`).join('')}
+        </div>
         <div class="space-y-4" id="exam-review-questions">
           ${results.map((r, i) => `
-            <div class="p-4 rounded-xl border ${r.isCorrect ? 'border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/10' : 'border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-900/10'}">
+            <div id="exam-q-${i}" class="p-4 rounded-xl border scroll-mt-20 ${r.isCorrect ? 'border-green-200 dark:border-green-800 bg-green-50/50 dark:bg-green-900/10' : 'border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-red-900/10'}">
               <div class="flex items-start gap-3">
                 <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${r.isCorrect ? 'bg-green-500' : 'bg-red-500'} text-white">
                   <i data-lucide="${r.isCorrect ? 'check' : 'x'}" class="w-4 h-4"></i>
