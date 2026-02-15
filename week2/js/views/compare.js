@@ -542,6 +542,37 @@ function renderComparison(dataA, dataB, idA, idB) {
         </div>`;
       })()}
 
+      <!-- Design Challenges -->
+      ${(() => {
+        const dcA = dataA.designChallenges || [];
+        const dcB = dataB.designChallenges || [];
+        if (dcA.length === 0 && dcB.length === 0) return '';
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <i data-lucide="lightbulb" class="w-4 h-4 text-orange-500"></i> Design Challenges
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="space-y-1.5">
+              ${dcA.length > 0 ? dcA.map(dc => `
+                <div class="text-xs p-2 rounded-lg bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800">
+                  <span class="font-bold">${dc.title || 'Challenge'}</span>
+                  ${dc.difficulty ? `<span class="ml-1 text-[9px] px-1 py-0.5 rounded ${dc.difficulty === 'hard' ? 'bg-red-100 text-red-600' : dc.difficulty === 'easy' ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-500'}">${dc.difficulty}</span>` : ''}
+                </div>
+              `).join('') : '<p class="text-xs text-slate-400">No design challenges</p>'}
+            </div>
+            <div class="space-y-1.5">
+              ${dcB.length > 0 ? dcB.map(dc => `
+                <div class="text-xs p-2 rounded-lg bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800">
+                  <span class="font-bold">${dc.title || 'Challenge'}</span>
+                  ${dc.difficulty ? `<span class="ml-1 text-[9px] px-1 py-0.5 rounded ${dc.difficulty === 'hard' ? 'bg-red-100 text-red-600' : dc.difficulty === 'easy' ? 'bg-green-100 text-green-600' : 'bg-slate-100 text-slate-500'}">${dc.difficulty}</span>` : ''}
+                </div>
+              `).join('') : '<p class="text-xs text-slate-400">No design challenges</p>'}
+            </div>
+          </div>
+        </div>`;
+      })()}
+
       <!-- Homework Connections -->
       ${(() => {
         const hwA = dataA.homeworkConnections || [];

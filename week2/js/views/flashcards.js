@@ -37,6 +37,27 @@ function createFlashcardsView() {
               Flashcards
             </h1>
             <p class="text-slate-500">Spaced repetition review. Cards you struggle with appear more often.</p>
+            ${(() => {
+              const reviews = store.get('flashcards').reviews || {};
+              const total = allCards.length;
+              if (total === 0) return '';
+              let mastered = 0, learning = 0;
+              allCards.forEach(c => {
+                const r = reviews[c.id];
+                if (r?.interval >= 21) mastered++;
+                else if (r) learning++;
+              });
+              const masteredPct = Math.round((mastered / total) * 100);
+              const learningPct = Math.round((learning / total) * 100);
+              return `
+              <div class="mt-3 flex items-center gap-3">
+                <div class="flex-1 h-2.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden flex">
+                  ${mastered > 0 ? `<div class="bg-green-500" style="width:${(mastered/total)*100}%"></div>` : ''}
+                  ${learning > 0 ? `<div class="bg-yellow-400" style="width:${(learning/total)*100}%"></div>` : ''}
+                </div>
+                <span class="text-xs text-slate-500 flex-shrink-0">${masteredPct}% mastered</span>
+              </div>`;
+            })()}
           </header>
 
           <!-- Topic Filter -->

@@ -1023,6 +1023,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v87', items: ['Compare design challenge comparison', 'Exam cumulative time on setup', 'Flashcard overall mastery bar'] },
     { ver: 'v86', items: ['Exam bookmarks count on setup', 'Compare homework connection overlap', 'Study summary readiness grade letter'] },
     { ver: 'v85', items: ['Saved exam questions on dashboard', 'Flashcard avg ease on topic filters', 'Glossary letter mastery dots'] },
     { ver: 'v84', items: ['Exam question bookmarks for later review', 'Dashboard weekly progress comparison', 'Glossary letter mastery dots'] },

@@ -118,7 +118,13 @@ export function createExamView() {
             <span class="text-slate-400"><i data-lucide="bar-chart-3" class="w-4 h-4 inline text-blue-500"></i> Avg: <strong class="text-slate-700 dark:text-slate-200">${avg}%</strong></span>
             <span class="text-slate-400">Attempts: <strong class="text-slate-700 dark:text-slate-200">${scores.length}</strong></span>
           </div>
-          ${sparkline ? `<div class="mt-2 text-center"><span class="text-xs text-slate-400">Trend</span>${sparkline}</div>` : ''}`;
+          ${sparkline ? `<div class="mt-2 text-center"><span class="text-xs text-slate-400">Trend</span>${sparkline}</div>` : ''}
+          <div class="mt-2 text-xs text-slate-400">${(() => {
+            const totalTime = scores.reduce((s, sc) => s + (sc.elapsed || 0), 0);
+            const totalQs = scores.reduce((s, sc) => s + sc.total, 0);
+            const mins = Math.floor(totalTime / 60);
+            return `Total: ${totalQs} questions in ${mins}m across ${scores.length} attempt${scores.length > 1 ? 's' : ''}`;
+          })()}</div>`;
         })()}
       </div>
 
