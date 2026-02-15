@@ -972,6 +972,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v83', items: ['Study summary time per topic bars', 'Flashcard deck position indicator', 'Exam new/seen in results'] },
     { ver: 'v82', items: ['Exam new/seen question counts in results', 'Glossary definition complexity badges', 'Dashboard vocab mastery stat'] },
     { ver: 'v81', items: ['Compare exam exposure stats', 'Flashcard rating distribution chart', 'Exam new question tracking'] },
     { ver: 'v80', items: ['Dashboard sessions stat', 'Study summary homework connections', 'Exam new question badges'] },

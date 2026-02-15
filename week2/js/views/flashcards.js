@@ -640,6 +640,11 @@ function renderCard(card, allCards) {
             <span class="text-xs text-slate-400 flex items-center gap-1">
               <i data-lucide="${topic?.icon || 'book-open'}" class="w-3 h-3"></i> ${topic?.title || 'General'}
             </span>
+            <span class="text-[10px] text-slate-300 dark:text-slate-600">${(() => {
+              const topicCards = allCards.filter(c => c.topicId === card.topicId);
+              const idx = topicCards.findIndex(c => c.id === card.id);
+              return idx >= 0 ? `${idx + 1}/${topicCards.length}` : '';
+            })()}</span>
             ${(() => {
               const r = store.get('flashcards').reviews[card.id];
               if (r && r.lapses >= 3) return `<span class="text-xs px-2 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400">Struggling</span>`;

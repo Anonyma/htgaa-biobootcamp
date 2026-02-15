@@ -166,6 +166,34 @@ function createStudySummaryView() {
             </div>`;
           })()}
 
+          <!-- Time Per Topic -->
+          ${(() => {
+            try {
+              const times = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+              const entries = allData.map(({ topic }) => ({ topic, secs: times[topic.id] || 0 })).filter(e => e.secs > 0);
+              if (entries.length === 0) return '';
+              const maxSecs = Math.max(...entries.map(e => e.secs), 1);
+              const fmtTime = (s) => { const m = Math.floor(s / 60); return m >= 60 ? `${Math.floor(m/60)}h ${m%60}m` : `${m}m`; };
+              return `
+              <div class="mb-8 print:mb-4">
+                <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+                  <i data-lucide="clock" class="w-5 h-5 text-cyan-500"></i> Time Per Topic
+                </h2>
+                <div class="space-y-2">
+                  ${entries.map(e => `
+                    <div class="flex items-center gap-3">
+                      <span class="text-xs font-medium w-32 truncate text-${e.topic.color}-600 dark:text-${e.topic.color}-400">${e.topic.title}</span>
+                      <div class="flex-1 h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-${e.topic.color}-400 rounded-full" style="width:${(e.secs/maxSecs)*100}%"></div>
+                      </div>
+                      <span class="text-xs text-slate-500 w-12 text-right">${fmtTime(e.secs)}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>`;
+            } catch { return ''; }
+          })()}
+
           ${allData.map(({ topic, data }) => `
             <section class="mb-8 page-break-inside-avoid">
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">
