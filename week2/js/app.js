@@ -17,6 +17,7 @@ import { createStudySummaryView } from './views/study-summary.js';
 import { createQuickReviewView } from './views/quick-review.js';
 import { createNotesView } from './views/notes.js';
 import { createWeakPointsView } from './views/weak-points.js';
+import { createBookmarksView } from './views/bookmarks.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -49,7 +50,8 @@ class App {
       .on('/review/:id', ({ id }) => createQuickReviewView(id))
       .on('/summary', () => createStudySummaryView())
       .on('/notes', () => createNotesView())
-      .on('/weak-points', () => createWeakPointsView());
+      .on('/weak-points', () => createWeakPointsView())
+      .on('/bookmarks', () => createBookmarksView());
 
     // Start
     this.router.start();
@@ -203,6 +205,11 @@ class App {
               <a data-route="#/weak-points" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i>
                 <span>Weak Points</span>
+              </a>
+              <a data-route="#/bookmarks" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i>
+                <span class="flex-1">Bookmarks</span>
+                <span id="sidebar-bookmarks-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold"></span>
               </a>
             </div>
 
@@ -603,6 +610,13 @@ class App {
       const count = store.getNotesCount();
       if (count > 0) { notesBadge.textContent = count; notesBadge.classList.remove('hidden'); }
       else { notesBadge.classList.add('hidden'); }
+    }
+
+    const bmBadge = document.getElementById('sidebar-bookmarks-count');
+    if (bmBadge) {
+      const count = store.getBookmarks().length;
+      if (count > 0) { bmBadge.textContent = count; bmBadge.classList.remove('hidden'); }
+      else { bmBadge.classList.add('hidden'); }
     }
 
     // Update individual topic indicators + progress bars

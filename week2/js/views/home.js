@@ -158,6 +158,10 @@ function createHomeView() {
               <a data-route="#/weak-points" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i> Weak Points
               </a>
+              <a data-route="#/bookmarks" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i> Bookmarks
+                ${(() => { const bm = store.getBookmarks(); return bm.length > 0 ? `<span class="text-xs text-blue-500 font-bold">${bm.length}</span>` : ''; })()}
+              </a>
             </div>
           </section>
 
