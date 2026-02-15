@@ -34,7 +34,13 @@ export function createExamView() {
   let answers = {};
   let timerInterval = null;
   let elapsedSeconds = 0;
-  let selectedTopics = new Set(TOPICS.map(t => t.id));
+  let selectedTopics = (() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('htgaa-exam-topics'));
+      if (saved && Array.isArray(saved) && saved.length > 0) return new Set(saved);
+    } catch {}
+    return new Set(TOPICS.map(t => t.id));
+  })();
   let questionCount = 20;
   let containerEl = null;
   let activeKeyHandler = null;
@@ -179,6 +185,7 @@ export function createExamView() {
         const tid = label.dataset.topic;
         if (selectedTopics.has(tid)) selectedTopics.delete(tid);
         else selectedTopics.add(tid);
+        localStorage.setItem('htgaa-exam-topics', JSON.stringify([...selectedTopics]));
         renderSetup();
       });
     });
@@ -186,10 +193,12 @@ export function createExamView() {
     // Select all/none
     containerEl.querySelector('#exam-select-all')?.addEventListener('click', () => {
       selectedTopics = new Set(TOPICS.map(t => t.id));
+      localStorage.setItem('htgaa-exam-topics', JSON.stringify([...selectedTopics]));
       renderSetup();
     });
     containerEl.querySelector('#exam-select-none')?.addEventListener('click', () => {
       selectedTopics.clear();
+      localStorage.setItem('htgaa-exam-topics', JSON.stringify([]));
       renderSetup();
     });
 

@@ -556,6 +556,21 @@ function createFlashcardsView() {
           handleRate(parseInt(rateBtn.dataset.quality, 10));
           return;
         }
+        // Copy session results
+        const copyBtn = e.target.closest('#fc-copy-session');
+        if (copyBtn && sessionStats.reviewed > 0) {
+          const acc = Math.round(((sessionStats.good + sessionStats.easy) / sessionStats.reviewed) * 100);
+          const topicLines = Object.entries(sessionStats.byTopic).map(([tid, ts]) => {
+            const topic = TOPICS.find(t => t.id === tid);
+            return `  ${topic?.title || tid}: ${Math.round((ts.correct / ts.reviewed) * 100)}% (${ts.reviewed} cards)`;
+          }).join('\n');
+          const text = `Flashcard Session Results\nCards: ${sessionStats.reviewed} · Recall: ${acc}%\nAgain: ${sessionStats.again} · Hard: ${sessionStats.hard} · Good: ${sessionStats.good} · Easy: ${sessionStats.easy}${sessionStats.bestStreak >= 3 ? `\nBest streak: ${sessionStats.bestStreak}` : ''}${topicLines ? `\n\nBy Topic:\n${topicLines}` : ''}`;
+          navigator.clipboard.writeText(text).then(() => {
+            copyBtn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Copied!';
+            if (window.lucide) lucide.createIcons();
+          }).catch(() => {});
+          return;
+        }
         if (e.target.closest('.fc-card')) handleFlip();
       });
 
@@ -749,13 +764,17 @@ function renderComplete() {
           </div>
         </div>
       ` : ''}
-      <div class="flex justify-center gap-3">
+      <div class="flex justify-center gap-3 flex-wrap">
         <a data-route="#/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors cursor-pointer">
           <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Hub
         </a>
         <a data-route="#/exam" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer">
           <i data-lucide="trophy" class="w-4 h-4"></i> Take Exam
         </a>
+        ${hasSession ? `
+        <button id="fc-copy-session" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 font-semibold hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+          <i data-lucide="copy" class="w-4 h-4"></i> Copy Results
+        </button>` : ''}
       </div>
     </div>
   `;

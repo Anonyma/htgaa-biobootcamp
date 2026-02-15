@@ -970,6 +970,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v77', items: ['Exam topic selection persistence', 'Flashcard copy session results', 'Knowledge radar on dashboard'] },
     { ver: 'v76', items: ['Knowledge radar chart on dashboard', 'Study summary strongest/weakest', 'Exam answer distribution chart'] },
     { ver: 'v75', items: ['Exam confidence labels on review', 'Flashcard session time estimate', 'Glossary word count badges'] },
     { ver: 'v74', items: ['Exam difficulty distribution', 'Flashcard topic completion %', 'Sections read dashboard stat'] },
