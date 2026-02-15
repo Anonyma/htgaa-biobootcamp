@@ -76,15 +76,14 @@ html { scroll-behavior: smooth; }
 
 /* ===== Topic Cards (index.html) ===== */
 .topic-card {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .topic-card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.18);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.12);
 }
 .dark .topic-card:hover {
-  box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.4);
 }
 .topic-card:active {
   transform: translateY(-2px) scale(0.99);
@@ -3115,6 +3114,48 @@ header h1 {
   }
 }
 
+/* ===== Hero Section Polish ===== */
+header.bg-gradient-to-br h1 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+header.bg-gradient-to-br p {
+  letter-spacing: 0.01em;
+}
+
+/* ===== Refined Color Palette ===== */
+/* Reduce visual noise: mute secondary badges */
+.topic-card .text-xs.text-slate-400 {
+  opacity: 0.85;
+}
+
+/* Study tool pills: unified border on hover */
+.study-tools-row a:hover {
+  border-color: #6366f1 !important;
+  box-shadow: 0 2px 8px -2px rgba(99, 102, 241, 0.15);
+}
+.dark .study-tools-row a:hover {
+  box-shadow: 0 2px 8px -2px rgba(99, 102, 241, 0.25);
+}
+
+/* Better heading hierarchy */
+h2 {
+  letter-spacing: -0.015em;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/* Subtle card borders */
+.topic-card,
+.study-tools-row a,
+.learning-path-step {
+  border-color: rgba(226, 232, 240, 0.8);
+}
+.dark .topic-card,
+.dark .study-tools-row a,
+.dark .learning-path-step {
+  border-color: rgba(51, 65, 85, 0.8);
+}
+
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   .topic-card, .topic-card:hover,
@@ -3125,4 +3166,13 @@ header h1 {
     animation: none !important;
   }
   .scroll-reveal { opacity: 1 !important; }
+}
+
+/* ===== Print Styles ===== */
+@media print {
+  header.bg-gradient-to-br { background: none !important; color: black !important; }
+  .topic-card { break-inside: avoid; box-shadow: none !important; }
+  .study-tools-row, .learning-path-row, .topic-filters,
+  #show-more-dashboard, .filter-pill { display: none !important; }
+  .topic-card:hover { transform: none !important; }
 }
