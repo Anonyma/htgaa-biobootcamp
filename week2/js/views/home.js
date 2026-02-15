@@ -24,7 +24,7 @@ function createHomeView() {
                   genetic codes, gel electrophoresis, and gene expression.
                 </p>
                 <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-100 text-xs">
-                  <span class="font-bold text-white">v113</span> 200+ features built with AI-assisted development
+                  <span class="font-bold text-white">v114</span> 200+ features built with AI-assisted development
                 </div>
                 <div class="flex items-center gap-4 mt-3 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
@@ -146,6 +146,9 @@ function createHomeView() {
 
           <!-- Flashcard Forecast -->
           ${renderFlashcardForecast()}
+
+          <!-- Completion Forecast -->
+          ${renderCompletionForecast()}
 
           <!-- Weekly Goal -->
           ${renderWeeklyGoal()}
@@ -1359,6 +1362,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v114', items: ['Exam review-topic links', 'Dashboard completion forecast', 'Compare study order recommendation'] },
     { ver: 'v113', items: ['Exam career stats in results', 'Flashcard mastery donut chart', 'Study summary knowledge map'] },
     { ver: 'v112', items: ['Exam time per question histogram', 'Dashboard mastery milestones', 'Glossary sticky letter index'] },
     { ver: 'v111', items: ['Glossary random term button', 'Flashcard reverse mode indicator', 'Compare quiz pool comparison'] },
@@ -2210,6 +2214,48 @@ function renderFlashcardForecast() {
       </div>
     </section>
   `;
+}
+
+function renderCompletionForecast() {
+  try {
+    const times = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+    const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
+    if (feed.length < 5) return '';
+    // Calculate daily study rate (minutes per day over last 7 days)
+    const weekAgo = Date.now() - 7 * 86400000;
+    const recentFeed = feed.filter(function(a) { return new Date(a.time).getTime() > weekAgo; });
+    const daysActive = new Set(recentFeed.map(function(a) { return new Date(a.time).toISOString().slice(0, 10); })).size;
+    if (daysActive === 0) return '';
+    const forecasts = TOPICS.map(function(t) {
+      var m = store.getTopicMastery(t.id);
+      var mastery = m?.mastery || 0;
+      if (mastery >= 95) return null;
+      var remaining = 100 - mastery;
+      var minsSpent = Math.round((times[t.id] || 0) / 60);
+      var rate = mastery > 0 && minsSpent > 0 ? mastery / minsSpent : 2;
+      var minsNeeded = Math.round(remaining / rate);
+      var daysNeeded = Math.max(1, Math.ceil(minsNeeded / (30 / daysActive)));
+      return { topic: t, mastery: mastery, daysNeeded: daysNeeded, remaining: remaining };
+    }).filter(Boolean);
+    if (forecasts.length === 0) return '';
+    forecasts.sort(function(a, b) { return a.daysNeeded - b.daysNeeded; });
+    return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="calendar-clock" class="w-5 h-5 text-indigo-500"></i> Completion Forecast
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div class="space-y-2">
+          ${forecasts.map(function(f) {
+            var c = f.daysNeeded <= 3 ? 'green' : f.daysNeeded <= 7 ? 'blue' : 'amber';
+            return '<div class="flex items-center gap-3"><i data-lucide="' + f.topic.icon + '" class="w-4 h-4 text-' + f.topic.color + '-500 flex-shrink-0"></i><span class="text-sm w-24 truncate">' + f.topic.title.split(' ')[0] + '</span><div class="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-' + f.topic.color + '-400 rounded-full" style="width:' + f.mastery + '%"></div></div><span class="text-xs font-medium text-' + c + '-600">~' + f.daysNeeded + 'd</span></div>';
+          }).join('')}
+        </div>
+        <p class="text-[10px] text-slate-400 text-center mt-3">Based on your study pace of ${daysActive} active days/week</p>
+      </div>
+    </section>
+    `;
+  } catch { return ''; }
 }
 
 function renderWeeklyGoal() {

@@ -1285,13 +1285,16 @@ export function createExamView() {
                     return ` (${fromLetter} → ${toLetter})`;
                   })()}</p>` : ''}
                   ${r.question.explanation ? `<p class="text-xs text-slate-500 mt-1">${escapeHtml(r.question.explanation)}</p>` : ''}
-                  <div class="flex gap-2 mt-2">
+                  <div class="flex gap-2 mt-2 flex-wrap">
                     <button class="exam-bookmark-btn text-[10px] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-500 hover:border-amber-300 transition-colors" data-q-idx="${i}">
                       <i data-lucide="bookmark" class="w-3 h-3 inline"></i> Bookmark
                     </button>
                     ${!r.isCorrect ? `<button class="exam-review-later-btn text-[10px] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-violet-500 hover:border-violet-300 transition-colors" data-q-idx="${i}">
                       <i data-lucide="clock" class="w-3 h-3 inline"></i> Review later
                     </button>` : ''}
+                    ${!r.isCorrect ? `<a data-route="#/topic/${r.question.topicId}" class="text-[10px] px-2 py-0.5 rounded border border-blue-200 dark:border-blue-700 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer">
+                      <i data-lucide="book-open" class="w-3 h-3 inline"></i> Review topic
+                    </a>` : ''}
                   </div>
                 </div>
               </div>

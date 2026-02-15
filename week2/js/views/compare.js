@@ -849,6 +849,39 @@ function renderComparison(dataA, dataB, idA, idB) {
         return '<div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5"><h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2"><i data-lucide="help-circle" class="w-4 h-4 text-pink-500"></i> Quiz Pool Comparison <span class="text-xs font-normal text-slate-400">' + totalQ + ' total questions</span></h3><div class="grid grid-cols-2 gap-4"><div><p class="text-xs font-medium text-' + (metaA?.color || 'blue') + '-600 mb-2">' + (metaA?.title || '') + ' (' + qA.length + ')</p><div class="flex gap-1.5">' + ['easy', 'medium', 'hard'].map(function(d) { var c = d === 'easy' ? 'green' : d === 'hard' ? 'red' : 'slate'; var n = diffA[d] || 0; return '<span class="text-[10px] px-1.5 py-0.5 rounded bg-' + c + '-100 dark:bg-' + c + '-900/20 text-' + c + '-600">' + d + ': ' + n + '</span>'; }).join('') + '</div></div><div><p class="text-xs font-medium text-' + (metaB?.color || 'blue') + '-600 mb-2">' + (metaB?.title || '') + ' (' + qB.length + ')</p><div class="flex gap-1.5">' + ['easy', 'medium', 'hard'].map(function(d) { var c = d === 'easy' ? 'green' : d === 'hard' ? 'red' : 'slate'; var n = diffB[d] || 0; return '<span class="text-[10px] px-1.5 py-0.5 rounded bg-' + c + '-100 dark:bg-' + c + '-900/20 text-' + c + '-600">' + d + ': ' + n + '</span>'; }).join('') + '</div></div></div></div>';
       })()}
 
+      <!-- Study Order Recommendation -->
+      ${(() => {
+        const mA = store.getTopicMastery(idA, dataA);
+        const mB = store.getTopicMastery(idB, dataB);
+        const mastA = mA?.mastery || 0;
+        const mastB = mB?.mastery || 0;
+        const preA = dataA.prerequisites || [];
+        const preB = dataB.prerequisites || [];
+        var reason = '';
+        var first = '';
+        var second = '';
+        if (preA.includes(idB)) {
+          first = metaB?.title || idB;
+          second = metaA?.title || idA;
+          reason = second + ' requires ' + first + ' as a prerequisite';
+        } else if (preB.includes(idA)) {
+          first = metaA?.title || idA;
+          second = metaB?.title || idB;
+          reason = second + ' requires ' + first + ' as a prerequisite';
+        } else if (mastA < mastB && (mastB - mastA) > 15) {
+          first = metaA?.title || idA;
+          second = metaB?.title || idB;
+          reason = first + ' needs more attention (' + mastA + '% vs ' + mastB + '%)';
+        } else if (mastB < mastA && (mastA - mastB) > 15) {
+          first = metaB?.title || idB;
+          second = metaA?.title || idA;
+          reason = first + ' needs more attention (' + mastB + '% vs ' + mastA + '%)';
+        } else {
+          return '';
+        }
+        return '<div class="mb-8 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl border border-emerald-200 dark:border-emerald-800 p-4"><div class="flex items-center gap-3"><i data-lucide="route" class="w-5 h-5 text-emerald-500 flex-shrink-0"></i><div><p class="text-sm font-medium text-emerald-800 dark:text-emerald-300">Study <strong>' + first + '</strong> first, then <strong>' + second + '</strong></p><p class="text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">' + reason + '</p></div></div></div>';
+      })()}
+
       <!-- Combined Study Plan -->
       ${(() => {
         const progressData = store.get('progress');
