@@ -196,10 +196,19 @@ function createFlashcardsView() {
 
           <!-- Review All Button (when no cards due) -->
           ${dueCards.length === 0 && allCards.length > 0 ? `
-          <div class="mb-6 text-center">
+          <div class="mb-6 flex items-center justify-center gap-3 flex-wrap">
             <button id="fc-review-all" class="px-5 py-2.5 rounded-xl bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400 font-medium hover:bg-violet-200 dark:hover:bg-violet-900/50 transition-colors">
-              <i data-lucide="repeat" class="w-4 h-4 inline"></i> Practice All Cards (${allCards.length})
+              <i data-lucide="repeat" class="w-4 h-4 inline"></i> Practice All (${allCards.length})
             </button>
+            ${(() => {
+              const reviews = store.get('flashcards').reviews;
+              const filtered = selectedTopic === 'all' ? allCards : allCards.filter(c => c.topicId === selectedTopic);
+              const newOnly = filtered.filter(c => !reviews[c.id]);
+              if (newOnly.length === 0 || newOnly.length === filtered.length) return '';
+              return `<button id="fc-new-only" class="px-5 py-2.5 rounded-xl bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors">
+                <i data-lucide="sparkles" class="w-4 h-4 inline"></i> New Only (${newOnly.length})
+              </button>`;
+            })()}
           </div>
           ` : ''}
 
@@ -253,7 +262,7 @@ function createFlashcardsView() {
       const sessionStatsEl = container.querySelector('#fc-session-stats');
 
       // Reset session stats
-      sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 };
+      sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
 
       // Session timer (module-level so unmount can clean up without container ref)
       let sessionSeconds = 0;
@@ -281,7 +290,7 @@ function createFlashcardsView() {
           dueCards = store.getDueFlashcards(filtered);
           currentIndex = 0;
           isFlipped = false;
-          sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 };
+          sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
           cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
           updateProgress();
           if (sessionStatsEl) sessionStatsEl.classList.add('hidden');
@@ -294,9 +303,23 @@ function createFlashcardsView() {
         dueCards = [...filtered]; // treat all as due
         currentIndex = 0;
         isFlipped = false;
-        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0 };
+        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
         cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
         // Show progress bar
+        if (progressBar) progressBar.parentElement.parentElement.classList.remove('hidden');
+        updateProgress();
+        if (window.lucide) window.lucide.createIcons();
+      });
+
+      // New Cards Only button
+      container.querySelector('#fc-new-only')?.addEventListener('click', () => {
+        const reviews = store.get('flashcards').reviews;
+        const filtered = selectedTopic === 'all' ? allCards : allCards.filter(c => c.topicId === selectedTopic);
+        dueCards = filtered.filter(c => !reviews[c.id]);
+        currentIndex = 0;
+        isFlipped = false;
+        sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {} };
+        cardArea.innerHTML = dueCards.length > 0 ? renderCard(dueCards[0], allCards) : renderComplete();
         if (progressBar) progressBar.parentElement.parentElement.classList.remove('hidden');
         updateProgress();
         if (window.lucide) window.lucide.createIcons();

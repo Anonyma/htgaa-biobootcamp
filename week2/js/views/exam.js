@@ -370,7 +370,13 @@ export function createExamView() {
           <div class="flex items-center gap-2">
             ${(() => {
               const unanswered = questions.length - Object.keys(answers).length;
-              return unanswered > 0 && unanswered < questions.length ? `<span class="text-xs text-slate-400">${unanswered} left</span>` : '';
+              const answered = Object.keys(answers).length;
+              let parts = '';
+              if (unanswered > 0 && answered > 0) {
+                parts += `<span class="text-xs text-slate-400">${unanswered} left</span>`;
+                parts += `<button id="exam-submit-early" class="px-3 py-1.5 rounded-lg text-xs font-medium border border-amber-300 dark:border-amber-700 text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors">Submit Early</button>`;
+              }
+              return parts;
             })()}
             <button id="exam-next" class="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium
               hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors ${answers[currentIndex] === undefined ? 'opacity-40' : ''}">
@@ -419,6 +425,34 @@ export function createExamView() {
     });
     containerEl.querySelector('#exam-next')?.addEventListener('click', () => {
       if (currentIndex < questions.length - 1) navigateTo(currentIndex + 1);
+    });
+    containerEl.querySelector('#exam-submit-early')?.addEventListener('click', () => {
+      const unanswered = questions.length - Object.keys(answers).length;
+      const warning = document.createElement('div');
+      warning.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+      warning.innerHTML = `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-sm mx-4 shadow-xl border border-slate-200 dark:border-slate-700">
+          <h3 class="font-bold text-lg mb-2 flex items-center gap-2"><i data-lucide="alert-circle" class="w-5 h-5 text-amber-500"></i> ${unanswered} Unanswered</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">You have ${unanswered} unanswered question${unanswered > 1 ? 's' : ''}. Unanswered questions will be marked incorrect.</p>
+          <div class="flex gap-2">
+            <button id="exam-back-to-questions" class="flex-1 py-2 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium text-sm hover:bg-slate-200 transition-colors">Go Back</button>
+            <button id="exam-submit-anyway" class="flex-1 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium text-sm hover:from-amber-600 hover:to-orange-600 transition-colors">Submit Anyway</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(warning);
+      if (window.lucide) lucide.createIcons();
+      warning.querySelector('#exam-back-to-questions').addEventListener('click', () => {
+        warning.remove();
+        // Navigate to first unanswered question
+        const firstUnanswered = questions.findIndex((_, i) => answers[i] === undefined);
+        if (firstUnanswered >= 0) navigateTo(firstUnanswered);
+      });
+      warning.querySelector('#exam-submit-anyway').addEventListener('click', () => {
+        warning.remove();
+        finishExam();
+      });
+      warning.addEventListener('click', (e) => { if (e.target === warning) warning.remove(); });
     });
     containerEl.querySelector('#exam-finish')?.addEventListener('click', () => {
       if (flaggedQuestions.size > 0) {

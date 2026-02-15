@@ -158,7 +158,7 @@ function createHomeView() {
               <a data-route="#/glossary" class="block p-5 bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800 hover:border-emerald-400 cursor-pointer transition-colors">
                 <i data-lucide="book-a" class="w-6 h-6 text-emerald-500 mb-2"></i>
                 <h3 class="font-bold">Glossary</h3>
-                <p class="text-sm text-slate-500 mt-1">All ${88} terms searchable</p>
+                <p class="text-sm text-slate-500 mt-1" id="glossary-term-count">All terms searchable</p>
               </a>
               <a data-route="#/summary" class="block p-5 bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl border border-rose-200 dark:border-rose-800 hover:border-rose-400 cursor-pointer transition-colors">
                 <i data-lucide="file-text" class="w-6 h-6 text-rose-500 mb-2"></i>
@@ -294,21 +294,24 @@ function createHomeView() {
 
       container._homeUnsub = unsub;
 
-      // Dynamic question count — load all topic data and count quiz questions
+      // Dynamic question count + glossary count — load all topic data
       (async () => {
         let totalQ = 0;
+        let totalVocab = 0;
         for (const topic of TOPICS) {
           try {
             const data = await store.loadTopicData(topic.id);
             if (data?.quizQuestions) totalQ += data.quizQuestions.length;
-            // Also count section check questions
             if (data?.sections) {
               data.sections.forEach(s => { if (s.checkQuestion) totalQ++; });
             }
+            if (data?.vocabulary) totalVocab += data.vocabulary.length;
           } catch {}
         }
         const countEl = container.querySelector('#hero-question-count [data-count]');
         if (countEl && totalQ > 0) countEl.textContent = totalQ;
+        const glossaryEl = container.querySelector('#glossary-term-count');
+        if (glossaryEl && totalVocab > 0) glossaryEl.textContent = `All ${totalVocab} terms searchable`;
       })();
 
       // Export Notes
@@ -948,6 +951,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v63', items: ['Exam early submit with unanswered warning', 'Flashcard new-cards-only mode', 'Dynamic glossary term count'] },
     { ver: 'v62', items: ['Exam fastest/slowest correct highlight', 'Most deliberate answer insight'] },
     { ver: 'v61', items: ['Study summary quiz scores', 'Compare learning objectives', 'Per-topic quiz accuracy in summary'] },
     { ver: 'v60', items: ['Exam difficulty badges', 'Last active stat on dashboard', 'Question difficulty labels'] },
