@@ -85,6 +85,9 @@ function createHomeView() {
           <!-- Time Distribution -->
           ${renderTimeDistribution()}
 
+          <!-- Session Timeline -->
+          ${renderSessionTimeline()}
+
           <!-- Visual Learning Path -->
           <section class="mb-10">
             <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
@@ -1231,6 +1234,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v101', items: ['Exam difficulty filter on setup', 'Dashboard recent sessions timeline', 'Flashcard session history tracking'] },
     { ver: 'v100', items: ['Exam answer change analysis', 'Flashcard session comparison vs previous', 'v100 milestone badge'] },
     { ver: 'v99', items: ['Dashboard topics at a glance grid', 'Compare content size comparison', 'Dashboard estimated completion date'] },
     { ver: 'v98', items: ['Exam print results button', 'Dashboard estimated completion date', 'Glossary term difficulty labels'] },
@@ -2349,6 +2353,80 @@ function getEstimatedRemaining(progress) {
   if (remaining < 60) return `~${remaining}m`;
   const hrs = Math.floor(remaining / 60);
   return `~${hrs}h ${remaining % 60}m`;
+}
+
+function renderSessionTimeline() {
+  let activityFeed;
+  try { activityFeed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]'); } catch { return ''; }
+  if (activityFeed.length === 0) return '';
+
+  // Group by date, show last 7 days
+  const byDate = {};
+  const now = new Date();
+  activityFeed.forEach(entry => {
+    const d = new Date(entry.time);
+    const key = d.toISOString().split('T')[0];
+    const daysAgo = Math.floor((now - d) / 86400000);
+    if (daysAgo > 6) return;
+    if (!byDate[key]) byDate[key] = { entries: [], totalMin: 0 };
+    byDate[key].entries.push(entry);
+  });
+
+  // Add time data
+  let timeData;
+  try { timeData = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}'); } catch { timeData = {}; }
+
+  const dates = Object.keys(byDate).sort().reverse().slice(0, 7);
+  if (dates.length === 0) return '';
+
+  const icons = {
+    'section-read': 'book-open',
+    'quiz-complete': 'check-circle',
+    'flashcard-review': 'layers',
+    'exam-complete': 'trophy',
+    'topic-complete': 'flag',
+  };
+  const colors = {
+    'section-read': 'blue',
+    'quiz-complete': 'green',
+    'flashcard-review': 'violet',
+    'exam-complete': 'amber',
+    'topic-complete': 'emerald',
+  };
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="calendar-clock" class="w-5 h-5 text-cyan-500"></i> Recent Sessions
+      </h2>
+      <div class="space-y-3">
+        ${dates.map(dateStr => {
+          const d = new Date(dateStr + 'T12:00:00');
+          const isToday = dateStr === now.toISOString().split('T')[0];
+          const label = isToday ? 'Today' : d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+          const entries = byDate[dateStr].entries.slice(-5); // Last 5 per day
+          return `
+          <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm font-semibold ${isToday ? 'text-cyan-600 dark:text-cyan-400' : 'text-slate-700 dark:text-slate-300'}">${label}</span>
+              <span class="text-xs text-slate-400">${entries.length} ${entries.length === 1 ? 'activity' : 'activities'}</span>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              ${entries.map(e => {
+                const icon = icons[e.type] || 'circle';
+                const color = colors[e.type] || 'slate';
+                const msg = (e.message || e.type || '').replace(/"/g, '&quot;');
+                const shortMsg = msg.substring(0, 40);
+                return `<span class="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-full bg-${color}-50 dark:bg-${color}-900/20 text-${color}-700 dark:text-${color}-400" title="${msg}">
+                  <i data-lucide="${icon}" class="w-3 h-3"></i> ${shortMsg}
+                </span>`;
+              }).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </section>
+  `;
 }
 
 function renderTimeDistribution() {

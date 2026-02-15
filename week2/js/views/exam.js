@@ -52,6 +52,7 @@ export function createExamView() {
   let questionTimerInterval = null;
   let flaggedQuestions = new Set();
   let answerChanges = {}; // track {questionIdx: [{from, to, time}]}
+  let difficultyFilter = new Set(['easy', 'medium', 'hard']);
   let seenQuestionIds = (() => {
     try { return new Set(JSON.parse(localStorage.getItem('htgaa-exam-seen-qs') || '[]')); } catch { return new Set(); }
   })();
@@ -184,6 +185,23 @@ export function createExamView() {
               <span id="exam-count-display" class="text-lg font-bold w-8 text-center">${questionCount}</span>
             </div>
           </div>
+          <div>
+            <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">Difficulty Filter</label>
+            <div class="flex items-center gap-2">
+              ${(() => {
+                const diffs = [
+                  { key: 'easy', label: 'Easy', color: 'green', icon: '🟢' },
+                  { key: 'medium', label: 'Medium', color: 'amber', icon: '🟡' },
+                  { key: 'hard', label: 'Hard', color: 'red', icon: '🔴' }
+                ];
+                return diffs.map(d => {
+                  const active = difficultyFilter.has(d.key);
+                  const cls = active ? 'border-' + d.color + '-400 bg-' + d.color + '-50 dark:bg-' + d.color + '-900/20' : 'border-slate-200 dark:border-slate-700 opacity-50';
+                  return '<label class="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 cursor-pointer transition-all exam-diff-toggle ' + cls + '" data-diff="' + d.key + '"><span class="text-xs">' + d.icon + '</span><span class="text-sm font-medium">' + d.label + '</span></label>';
+                }).join('');
+              })()}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -230,6 +248,19 @@ export function createExamView() {
       display.textContent = questionCount;
     });
 
+    // Difficulty filter toggles
+    containerEl.querySelectorAll('.exam-diff-toggle').forEach(label => {
+      label.addEventListener('click', () => {
+        const d = label.dataset.diff;
+        if (difficultyFilter.has(d)) {
+          if (difficultyFilter.size > 1) difficultyFilter.delete(d);
+        } else {
+          difficultyFilter.add(d);
+        }
+        renderSetup();
+      });
+    });
+
     // Start button
     containerEl.querySelector('#exam-start')?.addEventListener('click', startExam);
 
@@ -242,9 +273,10 @@ export function createExamView() {
         const data = await store.loadTopicData(tid);
         if (data?.quizQuestions) {
           const mcqs = data.quizQuestions.filter(q => q.type === 'multiple-choice');
-          poolSize += mcqs.length;
+          const filtered = mcqs.filter(q => difficultyFilter.has(q.difficulty || 'medium'));
+          poolSize += filtered.length;
           const topic = TOPICS.find(t => t.id === tid);
-          topicCounts.push({ title: topic?.title || tid, count: mcqs.length, color: topic?.color || 'blue' });
+          topicCounts.push({ title: topic?.title || tid, count: filtered.length, color: topic?.color || 'blue' });
           mcqs.forEach(q => {
             if (q.difficulty === 'easy') easy++;
             else if (q.difficulty === 'hard') hard++;
@@ -282,7 +314,7 @@ export function createExamView() {
       if (!data?.quizQuestions) continue;
       const topic = TOPICS.find(t => t.id === tid);
       data.quizQuestions.forEach((q, i) => {
-        if (q.type === 'multiple-choice') {
+        if (q.type === 'multiple-choice' && difficultyFilter.has(q.difficulty || 'medium')) {
           allQuestions.push({
             ...q,
             topicId: tid,
