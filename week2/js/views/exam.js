@@ -558,6 +558,29 @@ export function createExamView() {
         })()}
       </div>
 
+      <!-- Fastest/Slowest Correct -->
+      ${(() => {
+        const correctWithTimes = results.map((r, i) => ({ ...r, idx: i, time: questionElapsed[i] || 0 }))
+          .filter(r => r.isCorrect && r.time > 0);
+        if (correctWithTimes.length < 2) return '';
+        const fastest = correctWithTimes.reduce((a, b) => a.time < b.time ? a : b);
+        const slowest = correctWithTimes.reduce((a, b) => a.time > b.time ? a : b);
+        if (fastest.idx === slowest.idx) return '';
+        return `
+        <div class="grid grid-cols-2 gap-3 mb-6">
+          <div class="bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-200 dark:border-green-800 p-4">
+            <div class="flex items-center gap-2 mb-2"><span class="text-lg">⚡</span><span class="text-xs font-semibold text-green-700 dark:text-green-400 uppercase">Fastest Correct</span></div>
+            <p class="text-sm text-slate-700 dark:text-slate-300 line-clamp-2">${escapeHtml(fastest.question.question.substring(0, 80))}${fastest.question.question.length > 80 ? '...' : ''}</p>
+            <p class="text-xs text-green-600 dark:text-green-400 mt-1 font-bold">${fastest.time}s</p>
+          </div>
+          <div class="bg-amber-50 dark:bg-amber-900/10 rounded-xl border border-amber-200 dark:border-amber-800 p-4">
+            <div class="flex items-center gap-2 mb-2"><span class="text-lg">🧠</span><span class="text-xs font-semibold text-amber-700 dark:text-amber-400 uppercase">Most Deliberate</span></div>
+            <p class="text-sm text-slate-700 dark:text-slate-300 line-clamp-2">${escapeHtml(slowest.question.question.substring(0, 80))}${slowest.question.question.length > 80 ? '...' : ''}</p>
+            <p class="text-xs text-amber-600 dark:text-amber-400 mt-1 font-bold">${slowest.time}s</p>
+          </div>
+        </div>`;
+      })()}
+
       <!-- Topic Breakdown -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <h2 class="font-semibold mb-4">Score by Topic</h2>
