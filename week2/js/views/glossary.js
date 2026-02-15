@@ -195,6 +195,7 @@ function createGlossaryView() {
                             const cc = wc <= 10 ? 'blue' : wc <= 25 ? 'slate' : 'amber';
                             return `<span class="text-[8px] px-1 py-0.5 rounded bg-${cc}-50 dark:bg-${cc}-900/20 text-${cc}-400" title="${wc} words">${wc}w · ${complexity}</span>`;
                           })()}
+                          <button class="glossary-copy-btn text-[9px] px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-300 hover:text-teal-500 hover:border-teal-300 transition-colors" data-copy-text="${t.term}: ${t.definition.replace(/"/g, '&quot;')}" title="Copy to clipboard"><i data-lucide="copy" class="w-3 h-3 inline"></i></button>
                           <a data-route="#/topic/${t.topicId}" class="text-xs px-2 py-1 rounded-full bg-${t.topicColor}-100 dark:bg-${t.topicColor}-900/30 text-${t.topicColor}-600 dark:text-${t.topicColor}-400 cursor-pointer hover:underline whitespace-nowrap">${t.topicTitle}</a>
                         </div>
                       </div>
@@ -373,6 +374,24 @@ function createGlossaryView() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(a.href);
+      });
+
+      // Copy term buttons
+      container.querySelectorAll('.glossary-copy-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const text = btn.dataset.copyText;
+          navigator.clipboard.writeText(text).then(() => {
+            btn.innerHTML = '<i data-lucide="check" class="w-3 h-3 inline"></i>';
+            btn.classList.add('text-teal-500', 'border-teal-300');
+            if (window.lucide) lucide.createIcons();
+            setTimeout(() => {
+              btn.innerHTML = '<i data-lucide="copy" class="w-3 h-3 inline"></i>';
+              btn.classList.remove('text-teal-500', 'border-teal-300');
+              if (window.lucide) lucide.createIcons();
+            }, 1500);
+          }).catch(() => {});
+        });
       });
 
       // Back to top button

@@ -241,6 +241,22 @@ function createStudySummaryView() {
                 </div>`;
               })()}
 
+              ${(() => {
+                const sr = store.getSectionsRead(topic.id);
+                const totalSections = data.sections?.length || 0;
+                if (totalSections === 0) return '';
+                return `<div class="mb-3 flex items-center gap-2 text-xs">
+                  <span class="text-slate-500">Sections:</span>
+                  <div class="flex gap-0.5">
+                    ${(data.sections || []).map((s, i) => {
+                      const isRead = sr.sections ? sr.sections.includes(s.id || `section-${i}`) : false;
+                      return `<div class="w-4 h-4 rounded-sm flex items-center justify-center text-[8px] font-bold ${isRead ? `bg-${topic.color}-200 dark:bg-${topic.color}-800 text-${topic.color}-700 dark:text-${topic.color}-300` : 'bg-slate-100 dark:bg-slate-700 text-slate-400'}" title="${s.title}">${i + 1}</div>`;
+                    }).join('')}
+                  </div>
+                  <span class="text-slate-400">${sr.read || 0}/${totalSections}</span>
+                </div>`;
+              })()}
+
               ${data.learningObjectives ? `
                 <div class="mb-4">
                   <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Learning Objectives</h3>

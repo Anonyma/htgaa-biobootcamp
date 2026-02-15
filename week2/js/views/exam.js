@@ -185,6 +185,7 @@ export function createExamView() {
 
       <div id="exam-pool-info" class="text-center text-xs text-slate-400 mb-3">
         <span id="exam-pool-count">Loading question pool...</span>
+        <div id="exam-difficulty-breakdown" class="mt-1 hidden"></div>
       </div>
       <button id="exam-start" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg
         hover:from-amber-600 hover:to-orange-600 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg">
@@ -231,10 +232,17 @@ export function createExamView() {
     // Load question pool count asynchronously
     (async () => {
       let poolSize = 0;
+      let easy = 0, medium = 0, hard = 0;
       for (const tid of selectedTopics) {
         const data = await store.loadTopicData(tid);
         if (data?.quizQuestions) {
-          poolSize += data.quizQuestions.filter(q => q.type === 'multiple-choice').length;
+          const mcqs = data.quizQuestions.filter(q => q.type === 'multiple-choice');
+          poolSize += mcqs.length;
+          mcqs.forEach(q => {
+            if (q.difficulty === 'easy') easy++;
+            else if (q.difficulty === 'hard') hard++;
+            else medium++;
+          });
         }
       }
       const poolEl = containerEl.querySelector('#exam-pool-count');
@@ -242,6 +250,11 @@ export function createExamView() {
         poolEl.textContent = poolSize > 0
           ? `Drawing from ${poolSize} available questions across ${selectedTopics.size} topic${selectedTopics.size > 1 ? 's' : ''}`
           : 'No topics selected';
+      }
+      const diffEl = containerEl.querySelector('#exam-difficulty-breakdown');
+      if (diffEl && poolSize > 0) {
+        diffEl.classList.remove('hidden');
+        diffEl.innerHTML = `<span class="text-green-500">${easy} easy</span> · <span class="text-slate-500">${medium} medium</span> · <span class="text-red-400">${hard} hard</span>`;
       }
     })();
   }
