@@ -103,6 +103,7 @@ function createHomeView() {
               ${renderStatCard('brain', 'Flashcards', getFlashcardStats(), 'purple')}
               ${renderStatCard('timer', 'Time Studied', getTimeStudied(), 'cyan')}
               ${renderStatCard('hourglass', 'Remaining', getEstimatedRemaining(progress), 'rose')}
+              ${renderStatCard('activity', 'Sessions', getSessionCount(), 'teal')}
               ${renderStatCard('book-open', 'Sections Read', getSectionsReadStats(), 'indigo')}
               ${renderStatCard('calendar-check', 'Last Active', getLastActive(), 'slate')}
             </div>
@@ -970,6 +971,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v80', items: ['Dashboard sessions stat', 'Study summary homework connections', 'Exam new question badges'] },
     { ver: 'v79', items: ['Flashcard reverse mode', 'Exam enhanced streak indicator', 'Compare flashcard mastery'] },
     { ver: 'v78', items: ['Glossary related terms expand', 'Exam cumulative accuracy trend', 'Study summary quiz/challenge counts'] },
     { ver: 'v77', items: ['Exam topic selection persistence', 'Flashcard copy session results', 'Knowledge radar on dashboard'] },
@@ -2125,6 +2127,19 @@ function renderKnowledgeRadar() {
       </div>
     </section>
   `;
+}
+
+function getSessionCount() {
+  const examScores = store.getExamScores();
+  const feed = JSON.parse(localStorage.getItem('htgaa-week2-activity-feed') || '[]');
+  // Count distinct flashcard sessions (group by 10-min windows)
+  const fcTimes = feed.filter(a => a.action === 'flashcard').map(a => a.time);
+  let fcSessions = 0;
+  let lastSessionTime = 0;
+  fcTimes.sort().forEach(t => {
+    if (t - lastSessionTime > 600000) { fcSessions++; lastSessionTime = t; }
+  });
+  return `${examScores.length + fcSessions}`;
 }
 
 function getSectionsReadStats() {

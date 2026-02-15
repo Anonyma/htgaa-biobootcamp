@@ -52,6 +52,9 @@ export function createExamView() {
   let questionTimerInterval = null;
   let flaggedQuestions = new Set();
   let answerChanges = {}; // track {questionIdx: [{from, to, time}]}
+  let seenQuestionIds = (() => {
+    try { return new Set(JSON.parse(localStorage.getItem('htgaa-exam-seen-qs') || '[]')); } catch { return new Set(); }
+  })();
 
   function cleanupKeyHandler() {
     if (activeKeyHandler) {
@@ -317,6 +320,7 @@ export function createExamView() {
           <span class="text-sm font-medium text-slate-500">
             Question ${currentIndex + 1} of ${questions.length}
           </span>
+          ${!seenQuestionIds.has(q.id) ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 uppercase">New</span>' : ''}
           <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-${q.topicColor}-100 text-${q.topicColor}-700 dark:bg-${q.topicColor}-900/30 dark:text-${q.topicColor}-400">
             ${escapeHtml(q.topicTitle)}
           </span>
@@ -603,6 +607,10 @@ export function createExamView() {
     // Save score
     store.saveExamScore(correct, questions.length, elapsedSeconds, [...selectedTopics]);
     store.recordStudyActivity();
+
+    // Track seen question IDs
+    questions.forEach(q => seenQuestionIds.add(q.id));
+    localStorage.setItem('htgaa-exam-seen-qs', JSON.stringify([...seenQuestionIds]));
 
     // Per-topic breakdown
     const topicBreakdown = {};

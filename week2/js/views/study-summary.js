@@ -261,6 +261,23 @@ function createStudySummaryView() {
                 </div>
               ` : ''}
 
+              ${data.homeworkConnections?.length ? `
+                <div class="mb-4">
+                  <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Homework Connections</h3>
+                  <div class="space-y-1.5 text-xs">
+                    ${data.homeworkConnections.map(hc => `
+                      <div class="flex items-start gap-2 p-2 rounded-lg bg-teal-50 dark:bg-teal-900/10 border border-teal-200 dark:border-teal-800">
+                        <span class="flex-shrink-0 px-1.5 py-0.5 rounded bg-teal-200 dark:bg-teal-800 text-teal-800 dark:text-teal-200 font-bold">Part ${hc.hwPart}</span>
+                        <div>
+                          <span class="font-semibold text-teal-700 dark:text-teal-300">${hc.title}</span>
+                          <p class="text-slate-500 dark:text-slate-400 mt-0.5">${hc.relevance}</p>
+                        </div>
+                      </div>
+                    `).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
               ${data.conceptConnections?.length ? `
                 <div class="mb-4">
                   <h3 class="text-sm font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">Connections to Other Topics</h3>
