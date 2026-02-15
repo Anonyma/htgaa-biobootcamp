@@ -376,9 +376,12 @@ function renderConfidenceTimeline() {
 
   TOPICS.forEach(topic => {
     const ratings = store.getConfidence(topic.id);
-    ratings.forEach(rating => {
+    // Handle both array format [{rating, timestamp}] and object format {idx: {rating, updated}}
+    const ratingsList = Array.isArray(ratings) ? ratings : Object.values(ratings);
+    ratingsList.forEach(rating => {
       allRatings.push({
-        ...rating,
+        rating: rating.rating,
+        timestamp: rating.timestamp || rating.updated || 0,
         topicId: topic.id,
         topicTitle: topic.title
       });
@@ -423,11 +426,8 @@ function renderConfidenceTimeline() {
 }
 
 function saveConfidenceRating(topicId, rating) {
-  const key = 'htgaa-week2-confidence';
-  const data = JSON.parse(localStorage.getItem(key) || '{}');
-  if (!data[topicId]) data[topicId] = [];
-  data[topicId].push({ rating, timestamp: Date.now() });
-  localStorage.setItem(key, JSON.stringify(data));
+  // Use store's saveConfidence with objectiveIndex 'overall' for overall topic confidence
+  store.saveConfidence(topicId, 'overall', rating);
 }
 
 function updateStarDisplay(stars, rating) {

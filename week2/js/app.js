@@ -29,6 +29,8 @@ import { createResourcesView } from './views/resources.js';
 import { createLabProtocolView } from './views/lab-protocol.js';
 import { createConfidenceView } from './views/confidence.js';
 import { createCheatsheetView } from './views/cheatsheet.js';
+import { createAchievementsView } from './views/achievements.js';
+import { createDiscussionView } from './views/discussion.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -73,7 +75,9 @@ class App {
       .on('/resources', () => createResourcesView())
       .on('/lab-protocol', () => createLabProtocolView())
       .on('/confidence', () => createConfidenceView())
-      .on('/cheatsheet', () => createCheatsheetView());
+      .on('/cheatsheet', () => createCheatsheetView())
+      .on('/achievements', () => createAchievementsView())
+      .on('/discussion', () => createDiscussionView());
 
     // Start
     this.router.start();
@@ -276,6 +280,14 @@ class App {
               <a data-route="#/timeline" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="milestone" class="w-4 h-4 text-indigo-500"></i>
                 <span>Journey</span>
+              </a>
+              <a data-route="#/achievements" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
+                <span>Achievements</span>
+              </a>
+              <a data-route="#/discussion" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="message-circle" class="w-4 h-4 text-violet-500"></i>
+                <span>Discussion</span>
               </a>
               <a data-route="#/analytics" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i>

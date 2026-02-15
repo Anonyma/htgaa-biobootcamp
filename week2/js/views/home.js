@@ -202,6 +202,12 @@ function createHomeView() {
               <a data-route="#/lab-protocol" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-lime-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="test-tubes" class="w-4 h-4 text-lime-500"></i> Lab Protocol
               </a>
+              <a data-route="#/achievements" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-amber-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="award" class="w-4 h-4 text-amber-500"></i> Achievements
+              </a>
+              <a data-route="#/discussion" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="message-circle" class="w-4 h-4 text-violet-500"></i> Discussion
+              </a>
             </div>
           </section>
 
@@ -1711,6 +1717,8 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v130', items: ['Discussion prompts', 'Critical thinking questions', 'Study group conversation starters'] },
+    { ver: 'v129', items: ['Achievement badges', '20 unlockable badges', 'Gamified progress tracking'] },
     { ver: 'v128', items: ['Lab protocol quick reference', 'Step-by-step gel lab checklist', 'Troubleshooting guide'] },
     { ver: 'v127', items: ['Cheat sheet view', 'Printable one-page reference card', 'Key formulas and facts'] },
     { ver: 'v126', items: ['Confidence tracker', 'Self-rated topic understanding', 'Personalized study recommendations'] },
