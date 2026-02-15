@@ -1299,6 +1299,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v106', items: ['Exam question pool preview', 'Compare mastery race chart', 'Study summary focus areas'] },
     { ver: 'v105', items: ['Flashcard hard cards mode', 'Dashboard knowledge gaps widget', 'Glossary mastery by topic'] },
     { ver: 'v104', items: ['Study summary efficiency metrics', 'Compare study time recommendation', 'Exam per-topic accuracy trend arrows'] },
     { ver: 'v103', items: ['Glossary mastery by topic breakdown', 'Exam best streak highlight', 'Dashboard topic connections map'] },

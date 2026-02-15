@@ -210,6 +210,7 @@ export function createExamView() {
         <span id="exam-pool-count">Loading question pool...</span>
         <div id="exam-difficulty-breakdown" class="mt-1 hidden"></div>
       </div>
+      <div id="exam-preview-question" class="mb-4 hidden"></div>
       <button id="exam-start" class="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg
         hover:from-amber-600 hover:to-orange-600 transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg">
         Start Exam
@@ -315,6 +316,24 @@ export function createExamView() {
           `<span class="text-[10px] text-slate-400">${tc.title.split(' ')[0]}: ${tc.count}</span>`
         ).join('')}</div>` : '';
         diffEl.innerHTML = `<span class="text-green-500">${easy} easy</span> · <span class="text-slate-500">${medium} medium</span> · <span class="text-red-400">${hard} hard</span>${topicBars}`;
+      }
+      // Show preview question
+      const previewEl = containerEl.querySelector('#exam-preview-question');
+      if (previewEl && poolSize > 0) {
+        const allMcqs = [];
+        for (const tid of selectedTopics) {
+          const d = await store.loadTopicData(tid);
+          if (d?.quizQuestions) {
+            const t = TOPICS.find(tp => tp.id === tid);
+            d.quizQuestions.filter(q => q.type === 'multiple-choice' && difficultyFilter.has(q.difficulty || 'medium'))
+              .forEach(q => allMcqs.push({ ...q, topicTitle: t?.title || tid }));
+          }
+        }
+        if (allMcqs.length > 0) {
+          const sample = allMcqs[Math.floor(Math.random() * allMcqs.length)];
+          previewEl.classList.remove('hidden');
+          previewEl.innerHTML = `<div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 p-4 text-left"><p class="text-[10px] text-slate-400 uppercase tracking-wider mb-1">Sample Question · ${escapeHtml(sample.topicTitle)}</p><p class="text-sm text-slate-700 dark:text-slate-300 font-medium">${escapeHtml(sample.question)}</p><div class="mt-2 flex flex-wrap gap-1.5">${sample.options.slice(0, 4).map((o, i) => '<span class="text-xs px-2 py-1 rounded bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-500">' + String.fromCharCode(65 + i) + '. ' + escapeHtml(o.substring(0, 50)) + '</span>').join('')}</div></div>`;
+        }
       }
     })();
   }

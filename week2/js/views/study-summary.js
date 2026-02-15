@@ -230,6 +230,23 @@ function createStudySummaryView() {
             } catch { return ''; }
           })()}
 
+          <!-- Focus Areas -->
+          ${(() => {
+            const unread = [];
+            allData.forEach(({ topic, data }) => {
+              const sectionsRead = store.getSectionsRead(topic.id);
+              const totalSections = (data.sections || []).length;
+              const readCount = sectionsRead ? Object.values(sectionsRead).filter(Boolean).length : 0;
+              if (totalSections > 0 && readCount < totalSections) {
+                const remaining = totalSections - readCount;
+                unread.push({ topic, remaining, total: totalSections, pct: Math.round((readCount / totalSections) * 100) });
+              }
+            });
+            if (unread.length === 0) return '';
+            unread.sort((a, b) => a.pct - b.pct);
+            return '<div class="mb-8 print:mb-4"><h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="focus" class="w-5 h-5 text-orange-500"></i> Focus Areas</h2><p class="text-xs text-slate-400 mb-3">Topics with unread sections</p><div class="space-y-2">' + unread.map(function(u) { return '<div class="flex items-center gap-3"><i data-lucide="' + u.topic.icon + '" class="w-4 h-4 text-' + u.topic.color + '-500 flex-shrink-0"></i><span class="text-sm font-medium w-28 truncate">' + u.topic.title.split(' ')[0] + '</span><div class="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-' + u.topic.color + '-400 rounded-full" style="width:' + u.pct + '%"></div></div><span class="text-xs text-slate-500">' + u.remaining + ' left</span></div>'; }).join('') + '</div></div>';
+          })()}
+
           ${allData.map(({ topic, data }) => `
             <section class="mb-8 page-break-inside-avoid">
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">
