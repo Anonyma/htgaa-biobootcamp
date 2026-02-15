@@ -81,11 +81,18 @@ class Router {
     const view = matched(params);
     this.currentView = view;
 
+    // Show skeleton placeholder while async render loads
+    if (view.skeleton) {
+      this.contentEl.innerHTML = view.skeleton();
+      if (window.lucide) lucide.createIcons();
+    }
+
     if (view.render) {
       const content = await view.render();
       if (typeof content === 'string') {
         this.contentEl.innerHTML = content;
       } else if (content instanceof HTMLElement) {
+        this.contentEl.innerHTML = '';
         this.contentEl.appendChild(content);
       }
     }

@@ -51,6 +51,40 @@ Object.entries(TOPIC_VIDEOS).forEach(([topicId, videos]) => {
 });
 
 /** Renders a topic page view. */
+function renderTopicSkeleton(topicId) {
+  const topic = TOPICS.find(t => t.id === topicId);
+  return `
+    <div class="max-w-4xl mx-auto px-4 py-8 animate-pulse">
+      <div class="flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 rounded-xl bg-slate-200 dark:bg-slate-700"></div>
+        <div>
+          <div class="h-3 w-24 bg-slate-200 dark:bg-slate-700 rounded mb-2"></div>
+          <div class="h-7 w-64 bg-slate-200 dark:bg-slate-700 rounded"></div>
+        </div>
+      </div>
+      <div class="h-4 w-48 bg-slate-200 dark:bg-slate-700 rounded mb-8"></div>
+      <div class="space-y-4 mb-8">
+        <div class="h-20 bg-slate-100 dark:bg-slate-800 rounded-xl"></div>
+      </div>
+      ${[1,2,3].map(() => `
+        <div class="mb-10">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700"></div>
+            <div class="h-6 w-48 bg-slate-200 dark:bg-slate-700 rounded"></div>
+          </div>
+          <div class="space-y-3">
+            <div class="h-4 bg-slate-100 dark:bg-slate-800 rounded w-full"></div>
+            <div class="h-4 bg-slate-100 dark:bg-slate-800 rounded w-11/12"></div>
+            <div class="h-4 bg-slate-100 dark:bg-slate-800 rounded w-10/12"></div>
+            <div class="h-4 bg-slate-100 dark:bg-slate-800 rounded w-full"></div>
+            <div class="h-4 bg-slate-100 dark:bg-slate-800 rounded w-9/12"></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
 function createTopicView(topicId) {
   let simCleanup = [];
 
@@ -59,6 +93,11 @@ function createTopicView(topicId) {
       const data = await store.loadTopicData(topicId);
       if (!data) return renderError(topicId);
       return renderTopicPage(data, topicId);
+    },
+
+    // Show skeleton while loading (used by router for instant feedback)
+    skeleton() {
+      return renderTopicSkeleton(topicId);
     },
 
     async mount(container) {
