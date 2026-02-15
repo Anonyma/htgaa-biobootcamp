@@ -24,7 +24,7 @@ function createHomeView() {
                   genetic codes, gel electrophoresis, and gene expression.
                 </p>
                 <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-100 text-xs">
-                  <span class="font-bold text-white">v109</span> 200+ features built with AI-assisted development
+                  <span class="font-bold text-white">v110</span> 200+ features built with AI-assisted development
                 </div>
                 <div class="flex items-center gap-4 mt-3 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
@@ -158,6 +158,9 @@ function createHomeView() {
 
           <!-- Learning Insights -->
           ${renderLearningInsights()}
+
+          <!-- Quick Review -->
+          ${renderQuickReview()}
 
           <!-- Knowledge Gaps -->
           ${renderKnowledgeGaps()}
@@ -1036,6 +1039,29 @@ function renderMasteryRanking() {
   `;
 }
 
+function renderQuickReview() {
+  try {
+    const items = JSON.parse(localStorage.getItem('htgaa-review-later') || '[]');
+    if (items.length === 0) return '';
+    const recent = items.slice(-5).reverse();
+    return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="clock" class="w-5 h-5 text-violet-500"></i> Review Later
+        <span class="text-sm font-normal text-slate-400">${items.length} saved</span>
+      </h2>
+      <div class="space-y-3">
+        ${recent.map(function(item) {
+          var topic = TOPICS.find(function(t) { return t.id === item.topicId; });
+          return '<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4"><p class="text-sm font-medium mb-2">' + item.question + '</p><div class="flex items-center gap-3 text-xs"><span class="text-red-500 line-through">' + item.yourAnswer + '</span><span class="text-slate-400">&rarr;</span><span class="text-green-600 font-medium">' + item.correctAnswer + '</span></div>' + (item.explanation ? '<p class="text-xs text-slate-400 mt-1">' + item.explanation + '</p>' : '') + '<div class="flex items-center gap-2 mt-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-' + (topic?.color || 'slate') + '-100 dark:bg-' + (topic?.color || 'slate') + '-900/30 text-' + (topic?.color || 'slate') + '-600">' + (topic?.title || item.topic) + '</span></div></div>';
+        }).join('')}
+      </div>
+      ${items.length > 5 ? '<p class="text-xs text-slate-400 text-center mt-2">Showing 5 of ' + items.length + ' saved questions</p>' : ''}
+    </section>
+    `;
+  } catch { return ''; }
+}
+
 function renderKnowledgeGaps() {
   const gaps = TOPICS.map(t => {
     const qs = store.getQuizScore(t.id);
@@ -1303,6 +1329,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v110', items: ['Study summary mastery velocity', 'Exam review-later buttons', 'Dashboard quick review widget'] },
     { ver: 'v109', items: ['Exam difficulty breakdown chart', 'Flashcard 7-day review calendar', 'Dashboard weekly goals tracker'] },
     { ver: 'v108', items: ['Exam difficulty badges in review', 'Glossary Anki TSV export', 'Compare combined study plan'] },
     { ver: 'v107', items: ['Exam grade distribution on setup', 'Flashcard daily review comparison', 'Dashboard best study day stat'] },

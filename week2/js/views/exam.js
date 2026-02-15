@@ -1261,9 +1261,14 @@ export function createExamView() {
                     return ` (${fromLetter} → ${toLetter})`;
                   })()}</p>` : ''}
                   ${r.question.explanation ? `<p class="text-xs text-slate-500 mt-1">${escapeHtml(r.question.explanation)}</p>` : ''}
-                  <button class="exam-bookmark-btn mt-2 text-[10px] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-500 hover:border-amber-300 transition-colors" data-q-idx="${i}">
-                    <i data-lucide="bookmark" class="w-3 h-3 inline"></i> Save for review
-                  </button>
+                  <div class="flex gap-2 mt-2">
+                    <button class="exam-bookmark-btn text-[10px] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-amber-500 hover:border-amber-300 transition-colors" data-q-idx="${i}">
+                      <i data-lucide="bookmark" class="w-3 h-3 inline"></i> Bookmark
+                    </button>
+                    ${!r.isCorrect ? `<button class="exam-review-later-btn text-[10px] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-400 hover:text-violet-500 hover:border-violet-300 transition-colors" data-q-idx="${i}">
+                      <i data-lucide="clock" class="w-3 h-3 inline"></i> Review later
+                    </button>` : ''}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1429,6 +1434,33 @@ export function createExamView() {
         }
         btn.innerHTML = '<i data-lucide="bookmark-check" class="w-3 h-3 inline"></i> Saved!';
         btn.classList.add('text-amber-500', 'border-amber-300');
+        if (window.lucide) lucide.createIcons();
+      });
+    });
+
+    // Review later buttons — saves missed questions for dashboard quick review
+    containerEl.querySelectorAll('.exam-review-later-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.qIdx);
+        const r = results[idx];
+        if (!r) return;
+        const saved = JSON.parse(localStorage.getItem('htgaa-review-later') || '[]');
+        const item = {
+          question: r.question.question,
+          correctAnswer: r.question.options[r.question.correctIndex],
+          yourAnswer: r.question.shuffledOptions?.[r.selectedIdx]?.text || 'Skipped',
+          explanation: r.question.explanation || '',
+          topic: r.question.topicTitle,
+          topicId: r.question.topicId,
+          date: Date.now()
+        };
+        if (!saved.some(s => s.question === item.question)) {
+          saved.push(item);
+          if (saved.length > 50) saved.splice(0, saved.length - 50);
+          localStorage.setItem('htgaa-review-later', JSON.stringify(saved));
+        }
+        btn.innerHTML = '<i data-lucide="check" class="w-3 h-3 inline"></i> Added';
+        btn.classList.add('text-violet-500', 'border-violet-300');
         if (window.lucide) lucide.createIcons();
       });
     });

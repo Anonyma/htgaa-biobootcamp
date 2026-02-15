@@ -247,6 +247,31 @@ function createStudySummaryView() {
             return '<div class="mb-8 print:mb-4"><h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="focus" class="w-5 h-5 text-orange-500"></i> Focus Areas</h2><p class="text-xs text-slate-400 mb-3">Topics with unread sections</p><div class="space-y-2">' + unread.map(function(u) { return '<div class="flex items-center gap-3"><i data-lucide="' + u.topic.icon + '" class="w-4 h-4 text-' + u.topic.color + '-500 flex-shrink-0"></i><span class="text-sm font-medium w-28 truncate">' + u.topic.title.split(' ')[0] + '</span><div class="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-' + u.topic.color + '-400 rounded-full" style="width:' + u.pct + '%"></div></div><span class="text-xs text-slate-500">' + u.remaining + ' left</span></div>'; }).join('') + '</div></div>';
           })()}
 
+          <!-- Mastery Velocity -->
+          ${(() => {
+            try {
+              const scores = store.getExamScores();
+              const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+              const recentScores = scores.filter(function(s) { return s.date > weekAgo && s.topicBreakdown; });
+              if (recentScores.length < 2) return '';
+              const velocity = {};
+              TOPICS.forEach(function(t) {
+                var relevant = recentScores.filter(function(s) { return s.topicBreakdown[t.id]; });
+                if (relevant.length < 2) return;
+                var first = relevant[0].topicBreakdown[t.id];
+                var last = relevant[relevant.length - 1].topicBreakdown[t.id];
+                var firstPct = Math.round((first.correct / first.total) * 100);
+                var lastPct = Math.round((last.correct / last.total) * 100);
+                var diff = lastPct - firstPct;
+                velocity[t.id] = { title: t.title, icon: t.icon, color: t.color, diff: diff, current: lastPct };
+              });
+              var entries = Object.values(velocity);
+              if (entries.length === 0) return '';
+              entries.sort(function(a, b) { return b.diff - a.diff; });
+              return '<div class="mb-8 print:mb-4"><h2 class="text-lg font-bold mb-3 flex items-center gap-2"><i data-lucide="trending-up" class="w-5 h-5 text-blue-500"></i> Mastery Velocity <span class="text-xs font-normal text-slate-400">7-day trend</span></h2><div class="grid grid-cols-' + Math.min(entries.length, 3) + ' gap-3">' + entries.map(function(e) { var c = e.diff > 5 ? 'green' : e.diff < -5 ? 'red' : 'slate'; return '<div class="text-center p-3 rounded-xl bg-' + c + '-50 dark:bg-' + c + '-900/10 border border-' + c + '-200 dark:border-' + c + '-800"><i data-lucide="' + e.icon + '" class="w-4 h-4 text-' + e.color + '-500 mx-auto mb-1"></i><div class="text-lg font-bold text-' + c + '-600">' + (e.diff > 0 ? '+' : '') + e.diff + '%</div><div class="text-[10px] text-slate-500">now at ' + e.current + '%</div></div>'; }).join('') + '</div></div>';
+            } catch { return ''; }
+          })()}
+
           ${allData.map(({ topic, data }) => `
             <section class="mb-8 page-break-inside-avoid">
               <h2 class="text-xl font-bold mb-3 flex items-center gap-2 text-${topic.color}-600 dark:text-${topic.color}-400 border-b-2 border-${topic.color}-200 dark:border-${topic.color}-800 pb-2">
