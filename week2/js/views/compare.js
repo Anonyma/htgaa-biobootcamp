@@ -321,6 +321,19 @@ function renderComparison(dataA, dataB, idA, idB) {
       </div>
       ` : ''}
 
+      <!-- Prerequisites -->
+      ${(() => {
+        const preA = dataA.prerequisites || [];
+        const preB = dataB.prerequisites || [];
+        if (preA.length === 0 && preB.length === 0) return '';
+        const aNeeds = preA.includes(topicB);
+        const bNeeds = preB.includes(topicA);
+        let orderHint = '';
+        if (aNeeds && !bNeeds) orderHint = '<p class="text-xs text-indigo-600 dark:text-indigo-400 mt-2 text-center font-medium">Study ' + (metaB?.title || topicB) + ' first — it is a prerequisite for ' + (metaA?.title || topicA) + '</p>';
+        else if (bNeeds && !aNeeds) orderHint = '<p class="text-xs text-indigo-600 dark:text-indigo-400 mt-2 text-center font-medium">Study ' + (metaA?.title || topicA) + ' first — it is a prerequisite for ' + (metaB?.title || topicB) + '</p>';
+        return '<div class="mb-8 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-5 border border-indigo-200 dark:border-indigo-800"><h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2"><i data-lucide="git-branch" class="w-4 h-4 text-indigo-500"></i> Prerequisites</h3><div class="grid grid-cols-2 gap-4"><div><p class="text-xs text-slate-400 mb-1">' + (metaA?.title || topicA) + ' requires:</p>' + (preA.length > 0 ? preA.map(function(p) { var t = TOPICS.find(function(tp) { return tp.id === p; }); return '<span class="inline-block text-xs px-2 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 mr-1 mb-1">' + (t ? t.title : p) + '</span>'; }).join('') : '<span class="text-xs text-slate-400 italic">None</span>') + '</div><div><p class="text-xs text-slate-400 mb-1">' + (metaB?.title || topicB) + ' requires:</p>' + (preB.length > 0 ? preB.map(function(p) { var t = TOPICS.find(function(tp) { return tp.id === p; }); return '<span class="inline-block text-xs px-2 py-1 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 mr-1 mb-1">' + (t ? t.title : p) + '</span>'; }).join('') : '<span class="text-xs text-slate-400 italic">None</span>') + '</div></div>' + orderHint + '</div>';
+      })()}
+
       <!-- Key Facts Side by Side -->
       <div class="mb-8">
         <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">

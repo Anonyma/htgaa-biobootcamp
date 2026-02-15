@@ -169,6 +169,7 @@ export function createExamView() {
         <div class="flex items-center gap-2">
           <button class="text-xs px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors" id="exam-select-all">Select All</button>
           <button class="text-xs px-3 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors" id="exam-select-none">Deselect All</button>
+          <button class="text-xs px-3 py-1 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors" id="exam-focus-weak" title="Select topics with less than 60% mastery">Focus Weak</button>
         </div>
       </div>
 
@@ -237,6 +238,20 @@ export function createExamView() {
     containerEl.querySelector('#exam-select-none')?.addEventListener('click', () => {
       selectedTopics.clear();
       localStorage.setItem('htgaa-exam-topics', JSON.stringify([]));
+      renderSetup();
+    });
+    containerEl.querySelector('#exam-focus-weak')?.addEventListener('click', () => {
+      const weak = TOPICS.filter(t => {
+        const m = store.getTopicMastery(t.id, null);
+        return !m || m.mastery < 60;
+      });
+      if (weak.length === 0) {
+        // All topics are strong, select all instead
+        selectedTopics = new Set(TOPICS.map(t => t.id));
+      } else {
+        selectedTopics = new Set(weak.map(t => t.id));
+      }
+      localStorage.setItem('htgaa-exam-topics', JSON.stringify([...selectedTopics]));
       renderSetup();
     });
 

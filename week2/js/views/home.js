@@ -140,6 +140,9 @@ function createHomeView() {
           <!-- Weekly Progress Comparison -->
           ${renderWeeklyComparison()}
 
+          <!-- Flashcard Forecast -->
+          ${renderFlashcardForecast()}
+
           <!-- Study Planner -->
           ${renderStudyPlanner(progress)}
 
@@ -1234,6 +1237,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v102', items: ['Exam focus-weak-topics button', 'Compare prerequisite chain', 'Dashboard flashcard review forecast'] },
     { ver: 'v101', items: ['Exam difficulty filter on setup', 'Dashboard recent sessions timeline', 'Flashcard session history tracking'] },
     { ver: 'v100', items: ['Exam answer change analysis', 'Flashcard session comparison vs previous', 'v100 milestone badge'] },
     { ver: 'v99', items: ['Dashboard topics at a glance grid', 'Compare content size comparison', 'Dashboard estimated completion date'] },
@@ -1977,6 +1981,46 @@ function renderStudyHeatmap() {
           <div class="w-3 h-3 rounded-sm bg-green-700 dark:bg-green-400"></div>
           <span>More</span>
         </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderFlashcardForecast() {
+  const fc = store.get('flashcards');
+  const reviews = fc?.reviews || {};
+  const entries = Object.values(reviews);
+  if (entries.length < 3) return '';
+
+  const now = Date.now();
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const dayStart = now + i * 86400000;
+    const dayEnd = dayStart + 86400000;
+    const due = entries.filter(r => r.nextReview && r.nextReview >= (i === 0 ? 0 : dayStart) && r.nextReview < dayEnd).length;
+    days.push({ label: i === 0 ? 'Today' : i === 1 ? 'Tmrw' : new Date(dayStart).toLocaleDateString('en-US', { weekday: 'short' }), count: due });
+  }
+
+  const maxCount = Math.max(...days.map(d => d.count), 1);
+
+  return `
+    <section class="mb-10">
+      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
+        <i data-lucide="calendar-days" class="w-5 h-5 text-violet-500"></i> Review Forecast
+      </h2>
+      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+        <div class="flex items-end gap-2 h-24">
+          ${days.map(d => {
+            const h = Math.max(4, Math.round((d.count / maxCount) * 80));
+            const color = d.count >= 15 ? 'bg-red-400' : d.count >= 8 ? 'bg-amber-400' : d.count > 0 ? 'bg-violet-400' : 'bg-slate-200 dark:bg-slate-700';
+            return `<div class="flex-1 flex flex-col items-center gap-1">
+              <span class="text-[10px] font-bold text-slate-500">${d.count}</span>
+              <div class="${color} rounded-t-sm w-full" style="height:${h}px"></div>
+              <span class="text-[10px] text-slate-400">${d.label}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <p class="text-xs text-slate-400 mt-3 text-center">${days[0].count} cards due today · ${days.reduce((s, d) => s + d.count, 0)} total this week</p>
       </div>
     </section>
   `;
