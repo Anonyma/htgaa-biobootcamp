@@ -51,7 +51,10 @@ function createFlashcardsView() {
               const reviewed = topicCards.filter(c => reviews[c.id]).length;
               const pct = count > 0 ? Math.round((reviewed / count) * 100) : 0;
               const pctBadge = pct > 0 ? ` <span class="text-[9px] ${pct >= 100 ? 'text-green-500' : pct >= 50 ? 'text-blue-400' : 'text-slate-400'}">${pct}%</span>` : '';
-              return `<button class="fc-filter px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600" data-topic="${t.id}">${t.title} (${count})${pctBadge}</button>`;
+              const eases = topicCards.map(c => reviews[c.id]?.easeFactor).filter(e => e != null);
+              const avgEase = eases.length > 0 ? (eases.reduce((s, e) => s + e, 0) / eases.length).toFixed(1) : '';
+              const easeBadge = avgEase ? ` <span class="text-[8px] ${parseFloat(avgEase) >= 2.5 ? 'text-green-400' : parseFloat(avgEase) >= 2.0 ? 'text-blue-400' : 'text-red-400'}" title="Avg ease factor">${avgEase}E</span>` : '';
+              return `<button class="fc-filter px-3 py-1.5 rounded-lg text-sm font-medium transition-colors bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600" data-topic="${t.id}">${t.title} (${count})${pctBadge}${easeBadge}</button>`;
             }).join('')}
           </div>
 

@@ -113,6 +113,9 @@ function createHomeView() {
           <!-- Bookmarks -->
           ${renderBookmarks()}
 
+          <!-- Exam Bookmarks -->
+          ${renderExamBookmarks()}
+
           <!-- Study Activity Heatmap -->
           ${renderStudyHeatmap()}
 
@@ -474,6 +477,19 @@ function createHomeView() {
         }
       })();
 
+      // Exam bookmark remove buttons
+      container.querySelectorAll('.exam-bookmark-remove').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.bmIdx);
+          try {
+            const bm = JSON.parse(localStorage.getItem('htgaa-exam-bookmarks') || '[]');
+            bm.splice(idx, 1);
+            localStorage.setItem('htgaa-exam-bookmarks', JSON.stringify(bm));
+            btn.closest('.p-3')?.remove();
+          } catch {}
+        });
+      });
+
       // Quick Quiz on home page
       initQuickQuiz(container);
 
@@ -779,6 +795,38 @@ function renderBookmarks() {
   `;
 }
 
+function renderExamBookmarks() {
+  try {
+    const bookmarks = JSON.parse(localStorage.getItem('htgaa-exam-bookmarks') || '[]');
+    if (bookmarks.length === 0) return '';
+    return `
+    <section class="mb-8">
+      <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
+        <i data-lucide="bookmark" class="w-5 h-5 text-amber-500"></i> Saved Questions
+        <span class="text-xs text-slate-400 font-normal">${bookmarks.length} saved</span>
+      </h2>
+      <div class="space-y-2">
+        ${bookmarks.slice(0, 8).map((b, i) => `
+          <div class="p-3 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 text-sm">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1 min-w-0">
+                <p class="text-xs text-slate-400 mb-1">${b.topic}</p>
+                <p class="font-medium text-slate-700 dark:text-slate-300 text-sm">${b.question}</p>
+                <p class="text-xs text-green-600 dark:text-green-400 mt-1">Answer: ${b.correctAnswer}</p>
+                ${b.explanation ? `<p class="text-xs text-slate-400 mt-0.5">${b.explanation}</p>` : ''}
+              </div>
+              <button class="exam-bookmark-remove text-slate-300 hover:text-red-400 transition-colors flex-shrink-0" data-bm-idx="${i}" title="Remove">
+                <i data-lucide="x" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        `).join('')}
+        ${bookmarks.length > 8 ? `<p class="text-xs text-slate-400 text-center">+ ${bookmarks.length - 8} more saved questions</p>` : ''}
+      </div>
+    </section>`;
+  } catch { return ''; }
+}
+
 function renderContinueReading(progress) {
   // Find the most recently viewed topic from scroll positions
   try {
@@ -975,6 +1023,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v85', items: ['Saved exam questions on dashboard', 'Flashcard avg ease on topic filters', 'Glossary letter mastery dots'] },
     { ver: 'v84', items: ['Exam question bookmarks for later review', 'Dashboard weekly progress comparison', 'Glossary letter mastery dots'] },
     { ver: 'v83', items: ['Study summary time per topic bars', 'Flashcard deck position indicator', 'Exam new/seen in results'] },
     { ver: 'v82', items: ['Exam new/seen question counts in results', 'Glossary definition complexity badges', 'Dashboard vocab mastery stat'] },
