@@ -616,7 +616,25 @@ function createFlashcardsView() {
               updateProgress();
               if (window.lucide) window.lucide.createIcons();
             } else {
-              // Session complete
+              // Session complete — save session history for comparison
+              if (sessionStats.reviewed > 0) {
+                try {
+                  const history = JSON.parse(localStorage.getItem('htgaa-fc-sessions') || '[]');
+                  history.push({
+                    date: new Date().toISOString(),
+                    reviewed: sessionStats.reviewed,
+                    again: sessionStats.again,
+                    hard: sessionStats.hard,
+                    good: sessionStats.good,
+                    easy: sessionStats.easy,
+                    bestStreak: sessionStats.bestStreak,
+                    accuracy: Math.round(((sessionStats.good + sessionStats.easy) / sessionStats.reviewed) * 100)
+                  });
+                  // Keep last 50 sessions
+                  if (history.length > 50) history.splice(0, history.length - 50);
+                  localStorage.setItem('htgaa-fc-sessions', JSON.stringify(history));
+                } catch {}
+              }
               cardArea.innerHTML = renderComplete();
               updateProgress();
               if (sessionStatsEl) {
@@ -863,6 +881,49 @@ function renderComplete() {
           ` : ''}
         </div>
       ` : ''}
+
+      ${(() => {
+        // Session comparison vs previous
+        if (!hasSession) return '';
+        try {
+          const history = JSON.parse(localStorage.getItem('htgaa-fc-sessions') || '[]');
+          // Current session is the last entry (just saved), prev is second-to-last
+          if (history.length < 2) return '';
+          const prev = history[history.length - 2];
+          const accDiff = sessionAccuracy - prev.accuracy;
+          const cardsDiff = sessionStats.reviewed - prev.reviewed;
+          const streakDiff = sessionStats.bestStreak - (prev.bestStreak || 0);
+          const prevDate = new Date(prev.date);
+          const timeAgo = Math.round((Date.now() - prevDate.getTime()) / (1000 * 60 * 60));
+          const timeLabel = timeAgo < 1 ? 'just now' : timeAgo < 24 ? `${timeAgo}h ago` : `${Math.round(timeAgo / 24)}d ago`;
+          return `
+          <div class="max-w-sm mx-auto mb-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 text-left">
+            <h4 class="font-bold text-xs mb-3 flex items-center gap-2 text-center justify-center">
+              <i data-lucide="git-compare" class="w-4 h-4 text-indigo-500"></i> vs Last Session <span class="text-slate-400 font-normal">(${timeLabel})</span>
+            </h4>
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div>
+                <div class="text-lg font-bold ${accDiff > 0 ? 'text-green-600' : accDiff < 0 ? 'text-red-500' : 'text-slate-500'}">
+                  ${accDiff > 0 ? '+' : ''}${accDiff}%
+                </div>
+                <div class="text-[10px] text-slate-400">Accuracy</div>
+              </div>
+              <div>
+                <div class="text-lg font-bold ${cardsDiff > 0 ? 'text-blue-600' : cardsDiff < 0 ? 'text-amber-500' : 'text-slate-500'}">
+                  ${cardsDiff > 0 ? '+' : ''}${cardsDiff}
+                </div>
+                <div class="text-[10px] text-slate-400">Cards</div>
+              </div>
+              <div>
+                <div class="text-lg font-bold ${streakDiff > 0 ? 'text-amber-500' : streakDiff < 0 ? 'text-slate-400' : 'text-slate-500'}">
+                  ${streakDiff > 0 ? '+' : ''}${streakDiff}
+                </div>
+                <div class="text-[10px] text-slate-400">Best Streak</div>
+              </div>
+            </div>
+          </div>`;
+        } catch { return ''; }
+      })()}
 
       ${stats.total > 0 ? `
         <div class="max-w-xs mx-auto mb-6">

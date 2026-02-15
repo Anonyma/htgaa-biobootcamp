@@ -794,6 +794,48 @@ export function createExamView() {
         </div>`;
       })()}
 
+      <!-- Answer Change Analysis -->
+      ${(() => {
+        const changed = Object.entries(answerChanges);
+        if (changed.length === 0) return '';
+        let helpedCount = 0, hurtCount = 0, neutralCount = 0;
+        changed.forEach(([qIdx, changes]) => {
+          const i = parseInt(qIdx);
+          const q = questions[i];
+          const finalAnswer = answers[i];
+          const firstAnswer = changes[0].from;
+          if (finalAnswer === undefined) return;
+          const finalCorrect = q.shuffledOptions[finalAnswer] === q.options[q.correctIndex];
+          const firstCorrect = q.shuffledOptions[firstAnswer] === q.options[q.correctIndex];
+          if (!firstCorrect && finalCorrect) helpedCount++;
+          else if (firstCorrect && !finalCorrect) hurtCount++;
+          else neutralCount++;
+        });
+        const total = helpedCount + hurtCount + neutralCount;
+        const verdict = helpedCount > hurtCount ? 'helped' : hurtCount > helpedCount ? 'hurt' : 'neutral';
+        const verdictColor = verdict === 'helped' ? 'green' : verdict === 'hurt' ? 'red' : 'slate';
+        const verdictText = verdict === 'helped' ? 'Changing answers helped you!' : verdict === 'hurt' ? 'Trust your first instinct more' : 'No net effect';
+        return `
+        <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
+          <h2 class="font-semibold mb-3 flex items-center gap-2"><i data-lucide="repeat" class="w-5 h-5 text-violet-500"></i> Answer Changes</h2>
+          <p class="text-sm text-${verdictColor}-600 dark:text-${verdictColor}-400 font-medium mb-3">${verdictText}</p>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="text-center p-3 rounded-xl bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800">
+              <div class="text-2xl font-bold text-green-600">${helpedCount}</div>
+              <div class="text-xs text-green-700 dark:text-green-400">Wrong → Right</div>
+            </div>
+            <div class="text-center p-3 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800">
+              <div class="text-2xl font-bold text-red-600">${hurtCount}</div>
+              <div class="text-xs text-red-700 dark:text-red-400">Right → Wrong</div>
+            </div>
+            <div class="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-700/30 border border-slate-200 dark:border-slate-600">
+              <div class="text-2xl font-bold text-slate-600 dark:text-slate-400">${neutralCount}</div>
+              <div class="text-xs text-slate-500">No Effect</div>
+            </div>
+          </div>
+        </div>`;
+      })()}
+
       <!-- Topic Breakdown -->
       <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 p-6 mb-6">
         <h2 class="font-semibold mb-4">Score by Topic</h2>

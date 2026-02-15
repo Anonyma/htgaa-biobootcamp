@@ -23,7 +23,10 @@ function createHomeView() {
                   Master the foundations of DNA sequencing, synthesis, genome editing,
                   genetic codes, gel electrophoresis, and gene expression.
                 </p>
-                <div class="flex items-center gap-4 mt-4 text-sm text-blue-200">
+                <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-blue-100 text-xs">
+                  <span class="font-bold text-white">v100</span> 200+ features built with AI-assisted development
+                </div>
+                <div class="flex items-center gap-4 mt-3 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
                   <span class="flex items-center gap-1"><i data-lucide="flask-conical" class="w-4 h-4"></i> 12+ Simulations</span>
                   <span id="hero-question-count" class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> <span data-count>150+</span> Questions</span>
@@ -1228,6 +1231,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v100', items: ['Exam answer change analysis', 'Flashcard session comparison vs previous', 'v100 milestone badge'] },
     { ver: 'v99', items: ['Dashboard topics at a glance grid', 'Compare content size comparison', 'Dashboard estimated completion date'] },
     { ver: 'v98', items: ['Exam print results button', 'Dashboard estimated completion date', 'Glossary term difficulty labels'] },
     { ver: 'v97', items: ['Glossary mini quiz button', 'Compare flashcard maturity', 'Dashboard day streak stat'] },
