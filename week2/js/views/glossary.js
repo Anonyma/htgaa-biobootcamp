@@ -177,7 +177,12 @@ function createGlossaryView() {
                           </div>
                         </div>
                         <div class="flex items-center gap-1.5 flex-shrink-0">
-                          <span class="text-[9px] text-slate-300 dark:text-slate-600" title="${t.definition.split(/\s+/).length} words">${t.definition.split(/\s+/).length}w</span>
+                          ${(() => {
+                            const wc = t.definition.split(/\s+/).length;
+                            const complexity = wc <= 10 ? 'Brief' : wc <= 25 ? 'Med' : 'Long';
+                            const cc = wc <= 10 ? 'blue' : wc <= 25 ? 'slate' : 'amber';
+                            return `<span class="text-[8px] px-1 py-0.5 rounded bg-${cc}-50 dark:bg-${cc}-900/20 text-${cc}-400" title="${wc} words">${wc}w · ${complexity}</span>`;
+                          })()}
                           <a data-route="#/topic/${t.topicId}" class="text-xs px-2 py-1 rounded-full bg-${t.topicColor}-100 dark:bg-${t.topicColor}-900/30 text-${t.topicColor}-600 dark:text-${t.topicColor}-400 cursor-pointer hover:underline whitespace-nowrap">${t.topicTitle}</a>
                         </div>
                       </div>

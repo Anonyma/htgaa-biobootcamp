@@ -105,6 +105,7 @@ function createHomeView() {
               ${renderStatCard('hourglass', 'Remaining', getEstimatedRemaining(progress), 'rose')}
               ${renderStatCard('activity', 'Sessions', getSessionCount(), 'teal')}
               ${renderStatCard('book-open', 'Sections Read', getSectionsReadStats(), 'indigo')}
+              ${renderStatCard('graduation-cap', 'Vocab Mastery', getVocabMastery(), 'emerald')}
               ${renderStatCard('calendar-check', 'Last Active', getLastActive(), 'slate')}
             </div>
           </section>
@@ -971,6 +972,7 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v82', items: ['Exam new/seen question counts in results', 'Glossary definition complexity badges', 'Dashboard vocab mastery stat'] },
     { ver: 'v81', items: ['Compare exam exposure stats', 'Flashcard rating distribution chart', 'Exam new question tracking'] },
     { ver: 'v80', items: ['Dashboard sessions stat', 'Study summary homework connections', 'Exam new question badges'] },
     { ver: 'v79', items: ['Flashcard reverse mode', 'Exam enhanced streak indicator', 'Compare flashcard mastery'] },
@@ -2153,6 +2155,15 @@ function getSectionsReadStats() {
   });
   if (total === 0) return '0';
   return `${read}/${total}`;
+}
+
+function getVocabMastery() {
+  const fc = store.get('flashcards') || { reviews: {} };
+  const reviews = fc.reviews || {};
+  const total = Object.keys(reviews).length;
+  if (total === 0) return '—';
+  const mastered = Object.values(reviews).filter(r => r.interval >= 21).length;
+  return `${Math.round((mastered / total) * 100)}%`;
 }
 
 function getLastActive() {

@@ -608,6 +608,9 @@ export function createExamView() {
     store.saveExamScore(correct, questions.length, elapsedSeconds, [...selectedTopics]);
     store.recordStudyActivity();
 
+    // Count new questions before marking as seen
+    const newQuestionCount = questions.filter(q => !seenQuestionIds.has(q.id)).length;
+
     // Track seen question IDs
     questions.forEach(q => seenQuestionIds.add(q.id));
     localStorage.setItem('htgaa-exam-seen-qs', JSON.stringify([...seenQuestionIds]));
@@ -653,6 +656,7 @@ export function createExamView() {
           ~${Math.round(elapsedSeconds / questions.length)}s per question
           ${bestStreak >= 3 ? `<span class="mx-2">|</span> <span class="text-amber-500 font-medium">Best streak: ${bestStreak}</span>` : ''}
           ${Object.keys(answerChanges).length > 0 ? `<span class="mx-2">|</span> <span class="text-violet-500">${Object.keys(answerChanges).length} answer${Object.keys(answerChanges).length > 1 ? 's' : ''} changed</span>` : ''}
+          ${newQuestionCount < questions.length ? `<span class="mx-2">|</span> <span class="text-emerald-500">${newQuestionCount} new</span>, <span class="text-slate-400">${questions.length - newQuestionCount} seen</span>` : ''}
         </p>
         ${(() => {
           const correctIdxs = results.map((r, i) => r.isCorrect ? i : -1).filter(i => i >= 0);
