@@ -836,6 +836,23 @@ function renderComparison(dataA, dataB, idA, idB) {
         return '<div class="mb-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5"><h3 class="text-sm font-semibold mb-3 flex items-center gap-2"><i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> Mastery Race</h3><div class="space-y-3"><div class="flex items-center gap-3"><span class="text-xs font-medium w-20 truncate text-' + (metaA?.color || 'blue') + '-600">' + (metaA?.title?.split(' ')[0] || 'A') + '</span><div class="flex-1 h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-' + (metaA?.color || 'blue') + '-500 rounded-full transition-all" style="width:' + mastA + '%"></div></div><span class="text-sm font-bold w-10 text-right">' + mastA + '%</span></div><div class="flex items-center gap-3"><span class="text-xs font-medium w-20 truncate text-' + (metaB?.color || 'blue') + '-600">' + (metaB?.title?.split(' ')[0] || 'B') + '</span><div class="flex-1 h-4 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden"><div class="h-full bg-' + (metaB?.color || 'blue') + '-500 rounded-full transition-all" style="width:' + mastB + '%"></div></div><span class="text-sm font-bold w-10 text-right">' + mastB + '%</span></div></div>' + (diff > 0 ? '<p class="text-xs text-amber-600 dark:text-amber-400 text-center mt-2 font-medium">' + leader + ' leads by ' + diff + '%</p>' : '<p class="text-xs text-slate-400 text-center mt-2">Both topics at same mastery level</p>') + '</div>';
       })()}
 
+      <!-- Combined Study Plan -->
+      ${(() => {
+        const progressData = store.get('progress');
+        const sectionsA = (dataA.sections || []).map((s, i) => ({ ...s, topicId: idA, meta: metaA, idx: i, done: progressData.sections?.[idA]?.includes(s.id) }));
+        const sectionsB = (dataB.sections || []).map((s, i) => ({ ...s, topicId: idB, meta: metaB, idx: i, done: progressData.sections?.[idB]?.includes(s.id) }));
+        const pending = [...sectionsA, ...sectionsB].filter(s => !s.done);
+        if (pending.length === 0) return '';
+        const preA = dataA.prerequisites || [];
+        const preB = dataB.prerequisites || [];
+        let ordered;
+        if (preA.includes(idB)) ordered = [...sectionsB.filter(s => !s.done), ...sectionsA.filter(s => !s.done)];
+        else if (preB.includes(idA)) ordered = [...sectionsA.filter(s => !s.done), ...sectionsB.filter(s => !s.done)];
+        else ordered = pending.sort((a, b) => a.idx - b.idx);
+        const shown = ordered.slice(0, 8);
+        return '<div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5"><h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2"><i data-lucide="route" class="w-4 h-4 text-emerald-500"></i> Combined Study Plan <span class="text-xs font-normal text-slate-400">' + pending.length + ' sections remaining</span></h3><div class="space-y-1.5">' + shown.map(function(s, i) { return '<a data-route="#/topic/' + s.topicId + '" class="flex items-center gap-2 text-xs px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-colors"><span class="w-5 h-5 rounded-full bg-' + (s.meta?.color || 'blue') + '-100 dark:bg-' + (s.meta?.color || 'blue') + '-900/30 text-' + (s.meta?.color || 'blue') + '-600 flex items-center justify-center text-[10px] font-bold">' + (i + 1) + '</span><span class="flex-1 text-slate-700 dark:text-slate-300">' + s.title + '</span><span class="text-[10px] px-1.5 py-0.5 rounded bg-' + (s.meta?.color || 'blue') + '-50 dark:bg-' + (s.meta?.color || 'blue') + '-900/20 text-' + (s.meta?.color || 'blue') + '-600">' + (s.meta?.title?.split(' ')[0] || '') + '</span></a>'; }).join('') + (ordered.length > 8 ? '<p class="text-[10px] text-slate-400 text-center mt-1">+' + (ordered.length - 8) + ' more sections</p>' : '') + '</div></div>';
+      })()}
+
       <!-- Quick links -->
       <div class="flex justify-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
         <a data-route="#/topic/${idA}" class="text-sm text-blue-500 hover:underline cursor-pointer">Read ${metaA?.title}</a>

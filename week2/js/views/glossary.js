@@ -131,6 +131,9 @@ function createGlossaryView() {
               <button id="glossary-mini-quiz" class="text-xs px-3 py-1.5 rounded-full border border-pink-200 dark:border-pink-700 bg-pink-50 dark:bg-pink-900/20 text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-900/30 transition-colors flex items-center gap-1">
                 <i data-lucide="brain" class="w-3 h-3"></i> Quiz Me
               </button>
+              <button id="glossary-export-anki" class="text-xs px-3 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors flex items-center gap-1">
+                <i data-lucide="layers" class="w-3 h-3"></i> Anki
+              </button>
             </div>
           </header>
 
@@ -442,6 +445,25 @@ function createGlossaryView() {
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'htgaa-week2-glossary.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      });
+
+      // Anki export (TSV with tags)
+      container.querySelector('#glossary-export-anki')?.addEventListener('click', () => {
+        let tsv = '';
+        _allTerms.forEach(t => {
+          const front = t.term.replace(/\t/g, ' ');
+          const back = t.definition.replace(/\t/g, ' ').replace(/\n/g, '<br>');
+          const tags = 'htgaa::week2::' + t.topicId;
+          tsv += front + '\t' + back + '\t' + tags + '\n';
+        });
+        const blob = new Blob([tsv], { type: 'text/tab-separated-values' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'htgaa-week2-anki.txt';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
