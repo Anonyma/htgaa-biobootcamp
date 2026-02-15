@@ -911,49 +911,6 @@ async function loadQuestionOfDay(container) {
   } catch {}
 }
 
-function renderAchievements() {
-  const progress = store.get('progress');
-  const completedCount = TOPICS.filter(t => progress[t.id]).length;
-  const quizzes = store.get('quizzes') || {};
-  const quizCount = Object.keys(quizzes).length;
-  const fc = store.get('flashcards') || { reviews: {} };
-  const fcReviewed = Object.keys(fc.reviews || {}).length;
-  const streak = store.getLongestStreak();
-  const studyLog = store.getStudyLog();
-  const activeDays = Object.keys(studyLog).filter(d => studyLog[d] > 0).length;
-
-  const badges = [
-    { id: 'first-topic', label: 'First Steps', desc: 'Complete your first topic', icon: 'footprints', earned: completedCount >= 1 },
-    { id: 'half-topics', label: 'Halfway', desc: 'Complete 3 topics', icon: 'milestone', earned: completedCount >= 3 },
-    { id: 'all-topics', label: 'Scholar', desc: 'Complete all 6 topics', icon: 'graduation-cap', earned: completedCount >= 6 },
-    { id: 'quiz-10', label: 'Quiz Taker', desc: 'Answer 10 quiz questions', icon: 'clipboard-check', earned: quizCount >= 10 },
-    { id: 'quiz-perfect', label: 'Perfect Score', desc: '100% on a topic quiz', icon: 'star', earned: TOPICS.some(t => { const s = store.getQuizScore(t.id); return s && s.total >= 8 && s.correct === s.total; }) },
-    { id: 'flashcard-25', label: 'Card Collector', desc: 'Review 25 flashcards', icon: 'layers', earned: fcReviewed >= 25 },
-    { id: 'streak-3', label: 'On a Roll', desc: 'Study 3 days in a row', icon: 'flame', earned: streak >= 3 },
-    { id: 'active-5', label: 'Dedicated', desc: 'Study on 5 different days', icon: 'calendar-check', earned: activeDays >= 5 },
-  ];
-
-  const earnedCount = badges.filter(b => b.earned).length;
-  if (earnedCount === 0 && completedCount === 0 && quizCount === 0) return '';
-
-  return `
-    <section class="mb-8">
-      <h2 class="text-lg font-bold mb-3 flex items-center gap-2">
-        <i data-lucide="award" class="w-5 h-5 text-amber-500"></i> Achievements
-        <span class="text-xs text-slate-400 font-normal">${earnedCount}/${badges.length}</span>
-      </h2>
-      <div class="flex flex-wrap gap-2">
-        ${badges.map(b => `
-          <div class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium ${b.earned ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 border border-amber-200 dark:border-amber-800' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-slate-700'}" title="${b.desc}">
-            <i data-lucide="${b.icon}" class="w-3.5 h-3.5 ${b.earned ? '' : 'opacity-40'}"></i>
-            ${b.label}
-          </div>
-        `).join('')}
-      </div>
-    </section>
-  `;
-}
-
 function renderActivityFeed() {
   const feed = store.getActivityFeed(8);
   if (feed.length === 0) return '';
@@ -2609,58 +2566,6 @@ function renderStudyPlanner(progress) {
             </a>
           `).join('')}
         </div>
-      </div>
-    </section>
-  `;
-}
-
-function renderActivityFeed() {
-  const feed = store.getActivityFeed(5);
-  if (feed.length === 0) return '';
-
-  const icons = { quiz: 'help-circle', flashcard: 'layers', complete: 'check-circle-2', section: 'book-open' };
-  const colors = { quiz: 'blue', flashcard: 'violet', complete: 'green', section: 'slate' };
-  const labels = {
-    quiz: (d) => `Answered quiz question ${d.correct ? 'correctly' : 'incorrectly'}`,
-    flashcard: (d) => `Reviewed flashcard`,
-    complete: (d) => {
-      const topic = TOPICS.find(t => t.id === d.topicId);
-      return `Completed ${topic?.title || d.topicId}`;
-    },
-    section: (d) => {
-      const topic = TOPICS.find(t => t.id === d.topicId);
-      return `Read section in ${topic?.title || d.topicId}`;
-    },
-  };
-
-  function timeAgo(ts) {
-    const diff = Date.now() - ts;
-    if (diff < 60000) return 'just now';
-    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
-    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
-    return `${Math.floor(diff / 86400000)}d ago`;
-  }
-
-  return `
-    <section class="mb-10">
-      <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
-        <i data-lucide="history" class="w-5 h-5 text-slate-400"></i> Recent Activity
-      </h2>
-      <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 divide-y divide-slate-100 dark:divide-slate-700">
-        ${feed.map(item => {
-          const icon = icons[item.action] || 'activity';
-          const color = colors[item.action] || 'slate';
-          const label = labels[item.action] ? labels[item.action](item.detail || {}) : item.action;
-          return `
-            <div class="flex items-center gap-3 px-4 py-3">
-              <div class="w-8 h-8 rounded-lg bg-${color}-100 dark:bg-${color}-900/40 flex items-center justify-center flex-shrink-0">
-                <i data-lucide="${icon}" class="w-4 h-4 text-${color}-500"></i>
-              </div>
-              <span class="text-sm flex-1">${label}</span>
-              <span class="text-xs text-slate-400">${timeAgo(item.time)}</span>
-            </div>
-          `;
-        }).join('')}
       </div>
     </section>
   `;
