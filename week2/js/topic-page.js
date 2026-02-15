@@ -474,6 +474,18 @@ function createTopicView(topicId) {
           const target = e.key === 'n' ? TOPICS[topicIndex + 1] : TOPICS[topicIndex - 1];
           if (target) window.location.hash = `#/topic/${target.id}`;
         }
+        if (e.key === 'c') {
+          const overlay = container.querySelector('#mobile-toc-overlay');
+          if (overlay) {
+            if (overlay.classList.contains('open')) {
+              overlay.classList.remove('open');
+              setTimeout(() => { overlay.style.display = 'none'; }, 300);
+            } else {
+              overlay.style.display = 'block';
+              requestAnimationFrame(() => overlay.classList.add('open'));
+            }
+          }
+        }
       };
       document.addEventListener('keydown', this._keyHandler);
 

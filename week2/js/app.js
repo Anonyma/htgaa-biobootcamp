@@ -250,6 +250,7 @@ class App {
                   <div class="shortcut-row"><div class="flex items-center gap-1"><kbd class="shortcut-key">/</kbd><span class="shortcut-or">or</span><kbd class="shortcut-key">\u2318K</kbd></div><span class="shortcut-desc">Open search</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">f</kbd><span class="shortcut-desc">Toggle focus mode</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">t</kbd><span class="shortcut-desc">Toggle dark/light theme</span></div>
+                  <div class="shortcut-row"><kbd class="shortcut-key">c</kbd><span class="shortcut-desc">Toggle table of contents</span></div>
                   <div class="shortcut-row"><kbd class="shortcut-key">Esc</kbd><span class="shortcut-desc">Close modal / search</span></div>
                 </div>
               </div>

@@ -77,6 +77,9 @@ function createHomeView() {
           <!-- All Complete Celebration -->
           ${overallPct === 100 ? renderAllCompleteCelebration() : ''}
 
+          <!-- Quick Stats Strip -->
+          ${renderQuickStats(progress)}
+
           <!-- Continue Reading (primary CTA) -->
           ${renderContinueReading(progress)}
 
@@ -725,6 +728,71 @@ function renderExamBookmarks() {
       </div>
     </section>`;
   } catch { return ''; }
+}
+
+function renderQuickStats(progress) {
+  const completedCount = TOPICS.filter(t => progress[t.id]).length;
+  const timeSpent = JSON.parse(localStorage.getItem('htgaa-week2-time-spent') || '{}');
+  const totalSeconds = Object.values(timeSpent).reduce((sum, s) => sum + s, 0);
+  const totalMin = Math.floor(totalSeconds / 60);
+  const totalHours = Math.floor(totalMin / 60);
+  const timeStr = totalHours > 0 ? `${totalHours}h ${totalMin % 60}m` : `${totalMin}m`;
+  const fcStats = store.getFlashcardStats();
+  const quizzes = store.get('quizzes') || {};
+  const quizEntries = Object.entries(quizzes);
+  const correctQ = quizEntries.filter(([, v]) => v === true).length;
+  const totalQ = quizEntries.length;
+
+  // Don't show if no activity
+  if (totalMin === 0 && completedCount === 0 && totalQ === 0) return '';
+
+  // Study streak
+  const log = store.getStudyLog();
+  let streak = 0;
+  if (log && log.length > 0) {
+    const today = new Date().toDateString();
+    const dates = [...new Set(log.map(e => new Date(e.ts).toDateString()))];
+    const sorted = dates.sort((a, b) => new Date(b) - new Date(a));
+    if (sorted[0] === today || sorted[0] === new Date(Date.now() - 86400000).toDateString()) {
+      streak = 1;
+      for (let i = 1; i < sorted.length; i++) {
+        const diff = (new Date(sorted[i - 1]) - new Date(sorted[i])) / 86400000;
+        if (diff <= 1.5) streak++;
+        else break;
+      }
+    }
+  }
+
+  return `
+    <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mb-6 py-3 px-4 bg-white/70 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800 text-sm text-slate-600 dark:text-slate-400">
+      <span class="flex items-center gap-1.5">
+        <i data-lucide="clock" class="w-4 h-4 text-blue-500"></i>
+        <span class="font-semibold text-slate-700 dark:text-slate-300">${timeStr}</span> studied
+      </span>
+      <span class="flex items-center gap-1.5">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-green-500"></i>
+        <span class="font-semibold text-slate-700 dark:text-slate-300">${completedCount}/${TOPICS.length}</span> topics
+      </span>
+      ${totalQ > 0 ? `
+      <span class="flex items-center gap-1.5">
+        <i data-lucide="brain" class="w-4 h-4 text-purple-500"></i>
+        <span class="font-semibold text-slate-700 dark:text-slate-300">${correctQ}/${totalQ}</span> quiz
+      </span>
+      ` : ''}
+      ${fcStats.reviewed > 0 ? `
+      <span class="flex items-center gap-1.5">
+        <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i>
+        <span class="font-semibold text-slate-700 dark:text-slate-300">${fcStats.reviewed}</span> cards
+      </span>
+      ` : ''}
+      ${streak > 1 ? `
+      <span class="flex items-center gap-1.5">
+        <i data-lucide="flame" class="w-4 h-4 text-orange-500"></i>
+        <span class="font-semibold text-orange-600 dark:text-orange-400">${streak}-day streak</span>
+      </span>
+      ` : ''}
+    </div>
+  `;
 }
 
 function renderContinueReading(progress) {
