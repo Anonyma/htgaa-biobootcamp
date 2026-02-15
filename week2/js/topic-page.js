@@ -141,6 +141,16 @@ function createTopicView(topicId) {
         });
       });
 
+      // Wrap tables for mobile horizontal scroll
+      container.querySelectorAll('.topic-content table').forEach(table => {
+        if (!table.parentElement.classList.contains('table-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'table-wrapper';
+          table.parentNode.insertBefore(wrapper, table);
+          wrapper.appendChild(table);
+        }
+      });
+
       // Reading progress bar
       initReadingProgress(container);
 

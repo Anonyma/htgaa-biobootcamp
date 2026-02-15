@@ -853,6 +853,19 @@ html { scroll-behavior: smooth; }
 /* ===== Enhanced Topic Content ===== */
 
 /* Tables: hover rows, alternating colors, better borders */
+/* Wrap tables for horizontal scroll on mobile */
+.topic-content .table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5rem 0;
+  border-radius: 0.75rem;
+  border: 1px solid var(--sim-border);
+}
+.topic-content .table-wrapper table {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+}
 .topic-content table {
   border-radius: 0.75rem;
   overflow: hidden;
@@ -3220,4 +3233,17 @@ h2 {
   .study-tools-row, .learning-path-row, .topic-filters,
   #show-more-dashboard, .filter-pill { display: none !important; }
   .topic-card:hover { transform: none !important; }
+
+  /* Topic page print */
+  #reading-progress, #back-to-top, #quick-actions-bar,
+  .section-menu-trigger, .section-menu, .bookmark-btn,
+  .tts-btn, .share-section-btn, #mark-complete-btn,
+  .review-flashcard, .fc-action-btn, #notes-toggle,
+  #notes-panel, .sim-container, .interactive-container,
+  .section-expand, .section-collapsible-body .section-fade { display: none !important; }
+  .section-collapsible-body { max-height: none !important; overflow: visible !important; }
+  .topic-section { break-inside: avoid; page-break-inside: avoid; }
+  .topic-content { font-size: 11pt; line-height: 1.6; }
+  .takeaway-callout { border: 1px solid #ddd; break-inside: avoid; }
+  .deep-dive-box { break-inside: avoid; }
 }
