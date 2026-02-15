@@ -320,7 +320,7 @@ export function createExamView() {
           <span class="px-2 py-0.5 rounded-full text-xs font-medium bg-${q.topicColor}-100 text-${q.topicColor}-700 dark:bg-${q.topicColor}-900/30 dark:text-${q.topicColor}-400">
             ${escapeHtml(q.topicTitle)}
           </span>
-          ${streak >= 2 ? `<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 animate-pulse">${streak} streak</span>` : ''}
+          ${streak >= 2 ? `<span class="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 ${streak >= 5 ? 'animate-pulse' : ''}">${streak >= 5 ? '🔥' : streak >= 3 ? '✨' : ''} ${streak} streak</span>` : ''}
           ${q.difficulty ? `<span class="px-2 py-0.5 rounded-full text-xs font-medium ${
             q.difficulty === 'hard' ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400' :
             q.difficulty === 'easy' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' :

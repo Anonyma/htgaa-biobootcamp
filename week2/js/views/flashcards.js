@@ -15,6 +15,7 @@ function createFlashcardsView() {
   let selectedTopic = 'all';
   let keyHandler = null;
   let sessionStats = { reviewed: 0, again: 0, hard: 0, good: 0, easy: 0, byTopic: {}, streak: 0, bestStreak: 0 };
+  let reverseMode = false;
 
   return {
     async render() {
@@ -271,6 +272,9 @@ function createFlashcardsView() {
                 <i data-lucide="target" class="w-4 h-4 inline"></i> Focus Weak (${weak.length})
               </button>`;
             })()}
+            <button id="fc-reverse-toggle" class="px-5 py-2.5 rounded-xl ${reverseMode ? 'bg-cyan-200 dark:bg-cyan-800 text-cyan-800 dark:text-cyan-200' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400'} font-medium hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors">
+              <i data-lucide="flip-horizontal" class="w-4 h-4 inline"></i> Reverse${reverseMode ? ' ✓' : ''}
+            </button>
           </div>
           ` : ''}
 
@@ -442,6 +446,22 @@ function createFlashcardsView() {
         if (progressBar) progressBar.parentElement.parentElement.classList.remove('hidden');
         updateProgress();
         if (window.lucide) window.lucide.createIcons();
+      });
+
+      // Reverse mode toggle
+      container.querySelector('#fc-reverse-toggle')?.addEventListener('click', () => {
+        reverseMode = !reverseMode;
+        const btn = container.querySelector('#fc-reverse-toggle');
+        if (btn) {
+          btn.className = `px-5 py-2.5 rounded-xl ${reverseMode ? 'bg-cyan-200 dark:bg-cyan-800 text-cyan-800 dark:text-cyan-200' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400'} font-medium hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors`;
+          btn.innerHTML = `<i data-lucide="flip-horizontal" class="w-4 h-4 inline"></i> Reverse${reverseMode ? ' ✓' : ''}`;
+          if (window.lucide) lucide.createIcons();
+        }
+        // Re-render current card
+        if (currentIndex < dueCards.length) {
+          cardArea.innerHTML = renderCard(dueCards[currentIndex], allCards);
+          if (window.lucide) lucide.createIcons();
+        }
       });
 
       // Update progress display
@@ -637,16 +657,21 @@ function renderCard(card, allCards) {
               return '';
             })()}
           </div>
-          <p class="text-2xl font-bold mb-2">${escapeHtml(card.term)}</p>
+          <p class="text-2xl font-bold mb-2">${reverseMode ? `<span class="text-base font-normal text-slate-600 dark:text-slate-400 leading-relaxed">${escapeHtml(card.definition)}</span>` : escapeHtml(card.term)}</p>
           <div class="mt-4 flex items-center gap-2 text-slate-400">
             <i data-lucide="flip-horizontal" class="w-4 h-4"></i>
-            <p class="text-sm">Click to reveal definition</p>
+            <p class="text-sm">Click to reveal ${reverseMode ? 'term' : 'definition'}</p>
           </div>
         </div>
         <!-- Back -->
         <div class="absolute inset-0 backface-hidden bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border-2 border-blue-200 dark:border-blue-800 p-8 flex flex-col items-center justify-center text-center shadow-lg" style="transform: rotateY(180deg); backface-visibility: hidden; -webkit-backface-visibility: hidden;">
-          <p class="font-bold text-blue-600 dark:text-blue-400 mb-3 text-lg">${escapeHtml(card.term)}</p>
-          <p class="text-sm leading-relaxed max-w-md">${escapeHtml(card.definition)}</p>
+          ${reverseMode ? `
+            <p class="font-bold text-blue-600 dark:text-blue-400 mb-3 text-2xl">${escapeHtml(card.term)}</p>
+            <p class="text-sm leading-relaxed max-w-md text-slate-500">${escapeHtml(card.definition)}</p>
+          ` : `
+            <p class="font-bold text-blue-600 dark:text-blue-400 mb-3 text-lg">${escapeHtml(card.term)}</p>
+            <p class="text-sm leading-relaxed max-w-md">${escapeHtml(card.definition)}</p>
+          `}
           ${(() => {
             const r = store.get('flashcards').reviews[card.id];
             if (!r || !r.easeFactor) return '';

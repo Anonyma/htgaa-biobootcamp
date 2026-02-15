@@ -498,6 +498,50 @@ function renderComparison(dataA, dataB, idA, idB) {
         } catch { return ''; }
       })()}
 
+      <!-- Flashcard Mastery -->
+      ${(() => {
+        const reviews = store.get('flashcards').reviews || {};
+        const getStats = (topicId, vocab) => {
+          let mastered = 0, learning = 0, unseen = 0;
+          (vocab || []).forEach((v, i) => {
+            const cardId = `${topicId}-vocab-${i}`;
+            const r = reviews[cardId];
+            if (!r) unseen++;
+            else if (r.interval >= 21) mastered++;
+            else learning++;
+          });
+          return { mastered, learning, unseen, total: (vocab || []).length };
+        };
+        const sA = getStats(idA, vocabA);
+        const sB = getStats(idB, vocabB);
+        if (sA.total === 0 && sB.total === 0) return '';
+        if (sA.mastered + sA.learning === 0 && sB.mastered + sB.learning === 0) return '';
+        return `
+        <div class="mb-8 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+            <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i> Flashcard Mastery
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            ${[{s: sA, meta: metaA}, {s: sB, meta: metaB}].map(({s, meta}) => `
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1">
+                <span class="font-medium">${meta?.title}</span>
+                <span class="text-slate-400">${s.mastered}/${s.total} mastered</span>
+              </div>
+              <div class="h-3 rounded-full overflow-hidden flex bg-slate-200 dark:bg-slate-700">
+                ${s.mastered > 0 ? `<div class="bg-green-500" style="width:${(s.mastered/s.total)*100}%"></div>` : ''}
+                ${s.learning > 0 ? `<div class="bg-yellow-400" style="width:${(s.learning/s.total)*100}%"></div>` : ''}
+              </div>
+              <div class="flex gap-2 mt-1 text-[10px] text-slate-400">
+                <span class="text-green-600">${s.mastered} mastered</span>
+                <span class="text-yellow-600">${s.learning} learning</span>
+                <span>${s.unseen} new</span>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>`;
+      })()}
+
       <!-- Quick links -->
       <div class="flex justify-center gap-4 pt-4 border-t border-slate-200 dark:border-slate-700">
         <a data-route="#/topic/${idA}" class="text-sm text-blue-500 hover:underline cursor-pointer">Read ${metaA?.title}</a>
