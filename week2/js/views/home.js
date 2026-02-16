@@ -6,6 +6,7 @@
 import { store, TOPICS } from '../store.js';
 
 function createHomeView() {
+  let _container = null;
   return {
     render() {
       const progress = store.get('progress');
@@ -339,6 +340,7 @@ function createHomeView() {
     },
 
     mount(container) {
+      _container = container;
       // Initialize AOS (Animate On Scroll)
       if (typeof AOS !== 'undefined') {
         AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 60 });
@@ -720,8 +722,9 @@ function createHomeView() {
     },
 
     unmount() {
-      if (container._heroCleanup) container._heroCleanup();
-      if (container._homeUnsub) container._homeUnsub();
+      if (_container?._heroCleanup) _container._heroCleanup();
+      if (_container?._homeUnsub) _container._homeUnsub();
+      _container = null;
     }
   };
 }
