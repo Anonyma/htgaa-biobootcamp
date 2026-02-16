@@ -250,6 +250,18 @@ function createHomeView() {
             </div>
           </section>
 
+          <!-- More Tools Row -->
+          <section class="mb-8">
+            <div class="flex flex-wrap gap-2">
+              <a data-route="#/quiz-builder" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="puzzle" class="w-4 h-4 text-violet-500"></i> Quiz Builder
+              </a>
+              <a data-route="#/reading-list" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="book-marked" class="w-4 h-4 text-rose-500"></i> Reading List
+              </a>
+            </div>
+          </section>
+
           <!-- Question of the Day -->
           <div id="qotd-container"></div>
 
@@ -1756,6 +1768,8 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v145', items: ['Curated reading list', '23 papers, videos & resources', 'Read tracking with topic/type filters'] },
+    { ver: 'v144', items: ['Custom quiz builder', 'Topic & difficulty selection', 'Per-topic score breakdown'] },
     { ver: 'v143', items: ['Cornell note-taking system', 'Per-topic structured notes', 'Cues, notes, summary format with export'] },
     { ver: 'v142', items: ['Formula sheet with 10 key equations', 'Topic-filtered with examples', 'Printable reference card'] },
     { ver: 'v141', items: ['Evidence-based study tips', '18 strategies across 6 categories', 'Daily tip rotation with tool links'] },

@@ -44,6 +44,8 @@ import { createLabSafetyView } from './views/lab-safety.js';
 import { createStudyTipsView } from './views/study-tips.js';
 import { createFormulaSheetView } from './views/formula-sheet.js';
 import { createCornellNotesView } from './views/cornell-notes.js';
+import { createQuizBuilderView } from './views/quiz-builder.js';
+import { createReadingListView } from './views/reading-list.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -103,7 +105,9 @@ class App {
       .on('/lab-safety', () => createLabSafetyView())
       .on('/study-tips', () => createStudyTipsView())
       .on('/formulas', () => createFormulaSheetView())
-      .on('/cornell-notes', () => createCornellNotesView());
+      .on('/cornell-notes', () => createCornellNotesView())
+      .on('/quiz-builder', () => createQuizBuilderView())
+      .on('/reading-list', () => createReadingListView());
 
     // Start
     this.router.start();
@@ -251,6 +255,10 @@ class App {
                 <i data-lucide="zap" class="w-4 h-4 text-orange-500"></i>
                 <span>Quick Practice</span>
               </a>
+              <a data-route="#/quiz-builder" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="puzzle" class="w-4 h-4 text-violet-500"></i>
+                <span>Quiz Builder</span>
+              </a>
               <a data-route="#/exam" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>
                 <span class="flex-1">Exam Mode</span>
@@ -280,6 +288,10 @@ class App {
               <a data-route="#/resources" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="library" class="w-4 h-4 text-teal-500"></i>
                 <span>Resources</span>
+              </a>
+              <a data-route="#/reading-list" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="book-marked" class="w-4 h-4 text-rose-500"></i>
+                <span>Reading List</span>
               </a>
               <a data-route="#/faq" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="help-circle" class="w-4 h-4 text-sky-500"></i>
