@@ -40,6 +40,8 @@ import { createProgressReportView } from './views/progress-report.js';
 import { createMnemonicsView } from './views/mnemonics.js';
 import { createPomodoroView } from './views/pomodoro.js';
 import { createTopicReviewView } from './views/topic-review.js';
+import { createLabSafetyView } from './views/lab-safety.js';
+import { createStudyTipsView } from './views/study-tips.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -95,7 +97,9 @@ class App {
       .on('/progress-report', () => createProgressReportView())
       .on('/mnemonics', () => createMnemonicsView())
       .on('/pomodoro', () => createPomodoroView())
-      .on('/spaced-review', () => createTopicReviewView());
+      .on('/spaced-review', () => createTopicReviewView())
+      .on('/lab-safety', () => createLabSafetyView())
+      .on('/study-tips', () => createStudyTipsView());
 
     // Start
     this.router.start();
@@ -284,6 +288,14 @@ class App {
               <a data-route="#/lab-protocol" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="test-tubes" class="w-4 h-4 text-lime-500"></i>
                 <span>Lab Protocol</span>
+              </a>
+              <a data-route="#/lab-safety" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-red-500"></i>
+                <span>Lab Safety</span>
+              </a>
+              <a data-route="#/study-tips" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="graduation-cap" class="w-4 h-4 text-purple-500"></i>
+                <span>Study Tips</span>
               </a>
               <a data-route="#/summary" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="file-text" class="w-4 h-4 text-rose-500"></i>

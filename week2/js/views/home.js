@@ -235,6 +235,12 @@ function createHomeView() {
               <a data-route="#/spaced-review" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="repeat" class="w-4 h-4 text-emerald-500"></i> Spaced Review
               </a>
+              <a data-route="#/lab-safety" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-red-500"></i> Lab Safety
+              </a>
+              <a data-route="#/study-tips" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="graduation-cap" class="w-4 h-4 text-purple-500"></i> Study Tips
+              </a>
             </div>
           </section>
 
@@ -1744,6 +1750,8 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v141', items: ['Evidence-based study tips', '18 strategies across 6 categories', 'Daily tip rotation with tool links'] },
+    { ver: 'v140', items: ['Lab safety guide', 'PPE, chemical, UV, electrical safety', 'Safety quiz with checklist tracking'] },
     { ver: 'v139', items: ['Spaced review scheduler', 'Topic-level review intervals', 'Difficulty-based scheduling'] },
     { ver: 'v138', items: ['Pomodoro focus timer', 'Customizable work/break presets', 'Session history with topic linking'] },
     { ver: 'v137', items: ['Printable progress report', 'Shareable study summary', 'Exam history & strengths analysis'] },
