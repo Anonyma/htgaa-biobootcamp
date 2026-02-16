@@ -140,11 +140,6 @@ class App {
             <button id="sidebar-toggle" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" aria-label="Toggle sidebar" aria-expanded="false">
               <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
-            <a data-route="#/" class="flex items-center gap-2.5 cursor-pointer">
-              <span class="text-xl">🧬</span>
-              <span class="nav-logo hidden sm:inline">HTGAA Week 2</span>
-              <span class="nav-logo sm:hidden">W2</span>
-            </a>
           </div>
           <div class="flex items-center gap-1">
             <button id="search-toggle" class="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Search (⌘K or /)">
@@ -553,10 +548,8 @@ class App {
       </button>
 
       <!-- Footer -->
-      <footer class="border-t border-slate-200 dark:border-slate-700">
-        <div class="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-slate-400">
-          HTGAA Spring 2026 — How to Grow (Almost) Anything — MIT MAS.885
-        </div>
+      <footer style="padding:2rem 0 1rem;text-align:center">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.05em;color:var(--text-muted);opacity:0.4">HTGAA 2026 · MIT MAS.885</p>
       </footer>
     `;
 

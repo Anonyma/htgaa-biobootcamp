@@ -14,7 +14,7 @@ function createHomeView() {
 
       return `
         <!-- Hero — Bioluminescent Editorial -->
-        <header class="hero-editorial rounded-2xl mx-4 mt-6 text-white">
+        <header class="hero-editorial text-white" style="border-radius:0">
           <canvas id="hero-dna-canvas" class="absolute inset-0 w-full h-full pointer-events-none" style="opacity:0.10"></canvas>
           <div class="max-w-5xl mx-auto px-6 pt-12 pb-10 md:pt-16 md:pb-12 relative z-10">
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
@@ -106,124 +106,28 @@ function createHomeView() {
           <!-- All Complete Celebration -->
           ${overallPct === 100 ? renderAllCompleteCelebration() : ''}
 
-          <!-- Daily Goal -->
-          ${renderDailyGoal()}
-
-          <!-- Quick Stats Strip -->
-          ${renderQuickStats(progress)}
-
-          <!-- Session Recap -->
-          ${renderSessionRecap()}
-
-          <!-- Continue Reading (primary CTA) -->
-          ${renderContinueReading(progress)}
-
-          <!-- Suggested Next Steps -->
-          ${renderNextSteps(progress)}
-
-          <!-- Review Schedule -->
-          ${renderReviewSchedule()}
-
-          <!-- Today's Study Plan -->
-          ${renderStudyPlan(progress)}
-
-          <!-- Learning Path (visual) -->
-          ${renderLearningPath(progress)}
-
           <!-- Topic Cards (the core content) -->
           <section class="mb-10">
-            <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
-              <h2 class="section-header-editorial" style="margin-bottom:0; padding-bottom:0.5rem">Chapters</h2>
-              <div class="flex gap-1 topic-filters pill-nav">
-                <button class="filter-pill active" data-filter="all">All</button>
-                <button class="filter-pill" data-filter="foundational">Foundational</button>
-                <button class="filter-pill" data-filter="intermediate">Intermediate</button>
-                <button class="filter-pill" data-filter="advanced">Advanced</button>
-                <button id="surprise-topic" class="flex items-center gap-1 text-purple-500" style="font-family:'DM Sans',sans-serif">
-                  <i data-lucide="shuffle" class="w-3 h-3"></i> Random
-                </button>
-              </div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 topic-cards-grid">
+            <h2 class="section-header-editorial" style="margin-bottom:0; padding-bottom:0.5rem">Chapters</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6 topic-cards-grid">
               ${TOPICS.map((topic, i) => renderTopicCard(topic, i, progress)).join('')}
             </div>
           </section>
 
-          <!-- ===== Essentials ===== -->
-          <section class="mb-10" data-aos="fade-up">
-            <h2 class="section-header-editorial">Tools</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <a data-route="#/homework" class="feature-card toolkit-card-editorial group">
-                <div class="tk-icon" style="background:linear-gradient(135deg,#fb923c,#ef4444)">
-                  <i data-lucide="clipboard-list" class="w-4 h-4 text-white"></i>
-                </div>
-                <h3>Homework Hub</h3>
-                <p>Step-by-step guidance for all 5 assignments.</p>
-              </a>
-              <a data-route="#/flashcards" class="feature-card toolkit-card-editorial group">
-                <div class="tk-icon" style="background:linear-gradient(135deg,#a78bfa,#7c3aed)">
-                  <i data-lucide="layers" class="w-4 h-4 text-white"></i>
-                </div>
-                <h3>Flashcards</h3>
-                <p>350+ cards with spaced repetition.${(() => { const fc = store.getFlashcardStats(); return fc.due > 0 ? ` <strong style="color:var(--mcherry-red)">${fc.due} due</strong>` : ''; })()}</p>
-              </a>
-              <a data-route="#/exam" class="feature-card toolkit-card-editorial group">
-                <div class="tk-icon" style="background:linear-gradient(135deg,#fbbf24,#f59e0b)">
-                  <i data-lucide="trophy" class="w-4 h-4 text-white"></i>
-                </div>
-                <h3>Exam Mode</h3>
-                <p>Timed practice with topic breakdown.${(() => { const best = store.getBestExamScore(); return best ? ` Best: <strong>${best.pct}%</strong>` : ''; })()}</p>
-              </a>
-            </div>
-            <div class="flex flex-wrap gap-2">
+          <!-- ===== Tools (compact row) ===== -->
+          <section class="mb-10">
+            <div class="flex flex-wrap gap-3">
               ${[
-                { route: 'glossary', icon: 'book-a', label: 'Glossary' },
-                { route: 'concept-map', icon: 'git-branch', label: 'Concept Map' },
-                { route: 'formulas', icon: 'sigma', label: 'Formulas' },
-                { route: 'practice', icon: 'zap', label: 'Quick Practice' },
-                { route: 'lab-protocol', icon: 'test-tubes', label: 'Lab Protocol' },
-                { route: 'notes', icon: 'sticky-note', label: 'Notes' },
-                { route: 'analytics', icon: 'bar-chart-3', label: 'Analytics' },
-                { route: 'settings', icon: 'settings', label: 'Settings' },
-              ].map(t => `<a data-route="#/${t.route}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs cursor-pointer transition-all" style="color:var(--text-muted);border:1px solid var(--border-subtle)" onmouseover="this.style.borderColor='var(--border-strong)'" onmouseout="this.style.borderColor='var(--border-subtle)'">
-                <i data-lucide="${t.icon}" class="w-3 h-3"></i> ${t.label}
+                { route: 'homework', label: 'Homework', icon: 'clipboard-list' },
+                { route: 'flashcards', label: 'Flashcards', icon: 'layers' },
+                { route: 'exam', label: 'Exam', icon: 'trophy' },
+                { route: 'glossary', label: 'Glossary', icon: 'book-a' },
+                { route: 'lab-protocol', label: 'Lab Protocol', icon: 'test-tubes' },
+              ].map(t => `<a data-route="#/${t.route}" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium cursor-pointer transition-all" style="background:var(--surface-card);border:1px solid var(--border-subtle);color:var(--text-primary)" onmouseover="this.style.borderColor='var(--border-strong)';this.style.transform='translateY(-1px)'" onmouseout="this.style.borderColor='var(--border-subtle)';this.style.transform=''">
+                <i data-lucide="${t.icon}" class="w-3.5 h-3.5" style="color:var(--text-muted)"></i> ${t.label}
               </a>`).join('')}
             </div>
-          </section>
-
-          <!-- Question of the Day -->
-          <div id="qotd-container"></div>
-
-          <!-- Expandable analytics -->
-          <div class="mb-10">
-            <button id="show-more-dashboard" class="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors mx-auto">
-              <i data-lucide="chevron-down" class="w-4 h-4"></i> Show analytics & more
-            </button>
-            <div id="more-dashboard-content" class="hidden mt-8 space-y-10">
-              ${renderStudyHeatmap()}
-              ${renderStatsDashboard(progress)}
-              ${renderMasteryRanking()}
-              ${renderConfidenceOverview()}
-              ${renderExamHistoryChart()}
-
-              <section>
-                <h2 class="text-lg font-bold mb-4 flex items-center gap-2">
-                  <i data-lucide="download" class="w-5 h-5 text-teal-500"></i> Export
-                </h2>
-                <div class="flex flex-wrap gap-3">
-                  <button id="export-notes-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 transition-colors cursor-pointer text-sm">
-                    <i data-lucide="file-text" class="w-4 h-4 text-teal-500"></i> Export Notes
-                  </button>
-                  <button id="export-progress-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 transition-colors cursor-pointer text-sm">
-                    <i data-lucide="bar-chart" class="w-4 h-4 text-blue-500"></i> Export Progress
-                  </button>
-                  <button id="reset-progress-btn" class="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 transition-colors cursor-pointer text-sm">
-                    <i data-lucide="rotate-ccw" class="w-4 h-4 text-red-400"></i> Reset
-                  </button>
-                </div>
-              </section>
-            </div>
-          </div>        </main>
+          </section>        </main>
       `;
     },
 
@@ -358,10 +262,6 @@ function createHomeView() {
         gsap.from(container.querySelector('.progress-ring'), {
           opacity: 0, scale: 0.5, rotation: -90, duration: 0.8, delay: 0.3, ease: 'back.out(1.7)',
         });
-        // Feature cards stagger in
-        gsap.from(container.querySelectorAll('.feature-card'), {
-          opacity: 0, y: 25, duration: 0.5, stagger: 0.1, delay: 0.2, ease: 'power2.out',
-        });
         // Topic cards stagger in
         const topicCards = container.querySelectorAll('.topic-card-editorial');
         if (topicCards.length > 0) {
@@ -383,55 +283,7 @@ function createHomeView() {
         }, { once: true, passive: true });
       });
 
-      // Topic filter pills
-      container.querySelectorAll('.topic-filters .filter-pill').forEach(pill => {
-        pill.addEventListener('click', () => {
-          container.querySelectorAll('.topic-filters .filter-pill').forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-          const filter = pill.dataset.filter;
-          container.querySelectorAll('.topic-cards-grid .topic-card-editorial').forEach(card => {
-            if (filter === 'all' || card.dataset.difficulty === filter) {
-              card.style.display = '';
-            } else {
-              card.style.display = 'none';
-            }
-          });
-        });
-      });
-
-      // "Surprise Me" — navigate to a random incomplete topic
-      const surpriseBtn = container.querySelector('#surprise-topic');
-      if (surpriseBtn) {
-        surpriseBtn.addEventListener('click', () => {
-          const progress = store.get('progress');
-          const incomplete = TOPICS.filter(t => !progress[t.id]);
-          const pool = incomplete.length > 0 ? incomplete : TOPICS;
-          const pick = pool[Math.floor(Math.random() * pool.length)];
-          window.location.hash = `#/topic/${pick.id}`;
-        });
-      }
-
-      // "Show analytics & more" toggle
-      const showMoreBtn = container.querySelector('#show-more-dashboard');
-      const moreContent = container.querySelector('#more-dashboard-content');
-      if (showMoreBtn && moreContent) {
-        showMoreBtn.addEventListener('click', () => {
-          const isHidden = moreContent.classList.contains('hidden');
-          moreContent.classList.toggle('hidden');
-          moreContent.style.display = isHidden ? 'block' : 'none';
-          showMoreBtn.innerHTML = isHidden
-            ? '<i data-lucide="chevron-up" class="w-4 h-4"></i> Hide analytics'
-            : '<i data-lucide="chevron-down" class="w-4 h-4"></i> Show analytics & more';
-          if (typeof lucide !== 'undefined') lucide.createIcons();
-        });
-      }
-
-      // Prefetch "Continue Reading" topic data for instant navigation
-      const continueLink = container.querySelector('.mb-6 a[data-route^="#/topic/"]');
-      if (continueLink) {
-        const topicMatch = continueLink.dataset.route?.match(/#\/topic\/(.+)/);
-        if (topicMatch) store.loadTopicData(topicMatch[1]);
-      }
+      // (filter pills, surprise, analytics toggle, continue reading removed — decluttered per user feedback)
 
       // Dynamic question count + glossary count — load all topic data
       (async () => {
@@ -3127,56 +2979,27 @@ function renderTopicCard(topic, index, progress) {
   const accent = accentColors[topic.id] || '#60a5fa';
 
   return `
-    <a data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" data-topic="${topic.id}" class="topic-card-editorial group block">
+    <div data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" data-topic="${topic.id}" class="topic-card-editorial group block">
       <span class="card-number">0${index + 1}</span>
-      <div class="flex items-start gap-4">
-        <div class="relative flex-shrink-0" style="width:48px; height:48px">
-          ${sectionPct > 0 ? `
-          <svg class="absolute inset-0 -rotate-90" viewBox="0 0 48 48" style="width:48px;height:48px">
-            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="2.5"/>
-            <circle cx="24" cy="24" r="21" fill="none" stroke="${accent}" stroke-width="2.5" stroke-linecap="round"
-              stroke-dasharray="${2 * Math.PI * 21}" stroke-dashoffset="${2 * Math.PI * 21 * (1 - sectionPct / 100)}"
-              style="transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1)"/>
-          </svg>` : ''}
-          <div class="flex items-center justify-center" style="width:48px;height:48px;border-radius:12px;background:${accent}14">
-            <i data-lucide="${topic.icon}" class="w-5 h-5" style="color:${accent}"></i>
-          </div>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="flex items-center justify-between mb-1">
-            <h3 class="card-title group-hover:opacity-80 transition-opacity">${topic.title}</h3>
-            ${isComplete
-              ? `<span class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium" style="color:#4ade80;background:rgba(74,222,128,0.1)"><i data-lucide="check" class="w-3 h-3"></i>Done</span>`
-              : ''
-            }
-          </div>
-          <p class="card-desc mb-3">${descriptions[topic.id] || ''}</p>
-          <div class="flex items-center gap-3 card-meta flex-wrap">
-            <span class="px-2 py-0.5 rounded-md font-semibold" style="color:${accent};background:${accent}12">${diff.level}</span>
-            <span>${readingTimes[topic.id] || 30} min</span>
-            ${quizScore ? `<span>Quiz ${quizScore.correct}/${quizScore.total}</span>` : ''}
-            ${sectionsRead > 0 ? `<span>${sectionsRead}/${totalSections} read</span>` : ''}
-            ${(() => {
-              const m = store.getTopicMastery(topic.id, null);
-              return m && m.mastery > 0 ? `<span style="color:${m.mastery >= 80 ? '#4ade80' : m.mastery >= 50 ? '#fb923c' : 'inherit'};font-weight:600">${m.mastery}%</span>` : '';
-            })()}
-          </div>
-          ${sectionsRead > 0 && !isComplete ? `
-            <div class="mt-3 rounded-full overflow-hidden" style="height:3px;background:var(--border-subtle)">
-              <div class="h-full rounded-full transition-all duration-700" style="width:${sectionPct}%;background:${accent}"></div>
-            </div>
-          ` : ''}
-          <div class="mt-3 flex items-center justify-between">
-            ${sectionsRead === 0 ? `<span class="text-xs font-medium flex items-center gap-1 group-hover:gap-2 transition-all" style="color:${accent}"><i data-lucide="play" class="w-3 h-3"></i> Start learning</span>` : `<span class="text-xs font-medium flex items-center gap-1 group-hover:gap-2 transition-all" style="color:${accent}"><i data-lucide="arrow-right" class="w-3 h-3"></i> Continue</span>`}
-            ${sectionsRead > 0 || isComplete ? `
-              <a data-route="#/review/${topic.id}" class="text-xs px-2.5 py-1 rounded-lg transition-colors font-medium" style="background:rgba(99,102,241,0.08);color:#818cf8" onclick="event.stopPropagation()">
-                <i data-lucide="zap" class="w-3 h-3 inline mr-0.5"></i> Review
-              </a>
-            ` : ''}
-          </div>
-        </div>
+      <div class="flex items-center justify-between mb-1">
+        <h3 class="card-title group-hover:opacity-80 transition-opacity">${topic.title}</h3>
+        ${isComplete
+          ? `<span class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium" style="color:#4ade80;background:rgba(74,222,128,0.1)"><i data-lucide="check" class="w-3 h-3"></i>Done</span>`
+          : ''
+        }
       </div>
-    </a>
+      <p class="card-desc mb-2">${descriptions[topic.id] || ''}</p>
+      <div class="flex items-center gap-3 card-meta flex-wrap">
+        <span>${readingTimes[topic.id] || 30} min</span>
+        ${quizScore ? `<span>Quiz ${quizScore.correct}/${quizScore.total}</span>` : ''}
+        ${sectionsRead > 0 ? `<span>${sectionsRead}/${totalSections} read</span>` : ''}
+      </div>
+      ${sectionsRead > 0 && !isComplete ? `
+        <div class="mt-3 rounded-full overflow-hidden" style="height:3px;background:var(--border-subtle)">
+          <div class="h-full rounded-full transition-all duration-700" style="width:${sectionPct}%;background:${accent}"></div>
+        </div>
+      ` : ''}
+    </div>
   `;
 }
 
