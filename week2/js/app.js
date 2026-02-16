@@ -220,173 +220,181 @@ class App {
               `).join('')}
             </nav>
 
-            <!-- Study Tools -->
-            <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 space-y-1">
-              <a data-route="#/planner" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="timer" class="w-4 h-4 text-emerald-500"></i>
-                <span>Study Planner</span>
-              </a>
-              <a data-route="#/pomodoro" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="clock" class="w-4 h-4 text-red-500"></i>
-                <span>Pomodoro Timer</span>
-              </a>
-              <a data-route="#/digest" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="sunrise" class="w-4 h-4 text-indigo-500"></i>
-                <span>Daily Digest</span>
-              </a>
-              <a data-route="#/homework" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="clipboard-list" class="w-4 h-4 text-orange-500"></i>
-                <span>Homework</span>
-              </a>
-              <a data-route="#/flashcards" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i>
-                <span class="flex-1">Flashcards</span>
-                <span id="sidebar-fc-due" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold"></span>
-              </a>
-              <a data-route="#/spaced-review" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="repeat" class="w-4 h-4 text-emerald-500"></i>
-                <span>Spaced Review</span>
-              </a>
-              <a data-route="#/concept-map" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i>
-                <span>Concept Map</span>
-              </a>
-              <a data-route="#/practice" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="zap" class="w-4 h-4 text-orange-500"></i>
-                <span>Quick Practice</span>
-              </a>
-              <a data-route="#/quiz-builder" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="puzzle" class="w-4 h-4 text-violet-500"></i>
-                <span>Quiz Builder</span>
-              </a>
-              <a data-route="#/exam" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i>
-                <span class="flex-1">Exam Mode</span>
-                ${(() => {
-                  const best = store.getBestExamScore();
-                  if (!best) return '';
-                  const color = best.pct >= 80 ? 'green' : best.pct >= 60 ? 'yellow' : 'red';
-                  return `<span class="text-xs px-1.5 py-0.5 rounded-full bg-${color}-100 dark:bg-${color}-900/30 text-${color}-600 dark:text-${color}-400 font-bold">${best.pct}%</span>`;
-                })()}
-              </a>
-              <a data-route="#/compare" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="columns" class="w-4 h-4 text-teal-500"></i>
-                <span>Compare Topics</span>
-              </a>
-              <a data-route="#/glossary" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="book-a" class="w-4 h-4 text-emerald-500"></i>
-                <span>Glossary</span>
-              </a>
-              <a data-route="#/vocab-drill" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="spell-check" class="w-4 h-4 text-orange-500"></i>
-                <span>Vocab Drill</span>
-              </a>
-              <a data-route="#/mnemonics" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-500"></i>
-                <span>Memory Aids</span>
-              </a>
-              <a data-route="#/resources" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="library" class="w-4 h-4 text-teal-500"></i>
-                <span>Resources</span>
-              </a>
-              <a data-route="#/reading-list" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="book-marked" class="w-4 h-4 text-rose-500"></i>
-                <span>Reading List</span>
-              </a>
-              <a data-route="#/faq" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="help-circle" class="w-4 h-4 text-sky-500"></i>
-                <span>FAQ</span>
-              </a>
-              <a data-route="#/cheatsheet" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="file-badge" class="w-4 h-4 text-pink-500"></i>
-                <span>Cheat Sheet</span>
-              </a>
-              <a data-route="#/formulas" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="sigma" class="w-4 h-4 text-indigo-500"></i>
-                <span>Formula Sheet</span>
-              </a>
-              <a data-route="#/cornell-notes" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="notebook-pen" class="w-4 h-4 text-teal-500"></i>
-                <span>Cornell Notes</span>
-              </a>
-              <a data-route="#/lab-protocol" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="test-tubes" class="w-4 h-4 text-lime-500"></i>
-                <span>Lab Protocol</span>
-              </a>
-              <a data-route="#/lab-safety" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="shield-alert" class="w-4 h-4 text-red-500"></i>
-                <span>Lab Safety</span>
-              </a>
-              <a data-route="#/study-tips" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="graduation-cap" class="w-4 h-4 text-purple-500"></i>
-                <span>Study Tips</span>
-              </a>
-              <a data-route="#/summary" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="file-text" class="w-4 h-4 text-rose-500"></i>
-                <span>Study Summary</span>
-              </a>
-              <a data-route="#/notes" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="sticky-note" class="w-4 h-4 text-amber-500"></i>
-                <span class="flex-1">My Notes</span>
-                <span id="sidebar-notes-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 font-bold"></span>
-              </a>
-              <a data-route="#/confidence" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="gauge" class="w-4 h-4 text-cyan-500"></i>
-                <span>Confidence</span>
-              </a>
-              <a data-route="#/weak-points" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i>
-                <span>Weak Points</span>
-              </a>
-              <a data-route="#/mistakes" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="circle-x" class="w-4 h-4 text-rose-500"></i>
-                <span class="flex-1">Mistakes</span>
-                ${(() => {
-                  const wrong = store.getAllWrongAnswers();
-                  return wrong.length > 0 ? `<span class="text-xs px-1.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 font-bold">${wrong.length}</span>` : '';
-                })()}
-              </a>
-              <a data-route="#/bookmarks" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i>
-                <span class="flex-1">Bookmarks</span>
-                <span id="sidebar-bookmarks-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-bold"></span>
-              </a>
-              <a data-route="#/timeline" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="milestone" class="w-4 h-4 text-indigo-500"></i>
-                <span>Journey</span>
-              </a>
-              <a data-route="#/achievements" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="award" class="w-4 h-4 text-amber-500"></i>
-                <span>Achievements</span>
-              </a>
-              <a data-route="#/discussion" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="message-circle" class="w-4 h-4 text-violet-500"></i>
-                <span>Discussion</span>
-              </a>
-              <a data-route="#/prereqs" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="git-branch" class="w-4 h-4 text-teal-500"></i>
-                <span>Prerequisites</span>
-              </a>
-              <a data-route="#/analytics" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i>
-                <span>Analytics</span>
-              </a>
-              <a data-route="#/progress-report" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="file-bar-chart" class="w-4 h-4 text-indigo-500"></i>
-                <span>Progress Report</span>
-              </a>
-              <a data-route="#/study-log" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="calendar-check" class="w-4 h-4 text-green-500"></i>
-                <span>Study Log</span>
-              </a>
-              <a data-route="#/shortcuts" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="keyboard" class="w-4 h-4 text-slate-400"></i>
-                <span>Shortcuts</span>
-              </a>
-              <a data-route="#/settings" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
-                <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
-                <span>Settings</span>
-              </a>
+            <!-- Collapsible Study Tool Groups -->
+            <div class="mt-6 pt-4 border-t border-slate-200 dark:border-slate-700 space-y-2">
+
+              <!-- Essential -->
+              <div class="sidebar-group">
+                <div class="sidebar-group-header" data-group="essential">
+                  <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  Essential
+                </div>
+                <div class="sidebar-group-body space-y-0.5" data-group-body="essential">
+                  <a data-route="#/homework" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-orange-500"></i><span>Homework</span>
+                  </a>
+                  <a data-route="#/flashcards" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="layers" class="w-3.5 h-3.5 text-violet-500"></i><span class="flex-1">Flashcards</span>
+                    <span id="sidebar-fc-due" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold"></span>
+                  </a>
+                  <a data-route="#/exam" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="trophy" class="w-3.5 h-3.5 text-amber-500"></i><span class="flex-1">Exam Mode</span>
+                    ${(() => { const best = store.getBestExamScore(); if (!best) return ''; const color = best.pct >= 80 ? 'green' : best.pct >= 60 ? 'yellow' : 'red'; return `<span class="text-xs px-1.5 py-0.5 rounded-full bg-${color}-100 dark:bg-${color}-900/30 text-${color}-600 font-bold">${best.pct}%</span>`; })()}
+                  </a>
+                  <a data-route="#/glossary" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="book-a" class="w-3.5 h-3.5 text-emerald-500"></i><span>Glossary</span>
+                  </a>
+                  <a data-route="#/concept-map" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="git-branch" class="w-3.5 h-3.5 text-cyan-500"></i><span>Concept Map</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Practice -->
+              <div class="sidebar-group">
+                <div class="sidebar-group-header" data-group="practice">
+                  <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  Practice & Test
+                </div>
+                <div class="sidebar-group-body space-y-0.5" data-group-body="practice">
+                  <a data-route="#/practice" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="zap" class="w-3.5 h-3.5 text-orange-500"></i><span>Quick Practice</span>
+                  </a>
+                  <a data-route="#/quiz-builder" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="puzzle" class="w-3.5 h-3.5 text-violet-500"></i><span>Quiz Builder</span>
+                  </a>
+                  <a data-route="#/vocab-drill" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="spell-check" class="w-3.5 h-3.5 text-orange-500"></i><span>Vocab Drill</span>
+                  </a>
+                  <a data-route="#/spaced-review" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="repeat" class="w-3.5 h-3.5 text-emerald-500"></i><span>Spaced Review</span>
+                  </a>
+                  <a data-route="#/mnemonics" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-yellow-500"></i><span>Memory Aids</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Reference -->
+              <div class="sidebar-group">
+                <div class="sidebar-group-header" data-group="reference">
+                  <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  Reference
+                </div>
+                <div class="sidebar-group-body space-y-0.5" data-group-body="reference">
+                  <a data-route="#/cheatsheet" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="file-badge" class="w-3.5 h-3.5 text-pink-500"></i><span>Cheat Sheet</span>
+                  </a>
+                  <a data-route="#/formulas" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="sigma" class="w-3.5 h-3.5 text-indigo-500"></i><span>Formula Sheet</span>
+                  </a>
+                  <a data-route="#/resources" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="library" class="w-3.5 h-3.5 text-teal-500"></i><span>Resources</span>
+                  </a>
+                  <a data-route="#/reading-list" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="book-marked" class="w-3.5 h-3.5 text-rose-500"></i><span>Reading List</span>
+                  </a>
+                  <a data-route="#/compare" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="columns" class="w-3.5 h-3.5 text-teal-500"></i><span>Compare Topics</span>
+                  </a>
+                  <a data-route="#/lab-protocol" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="test-tubes" class="w-3.5 h-3.5 text-lime-500"></i><span>Lab Protocol</span>
+                  </a>
+                  <a data-route="#/lab-safety" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-red-500"></i><span>Lab Safety</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Notes & Study -->
+              <div class="sidebar-group">
+                <div class="sidebar-group-header collapsed" data-group="notes">
+                  <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  Notes & Study
+                </div>
+                <div class="sidebar-group-body space-y-0.5 collapsed" data-group-body="notes">
+                  <a data-route="#/notes" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="sticky-note" class="w-3.5 h-3.5 text-amber-500"></i><span class="flex-1">My Notes</span>
+                    <span id="sidebar-notes-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 font-bold"></span>
+                  </a>
+                  <a data-route="#/cornell-notes" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="notebook-pen" class="w-3.5 h-3.5 text-teal-500"></i><span>Cornell Notes</span>
+                  </a>
+                  <a data-route="#/bookmarks" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="bookmark" class="w-3.5 h-3.5 text-blue-500"></i><span class="flex-1">Bookmarks</span>
+                    <span id="sidebar-bookmarks-count" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 font-bold"></span>
+                  </a>
+                  <a data-route="#/planner" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="timer" class="w-3.5 h-3.5 text-emerald-500"></i><span>Study Planner</span>
+                  </a>
+                  <a data-route="#/pomodoro" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="clock" class="w-3.5 h-3.5 text-red-500"></i><span>Pomodoro</span>
+                  </a>
+                  <a data-route="#/discussion" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5 text-violet-500"></i><span>Discussion</span>
+                  </a>
+                  <a data-route="#/study-tips" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-purple-500"></i><span>Study Tips</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Progress & Analytics -->
+              <div class="sidebar-group">
+                <div class="sidebar-group-header collapsed" data-group="analytics">
+                  <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                  Progress
+                </div>
+                <div class="sidebar-group-body space-y-0.5 collapsed" data-group-body="analytics">
+                  <a data-route="#/analytics" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-blue-500"></i><span>Analytics</span>
+                  </a>
+                  <a data-route="#/progress-report" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="file-bar-chart" class="w-3.5 h-3.5 text-indigo-500"></i><span>Progress Report</span>
+                  </a>
+                  <a data-route="#/confidence" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="gauge" class="w-3.5 h-3.5 text-cyan-500"></i><span>Confidence</span>
+                  </a>
+                  <a data-route="#/weak-points" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="crosshair" class="w-3.5 h-3.5 text-red-500"></i><span>Weak Points</span>
+                  </a>
+                  <a data-route="#/mistakes" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="circle-x" class="w-3.5 h-3.5 text-rose-500"></i><span class="flex-1">Mistakes</span>
+                    ${(() => { const wrong = store.getAllWrongAnswers(); return wrong.length > 0 ? `<span class="text-xs px-1.5 py-0.5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-600 font-bold">${wrong.length}</span>` : ''; })()}
+                  </a>
+                  <a data-route="#/achievements" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="award" class="w-3.5 h-3.5 text-amber-500"></i><span>Achievements</span>
+                  </a>
+                  <a data-route="#/timeline" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="milestone" class="w-3.5 h-3.5 text-indigo-500"></i><span>Journey</span>
+                  </a>
+                  <a data-route="#/study-log" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <i data-lucide="calendar-check" class="w-3.5 h-3.5 text-green-500"></i><span>Study Log</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Misc -->
+              <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700/50 space-y-0.5">
+                <a data-route="#/digest" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                  <i data-lucide="sunrise" class="w-3.5 h-3.5 text-indigo-500"></i><span>Daily Digest</span>
+                </a>
+                <a data-route="#/prereqs" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                  <i data-lucide="git-branch" class="w-3.5 h-3.5 text-teal-500"></i><span>Prerequisites</span>
+                </a>
+                <a data-route="#/summary" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                  <i data-lucide="file-text" class="w-3.5 h-3.5 text-rose-500"></i><span>Summary</span>
+                </a>
+                <a data-route="#/faq" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                  <i data-lucide="help-circle" class="w-3.5 h-3.5 text-sky-500"></i><span>FAQ</span>
+                </a>
+                <a data-route="#/shortcuts" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                  <i data-lucide="keyboard" class="w-3.5 h-3.5 text-slate-400"></i><span>Shortcuts</span>
+                </a>
+                <a data-route="#/settings" class="sidebar-link flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                  <i data-lucide="settings" class="w-3.5 h-3.5 text-slate-400"></i><span>Settings</span>
+                </a>
+              </div>
             </div>
 
             <!-- Pomodoro Study Timer -->
@@ -560,6 +568,18 @@ class App {
   }
 
   initShell() {
+    // Sidebar collapsible groups
+    document.querySelectorAll('.sidebar-group-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const group = header.dataset.group;
+        const body = document.querySelector(`[data-group-body="${group}"]`);
+        if (body) {
+          header.classList.toggle('collapsed');
+          body.classList.toggle('collapsed');
+        }
+      });
+    });
+
     // Theme toggle
     document.getElementById('theme-toggle')?.addEventListener('click', () => {
       store.toggleTheme();

@@ -119,15 +119,15 @@ function createHomeView() {
           <section class="mb-10">
             <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
               <h2 class="text-xl font-bold flex items-center gap-2">
-                <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-500"></i> Topics
+                <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-500"></i> Chapters
               </h2>
-              <div class="flex gap-2 topic-filters flex-wrap">
-                <button class="filter-pill active px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="all">All</button>
-                <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="foundational">Foundational</button>
-                <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="intermediate">Intermediate</button>
-                <button class="filter-pill px-3 py-1 text-xs font-medium rounded-full border border-slate-200 dark:border-slate-600 text-slate-600 dark:text-slate-300" data-filter="advanced">Advanced</button>
-                <button id="surprise-topic" class="px-3 py-1 text-xs font-medium rounded-full border border-purple-300 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors flex items-center gap-1">
-                  <i data-lucide="shuffle" class="w-3 h-3"></i> Surprise Me
+              <div class="flex gap-1 topic-filters pill-nav">
+                <button class="filter-pill active" data-filter="all">All</button>
+                <button class="filter-pill" data-filter="foundational">Foundational</button>
+                <button class="filter-pill" data-filter="intermediate">Intermediate</button>
+                <button class="filter-pill" data-filter="advanced">Advanced</button>
+                <button id="surprise-topic" class="flex items-center gap-1 text-purple-500">
+                  <i data-lucide="shuffle" class="w-3 h-3"></i> Random
                 </button>
               </div>
             </div>
@@ -136,129 +136,161 @@ function createHomeView() {
             </div>
           </section>
 
-          <!-- Study Tools (compact row) -->
-          <section class="mb-10">
-            <div class="flex flex-wrap gap-3 study-tools-row">
-              <a data-route="#/planner" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="timer" class="w-4 h-4 text-emerald-500"></i> Study Planner
+          <!-- ===== Study Toolkit (Categorized) ===== -->
+          <section class="mb-12" data-aos="fade-up">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+              <i data-lucide="compass" class="w-5 h-5 text-blue-500"></i> Study Toolkit
+            </h2>
+
+            <!-- Featured Tools (Large cards) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <a data-route="#/homework" class="feature-card group glass rounded-2xl p-5 cursor-pointer card-elevated glow-blue border border-slate-200/50 dark:border-slate-700/50">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
+                    <i data-lucide="clipboard-list" class="w-5 h-5 text-white"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-sm">Homework Hub</h3>
+                    <p class="text-xs text-slate-400">Parts 0-4 guide</p>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Gel art, Benchling design, DNA challenge — step-by-step guidance for all assignments.</p>
               </a>
-              <a data-route="#/digest" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="sunrise" class="w-4 h-4 text-indigo-500"></i> Daily Digest
+              <a data-route="#/flashcards" class="feature-card group glass rounded-2xl p-5 cursor-pointer card-elevated glow-purple border border-slate-200/50 dark:border-slate-700/50">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-400 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/20">
+                    <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-sm">Flashcards</h3>
+                    <p class="text-xs text-slate-400">${(() => { const fc = store.getFlashcardStats(); return fc.due > 0 ? `<span class="text-red-500 font-bold">${fc.due} due now</span>` : 'Spaced repetition'; })()}</p>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">350+ flashcards with SM-2 spaced repetition. Review what you need, when you need it.</p>
               </a>
-              <a data-route="#/flashcards" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i> Flashcards
-                ${(() => { const fc = store.getFlashcardStats(); return fc.due > 0 ? `<span class="text-xs text-red-500 font-bold">${fc.due} due</span>` : ''; })()}
-              </a>
-              <a data-route="#/homework" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-orange-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="clipboard-list" class="w-4 h-4 text-orange-500"></i> Homework
-              </a>
-              <a data-route="#/exam" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-amber-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="trophy" class="w-4 h-4 text-amber-500"></i> Exam Mode
-              </a>
-              <a data-route="#/glossary" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="book-a" class="w-4 h-4 text-emerald-500"></i> Glossary
-              </a>
-              <a data-route="#/concept-map" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-cyan-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i> Concept Map
-              </a>
-              <a data-route="#/resources" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="library" class="w-4 h-4 text-teal-500"></i> Resources
-              </a>
-              <a data-route="#/summary" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="printer" class="w-4 h-4 text-rose-500"></i> Study Summary
-              </a>
-              <a data-route="#/compare" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="columns" class="w-4 h-4 text-teal-500"></i> Compare
-              </a>
-              <a data-route="#/notes" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-amber-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="sticky-note" class="w-4 h-4 text-amber-500"></i> My Notes
-              </a>
-              <a data-route="#/weak-points" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="crosshair" class="w-4 h-4 text-red-500"></i> Weak Points
-              </a>
-              <a data-route="#/bookmarks" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="bookmark" class="w-4 h-4 text-blue-500"></i> Bookmarks
-                ${(() => { const bm = store.getBookmarks(); return bm.length > 0 ? `<span class="text-xs text-blue-500 font-bold">${bm.length}</span>` : ''; })()}
-              </a>
-              <a data-route="#/timeline" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="milestone" class="w-4 h-4 text-indigo-500"></i> Journey
-              </a>
-              <a data-route="#/mistakes" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="circle-x" class="w-4 h-4 text-rose-500"></i> Mistakes
-                ${(() => { const w = store.getAllWrongAnswers(); return w.length > 0 ? `<span class="text-xs text-rose-500 font-bold">${w.length}</span>` : ''; })()}
-              </a>
-              <a data-route="#/practice" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-orange-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="zap" class="w-4 h-4 text-orange-500"></i> Quick Practice
-              </a>
-              <a data-route="#/analytics" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-blue-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="bar-chart-3" class="w-4 h-4 text-blue-500"></i> Analytics
-              </a>
-              <a data-route="#/confidence" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-cyan-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="gauge" class="w-4 h-4 text-cyan-500"></i> Confidence
-              </a>
-              <a data-route="#/cheatsheet" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-pink-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="file-badge" class="w-4 h-4 text-pink-500"></i> Cheat Sheet
-              </a>
-              <a data-route="#/lab-protocol" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-lime-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="test-tubes" class="w-4 h-4 text-lime-500"></i> Lab Protocol
-              </a>
-              <a data-route="#/achievements" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-amber-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="award" class="w-4 h-4 text-amber-500"></i> Achievements
-              </a>
-              <a data-route="#/discussion" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="message-circle" class="w-4 h-4 text-violet-500"></i> Discussion
-              </a>
-              <a data-route="#/study-log" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-green-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="calendar-check" class="w-4 h-4 text-green-500"></i> Study Log
-              </a>
-              <a data-route="#/shortcuts" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="keyboard" class="w-4 h-4 text-slate-500"></i> Shortcuts
-              </a>
-              <a data-route="#/faq" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-sky-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="help-circle" class="w-4 h-4 text-sky-500"></i> FAQ
-              </a>
-              <a data-route="#/prereqs" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="git-branch" class="w-4 h-4 text-teal-500"></i> Prerequisites
-              </a>
-              <a data-route="#/vocab-drill" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-orange-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="spell-check" class="w-4 h-4 text-orange-500"></i> Vocab Drill
-              </a>
-              <a data-route="#/mnemonics" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-yellow-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-500"></i> Memory Aids
-              </a>
-              <a data-route="#/progress-report" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="file-bar-chart" class="w-4 h-4 text-indigo-500"></i> Progress Report
-              </a>
-              <a data-route="#/pomodoro" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="clock" class="w-4 h-4 text-red-500"></i> Pomodoro Timer
-              </a>
-              <a data-route="#/spaced-review" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="repeat" class="w-4 h-4 text-emerald-500"></i> Spaced Review
-              </a>
-              <a data-route="#/lab-safety" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="shield-alert" class="w-4 h-4 text-red-500"></i> Lab Safety
-              </a>
-              <a data-route="#/study-tips" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="graduation-cap" class="w-4 h-4 text-purple-500"></i> Study Tips
-              </a>
-              <a data-route="#/formulas" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="sigma" class="w-4 h-4 text-indigo-500"></i> Formula Sheet
-              </a>
-              <a data-route="#/cornell-notes" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="notebook-pen" class="w-4 h-4 text-teal-500"></i> Cornell Notes
+              <a data-route="#/exam" class="feature-card group glass rounded-2xl p-5 cursor-pointer card-elevated glow-yellow border border-slate-200/50 dark:border-slate-700/50">
+                <div class="flex items-center gap-3 mb-3">
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
+                    <i data-lucide="trophy" class="w-5 h-5 text-white"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-sm">Exam Mode</h3>
+                    <p class="text-xs text-slate-400">${(() => { const best = store.getBestExamScore(); return best ? `Best: ${best.pct}%` : 'Test yourself'; })()}</p>
+                  </div>
+                </div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Timed practice exams with detailed scoring breakdown by topic.</p>
               </a>
             </div>
-          </section>
 
-          <!-- More Tools Row -->
-          <section class="mb-8">
-            <div class="flex flex-wrap gap-2">
-              <a data-route="#/quiz-builder" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-violet-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="puzzle" class="w-4 h-4 text-violet-500"></i> Quiz Builder
-              </a>
-              <a data-route="#/reading-list" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-rose-400 cursor-pointer transition-colors text-sm font-medium">
-                <i data-lucide="book-marked" class="w-4 h-4 text-rose-500"></i> Reading List
-              </a>
+            <!-- Tool Categories (Compact grouped) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+              <!-- Practice & Test -->
+              <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm overflow-hidden">
+                <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700/50 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10">
+                  <h3 class="text-xs font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="target" class="w-3.5 h-3.5"></i> Practice & Test
+                  </h3>
+                </div>
+                <div class="p-2 space-y-0.5">
+                  ${[
+                    { route: 'practice', icon: 'zap', color: 'orange', label: 'Quick Practice' },
+                    { route: 'quiz-builder', icon: 'puzzle', color: 'violet', label: 'Quiz Builder' },
+                    { route: 'vocab-drill', icon: 'spell-check', color: 'orange', label: 'Vocab Drill' },
+                    { route: 'spaced-review', icon: 'repeat', color: 'emerald', label: 'Spaced Review' },
+                    { route: 'mnemonics', icon: 'lightbulb', color: 'yellow', label: 'Memory Aids' },
+                  ].map(t => `<a data-route="#/${t.route}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-all group">
+                    <i data-lucide="${t.icon}" class="w-4 h-4 text-${t.color}-500 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-slate-700 dark:text-slate-300">${t.label}</span>
+                  </a>`).join('')}
+                </div>
+              </div>
+
+              <!-- Study Aids -->
+              <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm overflow-hidden">
+                <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700/50 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/10 dark:to-teal-900/10">
+                  <h3 class="text-xs font-bold text-emerald-700 dark:text-emerald-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Study Aids
+                  </h3>
+                </div>
+                <div class="p-2 space-y-0.5">
+                  ${[
+                    { route: 'glossary', icon: 'book-a', color: 'emerald', label: 'Glossary' },
+                    { route: 'concept-map', icon: 'git-branch', color: 'cyan', label: 'Concept Map' },
+                    { route: 'formulas', icon: 'sigma', color: 'indigo', label: 'Formula Sheet' },
+                    { route: 'cheatsheet', icon: 'file-badge', color: 'pink', label: 'Cheat Sheet' },
+                    { route: 'reading-list', icon: 'book-marked', color: 'rose', label: 'Reading List' },
+                  ].map(t => `<a data-route="#/${t.route}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-all group">
+                    <i data-lucide="${t.icon}" class="w-4 h-4 text-${t.color}-500 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-slate-700 dark:text-slate-300">${t.label}</span>
+                  </a>`).join('')}
+                </div>
+              </div>
+
+              <!-- Notes & Writing -->
+              <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm overflow-hidden">
+                <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700/50 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/10 dark:to-yellow-900/10">
+                  <h3 class="text-xs font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="pencil" class="w-3.5 h-3.5"></i> Notes & Writing
+                  </h3>
+                </div>
+                <div class="p-2 space-y-0.5">
+                  ${[
+                    { route: 'notes', icon: 'sticky-note', color: 'amber', label: 'My Notes' },
+                    { route: 'cornell-notes', icon: 'notebook-pen', color: 'teal', label: 'Cornell Notes' },
+                    { route: 'bookmarks', icon: 'bookmark', color: 'blue', label: 'Bookmarks' },
+                    { route: 'discussion', icon: 'message-circle', color: 'violet', label: 'Discussion' },
+                    { route: 'compare', icon: 'columns', color: 'teal', label: 'Compare Topics' },
+                  ].map(t => `<a data-route="#/${t.route}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-all group">
+                    <i data-lucide="${t.icon}" class="w-4 h-4 text-${t.color}-500 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-slate-700 dark:text-slate-300">${t.label}</span>
+                  </a>`).join('')}
+                </div>
+              </div>
+
+              <!-- Progress & Planning -->
+              <div class="rounded-xl border border-slate-200 dark:border-slate-700 bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm overflow-hidden">
+                <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-700/50 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10">
+                  <h3 class="text-xs font-bold text-purple-700 dark:text-purple-300 uppercase tracking-wider flex items-center gap-1.5">
+                    <i data-lucide="bar-chart-3" class="w-3.5 h-3.5"></i> Track & Plan
+                  </h3>
+                </div>
+                <div class="p-2 space-y-0.5">
+                  ${[
+                    { route: 'planner', icon: 'timer', color: 'emerald', label: 'Study Planner' },
+                    { route: 'pomodoro', icon: 'clock', color: 'red', label: 'Pomodoro Timer' },
+                    { route: 'analytics', icon: 'bar-chart-3', color: 'blue', label: 'Analytics' },
+                    { route: 'progress-report', icon: 'file-bar-chart', color: 'indigo', label: 'Progress Report' },
+                    { route: 'achievements', icon: 'award', color: 'amber', label: 'Achievements' },
+                  ].map(t => `<a data-route="#/${t.route}" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer transition-all group">
+                    <i data-lucide="${t.icon}" class="w-4 h-4 text-${t.color}-500 group-hover:scale-110 transition-transform"></i>
+                    <span class="text-slate-700 dark:text-slate-300">${t.label}</span>
+                  </a>`).join('')}
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Access Row (remaining tools) -->
+            <div class="mt-4 flex flex-wrap gap-2">
+              ${[
+                { route: 'digest', icon: 'sunrise', label: 'Daily Digest' },
+                { route: 'resources', icon: 'library', label: 'Resources' },
+                { route: 'summary', icon: 'printer', label: 'Study Summary' },
+                { route: 'weak-points', icon: 'crosshair', label: 'Weak Points' },
+                { route: 'mistakes', icon: 'circle-x', label: 'Mistakes' },
+                { route: 'confidence', icon: 'gauge', label: 'Confidence' },
+                { route: 'prereqs', icon: 'git-branch', label: 'Prerequisites' },
+                { route: 'lab-protocol', icon: 'test-tubes', label: 'Lab Protocol' },
+                { route: 'lab-safety', icon: 'shield-alert', label: 'Lab Safety' },
+                { route: 'study-tips', icon: 'graduation-cap', label: 'Study Tips' },
+                { route: 'timeline', icon: 'milestone', label: 'Journey' },
+                { route: 'study-log', icon: 'calendar-check', label: 'Study Log' },
+                { route: 'faq', icon: 'help-circle', label: 'FAQ' },
+                { route: 'shortcuts', icon: 'keyboard', label: 'Shortcuts' },
+                { route: 'settings', icon: 'settings', label: 'Settings' },
+              ].map(t => `<a data-route="#/${t.route}" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/50 cursor-pointer transition-all">
+                <i data-lucide="${t.icon}" class="w-3 h-3"></i> ${t.label}
+              </a>`).join('')}
             </div>
           </section>
 
@@ -305,6 +337,11 @@ function createHomeView() {
     },
 
     mount(container) {
+      // Initialize AOS (Animate On Scroll)
+      if (typeof AOS !== 'undefined') {
+        AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 60 });
+      }
+
       // Listen for progress updates
       const unsub = store.subscribe('progress', () => {
         // Update progress ring
@@ -3074,62 +3111,55 @@ function renderTopicCard(topic, index, progress) {
   const sectionPct = Math.round((sectionsRead / totalSections) * 100);
 
   return `
-    <a data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" class="topic-card group block bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 hover:border-${topic.color}-400 dark:hover:border-${topic.color}-500 cursor-pointer transition-all">
+    <a data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" data-aos="fade-up" data-aos-delay="${index * 80}" class="topic-card group block glass rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50 cursor-pointer card-elevated glow-${topic.color}">
       <div class="flex items-start gap-4">
-        <div class="relative w-12 h-12 flex-shrink-0 group-hover:scale-110 transition-transform">
+        <div class="relative w-14 h-14 flex-shrink-0">
           ${sectionPct > 0 ? `
-          <svg class="absolute inset-0 w-12 h-12 -rotate-90" viewBox="0 0 48 48">
-            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="3"/>
-            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-${topic.color}-500" stroke-width="3" stroke-linecap="round"
-              stroke-dasharray="${2 * Math.PI * 21}" stroke-dashoffset="${2 * Math.PI * 21 * (1 - sectionPct / 100)}"
-              style="transition: stroke-dashoffset 0.6s ease"/>
+          <svg class="absolute inset-0 w-14 h-14 -rotate-90" viewBox="0 0 56 56">
+            <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="3"/>
+            <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor" class="text-${topic.color}-500" stroke-width="3" stroke-linecap="round"
+              stroke-dasharray="${2 * Math.PI * 24}" stroke-dashoffset="${2 * Math.PI * 24 * (1 - sectionPct / 100)}"
+              style="transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1)"/>
           </svg>` : ''}
-          <div class="w-12 h-12 rounded-xl ${sectionPct > 0 ? '' : `bg-${topic.color}-100 dark:bg-${topic.color}-900/40`} flex items-center justify-center">
-            <i data-lucide="${topic.icon}" class="w-6 h-6 text-${topic.color}-600 dark:text-${topic.color}-400"></i>
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-${topic.color}-100 to-${topic.color}-50 dark:from-${topic.color}-900/40 dark:to-${topic.color}-900/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <i data-lucide="${topic.icon}" class="w-7 h-7 text-${topic.color}-600 dark:text-${topic.color}-400"></i>
           </div>
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center justify-between mb-1">
-            <h3 class="font-bold text-lg">${topic.title}</h3>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono text-slate-400 tabular-nums">0${index + 1}</span>
+              <h3 class="font-bold text-lg group-hover:text-${topic.color}-600 dark:group-hover:text-${topic.color}-400 transition-colors">${topic.title}</h3>
+            </div>
             ${isComplete
-              ? '<span class="flex items-center gap-1 text-xs text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full"><i data-lucide="check" class="w-3 h-3"></i>Done</span>'
-              : `<span class="text-xs text-slate-400">Ch. ${index + 1}</span>`
+              ? '<span class="flex items-center gap-1 text-xs text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full font-medium"><i data-lucide="check" class="w-3 h-3"></i>Done</span>'
+              : ''
             }
           </div>
-          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-2">${descriptions[topic.id] || ''}</p>
-          <div class="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
-            <span class="px-1.5 py-0.5 rounded text-${diff.color}-600 dark:text-${diff.color}-400 bg-${diff.color}-50 dark:bg-${diff.color}-900/20 font-medium">${diff.level}</span>
-            <span class="flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${readingTimes[topic.id] || 30} min</span>
-            ${quizScore ? `<span>Quiz: ${quizScore.correct}/${quizScore.total}</span>` : ''}
-            ${sectionsRead > 0 ? `<span class="flex items-center gap-1"><i data-lucide="book-open" class="w-3 h-3"></i> ${sectionsRead}/${totalSections} read</span>` : ''}
-            ${sectionsRead === 0 ? `<span class="flex items-center gap-1"><i data-lucide="arrow-right" class="w-3 h-3"></i> Start reading</span>` : ''}
+          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-3">${descriptions[topic.id] || ''}</p>
+          <div class="flex items-center gap-2 text-xs flex-wrap">
+            <span class="px-2 py-0.5 rounded-md text-${diff.color}-600 dark:text-${diff.color}-400 bg-${diff.color}-50 dark:bg-${diff.color}-900/20 font-semibold">${diff.level}</span>
+            <span class="text-slate-400 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${readingTimes[topic.id] || 30}m</span>
+            ${quizScore ? `<span class="text-slate-400">Quiz: <span class="font-semibold text-slate-600 dark:text-slate-300">${quizScore.correct}/${quizScore.total}</span></span>` : ''}
+            ${sectionsRead > 0 ? `<span class="text-slate-400">${sectionsRead}/${totalSections} sections</span>` : ''}
             ${(() => {
               const m = store.getTopicMastery(topic.id, null);
-              return m && m.mastery > 0 ? `<span class="font-semibold text-${m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'slate'}-600 dark:text-${m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'slate'}-400">${m.mastery}% mastery</span>` : '';
-            })()}
-            ${(() => {
-              try {
-                const pos = JSON.parse(localStorage.getItem('htgaa-week2-scroll-pos') || '{}');
-                const ts = pos[topic.id]?.ts;
-                if (!ts) return '';
-                const ago = Date.now() - ts;
-                const agoStr = ago < 3600000 ? 'just now' : ago < 86400000 ? `${Math.floor(ago / 3600000)}h ago` : `${Math.floor(ago / 86400000)}d ago`;
-                return `<span class="text-slate-400">${agoStr}</span>`;
-              } catch { return ''; }
+              return m && m.mastery > 0 ? `<span class="font-bold text-${m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'slate'}-500">${m.mastery}%</span>` : '';
             })()}
           </div>
           ${sectionsRead > 0 && !isComplete ? `
-            <div class="mt-2 h-1 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
-              <div class="h-full rounded-full bg-${topic.color}-400 transition-all" style="width: ${sectionPct}%"></div>
+            <div class="mt-3 h-1.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
+              <div class="h-full rounded-full bg-gradient-to-r from-${topic.color}-400 to-${topic.color}-500 transition-all duration-700" style="width: ${sectionPct}%"></div>
             </div>
           ` : ''}
-          ${sectionsRead > 0 || isComplete ? `
-            <div class="mt-2 flex justify-end">
+          <div class="mt-3 flex items-center justify-between">
+            ${sectionsRead === 0 ? `<span class="text-xs text-${topic.color}-500 font-medium flex items-center gap-1 group-hover:gap-2 transition-all"><i data-lucide="play" class="w-3 h-3"></i> Start learning</span>` : `<span class="text-xs text-${topic.color}-500 font-medium flex items-center gap-1 group-hover:gap-2 transition-all"><i data-lucide="arrow-right" class="w-3 h-3"></i> Continue</span>`}
+            ${sectionsRead > 0 || isComplete ? `
               <a data-route="#/review/${topic.id}" class="text-xs px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors font-medium" onclick="event.stopPropagation()">
-                <i data-lucide="zap" class="w-3 h-3 inline mr-0.5"></i> Quick Review
+                <i data-lucide="zap" class="w-3 h-3 inline mr-0.5"></i> Review
               </a>
-            </div>
-          ` : ''}
+            ` : ''}
+          </div>
         </div>
       </div>
     </a>
