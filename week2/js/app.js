@@ -38,6 +38,8 @@ import { createPrereqsView } from './views/prereqs.js';
 import { createVocabDrillView } from './views/vocab-drill.js';
 import { createProgressReportView } from './views/progress-report.js';
 import { createMnemonicsView } from './views/mnemonics.js';
+import { createPomodoroView } from './views/pomodoro.js';
+import { createTopicReviewView } from './views/topic-review.js';
 import { SearchUI } from './search.js';
 
 class App {
@@ -91,7 +93,9 @@ class App {
       .on('/prereqs', () => createPrereqsView())
       .on('/vocab-drill', () => createVocabDrillView())
       .on('/progress-report', () => createProgressReportView())
-      .on('/mnemonics', () => createMnemonicsView());
+      .on('/mnemonics', () => createMnemonicsView())
+      .on('/pomodoro', () => createPomodoroView())
+      .on('/spaced-review', () => createTopicReviewView());
 
     // Start
     this.router.start();
@@ -210,6 +214,10 @@ class App {
                 <i data-lucide="timer" class="w-4 h-4 text-emerald-500"></i>
                 <span>Study Planner</span>
               </a>
+              <a data-route="#/pomodoro" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="clock" class="w-4 h-4 text-red-500"></i>
+                <span>Pomodoro Timer</span>
+              </a>
               <a data-route="#/digest" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="sunrise" class="w-4 h-4 text-indigo-500"></i>
                 <span>Daily Digest</span>
@@ -222,6 +230,10 @@ class App {
                 <i data-lucide="layers" class="w-4 h-4 text-violet-500"></i>
                 <span class="flex-1">Flashcards</span>
                 <span id="sidebar-fc-due" class="hidden text-xs px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold"></span>
+              </a>
+              <a data-route="#/spaced-review" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                <i data-lucide="repeat" class="w-4 h-4 text-emerald-500"></i>
+                <span>Spaced Review</span>
               </a>
               <a data-route="#/concept-map" class="sidebar-link flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                 <i data-lucide="git-branch" class="w-4 h-4 text-cyan-500"></i>

@@ -229,6 +229,12 @@ function createHomeView() {
               <a data-route="#/progress-report" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="file-bar-chart" class="w-4 h-4 text-indigo-500"></i> Progress Report
               </a>
+              <a data-route="#/pomodoro" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-red-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="clock" class="w-4 h-4 text-red-500"></i> Pomodoro Timer
+              </a>
+              <a data-route="#/spaced-review" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="repeat" class="w-4 h-4 text-emerald-500"></i> Spaced Review
+              </a>
             </div>
           </section>
 
@@ -1738,6 +1744,8 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v139', items: ['Spaced review scheduler', 'Topic-level review intervals', 'Difficulty-based scheduling'] },
+    { ver: 'v138', items: ['Pomodoro focus timer', 'Customizable work/break presets', 'Session history with topic linking'] },
     { ver: 'v137', items: ['Printable progress report', 'Shareable study summary', 'Exam history & strengths analysis'] },
     { ver: 'v136', items: ['Memory aids & mnemonics', '30+ bioengineering mnemonics', 'Custom mnemonic builder & quiz mode'] },
     { ver: 'v135', items: ['Vocabulary drill', 'Term-to-definition & spelling modes', 'Smart weighting for struggling terms'] },
