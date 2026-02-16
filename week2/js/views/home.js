@@ -363,9 +363,15 @@ function createHomeView() {
           opacity: 0, y: 25, duration: 0.5, stagger: 0.1, delay: 0.2, ease: 'power2.out',
         });
         // Topic cards stagger in
-        gsap.from(container.querySelectorAll('.topic-card-editorial'), {
-          opacity: 0, y: 30, scale: 0.97, duration: 0.5, stagger: 0.08, delay: 0.4, ease: 'power2.out',
-        });
+        const topicCards = container.querySelectorAll('.topic-card-editorial');
+        if (topicCards.length > 0) {
+          gsap.from(topicCards, {
+            opacity: 0, y: 30, scale: 0.97, duration: 0.5, stagger: 0.08, delay: 0.4, ease: 'power2.out',
+            onComplete: () => { topicCards.forEach(c => { c.style.opacity = ''; c.style.transform = ''; }); }
+          });
+          // Safety: ensure cards visible after 2s regardless
+          setTimeout(() => { topicCards.forEach(c => { if (parseFloat(getComputedStyle(c).opacity) < 0.5) { c.style.opacity = '1'; c.style.transform = 'none'; } }); }, 2000);
+        }
       }
 
       // Prefetch topic data on hover for instant navigation
@@ -3121,7 +3127,7 @@ function renderTopicCard(topic, index, progress) {
   const accent = accentColors[topic.id] || '#60a5fa';
 
   return `
-    <a data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" data-topic="${topic.id}" data-aos="fade-up" data-aos-delay="${index * 60}" class="topic-card-editorial group block">
+    <a data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" data-topic="${topic.id}" class="topic-card-editorial group block">
       <span class="card-number">0${index + 1}</span>
       <div class="flex items-start gap-4">
         <div class="relative flex-shrink-0" style="width:48px; height:48px">
