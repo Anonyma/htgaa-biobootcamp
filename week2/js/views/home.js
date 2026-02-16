@@ -13,42 +13,54 @@ function createHomeView() {
       const overallPct = store.getOverallProgress();
 
       return `
-        <!-- Hero -->
-        <header class="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white rounded-2xl mx-4 mt-6 overflow-hidden relative">
-          <canvas id="hero-dna-canvas" class="absolute inset-0 w-full h-full pointer-events-none" style="opacity:0.12"></canvas>
-          <div class="max-w-5xl mx-auto px-6 py-10 md:py-14 relative z-10">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-              <div>
-                <p class="text-blue-200 text-sm font-medium mb-2">HTGAA Spring 2026 — Week 2</p>
-                <h1 class="text-3xl md:text-4xl font-extrabold mb-3">DNA Read, Write, & Edit</h1>
-                <p class="text-blue-100 max-w-xl leading-relaxed">
-                  Master <span id="typed-target" class="text-white font-semibold"></span>
+        <!-- Hero — Bioluminescent Editorial -->
+        <header class="hero-editorial rounded-2xl mx-4 mt-6 text-white">
+          <canvas id="hero-dna-canvas" class="absolute inset-0 w-full h-full pointer-events-none" style="opacity:0.10"></canvas>
+          <div class="max-w-5xl mx-auto px-6 pt-12 pb-10 md:pt-16 md:pb-12 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+              <div class="flex-1">
+                <p class="hero-label mb-4">HTGAA Spring 2026 — Week 2</p>
+                <h1 class="hero-title mb-4">DNA Read,<br>Write, &amp; Edit</h1>
+                <p class="hero-subtitle mb-1">
+                  Master <span id="typed-target" class="text-white font-semibold" style="font-family:'DM Sans',sans-serif"></span>
                   <span class="typed-cursor typed-cursor--blink text-white">|</span>
-                  <br><span class="text-blue-200 text-sm">Everything you need for HTGAA Week 2.</span>
                 </p>
-                <div class="flex items-center gap-4 mt-4 text-sm text-blue-200">
-                  <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
-                  <span class="flex items-center gap-1"><i data-lucide="flask-conical" class="w-4 h-4"></i> 12+ Simulations</span>
-                  <span id="hero-question-count" class="flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i> <span data-count>150+</span> Questions</span>
-                  <span class="flex items-center gap-1"><i data-lucide="clock" class="w-4 h-4"></i> ~4 hrs</span>
+                <p class="hero-subtitle text-sm" style="color:rgba(240,237,232,0.35); max-width:420px; margin-top:0.25rem;">Interactive study companion with simulations, quizzes, and homework guidance.</p>
+                <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-6">
+                  <span class="hero-stat"><strong>6</strong> chapters</span>
+                  <span class="hero-stat" style="color:rgba(240,237,232,0.2)">·</span>
+                  <span class="hero-stat"><strong>12+</strong> simulations</span>
+                  <span class="hero-stat" style="color:rgba(240,237,232,0.2)">·</span>
+                  <span id="hero-question-count" class="hero-stat"><strong><span data-count>150+</span></strong> questions</span>
+                  <span class="hero-stat" style="color:rgba(240,237,232,0.2)">·</span>
+                  <span class="hero-stat"><strong>~4</strong> hrs</span>
                 </div>
               </div>
-              <div class="flex flex-col items-center">
-                <div class="relative w-28 h-28" style="width:112px;height:112px">
-                  <svg class="progress-ring w-28 h-28 -rotate-90" viewBox="0 0 100 100" style="width:112px;height:112px">
-                    <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
-                    <circle id="hero-progress-circle" cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="8"
+              <div class="flex flex-col items-center flex-shrink-0">
+                <div class="hero-progress-ring relative" style="width:120px;height:120px">
+                  <div class="ring-glow"></div>
+                  <svg class="progress-ring -rotate-90" viewBox="0 0 100 100" style="width:120px;height:120px">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+                    <circle id="hero-progress-circle" cx="50" cy="50" r="42" fill="none" stroke="url(#progress-gradient)" stroke-width="6"
                             stroke-dasharray="264" stroke-dashoffset="${264 - (overallPct / 100) * 264}" stroke-linecap="round"
-                            style="transition: stroke-dashoffset 0.8s ease"/>
+                            style="transition: stroke-dashoffset 1s cubic-bezier(0.22, 1, 0.36, 1)"/>
+                    <defs>
+                      <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="var(--gfp-green)"/>
+                        <stop offset="50%" stop-color="var(--dapi-blue)"/>
+                        <stop offset="100%" stop-color="var(--cy5-purple)"/>
+                      </linearGradient>
+                    </defs>
                   </svg>
-                  <div class="absolute inset-0 flex items-center justify-center">
-                    <span class="text-2xl font-bold">${overallPct}%</span>
+                  <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span class="text-3xl font-bold" style="font-family:'Instrument Serif',Georgia,serif; letter-spacing:-0.03em">${overallPct}%</span>
                   </div>
                 </div>
-                <span class="text-blue-200 text-sm mt-2">Progress</span>
+                <span class="hero-stat mt-3">progress</span>
               </div>
             </div>
           </div>
+          <div class="divider-glow" style="margin:0"></div>
         </header>
 
         <main class="max-w-5xl mx-auto px-4 py-8">
@@ -121,15 +133,13 @@ function createHomeView() {
           <!-- Topic Cards (the core content) -->
           <section class="mb-10">
             <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
-              <h2 class="text-xl font-bold flex items-center gap-2">
-                <i data-lucide="layout-grid" class="w-5 h-5 text-indigo-500"></i> Chapters
-              </h2>
+              <h2 class="section-header-editorial" style="margin-bottom:0; padding-bottom:0.5rem">Chapters</h2>
               <div class="flex gap-1 topic-filters pill-nav">
                 <button class="filter-pill active" data-filter="all">All</button>
                 <button class="filter-pill" data-filter="foundational">Foundational</button>
                 <button class="filter-pill" data-filter="intermediate">Intermediate</button>
                 <button class="filter-pill" data-filter="advanced">Advanced</button>
-                <button id="surprise-topic" class="flex items-center gap-1 text-purple-500">
+                <button id="surprise-topic" class="flex items-center gap-1 text-purple-500" style="font-family:'DM Sans',sans-serif">
                   <i data-lucide="shuffle" class="w-3 h-3"></i> Random
                 </button>
               </div>
@@ -141,9 +151,7 @@ function createHomeView() {
 
           <!-- ===== Study Toolkit (Categorized) ===== -->
           <section class="mb-12" data-aos="fade-up">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
-              <i data-lucide="compass" class="w-5 h-5 text-blue-500"></i> Study Toolkit
-            </h2>
+            <h2 class="section-header-editorial">Study Toolkit</h2>
 
             <!-- Featured Tools (Large cards) -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -3230,52 +3238,56 @@ function renderTopicCard(topic, index, progress) {
   const sectionsRead = store.getSectionsRead(topic.id).length;
   const sectionPct = Math.round((sectionsRead / totalSections) * 100);
 
+  const accentColors = {
+    'sequencing': '#60a5fa', 'synthesis': '#4ade80', 'editing': '#fb7185',
+    'genetic-codes': '#a78bfa', 'gel-electrophoresis': '#fb923c', 'central-dogma': '#2dd4bf',
+  };
+  const accent = accentColors[topic.id] || '#60a5fa';
+
   return `
-    <a data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" data-aos="fade-up" data-aos-delay="${index * 80}" class="topic-card group block glass rounded-2xl p-5 border border-slate-200/50 dark:border-slate-700/50 cursor-pointer card-elevated glow-${topic.color}">
+    <a data-route="#/topic/${topic.id}" data-difficulty="${diff.level.toLowerCase()}" data-topic="${topic.id}" data-aos="fade-up" data-aos-delay="${index * 60}" class="topic-card-editorial group block">
+      <span class="card-number">0${index + 1}</span>
       <div class="flex items-start gap-4">
-        <div class="relative w-14 h-14 flex-shrink-0">
+        <div class="relative flex-shrink-0" style="width:48px; height:48px">
           ${sectionPct > 0 ? `
-          <svg class="absolute inset-0 w-14 h-14 -rotate-90" viewBox="0 0 56 56">
-            <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="3"/>
-            <circle cx="28" cy="28" r="24" fill="none" stroke="currentColor" class="text-${topic.color}-500" stroke-width="3" stroke-linecap="round"
-              stroke-dasharray="${2 * Math.PI * 24}" stroke-dashoffset="${2 * Math.PI * 24 * (1 - sectionPct / 100)}"
+          <svg class="absolute inset-0 -rotate-90" viewBox="0 0 48 48" style="width:48px;height:48px">
+            <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" class="text-slate-200 dark:text-slate-700" stroke-width="2.5"/>
+            <circle cx="24" cy="24" r="21" fill="none" stroke="${accent}" stroke-width="2.5" stroke-linecap="round"
+              stroke-dasharray="${2 * Math.PI * 21}" stroke-dashoffset="${2 * Math.PI * 21 * (1 - sectionPct / 100)}"
               style="transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1)"/>
           </svg>` : ''}
-          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-${topic.color}-100 to-${topic.color}-50 dark:from-${topic.color}-900/40 dark:to-${topic.color}-900/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-            <i data-lucide="${topic.icon}" class="w-7 h-7 text-${topic.color}-600 dark:text-${topic.color}-400"></i>
+          <div class="flex items-center justify-center" style="width:48px;height:48px;border-radius:12px;background:${accent}14">
+            <i data-lucide="${topic.icon}" class="w-5 h-5" style="color:${accent}"></i>
           </div>
         </div>
         <div class="flex-1 min-w-0">
           <div class="flex items-center justify-between mb-1">
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-mono text-slate-400 tabular-nums">0${index + 1}</span>
-              <h3 class="font-bold text-lg group-hover:text-${topic.color}-600 dark:group-hover:text-${topic.color}-400 transition-colors">${topic.title}</h3>
-            </div>
+            <h3 class="card-title group-hover:opacity-80 transition-opacity">${topic.title}</h3>
             ${isComplete
-              ? '<span class="flex items-center gap-1 text-xs text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full font-medium"><i data-lucide="check" class="w-3 h-3"></i>Done</span>'
+              ? `<span class="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium" style="color:#4ade80;background:rgba(74,222,128,0.1)"><i data-lucide="check" class="w-3 h-3"></i>Done</span>`
               : ''
             }
           </div>
-          <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-3">${descriptions[topic.id] || ''}</p>
-          <div class="flex items-center gap-2 text-xs flex-wrap">
-            <span class="px-2 py-0.5 rounded-md text-${diff.color}-600 dark:text-${diff.color}-400 bg-${diff.color}-50 dark:bg-${diff.color}-900/20 font-semibold">${diff.level}</span>
-            <span class="text-slate-400 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${readingTimes[topic.id] || 30}m</span>
-            ${quizScore ? `<span class="text-slate-400">Quiz: <span class="font-semibold text-slate-600 dark:text-slate-300">${quizScore.correct}/${quizScore.total}</span></span>` : ''}
-            ${sectionsRead > 0 ? `<span class="text-slate-400">${sectionsRead}/${totalSections} sections</span>` : ''}
+          <p class="card-desc mb-3">${descriptions[topic.id] || ''}</p>
+          <div class="flex items-center gap-3 card-meta flex-wrap">
+            <span class="px-2 py-0.5 rounded-md font-semibold" style="color:${accent};background:${accent}12">${diff.level}</span>
+            <span>${readingTimes[topic.id] || 30} min</span>
+            ${quizScore ? `<span>Quiz ${quizScore.correct}/${quizScore.total}</span>` : ''}
+            ${sectionsRead > 0 ? `<span>${sectionsRead}/${totalSections} read</span>` : ''}
             ${(() => {
               const m = store.getTopicMastery(topic.id, null);
-              return m && m.mastery > 0 ? `<span class="font-bold text-${m.mastery >= 80 ? 'green' : m.mastery >= 50 ? 'amber' : 'slate'}-500">${m.mastery}%</span>` : '';
+              return m && m.mastery > 0 ? `<span style="color:${m.mastery >= 80 ? '#4ade80' : m.mastery >= 50 ? '#fb923c' : 'inherit'};font-weight:600">${m.mastery}%</span>` : '';
             })()}
           </div>
           ${sectionsRead > 0 && !isComplete ? `
-            <div class="mt-3 h-1.5 rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
-              <div class="h-full rounded-full bg-gradient-to-r from-${topic.color}-400 to-${topic.color}-500 transition-all duration-700" style="width: ${sectionPct}%"></div>
+            <div class="mt-3 rounded-full overflow-hidden" style="height:3px;background:var(--border-subtle)">
+              <div class="h-full rounded-full transition-all duration-700" style="width:${sectionPct}%;background:${accent}"></div>
             </div>
           ` : ''}
           <div class="mt-3 flex items-center justify-between">
-            ${sectionsRead === 0 ? `<span class="text-xs text-${topic.color}-500 font-medium flex items-center gap-1 group-hover:gap-2 transition-all"><i data-lucide="play" class="w-3 h-3"></i> Start learning</span>` : `<span class="text-xs text-${topic.color}-500 font-medium flex items-center gap-1 group-hover:gap-2 transition-all"><i data-lucide="arrow-right" class="w-3 h-3"></i> Continue</span>`}
+            ${sectionsRead === 0 ? `<span class="text-xs font-medium flex items-center gap-1 group-hover:gap-2 transition-all" style="color:${accent}"><i data-lucide="play" class="w-3 h-3"></i> Start learning</span>` : `<span class="text-xs font-medium flex items-center gap-1 group-hover:gap-2 transition-all" style="color:${accent}"><i data-lucide="arrow-right" class="w-3 h-3"></i> Continue</span>`}
             ${sectionsRead > 0 || isComplete ? `
-              <a data-route="#/review/${topic.id}" class="text-xs px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 transition-colors font-medium" onclick="event.stopPropagation()">
+              <a data-route="#/review/${topic.id}" class="text-xs px-2.5 py-1 rounded-lg transition-colors font-medium" style="background:rgba(99,102,241,0.08);color:#818cf8" onclick="event.stopPropagation()">
                 <i data-lucide="zap" class="w-3 h-3 inline mr-0.5"></i> Review
               </a>
             ` : ''}

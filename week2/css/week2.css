@@ -19,19 +19,31 @@ svg.progress-ring { width: 112px; height: 112px; }
 #search-modal { display: none; }
 #search-modal:not(.hidden) { display: block; }
 
-/* ===== Base & Typography ===== */
+/* ===== Base & Typography — Bioluminescent Editorial ===== */
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+/* Keep sans-serif for UI chrome (nav, buttons, badges, sidebar) */
+nav h1, nav h2, nav h3, nav span, nav a,
+aside h1, aside h2, aside h3, aside span, aside a,
+button, .pill-nav, .filter-pill, .badge,
+.sidebar-group-header, .sidebar-link,
+.stat-value, .stat-label {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: -0.01em;
 }
 
 :root {
+  /* Fluorescent protein palette */
   --dna-blue: #3b82f6;
   --dna-green: #10b981;
   --dna-red: #ef4444;
@@ -41,11 +53,331 @@ h1, h2, h3, h4, h5, h6 {
   --gel-glow: rgba(74, 222, 128, 0.6);
   --sim-border: #e2e8f0;
   --sim-bg: #f8fafc;
+
+  /* Bioluminescent accents */
+  --gfp-green: #4ade80;
+  --dapi-blue: #60a5fa;
+  --mcherry-red: #fb7185;
+  --sypro-orange: #fb923c;
+  --cy5-purple: #a78bfa;
+
+  /* Editorial surfaces */
+  --surface-primary: #faf9f7;
+  --surface-card: #ffffff;
+  --surface-elevated: #ffffff;
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a68;
+  --text-muted: #8888a4;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-strong: rgba(0, 0, 0, 0.12);
+
+  /* Grain overlay */
+  --grain-opacity: 0.03;
 }
 
 .dark {
   --sim-border: #334155;
   --sim-bg: #1e293b;
+
+  --surface-primary: #0a0e1a;
+  --surface-card: #111827;
+  --surface-elevated: #1a1f35;
+  --text-primary: #e8e6e1;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --grain-opacity: 0.04;
+}
+
+/* ===== Grain Texture Overlay ===== */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ===== Editorial Hero ===== */
+.hero-editorial {
+  background: linear-gradient(135deg, #0a0e1a 0%, #111827 40%, #0f1729 100%);
+  position: relative;
+  overflow: hidden;
+}
+.hero-editorial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 50%, rgba(74, 222, 128, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 80% 30%, rgba(96, 165, 250, 0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 30% 40% at 60% 80%, rgba(251, 113, 133, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-editorial .hero-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #f0ede8;
+}
+.hero-editorial .hero-subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  color: rgba(240, 237, 232, 0.6);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 540px;
+}
+.hero-editorial .hero-label {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gfp-green);
+  opacity: 0.9;
+}
+.hero-editorial .hero-stat {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: rgba(240, 237, 232, 0.45);
+}
+.hero-editorial .hero-stat strong {
+  color: rgba(240, 237, 232, 0.85);
+  font-weight: 500;
+}
+
+/* Progress ring in hero */
+.hero-progress-ring {
+  position: relative;
+}
+.hero-progress-ring .ring-glow {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(var(--gfp-green), var(--dapi-blue), var(--cy5-purple), var(--gfp-green));
+  opacity: 0.15;
+  filter: blur(8px);
+  animation: ringGlow 6s linear infinite;
+}
+@keyframes ringGlow {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.22; }
+}
+
+/* ===== Editorial Topic Cards ===== */
+.topic-card-editorial {
+  position: relative;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              border-color 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+.topic-card-editorial::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--card-accent, var(--dapi-blue));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.topic-card-editorial:hover::before {
+  opacity: 1;
+}
+.topic-card-editorial:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 40px -12px rgba(0, 0, 0, 0.08),
+    0 0 0 1px var(--border-subtle);
+  border-color: var(--border-strong);
+}
+.dark .topic-card-editorial:hover {
+  box-shadow:
+    0 20px 40px -12px rgba(0, 0, 0, 0.4),
+    0 0 30px -10px rgba(74, 222, 128, 0.06);
+}
+.topic-card-editorial .card-number {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--border-subtle);
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+.topic-card-editorial:hover .card-number {
+  color: var(--border-strong);
+}
+.dark .topic-card-editorial .card-number {
+  color: rgba(255, 255, 255, 0.04);
+}
+.dark .topic-card-editorial:hover .card-number {
+  color: rgba(255, 255, 255, 0.08);
+}
+.topic-card-editorial .card-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+.topic-card-editorial .card-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.topic-card-editorial .card-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Accent line colors per topic */
+.topic-card-editorial[data-topic="sequencing"] { --card-accent: var(--dapi-blue); }
+.topic-card-editorial[data-topic="synthesis"] { --card-accent: var(--gfp-green); }
+.topic-card-editorial[data-topic="editing"] { --card-accent: var(--mcherry-red); }
+.topic-card-editorial[data-topic="genetic-codes"] { --card-accent: var(--cy5-purple); }
+.topic-card-editorial[data-topic="gel-electrophoresis"] { --card-accent: var(--sypro-orange); }
+.topic-card-editorial[data-topic="central-dogma"] { --card-accent: #2dd4bf; }
+
+/* ===== Organic Glow Buttons ===== */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.12), rgba(96, 165, 250, 0.12));
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  color: var(--gfp-green);
+  padding: 0.625rem 1.5rem;
+  border-radius: 100px;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.btn-glow:hover {
+  background: linear-gradient(135deg, rgba(74, 222, 128, 0.2), rgba(96, 165, 250, 0.2));
+  border-color: rgba(74, 222, 128, 0.4);
+  box-shadow: 0 0 20px rgba(74, 222, 128, 0.15);
+}
+
+/* ===== Section Headers (Editorial) ===== */
+.section-header-editorial {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  position: relative;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.section-header-editorial::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 48px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gfp-green), var(--dapi-blue));
+  border-radius: 1px;
+}
+
+/* ===== Toolkit Cards (Editorial) ===== */
+.toolkit-card-editorial {
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 1.25rem;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.toolkit-card-editorial:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.06);
+}
+.dark .toolkit-card-editorial:hover {
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.3);
+}
+.toolkit-card-editorial .tk-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+.toolkit-card-editorial h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+.toolkit-card-editorial p {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* ===== Fluorescent Divider ===== */
+.divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--gfp-green) 20%, var(--dapi-blue) 50%, var(--cy5-purple) 80%, transparent 100%);
+  opacity: 0.2;
+  margin: 2rem 0;
+}
+
+/* ===== Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .hero-progress-ring .ring-glow { animation: none; opacity: 0.15; }
+}
+
+/* ===== Nav Bar Editorial ===== */
+.nav-editorial {
+  background: rgba(250, 249, 247, 0.85);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.dark .nav-editorial {
+  background: rgba(10, 14, 26, 0.88);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+.nav-editorial .nav-logo {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+
+/* ===== Sidebar Editorial ===== */
+.sidebar-editorial {
+  background: var(--surface-card);
+  border-right: 1px solid var(--border-subtle);
+}
+.dark .sidebar-editorial {
+  background: var(--surface-card);
 }
 
 /* Smooth scroll for anchor links */

@@ -134,16 +134,16 @@ class App {
       </a>
 
       <!-- Top Nav -->
-      <nav class="sticky top-0 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur border-b border-slate-200 dark:border-slate-700" role="navigation" aria-label="Main navigation">
+      <nav class="nav-editorial sticky top-0 z-50 backdrop-blur-xl" role="navigation" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <button id="sidebar-toggle" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" aria-label="Toggle sidebar" aria-expanded="false">
               <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
-            <a data-route="#/" class="flex items-center gap-2 cursor-pointer">
+            <a data-route="#/" class="flex items-center gap-2.5 cursor-pointer">
               <span class="text-xl">🧬</span>
-              <span class="font-bold text-lg hidden sm:inline">HTGAA Week 2</span>
-              <span class="font-bold text-lg sm:hidden">W2</span>
+              <span class="nav-logo hidden sm:inline">HTGAA Week 2</span>
+              <span class="nav-logo sm:hidden">W2</span>
             </a>
           </div>
           <div class="flex items-center gap-1">
@@ -182,7 +182,7 @@ class App {
       <!-- Layout: Sidebar + Content -->
       <div class="flex min-h-[calc(100vh-57px)]">
         <!-- Sidebar -->
-        <aside id="app-sidebar" class="w-64 flex-shrink-0 border-r border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hidden lg:block overflow-y-auto" role="complementary" aria-label="Study navigation">
+        <aside id="app-sidebar" class="sidebar-editorial w-64 flex-shrink-0 hidden lg:block overflow-y-auto" role="complementary" aria-label="Study navigation">
           <div class="p-4">
             <!-- Progress -->
             <div class="mb-6 text-center">
