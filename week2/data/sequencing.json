@@ -546,6 +546,48 @@
       "correctIndex": 1,
       "explanation": "Long-read platforms cost more per genome and generate less total data per run than short-read platforms like NovaSeq. However, they provide critical advantages for resolving repetitive regions, structural variants, phasing, and de novo assembly—problems that short reads struggle with or cannot solve. The choice depends on the research question and budget.",
       "difficulty": "beginner"
+    },
+    {
+      "id": "sequencing-q24",
+      "question": "A Sanger sequencing chromatogram shows double peaks starting at position 150, with clean single peaks before that point. What is the most likely cause?",
+      "options": [
+        "A heterozygous single-nucleotide polymorphism at position 150",
+        "The sequencing reaction contains two different template molecules, and an insertion or deletion in one creates out-of-phase reads from that point forward",
+        "The sequencing instrument malfunctioned at cycle 150",
+        "The primer degraded partway through the reaction"
+      ],
+      "correctIndex": 1,
+      "explanation": "When double peaks begin at a specific position and continue through the rest of the chromatogram, the most likely cause is contamination with a second template (or a mixed clone population). An indel in one template shifts its reading frame relative to the other, causing all subsequent peaks to overlap. A single heterozygous SNP would show a double peak at only one position, not from that point onward. Instrument errors would affect random positions, not create a systematic pattern starting at one point.",
+      "difficulty": "advanced",
+      "section": "sanger-sequencing"
+    },
+    {
+      "id": "sequencing-q25",
+      "question": "Your lab needs to sequence a 5 Mb bacterial genome de novo (no reference genome exists). Which sequencing strategy would you recommend?",
+      "options": [
+        "Sanger sequencing with primer walking across the entire genome",
+        "Illumina short-read sequencing alone at 100x coverage",
+        "Oxford Nanopore long-read sequencing alone",
+        "Hybrid approach: Illumina short reads for accuracy combined with Oxford Nanopore long reads for scaffolding"
+      ],
+      "correctIndex": 3,
+      "explanation": "A hybrid approach combines the strengths of both platforms. Illumina short reads provide high accuracy (Q30+, ~0.1% error rate) for consensus sequence, while long reads from Oxford Nanopore span repetitive regions and provide scaffolding information to produce a contiguous assembly. Short reads alone cannot resolve repeats longer than the read length (~150-300 bp), leading to a fragmented assembly. Long reads alone have higher error rates that may miss SNPs. Sanger sequencing would be prohibitively slow and expensive for 5 Mb. The hybrid approach typically produces a near-complete, highly accurate genome assembly.",
+      "difficulty": "advanced",
+      "section": "next-gen-sequencing"
+    },
+    {
+      "id": "sequencing-q26",
+      "question": "You want to detect a rare somatic mutation present in only 1% of cells in a tumor biopsy. What minimum sequencing depth do you need to reliably detect this variant?",
+      "options": [
+        "10x coverage",
+        "30x coverage",
+        "100x coverage",
+        "1,000x or greater coverage"
+      ],
+      "correctIndex": 3,
+      "explanation": "To reliably detect a variant at 1% allele frequency, you need enough reads so that multiple reads carry the variant allele (typically requiring at least 5-10 variant-supporting reads for statistical confidence). At 1% frequency, you would expect ~10 variant reads per 1,000 total reads at that position. At 100x coverage, you would expect only ~1 variant read, which is indistinguishable from sequencing error (Illumina's ~0.1% error rate means ~0.1 erroneous reads per position at 100x). At 1,000x+ coverage, you get ~10+ variant reads, providing statistical power to distinguish true variants from noise. This is why liquid biopsy and tumor profiling panels use ultra-deep sequencing (1,000-10,000x).",
+      "difficulty": "advanced",
+      "section": "next-gen-sequencing"
     }
   ],
   "designChallenges": [

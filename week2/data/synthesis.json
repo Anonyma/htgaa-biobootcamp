@@ -555,6 +555,48 @@
       "correctIndex": 1,
       "explanation": "BsaI recognizes GGTCTC but cuts 1 bp downstream on one strand and 4 bp on the other, outside the recognition sequence. This allows the design of custom 4-nucleotide overhangs whose sequence is determined by the DNA, not the enzyme, enabling ordered scarless assembly.",
       "difficulty": "intermediate"
+    },
+    {
+      "id": "synthesis-q25",
+      "question": "A 200-mer oligonucleotide synthesized at 99.5% coupling efficiency per step has approximately what percentage of full-length product?",
+      "options": [
+        "95%",
+        "75%",
+        "37%",
+        "10%"
+      ],
+      "correctIndex": 2,
+      "explanation": "Full-length yield = (coupling efficiency)^(N-1) = (0.995)^199 ≈ 0.370, or about 37%. Even at an excellent 99.5% per-step efficiency, nearly two-thirds of the product will contain at least one deletion or truncation by the 200th nucleotide. This exponential decay is the fundamental reason chemical DNA synthesis is limited to ~150-300 nucleotides and why longer constructs must be assembled from shorter oligos.",
+      "difficulty": "advanced",
+      "section": "phosphoramidite-chemistry"
+    },
+    {
+      "id": "synthesis-q26",
+      "question": "Your team needs to produce a functional 10 kb gene. Compare ordering from a commercial gene synthesis company (e.g., Twist Bioscience) versus synthesizing oligonucleotides in-house and assembling via Gibson Assembly. Which approach is more practical?",
+      "options": [
+        "Order from a commercial vendor — they have optimized pipelines, error correction, and sequence verification for long constructs",
+        "In-house oligo synthesis and Gibson Assembly — it is always cheaper and faster to do it yourself",
+        "Both approaches are equally practical for a 10 kb construct",
+        "Neither approach works — use PCR to amplify the gene from an existing genomic template instead"
+      ],
+      "correctIndex": 0,
+      "explanation": "For a 10 kb gene, commercial synthesis is far more practical. Companies like Twist, GenScript, and IDT have optimized assembly pipelines with automated error correction (using enzymes like MutS or next-gen sequencing verification) that routinely deliver sequence-perfect constructs up to 10-15 kb. In-house assembly of a 10 kb gene from oligos would require synthesizing ~35-40 overlapping oligos, performing multi-step hierarchical Gibson assemblies, and extensive sequence verification — a process prone to errors at each stage and requiring weeks of troubleshooting. The commercial route costs ~$700-1000 for 10 kb but saves weeks of labor.",
+      "difficulty": "advanced",
+      "section": "gene-assembly"
+    },
+    {
+      "id": "synthesis-q27",
+      "question": "You need to build a 3-fragment Gibson Assembly. Fragment A (2 kb) ends with the sequence ...ATCGATCGATCGATCGATCG. What should the 5' end of the forward primer for Fragment B look like to create a proper Gibson Assembly overlap?",
+      "options": [
+        "The primer should begin with 20 bp matching the end of Fragment A (5'-ATCGATCGATCGATCGATCG-3') followed by ~20 bp annealing to the start of Fragment B",
+        "The primer should contain a BsaI restriction site for Golden Gate cloning",
+        "The primer should begin with a random 20 bp sequence for unique identification",
+        "The primer needs only 5 bp of overlap with Fragment A"
+      ],
+      "correctIndex": 0,
+      "explanation": "Gibson Assembly requires 20-40 bp overlaps between adjacent fragments. The forward primer for Fragment B must have a 5' tail that matches the end of Fragment A (5'-ATCGATCGATCGATCGATCG-3', 20 bp) followed by ~20 bp that anneal to the beginning of Fragment B's template. When Fragment B is PCR-amplified with this primer, its 5' end will carry the overlap sequence. During Gibson Assembly, the T5 exonuclease chews back 5' ends to expose complementary single-stranded regions, which anneal, and then Phusion polymerase fills gaps and Taq ligase seals nicks. The overlap Tm should be 48-63°C for efficient annealing at the 50°C reaction temperature.",
+      "difficulty": "advanced",
+      "section": "gene-assembly"
     }
   ],
   "designChallenges": [

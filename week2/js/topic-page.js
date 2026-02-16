@@ -2336,6 +2336,7 @@ async function initSimulations(container, topicId) {
       { module: './coupling-calc.js', containerId: 'viz-coupling-calc', initFn: 'initCouplingCalc', title: 'Coupling Efficiency Calculator' },
       { module: './storage-calc.js', containerId: 'viz-storage-calc', initFn: 'initStorageCalc', title: 'DNA Data Storage Calculator' },
       { module: './timeline.js', containerId: 'viz-timeline', initFn: 'initTimeline', title: 'DNA Technology Timeline' },
+      { module: './gibson-anim.js', containerId: 'viz-gibson-anim', initFn: 'initGibsonAnim', title: 'Gibson Assembly Step-Through' },
     ],
     'editing': [
       { module: './crispr-anim.js', containerId: 'viz-crispr-anim', initFn: 'initCrisprAnim', title: 'CRISPR-Cas9 Mechanism' },

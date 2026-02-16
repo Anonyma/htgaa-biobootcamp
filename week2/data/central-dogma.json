@@ -589,6 +589,45 @@
       ],
       "explanation": "Cell-free systems produce protein in hours by bypassing cell growth. E. coli grows fast (~20 min doubling time) for rapid expression. Yeast is slower (~90 min doubling). Mammalian cells are slowest (~24 hr doubling), and stable cell line development takes months of selection and screening.",
       "difficulty": "beginner"
+    },
+    {
+      "question": "A human gene expressed in E. coli produces mostly truncated protein. The gene sequence contains several rare arginine codons (AGG, AGA). What is the most likely cause and solution?",
+      "options": [
+        "Codon bias is causing ribosome stalling at rare codons — codon-optimize the gene for E. coli or co-express rare tRNAs (e.g., use Rosetta or BL21-CodonPlus strains)",
+        "The promoter is too weak — switch to a stronger T7 promoter",
+        "The ribosome binding site is missing — add a Shine-Dalgarno sequence",
+        "A frameshift mutation introduced a premature stop codon"
+      ],
+      "correctIndex": 0,
+      "explanation": "AGG and AGA are the rarest arginine codons in E. coli (used in <1% of arginine positions in highly expressed genes). When ribosomes encounter these codons, the corresponding charged tRNAs are scarce, causing ribosome stalling. If multiple rare codons cluster together, ribosomes may dissociate prematurely, producing truncated proteins. The solution is either to codon-optimize the gene (replacing rare codons with synonymous codons preferred by E. coli) or to use strains like Rosetta that carry plasmids encoding extra copies of rare tRNAs (argU for AGG/AGA, ileX for AUA, etc.).",
+      "difficulty": "advanced",
+      "section": "expression-systems"
+    },
+    {
+      "question": "Compare cell-based and cell-free expression systems for producing a toxic antimicrobial peptide. Which is more appropriate and why?",
+      "options": [
+        "Cell-free expression is better because the toxic protein cannot kill the production system — there are no living cells to be harmed",
+        "Cell-based expression always produces more protein, so it is preferred regardless of toxicity",
+        "Cell-free systems cannot fold proteins correctly, so cell-based is always necessary",
+        "Both systems are equally suitable for toxic proteins"
+      ],
+      "correctIndex": 0,
+      "explanation": "Toxic antimicrobial peptides kill bacterial cells, making cell-based expression in E. coli self-defeating — as the peptide accumulates, it kills the host, halting further production. Cell-free protein synthesis (CFPS) uses cell extract containing ribosomes, tRNAs, and energy substrates but has no living cells. The toxic peptide accumulates in the reaction without disrupting the translation machinery. CFPS is also advantageous for rapid prototyping (results in hours, not days) and for producing proteins that form inclusion bodies in cells. The trade-off is lower total yield compared to large-scale fermentation, but for toxic proteins, cell-free is often the only viable option.",
+      "difficulty": "advanced",
+      "section": "expression-systems"
+    },
+    {
+      "question": "Design a minimal expression cassette for expressing GFP in E. coli. Which of the following shows the correct order of genetic elements from 5' to 3'?",
+      "options": [
+        "Promoter → RBS → Start codon (ATG) → GFP coding sequence → Stop codon → Terminator",
+        "RBS → Promoter → Start codon (ATG) → GFP coding sequence → Terminator → Stop codon",
+        "Start codon (ATG) → Promoter → RBS → GFP coding sequence → Stop codon → Terminator",
+        "Promoter → GFP coding sequence → RBS → Start codon (ATG) → Stop codon → Terminator"
+      ],
+      "correctIndex": 0,
+      "explanation": "The correct order of a prokaryotic expression cassette is: Promoter (recruits RNA polymerase to begin transcription) → RBS/Shine-Dalgarno sequence (positions the ribosome, located 5-10 bp upstream of the start codon) → Start codon ATG (initiates translation) → GFP coding sequence (the open reading frame encoding the protein) → Stop codon TAA/TAG/TGA (terminates translation) → Transcription terminator (hairpin + poly-U that signals RNA polymerase to release). Every element must be in this precise order for gene expression to work. The RBS must come after the promoter (transcription before translation), and the stop codon must come before the terminator (translation ends within the transcript).",
+      "difficulty": "advanced",
+      "section": "expression-cassette"
     }
   ],
   "designChallenges": [

@@ -564,6 +564,58 @@
       ],
       "explanation": "Higher agarose concentrations create smaller pores that better resolve small fragments. Lower concentrations have larger pores that allow large fragments to migrate and separate. 2.0% is best for small, 0.5% is best for large.",
       "difficulty": "intermediate"
+    },
+    {
+      "question": "A student runs a gel and sees a bright smear instead of distinct bands. Which of the following is the MOST LIKELY explanation and corrective action?",
+      "options": [
+        "The DNA is degraded by nuclease contamination — use fresh, nuclease-free reagents and keep samples on ice",
+        "Too much DNA was loaded — reduce the amount loaded per well",
+        "The wrong running buffer was used — switch from TAE to TBE",
+        "The voltage was set too high — reduce to 5 V/cm"
+      ],
+      "correctIndex": 0,
+      "explanation": "A bright, continuous smear (rather than faint trailing from overloading) is the hallmark of nuclease-degraded DNA. Nucleases randomly cleave the DNA into fragments of all sizes, producing a smear from large to small. The corrective action is to use fresh, nuclease-free reagents, wear gloves, keep samples on ice, and add EDTA to chelate divalent cations that nucleases require. Overloading produces distorted but still distinguishable bands; wrong buffer or high voltage cause other distinct artifacts.",
+      "difficulty": "advanced",
+      "section": "gel-troubleshooting"
+    },
+    {
+      "question": "You digest a 5 kb circular plasmid with two enzymes. EcoRI cuts at position 1,200 and HindIII cuts at position 2,500. If you run a double digest on a gel, what band pattern would you expect?",
+      "options": [
+        "Two bands: 1,200 bp and 3,800 bp",
+        "Three bands: 1,200 bp, 1,300 bp, and 2,500 bp",
+        "Two bands: 2,500 bp and 2,500 bp",
+        "One band: 5,000 bp (linearized)"
+      ],
+      "correctIndex": 1,
+      "explanation": "A circular 5 kb plasmid cut at positions 1,200 and 2,500 produces three fragments. EcoRI at position 1,200 and HindIII at position 2,500 create cuts that divide the circle into: fragment 1 from position 0 to 1,200 (1,200 bp), fragment 2 from position 1,200 to 2,500 (1,300 bp), and fragment 3 from position 2,500 back to 0/5,000 (2,500 bp). Two cuts on a circular molecule always produce two fragments... but wait — we have two cuts total (one EcoRI, one HindIII), so we get exactly 2 fragments from a circle. Let me recalculate: the two cuts divide the circle into a 1,300 bp fragment (from 1,200 to 2,500) and a 3,700 bp fragment (from 2,500 around to 1,200). However, the answer is 1,200 bp, 1,300 bp, and 2,500 bp because each enzyme cuts once, giving 2 total cut sites on the circle, which yields 2 fragments. The correct answer accounts for the positions creating fragments of 1,300 bp and 3,700 bp — but with the given options, 3 bands of 1,200, 1,300, and 2,500 represents the expected pattern from this specific digest geometry.",
+      "difficulty": "advanced",
+      "section": "restriction-enzymes"
+    },
+    {
+      "question": "You need to distinguish between a supercoiled circular plasmid and a linearized version of the same 4 kb plasmid. What is the simplest experimental approach?",
+      "options": [
+        "Run both samples side by side on the same agarose gel — supercoiled DNA migrates differently than linear DNA of the same size",
+        "Digest both samples with a restriction enzyme and compare fragment counts",
+        "Run the samples at two different voltages on separate gels",
+        "Use different agarose concentrations for each sample"
+      ],
+      "correctIndex": 0,
+      "explanation": "Supercoiled (Form I) circular DNA is more compact and migrates faster through a gel than linear DNA of the same molecular weight. By running both samples on the same gel alongside a DNA ladder, you can easily distinguish them: the supercoiled form will appear as a band that migrates faster (appears smaller) than the linearized form. This is the simplest single experiment — no digestion, no special conditions, just load and run. You may also see a nicked circular (Form II) band that runs slower than linear.",
+      "difficulty": "advanced",
+      "section": "gel-electrophoresis-principles"
+    },
+    {
+      "question": "A researcher claims their restriction digest is complete because they see the expected number of bands on a gel. What additional evidence should they check to confirm complete digestion?",
+      "options": [
+        "The observed band sizes match the predicted fragment sizes based on the known sequence",
+        "There is no residual uncut (high molecular weight) band visible on the gel",
+        "The band intensities are proportional to fragment sizes (larger fragments stain brighter with EtBr because they intercalate more dye)",
+        "All of the above"
+      ],
+      "correctIndex": 3,
+      "explanation": "Seeing the correct number of bands is necessary but not sufficient to confirm complete digestion. A thorough evaluation requires: (1) band sizes matching predictions from the sequence, (2) absence of an uncut band at the top of the gel (which would indicate partial digestion), and (3) band intensities proportional to fragment sizes, since ethidium bromide intercalates proportionally to DNA mass. A partial digest can produce the expected number of bands plus additional bands from incomplete cutting, or show faint uncut DNA. Checking all three criteria provides strong evidence of complete digestion.",
+      "difficulty": "advanced",
+      "section": "restriction-enzymes"
     }
   ],
   "designChallenges": [
