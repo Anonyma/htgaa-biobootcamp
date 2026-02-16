@@ -639,14 +639,19 @@ class App {
     document.getElementById('focus-toggle')?.addEventListener('click', toggleFocus);
 
     // Font size toggle (cycles: normal -> large -> xl -> normal)
-    const FONT_SIZES = ['text-base', 'text-lg', 'text-xl'];
-    let fontIdx = 0;
+    const FONT_SCALES = [1, 1.12, 1.25];
+    const FONT_LABELS = ['A', 'A+', 'A++'];
+    let fontIdx = parseInt(localStorage.getItem('htgaa-font-idx') || '0') % 3;
+    const applyFontScale = () => {
+      document.documentElement.style.setProperty('--font-scale', FONT_SCALES[fontIdx]);
+      const btn = document.getElementById('font-size-toggle');
+      if (btn) btn.title = `Font size: ${FONT_LABELS[fontIdx]}`;
+    };
+    if (fontIdx > 0) applyFontScale();
     document.getElementById('font-size-toggle')?.addEventListener('click', () => {
-      const content = document.getElementById('app-content');
-      if (!content) return;
-      content.classList.remove(FONT_SIZES[fontIdx]);
-      fontIdx = (fontIdx + 1) % FONT_SIZES.length;
-      content.classList.add(FONT_SIZES[fontIdx]);
+      fontIdx = (fontIdx + 1) % FONT_SCALES.length;
+      localStorage.setItem('htgaa-font-idx', fontIdx);
+      applyFontScale();
     });
 
     // Global keyboard shortcuts

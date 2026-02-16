@@ -686,10 +686,17 @@ function createTopicView(topicId) {
           });
         });
         // Animate key fact cards with stagger
-        gsap.from(container.querySelectorAll('.key-fact-card'), {
-          scrollTrigger: { trigger: container.querySelector('.key-facts-section'), start: 'top 80%' },
-          opacity: 0, y: 20, scale: 0.95, duration: 0.5, stagger: 0.08, ease: 'back.out(1.5)',
-        });
+        const keyFactCards = container.querySelectorAll('.key-fact-card');
+        const keyFactsTrigger = container.querySelector('.key-facts-section');
+        if (keyFactCards.length > 0 && keyFactsTrigger) {
+          gsap.from(keyFactCards, {
+            scrollTrigger: { trigger: keyFactsTrigger, start: 'top 85%', toggleActions: 'play none none none' },
+            opacity: 0, y: 20, scale: 0.95, duration: 0.5, stagger: 0.08, ease: 'back.out(1.5)',
+            onComplete: () => { keyFactCards.forEach(c => { c.style.opacity = ''; c.style.transform = ''; }); }
+          });
+          // Safety: ensure cards are visible after 3s regardless
+          setTimeout(() => { keyFactCards.forEach(c => { if (parseFloat(getComputedStyle(c).opacity) < 0.5) { c.style.opacity = '1'; c.style.transform = 'none'; } }); }, 3000);
+        }
         // Animate quiz section
         const quizSection = container.querySelector('#topic-quiz');
         if (quizSection) {
@@ -942,7 +949,7 @@ function renderTopicPage(data, topicId) {
           </h3>
           <ul class="space-y-2">
             ${data.learningObjectives.map(obj => `
-              <li class="flex items-start gap-2 text-blue-700 dark:text-blue-300">
+              <li class="flex items-start gap-2.5 text-blue-700 dark:text-blue-300">
                 <i data-lucide="check" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
                 <span>${obj}</span>
               </li>
@@ -1112,16 +1119,16 @@ function renderTopicPage(data, topicId) {
             ${isComplete ? '<i data-lucide="check-circle-2" class="w-5 h-5 inline mr-2"></i>Completed' : '<i data-lucide="circle" class="w-5 h-5 inline mr-2"></i>Mark as Complete'}
           </button>
           <div class="flex items-center gap-3">
-            <a data-route="#/flashcards" class="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/30 text-sm font-medium transition-colors cursor-pointer">
+            <a data-route="#/flashcards" class="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-violet-200 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/30 text-sm font-semibold transition-colors cursor-pointer">
               <i data-lucide="layers" class="w-4 h-4"></i> Review Flashcards
             </a>
             ${nextTopic ? `
-            <a data-route="#/topic/${nextTopic.id}" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-semibold transition-colors cursor-pointer">
-              Next: ${nextTopic.title} <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            <a data-route="#/topic/${nextTopic.id}" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-sm font-semibold transition-colors cursor-pointer">
+              Next: ${nextTopic.title} <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </a>
             ` : `
-            <a data-route="#/" class="flex items-center gap-2 px-6 py-3 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 font-semibold transition-colors cursor-pointer">
-              Back to Hub <i data-lucide="layout-grid" class="w-5 h-5"></i>
+            <a data-route="#/" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-sm font-semibold transition-colors cursor-pointer">
+              Back to Hub <i data-lucide="layout-grid" class="w-4 h-4"></i>
             </a>
             `}
           </div>
@@ -1294,12 +1301,14 @@ function renderSection(section, index, topicId) {
       ${section.checkQuestion ? renderCheckQuestion(section.checkQuestion, topicId, section.id) : ''}
 
       ${section.takeaway ? `
-        <div class="takeaway-callout">
-          <div class="flex items-start gap-2">
-            <i data-lucide="lightbulb" class="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5"></i>
+        <div class="takeaway-bubble">
+          <div class="takeaway-bubble-inner">
+            <div class="takeaway-icon-wrap">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+            </div>
             <div>
-              <p class="font-semibold text-amber-800 dark:text-amber-300 text-sm mb-0.5">Key Takeaway</p>
-              <p class="text-sm text-amber-700 dark:text-amber-400">${section.takeaway}</p>
+              <p class="takeaway-label">Key Takeaway</p>
+              <p class="takeaway-text">${section.takeaway}</p>
             </div>
           </div>
         </div>
@@ -1691,7 +1700,7 @@ function renderQuickReview(vocab, topicId) {
 
 function renderVocabulary(vocab) {
   return `
-    <section id="topic-vocab" data-section="vocab" class="mb-12 scroll-mt-28">
+    <section id="topic-vocab" data-section="vocab" class="mb-4 scroll-mt-28">
       <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
         <button class="vocab-toggle w-full flex items-center justify-between px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer">
           <h2 class="text-lg font-bold flex items-center gap-2">
@@ -3048,11 +3057,11 @@ function renderRelatedTopics(connections, currentTopicId) {
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
-              <h4 class="font-bold text-sm">${topic.title}</h4>
+              <h4 class="font-bold text-sm font-medium">${topic.title}</h4>
               ${isComplete ? '<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-green-500 flex-shrink-0"></i>' : ''}
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">${connection?.relationship || ''}</p>
-            ${connection?.concept ? `<span class="inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full bg-${topic.color}-100 dark:bg-${topic.color}-900/30 text-${topic.color}-700 dark:text-${topic.color}-400">${connection.concept}</span>` : ''}
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">${connection?.relationship || ''}</p>
+            ${connection?.concept ? `<span class="inline-block mt-1.5 text-sm px-2 py-0.5 rounded-full bg-${topic.color}-100 dark:bg-${topic.color}-900/30 text-${topic.color}-700 dark:text-${topic.color}-400">${connection.concept}</span>` : ''}
           </div>
         </div>
       </a>
