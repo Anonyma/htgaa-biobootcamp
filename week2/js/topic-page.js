@@ -604,6 +604,102 @@ function createTopicView(topicId) {
       container.addEventListener('touchstart', this._touchStart, { passive: true });
       container.addEventListener('touchend', this._touchEnd, { passive: true });
 
+      // Rough Notation highlights on key vocabulary terms in content
+      if (typeof RoughNotation !== 'undefined' && data.vocabulary) {
+        const termSet = new Map();
+        data.vocabulary.forEach(v => termSet.set(v.term.toLowerCase(), v.term));
+
+        // Find first occurrence of each vocab term in topic content and annotate it
+        const contentEls = container.querySelectorAll('.topic-content');
+        const annotations = [];
+        const annotatedTerms = new Set();
+
+        const annotationColors = ['#3b82f6', '#8b5cf6', '#ef4444', '#f59e0b', '#10b981', '#ec4899', '#6366f1', '#14b8a6'];
+        let colorIdx = 0;
+
+        contentEls.forEach(el => {
+          const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+          let node;
+          while ((node = walker.nextNode())) {
+            const text = node.textContent;
+            for (const [termLower, termOriginal] of termSet) {
+              if (annotatedTerms.has(termLower)) continue;
+              const regex = new RegExp(`\\b${termOriginal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+              const match = text.match(regex);
+              if (match) {
+                // Wrap the matched text in a span
+                const idx = match.index;
+                const range = document.createRange();
+                range.setStart(node, idx);
+                range.setEnd(node, idx + match[0].length);
+                const span = document.createElement('span');
+                span.className = 'rn-term';
+                span.title = data.vocabulary.find(v => v.term.toLowerCase() === termLower)?.definition || '';
+                range.surroundContents(span);
+
+                const color = annotationColors[colorIdx % annotationColors.length];
+                colorIdx++;
+                const annotation = RoughNotation.annotate(span, {
+                  type: colorIdx % 3 === 0 ? 'highlight' : colorIdx % 3 === 1 ? 'underline' : 'box',
+                  color: color,
+                  animationDuration: 800,
+                  multiline: true,
+                  padding: 2,
+                });
+                annotations.push({ el: span, annotation });
+                annotatedTerms.add(termLower);
+                break; // Move to next content element after modifying this node
+              }
+            }
+            if (annotatedTerms.size >= 12) break; // Limit to 12 annotations
+          }
+          if (annotatedTerms.size >= 12) return;
+        });
+
+        // Use IntersectionObserver to animate annotations when scrolled into view
+        if (annotations.length > 0) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const match = annotations.find(a => a.el === entry.target);
+                if (match && !match.shown) {
+                  match.shown = true;
+                  match.annotation.show();
+                }
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.5 });
+          annotations.forEach(a => observer.observe(a.el));
+          this._rnObserver = observer;
+          this._rnAnnotations = annotations;
+        }
+      }
+
+      // GSAP scroll-triggered section animations
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+        container.querySelectorAll('.topic-section').forEach((section, i) => {
+          gsap.from(section, {
+            scrollTrigger: { trigger: section, start: 'top 85%', toggleActions: 'play none none none' },
+            opacity: 0, y: 30, duration: 0.6, delay: i * 0.05, ease: 'power2.out',
+          });
+        });
+        // Animate key fact cards with stagger
+        gsap.from(container.querySelectorAll('.key-fact-card'), {
+          scrollTrigger: { trigger: container.querySelector('.key-facts-section'), start: 'top 80%' },
+          opacity: 0, y: 20, scale: 0.95, duration: 0.5, stagger: 0.08, ease: 'back.out(1.5)',
+        });
+        // Animate quiz section
+        const quizSection = container.querySelector('#topic-quiz');
+        if (quizSection) {
+          gsap.from(quizSection, {
+            scrollTrigger: { trigger: quizSection, start: 'top 85%' },
+            opacity: 0, y: 40, duration: 0.7, ease: 'power3.out',
+          });
+        }
+      }
+
       // Restore scroll position if returning to this topic
       restoreScrollPosition(topicId);
     },
@@ -617,6 +713,11 @@ function createTopicView(topicId) {
       if (this._timeSpentCleanup) this._timeSpentCleanup();
       // Stop any TTS
       if (window.speechSynthesis) speechSynthesis.cancel();
+      // Clean up Rough Notation
+      if (this._rnObserver) this._rnObserver.disconnect();
+      if (this._rnAnnotations) this._rnAnnotations.forEach(a => { try { a.annotation.remove(); } catch {} });
+      // Clean up GSAP ScrollTriggers
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.getAll().forEach(t => t.kill());
     }
   };
 }
