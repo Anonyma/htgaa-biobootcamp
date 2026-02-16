@@ -13,15 +13,17 @@ function createHomeView() {
 
       return `
         <!-- Hero -->
-        <header class="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white rounded-2xl mx-4 mt-6 overflow-hidden">
-          <div class="max-w-5xl mx-auto px-6 py-10 md:py-14">
+        <header class="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 text-white rounded-2xl mx-4 mt-6 overflow-hidden relative">
+          <canvas id="hero-dna-canvas" class="absolute inset-0 w-full h-full pointer-events-none" style="opacity:0.12"></canvas>
+          <div class="max-w-5xl mx-auto px-6 py-10 md:py-14 relative z-10">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
                 <p class="text-blue-200 text-sm font-medium mb-2">HTGAA Spring 2026 — Week 2</p>
                 <h1 class="text-3xl md:text-4xl font-extrabold mb-3">DNA Read, Write, & Edit</h1>
                 <p class="text-blue-100 max-w-xl leading-relaxed">
-                  Master the foundations of DNA sequencing, synthesis, genome editing,
-                  genetic codes, gel electrophoresis, and gene expression.
+                  Master <span id="typed-target" class="text-white font-semibold"></span>
+                  <span class="typed-cursor typed-cursor--blink text-white">|</span>
+                  <br><span class="text-blue-200 text-sm">Everything you need for HTGAA Week 2.</span>
                 </p>
                 <div class="flex items-center gap-4 mt-4 text-sm text-blue-200">
                   <span class="flex items-center gap-1"><i data-lucide="book-open" class="w-4 h-4"></i> 6 Chapters</span>
@@ -342,6 +344,94 @@ function createHomeView() {
         AOS.init({ duration: 600, easing: 'ease-out-cubic', once: true, offset: 60 });
       }
 
+      // Typed.js hero effect
+      const typedEl = container.querySelector('#typed-target');
+      if (typedEl && typeof Typed !== 'undefined') {
+        new Typed(typedEl, {
+          strings: [
+            'DNA sequencing — from Sanger to nanopore',
+            'gene synthesis — phosphoramidite to Gibson assembly',
+            'CRISPR genome editing — base &amp; prime editors',
+            'genetic codes — standard and expanded alphabets',
+            'gel electrophoresis — restriction enzymes &amp; gel art',
+            'expression cassettes — promoters to terminators',
+          ],
+          typeSpeed: 30,
+          backSpeed: 15,
+          backDelay: 2000,
+          loop: true,
+          showCursor: false,
+        });
+      }
+
+      // Animated DNA helix on hero canvas
+      const heroCanvas = container.querySelector('#hero-dna-canvas');
+      if (heroCanvas) {
+        const ctx = heroCanvas.getContext('2d');
+        const header = heroCanvas.parentElement;
+        let animFrame;
+        const resize = () => {
+          heroCanvas.width = header.offsetWidth * (window.devicePixelRatio || 1);
+          heroCanvas.height = header.offsetHeight * (window.devicePixelRatio || 1);
+          ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+        };
+        resize();
+        let t = 0;
+        const bases = ['A', 'T', 'G', 'C'];
+        const baseColors = { A: '#34d399', T: '#f87171', G: '#60a5fa', C: '#fbbf24' };
+        const draw = () => {
+          const w = header.offsetWidth;
+          const h = header.offsetHeight;
+          ctx.clearRect(0, 0, w, h);
+          const numPairs = 14;
+          const spacing = h / (numPairs + 1);
+          for (let i = 0; i < numPairs; i++) {
+            const y = spacing * (i + 1);
+            const phase = t * 0.02 + i * 0.4;
+            const cx = w * 0.5;
+            const amplitude = w * 0.15;
+            const x1 = cx + Math.sin(phase) * amplitude;
+            const x2 = cx - Math.sin(phase) * amplitude;
+            const depth = (Math.cos(phase) + 1) / 2; // 0..1, used for z-depth
+
+            // Backbone strands
+            if (i > 0) {
+              const prevPhase = t * 0.02 + (i - 1) * 0.4;
+              const prevY = spacing * i;
+              const prevX1 = cx + Math.sin(prevPhase) * amplitude;
+              const prevX2 = cx - Math.sin(prevPhase) * amplitude;
+              ctx.strokeStyle = `rgba(255,255,255,${0.3 + depth * 0.3})`;
+              ctx.lineWidth = 1.5;
+              ctx.beginPath(); ctx.moveTo(prevX1, prevY); ctx.lineTo(x1, y); ctx.stroke();
+              ctx.beginPath(); ctx.moveTo(prevX2, prevY); ctx.lineTo(x2, y); ctx.stroke();
+            }
+
+            // Base pair rung
+            ctx.strokeStyle = `rgba(255,255,255,${0.15 + depth * 0.2})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+
+            // Base pair dots
+            const b1 = bases[i % 4];
+            const b2 = bases[(i + 2) % 4]; // complementary-ish
+            [{ x: x1, b: b1 }, { x: x2, b: b2 }].forEach(({ x, b }) => {
+              ctx.fillStyle = baseColors[b];
+              ctx.globalAlpha = 0.4 + depth * 0.4;
+              ctx.beginPath(); ctx.arc(x, y, 3 + depth * 2, 0, Math.PI * 2); ctx.fill();
+              ctx.globalAlpha = 1;
+            });
+          }
+          t++;
+          animFrame = requestAnimationFrame(draw);
+        };
+        draw();
+        window.addEventListener('resize', resize);
+        container._heroCleanup = () => {
+          cancelAnimationFrame(animFrame);
+          window.removeEventListener('resize', resize);
+        };
+      }
+
       // Listen for progress updates
       const unsub = store.subscribe('progress', () => {
         // Update progress ring
@@ -367,6 +457,26 @@ function createHomeView() {
           setTimeout(() => banner.remove(), 300);
         }
       });
+
+      // GSAP entrance animations for homepage
+      if (typeof gsap !== 'undefined') {
+        // Hero content slides in
+        gsap.from(container.querySelector('header .max-w-5xl'), {
+          opacity: 0, y: 20, duration: 0.7, ease: 'power3.out',
+        });
+        // Progress ring spins in
+        gsap.from(container.querySelector('.progress-ring'), {
+          opacity: 0, scale: 0.5, rotation: -90, duration: 0.8, delay: 0.3, ease: 'back.out(1.7)',
+        });
+        // Feature cards stagger in
+        gsap.from(container.querySelectorAll('.feature-card'), {
+          opacity: 0, y: 25, duration: 0.5, stagger: 0.1, delay: 0.2, ease: 'power2.out',
+        });
+        // Topic cards stagger in
+        gsap.from(container.querySelectorAll('.topic-card'), {
+          opacity: 0, y: 30, scale: 0.97, duration: 0.5, stagger: 0.08, delay: 0.4, ease: 'power2.out',
+        });
+      }
 
       // Prefetch topic data on hover for instant navigation
       container.querySelectorAll('.topic-card[data-route]').forEach(card => {
@@ -609,7 +719,10 @@ function createHomeView() {
       checkMilestones();
     },
 
-    unmount() {}
+    unmount() {
+      if (container._heroCleanup) container._heroCleanup();
+      if (container._homeUnsub) container._homeUnsub();
+    }
   };
 }
 
@@ -677,6 +790,10 @@ async function initQuickQuiz(container) {
           if (isCorrect) {
             feedback.className = 'quick-quiz-feedback mt-3 p-3 rounded-lg text-sm bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400';
             feedback.textContent = q.explanation || 'Correct!';
+            // Confetti celebration
+            if (typeof confetti === 'function') {
+              confetti({ particleCount: 60, spread: 50, origin: { y: 0.7 }, colors: ['#10b981', '#3b82f6', '#8b5cf6'] });
+            }
           } else {
             feedback.className = 'quick-quiz-feedback mt-3 p-3 rounded-lg text-sm bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400';
             feedback.textContent = q.explanation || `Incorrect. The answer is ${String.fromCharCode(65 + q.correctIndex)}.`;

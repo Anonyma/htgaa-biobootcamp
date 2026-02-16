@@ -2104,6 +2104,15 @@ function initTopicQuizzes(container, topicId) {
 
           if (isCorrect) {
             btn.classList.add('bg-green-100', 'border-green-500', 'text-green-800', 'dark:bg-green-900/30');
+            // Confetti burst on correct answer
+            if (typeof confetti === 'function') {
+              const rect = btn.getBoundingClientRect();
+              confetti({ particleCount: 50, spread: 45, origin: { x: (rect.left + rect.width / 2) / window.innerWidth, y: (rect.top + rect.height / 2) / window.innerHeight }, colors: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'] });
+            }
+            // GSAP pulse on correct
+            if (typeof gsap !== 'undefined') {
+              gsap.fromTo(btn, { scale: 1 }, { scale: 1.05, duration: 0.15, yoyo: true, repeat: 1, ease: 'power2.out' });
+            }
           } else {
             btn.classList.add('bg-red-100', 'border-red-500', 'text-red-800', 'dark:bg-red-900/30');
             const correct = slide.querySelector(`.quiz-option[data-index="${correctIndex}"]`);
@@ -2139,7 +2148,14 @@ function initTopicQuizzes(container, topicId) {
       const iconContainer = resultsSlide?.querySelector('.quiz-result-icon');
       if (pct === 100) {
         if (msgEl) msgEl.textContent = 'Perfect score! You\'ve mastered this material.';
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b', '#ec4899'] });
+          setTimeout(() => confetti({ particleCount: 60, spread: 100, origin: { y: 0.5 } }), 300);
+        }
       } else if (pct >= 80) {
+        if (typeof confetti === 'function') {
+          confetti({ particleCount: 60, spread: 50, origin: { y: 0.65 }, colors: ['#10b981', '#3b82f6'] });
+        }
         if (msgEl) msgEl.textContent = 'Great job! Review the missed questions below to solidify your understanding.';
       } else if (pct >= 60) {
         if (msgEl) msgEl.textContent = 'Good effort! Review the mistakes below and re-read the relevant sections.';
