@@ -241,6 +241,12 @@ function createHomeView() {
               <a data-route="#/study-tips" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-purple-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="graduation-cap" class="w-4 h-4 text-purple-500"></i> Study Tips
               </a>
+              <a data-route="#/formulas" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="sigma" class="w-4 h-4 text-indigo-500"></i> Formula Sheet
+              </a>
+              <a data-route="#/cornell-notes" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="notebook-pen" class="w-4 h-4 text-teal-500"></i> Cornell Notes
+              </a>
             </div>
           </section>
 
@@ -1750,6 +1756,8 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v143', items: ['Cornell note-taking system', 'Per-topic structured notes', 'Cues, notes, summary format with export'] },
+    { ver: 'v142', items: ['Formula sheet with 10 key equations', 'Topic-filtered with examples', 'Printable reference card'] },
     { ver: 'v141', items: ['Evidence-based study tips', '18 strategies across 6 categories', 'Daily tip rotation with tool links'] },
     { ver: 'v140', items: ['Lab safety guide', 'PPE, chemical, UV, electrical safety', 'Safety quiz with checklist tracking'] },
     { ver: 'v139', items: ['Spaced review scheduler', 'Topic-level review intervals', 'Difficulty-based scheduling'] },
