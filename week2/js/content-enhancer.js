@@ -15,6 +15,7 @@ export function enhanceContent(container) {
   container.dataset.enhanced = 'true';
 
   enhanceDeepDiveBoxes(container);
+  enhanceMisconceptionBoxes(container);
   enhanceTryItPrompts(container);
   enhanceCallouts(container);
   enhanceTables(container);
@@ -96,6 +97,58 @@ function enhanceDeepDiveBoxes(container) {
           }
         });
 
+        break;
+      }
+    }
+  });
+}
+
+/** Detect misconception / common mistake / watch out paragraphs and wrap in callout boxes */
+function enhanceMisconceptionBoxes(container) {
+  const patterns = [
+    { regex: /^<strong>Common misconception[:\s]/i, type: 'misconception' },
+    { regex: /^<strong>Common mistake[:\s]/i, type: 'misconception' },
+    { regex: /^<strong>Watch out[:\s]/i, type: 'misconception' },
+    { regex: /^<strong>Careful[:\s]/i, type: 'misconception' },
+    { regex: /^<strong>Don't confuse[:\s]/i, type: 'misconception' },
+    { regex: /^<strong>Pro tip[:\s]/i, type: 'protip' },
+    { regex: /^<strong>Exam tip[:\s]/i, type: 'protip' },
+    { regex: /^<strong>Homework tip[:\s]/i, type: 'protip' },
+    { regex: /^<strong>Lab tip[:\s]/i, type: 'protip' },
+  ];
+
+  container.querySelectorAll('p').forEach(p => {
+    const html = p.innerHTML.trim();
+    for (const pat of patterns) {
+      if (pat.regex.test(html)) {
+        const box = document.createElement('div');
+        box.className = pat.type === 'protip' ? 'pro-tip-box' : 'misconception-box';
+
+        // Collect content: this paragraph + following paragraphs until next special marker
+        const contentEls = [p];
+        let next = p.nextElementSibling;
+        while (next && (next.tagName === 'P' || next.tagName === 'UL' || next.tagName === 'OL')) {
+          if (/^<strong>[A-Z]/i.test(next.innerHTML?.trim() || '')) break;
+          contentEls.push(next);
+          next = next.nextElementSibling;
+        }
+
+        if (pat.type === 'protip') {
+          box.innerHTML = `<div class="tip-title">Pro Tip</div>`;
+        } else {
+          box.innerHTML = `<div class="misconception-title">Common Misconception</div>`;
+        }
+
+        // Clean the prefix from first paragraph
+        const cleanHtml = contentEls[0].innerHTML.replace(pat.regex, '').replace(/^<\/strong>\s*/, '');
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'misconception-reality';
+        contentDiv.innerHTML = cleanHtml;
+        contentEls.slice(1).forEach(el => contentDiv.appendChild(el.cloneNode(true)));
+        box.appendChild(contentDiv);
+
+        contentEls[0].parentNode.insertBefore(box, contentEls[0]);
+        contentEls.forEach(el => el.remove());
         break;
       }
     }

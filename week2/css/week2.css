@@ -3593,3 +3593,80 @@ code, pre, .font-mono, .mono { font-family: 'JetBrains Mono', 'Fira Code', monos
   from { opacity: 0; transform: translateX(-50%) translateY(4px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
+
+/* --- Misconception callout boxes --- */
+.misconception-box {
+  position: relative;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem 1rem 3.25rem;
+  margin: 1.5rem 0;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a33 100%);
+  border: 1px solid #f59e0b44;
+  color: #92400e;
+}
+.dark .misconception-box {
+  background: linear-gradient(135deg, rgba(251,191,36,0.1) 0%, rgba(245,158,11,0.05) 100%);
+  border-color: rgba(245,158,11,0.2);
+  color: #fbbf24;
+}
+.misconception-box::before {
+  content: '⚠';
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.misconception-box .misconception-title {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+  color: #b45309;
+}
+.dark .misconception-box .misconception-title { color: #f59e0b; }
+.misconception-box .misconception-myth {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+.misconception-box .misconception-reality {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* --- Pro tip boxes --- */
+.pro-tip-box {
+  position: relative;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem 1rem 3.25rem;
+  margin: 1.5rem 0;
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe33 100%);
+  border: 1px solid #3b82f644;
+  color: #1e40af;
+}
+.dark .pro-tip-box {
+  background: linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(59,130,246,0.05) 100%);
+  border-color: rgba(59,130,246,0.2);
+  color: #93c5fd;
+}
+.pro-tip-box::before {
+  content: '💡';
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.pro-tip-box .tip-title {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.35rem;
+  color: #1d4ed8;
+}
+.dark .pro-tip-box .tip-title { color: #60a5fa; }
