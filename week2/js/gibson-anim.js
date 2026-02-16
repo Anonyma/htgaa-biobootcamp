@@ -528,9 +528,4 @@ function initGibsonAnim(container) {
   updateUI();
 }
 
-// Support both module and global usage
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { initGibsonAnim };
-} else if (typeof window !== 'undefined') {
-  window.initGibsonAnim = initGibsonAnim;
-}
+export { initGibsonAnim };
