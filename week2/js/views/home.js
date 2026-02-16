@@ -220,6 +220,15 @@ function createHomeView() {
               <a data-route="#/prereqs" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-teal-400 cursor-pointer transition-colors text-sm font-medium">
                 <i data-lucide="git-branch" class="w-4 h-4 text-teal-500"></i> Prerequisites
               </a>
+              <a data-route="#/vocab-drill" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-orange-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="spell-check" class="w-4 h-4 text-orange-500"></i> Vocab Drill
+              </a>
+              <a data-route="#/mnemonics" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-yellow-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="lightbulb" class="w-4 h-4 text-yellow-500"></i> Memory Aids
+              </a>
+              <a data-route="#/progress-report" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-indigo-400 cursor-pointer transition-colors text-sm font-medium">
+                <i data-lucide="file-bar-chart" class="w-4 h-4 text-indigo-500"></i> Progress Report
+              </a>
             </div>
           </section>
 
@@ -1729,6 +1738,9 @@ function renderStrugglingTerms() {
 
 function renderChangelog() {
   const changes = [
+    { ver: 'v137', items: ['Printable progress report', 'Shareable study summary', 'Exam history & strengths analysis'] },
+    { ver: 'v136', items: ['Memory aids & mnemonics', '30+ bioengineering mnemonics', 'Custom mnemonic builder & quiz mode'] },
+    { ver: 'v135', items: ['Vocabulary drill', 'Term-to-definition & spelling modes', 'Smart weighting for struggling terms'] },
     { ver: 'v134', items: ['Learning prerequisites map', 'Topic dependency visualization', 'Recommended study order'] },
     { ver: 'v133', items: ['FAQ with 30+ questions', 'Searchable accordion answers', 'Category filtering'] },
     { ver: 'v132', items: ['Study log with heatmap', 'GitHub-style activity calendar', 'Activity timeline and weekly chart'] },
